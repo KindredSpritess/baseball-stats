@@ -1,3 +1,5 @@
+<head><title>{{ $team->name }}</title></head>
+<body>
 <style>
     table td {
         font-family: sans-serif;
@@ -223,3 +225,4 @@
         </tr>
     </tfoot>
 </table>
+</body>

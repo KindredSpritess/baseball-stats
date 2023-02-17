@@ -99,7 +99,7 @@ class Game extends Model
             $this->runners[$player->id] = [
                 'pitcher' => $this->pitching(),
                 'base' => 0,
-                'earned' => ($decisiveError || $this->expectedOuts > 2) ? -INF : 0,
+                'earned' => ($decisiveError || $this->expectedOuts > 2) ? -100000000000 : 0,
                 'expectedOuts' => (int)$this->expectedOuts,
             ];
         }
@@ -107,7 +107,7 @@ class Game extends Model
         if ($decisiveError) {
             foreach ($this->runners as &$runner) {
                 $runner['expectedOuts']++;
-                if ($runner['expectedOuts'] > 2) $runner['earned'] = -INF;
+                if ($runner['expectedOuts'] > 2) $runner['earned'] = -100000000000;
             }
             $this->expectedOuts++;
         }
@@ -115,7 +115,7 @@ class Game extends Model
         $runner = &$this->runners[$player->id];
         $runner['base'] += $bases;
         if ($earned) $runner['earned'] += $bases;
-        if ($decisiveError) $runner['earned'] = -INF;
+        if ($decisiveError) $runner['earned'] = -100000000000;
 
         $keys = array_reverse(array_keys($this->runners));
         $fb = $runner['earned'];
@@ -139,7 +139,7 @@ class Game extends Model
         }
         if ($runner['base'] >= 4) {
             $runner['pitcher']->evt('RA');
-            $runner['base'] = -INF;
+            $runner['base'] = -100000000000;
             if ($runner['earned'] < 0) {
                 unset($this->runners[$player->id]);
             }
@@ -151,7 +151,7 @@ class Game extends Model
         $this->expectedOuts++;
         foreach ($this->runners as &$runner) {
             $runner['expectedOuts']++;
-            if ($runner['expectedOuts'] > 2) $runner['earned'] = -INF;
+            if ($runner['expectedOuts'] > 2) $runner['earned'] = -100000000000;
         }
         $this->pitching()->evt('TO');
         foreach ($this->defense[($this->half+1)%2] as $pos => $fielder) {

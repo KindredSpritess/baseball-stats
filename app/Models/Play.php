@@ -257,7 +257,7 @@ class Play extends Model
         } elseif ($event->consume('CS')) {
             $countStats && $game->fielding(2)->evt('CCS');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
-                $bases = -INF;
+                $bases = -10000000000;
                 $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
             } else {
@@ -287,7 +287,7 @@ class Play extends Model
                     $event->consume('UA') ||
                     $bases < 0) {
             $this->handleFielding($game, $event, $hit, $countStats);
-            $bases = -INF;
+            $bases = -10000000000;
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('FC')) {
             $game->advanceRunner($runner, $bases);
@@ -296,7 +296,7 @@ class Play extends Model
             if ($this->handleFielding($game, $event, $hit, $countStats)) {
                 $game->advanceRunner($runner, $bases, $hit, $descisive);
             } else {
-                $bases = -INF;
+                $bases = -10000000000;
                 $game->advanceRunner($runner, $bases);
             }
         }

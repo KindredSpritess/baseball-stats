@@ -48,7 +48,7 @@ class GameState implements CastsAttributes
         $decodeArray($game->away_team, $game->lineup[0], $value['lineup'][0] ?? []);
         $decodeArray($game->home_team, $game->lineup[1], $value['lineup'][1] ?? []);
         $game->runners = array_map(function ($r) use ($game) {
-            $team = $game->half ? $game->home_team : $game->away_team;
+            $team = $game->half ? $game->away_team : $game->home_team;
             return [
                 'pitcher' => $team->players()->find($r['pitcher']),
                 'base' => $r['base'],
@@ -93,6 +93,7 @@ class GameState implements CastsAttributes
             'defense' => array_map(function ($d) use ($getId) { return array_map($getId, $d); }, $game->defense),
             'lineup' => array_map(function ($l) use ($getId) { return array_map($getId, $l); }, $game->lineup),
         ];
+        Log::info($out);
         return json_encode($out);
     }
 }
