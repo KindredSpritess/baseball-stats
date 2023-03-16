@@ -1,4 +1,7 @@
-<head><title>{{ $team->name }}</title></head>
+<head>
+    <title>{{ $team->name }}</title>
+    <meta charset="utf-8">
+</head>
 <body>
 <style>
     table td {

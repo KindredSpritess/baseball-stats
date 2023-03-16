@@ -30,17 +30,37 @@
                             <path style="fill:#FB9761;" d="M224.097,1260.374c8.931,0,15.969,7.131,15.969,16.063c0,8.932-7.037,15.938-15.969,15.938 c-8.931,0-16.062-7.006-16.062-15.938C208.034,1267.505,215.165,1260.374,224.097,1260.374z"></path>
                             <path style="fill:#FB9761;" d="M224.097,1388.403c17.768,0,32.031,14.232,32.031,32s-14.263,32.031-32.031,32.031 s-32-14.264-32-32.031S206.329,1388.403,224.097,1388.403L224.097,1388.403z"></path>
                         </g>
-                        <path style="fill:#4bb33d;" d="M224.09,1053.436c40.888,0,84.197,14.514,116.644,40.063c28.782,22.666,47.813,53.402,60.348,93.516 l-63.997,72.986l-108.514-94.988c-1.401-1.207-3.229-1.799-5.072-1.641c-1.465,0.107-2.857,0.684-3.971,1.641l-108.514,94.988 l-63.997-72.986c13.216-40.563,31.61-70.887,60.348-93.516C139.811,1067.95,183.202,1053.436,224.09,1053.436L224.09,1053.436z">                        </path> 
+                        <path style="fill:#4bb33d;" d="M224.09,1053.436c40.888,0,84.197,14.514,116.644,40.063c28.782,22.666,47.813,53.402,60.348,93.516 l-63.997,72.986l-108.514-94.988c-1.401-1.207-3.229-1.799-5.072-1.641c-1.465,0.107-2.857,0.684-3.971,1.641l-108.514,94.988 l-63.997-72.986c13.216-40.563,31.61-70.887,60.348-93.516C139.811,1067.95,183.202,1053.436,224.09,1053.436L224.09,1053.436z">                        </path>
+                        @if ($game->fielding('1'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=1280 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('1')->person->lastName }}, {{ $game->fielding('1')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('2'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1455 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('2')->person->lastName }}, {{ $game->fielding('2')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('3'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1330 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('3')->person->lastName }}, {{ $game->fielding('3')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('4'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=284 y=1230 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('4')->person->lastName }}, {{ $game->fielding('4')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('5'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=1330 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('5')->person->lastName }}, {{ $game->fielding('5')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('6'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=164 y=1230 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('6')->person->lastName }}, {{ $game->fielding('6')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('7'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=1150 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('7')->person->lastName }}, {{ $game->fielding('7')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('8'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1100 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('8')->person->lastName }}, {{ $game->fielding('8')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->fielding('9'))
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1150 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('9')->person->lastName }}, {{ $game->fielding('9')->person->firstName[0] }}</text>
+                        @endif
+                        @if ($game->hitting())
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1425 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->hitting()->person->lastName }}, {{ $game->hitting()->person->firstName[0] }}</text>
+                        @endif
                         @if ($game->bases[0])
                         <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1300 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['0']->person->lastName }}</text>
                         @endif

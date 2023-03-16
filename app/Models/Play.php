@@ -21,6 +21,10 @@ class Play extends Model
             return;
         }
 
+        if ($log->consume('Side Away')) {
+            $game->sideAway();
+        }
+
         // Lineups
         if ($log->consume('@')) {
             $matches = [];
@@ -158,6 +162,11 @@ class Play extends Model
                             $game->pitching()->evt('HBP');
                             $b = $this->advance($game, -1, 0);
                             $game->advanceRunner($game->hitting(), 1);
+                        } elseif ($event->consume('CI')) {
+                            $game->hitting()->evt('CI');
+                            $game->fielding('2')->evt('E');
+                            $b = $this->advance($game, -1, 0);
+                            $game->advanceRunner($game->hitting(), 1, false);
                         } elseif (($sac = $event->consume('SAF')) ||
                                   ($sac = $event->consume('SAB'))) {
                             $tb = self::getBases($event);
@@ -167,11 +176,11 @@ class Play extends Model
                                 $b = $this->advance($game, -1, $tb - 1);
                                 $game->advanceRunner($game->hitting(), $tb, $hit, !$hit);
                             }
-                        } elseif (($bb = $event->consume('G')) || 
-                                  ($bb = $event->consume('FF')) || 
-                                  ($bb = $event->consume('F')) || 
-                                  ($bb = $event->consume('L')) ||  
-                                  ($bb = $event->consume('PF')) ||  
+                        } elseif (($bb = $event->consume('G')) ||
+                                  ($bb = $event->consume('FF')) ||
+                                  ($bb = $event->consume('F')) ||
+                                  ($bb = $event->consume('L')) ||
+                                  ($bb = $event->consume('PF')) ||
                                   ($bb = $event->consume('P'))) {
                             $game->hitting()->evt('AB');
                             $game->hitting()->evt("BIP$bb");

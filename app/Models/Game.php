@@ -47,17 +47,15 @@ class Game extends Model
         return $this->hasMany(Player::class);
     }
 
-    public function substitute(int $home, Player $player, ?Player $replacing = null, ?string $fieldPos = null) : void {        
+    public function substitute(int $home, Player $player, ?Player $replacing = null, ?string $fieldPos = null) : void {
         if (!$fieldPos) {
             return;
         }
 
-        if (intval($fieldPos)) {
-            $this->defense[$home][$fieldPos] = $player;
-            if ($fieldPos == '1') {
-                $player->evt('GP');
-                $this->expectedOuts = $this->outs;
-            }
+        $this->defense[$home][$fieldPos] = $player;
+        if ($fieldPos === '1') {
+            $player->evt('GP');
+            $this->expectedOuts = $this->outs;
         }
 
         $lineup =& $this->lineup[$home];
@@ -74,7 +72,7 @@ class Game extends Model
                 $this->runners[$player->id] = $this->runners[$replacing->id];
                 unset($this->runners[$replacing->id]);
             }
-        } else if ($fieldPos) {
+        } else if ($fieldPos !== '1' || !isset($this->defense[$home]['DH'])) {
             $lineup[] = $player;
         }
     }
@@ -171,12 +169,12 @@ class Game extends Model
         return $this->defense[($this->half+1)%2]['1'];
     }
 
-    public function hitting() : Player {
-        return $this->lineup[$this->half][$this->atBat[$this->half]];
+    public function hitting() : ?Player {
+        return $this->lineup[$this->half][$this->atBat[$this->half]] ?? null;
     }
 
-    public function fielding(string $pos): Player {
-        return $this->defense[($this->half+1)%2][$pos];
+    public function fielding(string $pos): ?Player {
+        return $this->defense[($this->half+1)%2][$pos] ?? null;
     }
 
     public function plays() {
