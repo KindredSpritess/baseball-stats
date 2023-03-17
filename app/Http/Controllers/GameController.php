@@ -30,7 +30,9 @@ class GameController extends Controller
      */
     public function create()
     {
-        return view('game.create');
+        return view('game.create', [
+            'teams' => Team::all(),
+        ]);
     }
 
     /**
@@ -41,9 +43,10 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $game = new Game($request->query());
-        $game->home_team()->associate(Team::find($request->query('home')));
-        $game->away_team()->associate(Team::find($request->query('away')));
+        $game = new Game();
+        $game->home_team()->associate(Team::find($request->input('home')));
+        $game->away_team()->associate(Team::find($request->input('away')));
+        $game->fill($request->input());
         $game->save();
         return new JsonResponse(['status' => 'success', 'created' => $game->id]);
     }
