@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(Team::class, 'away');
             $table->foreignIdFor(Team::class, 'home');
             $table->string('location');
-            $table->integer('duration');
+            $table->integer('duration')->nullable();
         });
     }
 
