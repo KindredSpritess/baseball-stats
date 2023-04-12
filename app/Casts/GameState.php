@@ -30,21 +30,25 @@ class GameState implements CastsAttributes
         $game->strikes = $value['strikes'] ?? 0;
         $game->outs = $value['outs'] ?? 0;
         $game->expectedOuts = $value['expectedOuts'] ?? 0;
-    
+
         $game->score = $value['score'] ?? [0, 0];
         $game->atBat = $value['atBat'] ?? [0, 0];
-    
-        $decodeArray = function ($team, &$out, $in, $stringKeys = false) {
+
+        $players = [];
+        $decodeArray = function ($team, &$out, $in) use (&$players) {
             foreach($in as $key => $value) {
                 if ($value) {
-                    $out[$key] = $team->players()->find($value);
+                    if (!isset($players[$value])) {
+                        $players[$value] = $team->players()->find($value);
+                    }
+                    $out[$key] = $players[$value];
                 }
             }
         };
 
         $decodeArray($game->half ? $game->home_team : $game->away_team, $game->bases, $value['bases'] ?? []);
-        $decodeArray($game->away_team, $game->defense[0], $value['defense'][0] ?? [], true);
-        $decodeArray($game->home_team, $game->defense[1], $value['defense'][1] ?? [], true);
+        $decodeArray($game->away_team, $game->defense[0], $value['defense'][0] ?? []);
+        $decodeArray($game->home_team, $game->defense[1], $value['defense'][1] ?? []);
         $decodeArray($game->away_team, $game->lineup[0], $value['lineup'][0] ?? []);
         $decodeArray($game->home_team, $game->lineup[1], $value['lineup'][1] ?? []);
         $game->runners = array_map(function ($r) use ($game) {
