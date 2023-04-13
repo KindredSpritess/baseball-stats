@@ -1,5 +1,5 @@
 <head>
-    <title>{{ $team->name }}</title>
+    <title>{{ $person->firstName }} {{ $person->lastName }}</title>
     <meta charset="utf-8">
 </head>
 <body>
@@ -25,7 +25,7 @@
 </style>
 <script src="/sorttable.js"></script>
 
-<h1>{{ $team->name }} - {{ $team->season }}</h1>
+<h1>{{ $person->firstName }} {{ $person->lastName }}</h1>
 
 <h2>Statistics</h2>
 <h3>Hitting</h3>
@@ -55,33 +55,33 @@
             <td>ISO</td>
         </tr>
     </thead>
-@foreach ($people as $person)
+@foreach ($teams as $team)
     <tr>
         <td style="text-align:left;">
-            <a href="{{ route('person.show', ['person' => $person->id]) }}">
-                <span style="text-transform:uppercase;font-weight:520">{{ $person->lastName }}</span>,&nbsp;{{ $person->firstName }}
+            <a href="{{ route('person.games', ['person' => $person->id, 'team' => $team->id]) }}">
+                {{ $team->name }} - {{ $team->season }}
             </a>
         </td>
-        <td>{{ $stats[$person->id]->G }}</td>
-        <td>{{ $stats[$person->id]->PA }}</td>
-        <td>{{ $stats[$person->id]->AB }}</td>
-        <td>{{ $stats[$person->id]->R }}</td>
-        <td>{{ $stats[$person->id]->H }}</td>
-        <td>{{ $stats[$person->id]->stat('1') }}</td>
-        <td>{{ $stats[$person->id]->stat('2') }}</td>
-        <td>{{ $stats[$person->id]->stat('3') }}</td>
-        <td>{{ $stats[$person->id]->stat('4') }}</td>
-        <td>{{ $stats[$person->id]->RBI }}</td>
-        <td>{{ $stats[$person->id]->SO }}</td>
-        <td>{{ $stats[$person->id]->BBs }}</td>
-        <td>{{ $stats[$person->id]->HPB }}</td>
-        <td>{{ $stats[$person->id]->SB }}</td>
-        <td>{{ $stats[$person->id]->CS }}</td>
-        <td>{{ number_format($stats[$person->id]->AVG, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->OBP, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->SLG, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->OPS, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->ISO, 3) }}</td>
+        <td>{{ $stats[$team->id]->G }}</td>
+        <td>{{ $stats[$team->id]->PA }}</td>
+        <td>{{ $stats[$team->id]->AB }}</td>
+        <td>{{ $stats[$team->id]->R }}</td>
+        <td>{{ $stats[$team->id]->H }}</td>
+        <td>{{ $stats[$team->id]->stat('1') }}</td>
+        <td>{{ $stats[$team->id]->stat('2') }}</td>
+        <td>{{ $stats[$team->id]->stat('3') }}</td>
+        <td>{{ $stats[$team->id]->stat('4') }}</td>
+        <td>{{ $stats[$team->id]->RBI }}</td>
+        <td>{{ $stats[$team->id]->SO }}</td>
+        <td>{{ $stats[$team->id]->BBs }}</td>
+        <td>{{ $stats[$team->id]->HPB }}</td>
+        <td>{{ $stats[$team->id]->SB }}</td>
+        <td>{{ $stats[$team->id]->CS }}</td>
+        <td>{{ number_format($stats[$team->id]->AVG, 3) }}</td>
+        <td>{{ number_format($stats[$team->id]->OBP, 3) }}</td>
+        <td>{{ number_format($stats[$team->id]->SLG, 3) }}</td>
+        <td>{{ number_format($stats[$team->id]->OPS, 3) }}</td>
+        <td>{{ number_format($stats[$team->id]->ISO, 3) }}</td>
     </tr>
 @endforeach
     <tfoot>
@@ -126,21 +126,21 @@
             <td>PB</td>
         </tr>
     </thead>
-@foreach ($people as $person)
+@foreach ($teams as $team)
     <tr>
         <td style="text-align:left;">
-            <a href="{{ route('person.show', ['person' => $person->id]) }}">
-                <span style="text-transform:uppercase;font-weight:520">{{ $person->lastName }}</span>,&nbsp;{{ $person->firstName }}
+            <a href="{{ route('person.games', ['person' => $person->id, 'team' => $team->id]) }}">
+                {{ $team->name }} - {{ $team->season }}
             </a>
         </td>
-        <td>{{ $stats[$person->id]->G }}</td>
-        <td>{{ App\Helpers\StatsHelper::innings_format($stats[$person->id]->FI) }}</td>
-        <td>{{ $stats[$person->id]->TC }}</td>
-        <td>{{ $stats[$person->id]->PO }}</td>
-        <td>{{ $stats[$person->id]->A }}</td>
-        <td>{{ $stats[$person->id]->E }}</td>
-        <td>{{ number_format($stats[$person->id]->FPCT, 3) }}</td>
-        <td>{{ $stats[$person->id]->PB }}</td>
+        <td>{{ $stats[$team->id]->G }}</td>
+        <td>{{ App\Helpers\StatsHelper::innings_format($stats[$team->id]->FI) }}</td>
+        <td>{{ $stats[$team->id]->TC }}</td>
+        <td>{{ $stats[$team->id]->PO }}</td>
+        <td>{{ $stats[$team->id]->A }}</td>
+        <td>{{ $stats[$team->id]->E }}</td>
+        <td>{{ number_format($stats[$team->id]->FPCT, 3) }}</td>
+        <td>{{ $stats[$team->id]->PB }}</td>
     </tr>
 @endforeach
     <tfoot>
@@ -185,33 +185,33 @@
             <td>K/BB</td>
         </tr>
     </thead>
-@foreach ($people as $person)
-    @if ($stats[$person->id]->IP)
+@foreach ($teams as $team)
+    @if ($stats[$team->id]->IP)
     <tr>
         <td style="text-align:left;">
-            <a href="{{ route('person.show', ['person' => $person->id]) }}">
-                <span style="text-transform:uppercase;font-weight:520">{{ $person->lastName }}</span>,&nbsp;{{ $person->firstName }}
+            <a href="{{ route('person.games', ['person' => $person->id, 'team' => $team->id]) }}">
+                {{ $team->name }} - {{ $team->season }}
             </a>
         </td>
-        <td>{{ $stats[$person->id]->GP }}</td>
-        <td>{{ App\Helpers\StatsHelper::innings_format($stats[$person->id]->IP) }}</td>
-        <td>{{ $stats[$person->id]->HA }}</td>
-        <td>{{ $stats[$person->id]->K }}</td>
-        <td>{{ $stats[$person->id]->BB }}</td>
-        <td>{{ $stats[$person->id]->HBP }}</td>
-        <td>{{ $stats[$person->id]->ER }}</td>
-        <td>{{ $stats[$person->id]->RA }}</td>
-        <td>{{ $stats[$person->id]->WP }}</td>
-        <td>{{ $stats[$person->id]->POs }}</td>
-        <td>{{ $stats[$person->id]->BFP }}</td>
-        <td>{{ $stats[$person->id]->Balls }}</td>
-        <td>{{ $stats[$person->id]->Strikes }}</td>
-        <td>{{ $stats[$person->id]->Pitches }}</td>
-        <td>{{ number_format($stats[$person->id]->ERA, 2) }}</td>
-        <td>{{ number_format($stats[$person->id]->StrkPct * 100, 1) }}%</td>
-        <td>{{ number_format($stats[$person->id]->KP9, 1) }}</td>
-        <td>{{ number_format($stats[$person->id]->BBP9, 1) }}</td>
-        <td>{{ number_format($stats[$person->id]->KPBB, 1) }}</td>
+        <td>{{ $stats[$team->id]->GP }}</td>
+        <td>{{ App\Helpers\StatsHelper::innings_format($stats[$team->id]->IP) }}</td>
+        <td>{{ $stats[$team->id]->HA }}</td>
+        <td>{{ $stats[$team->id]->K }}</td>
+        <td>{{ $stats[$team->id]->BB }}</td>
+        <td>{{ $stats[$team->id]->HBP }}</td>
+        <td>{{ $stats[$team->id]->ER }}</td>
+        <td>{{ $stats[$team->id]->RA }}</td>
+        <td>{{ $stats[$team->id]->WP }}</td>
+        <td>{{ $stats[$team->id]->POs }}</td>
+        <td>{{ $stats[$team->id]->BFP }}</td>
+        <td>{{ $stats[$team->id]->Balls }}</td>
+        <td>{{ $stats[$team->id]->Strikes }}</td>
+        <td>{{ $stats[$team->id]->Pitches }}</td>
+        <td>{{ number_format($stats[$team->id]->ERA, 2) }}</td>
+        <td>{{ number_format($stats[$team->id]->StrkPct * 100, 1) }}%</td>
+        <td>{{ number_format($stats[$team->id]->KP9, 1) }}</td>
+        <td>{{ number_format($stats[$team->id]->BBP9, 1) }}</td>
+        <td>{{ number_format($stats[$team->id]->KPBB, 1) }}</td>
     </tr>
     @endif
 @endforeach

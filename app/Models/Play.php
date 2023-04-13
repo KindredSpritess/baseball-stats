@@ -2,17 +2,55 @@
 
 namespace App\Models;
 
+use Dotenv\Util\Str;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-
+use NumberFormatter;
 
 class Play extends Model
 {
     use HasFactory;
 
     protected $fillable = ['play'];
+
+    const POSITIONS = [
+        1 => 'P',
+        2 => 'C',
+        3 => '1B',
+        4 => '2B',
+        5 => '3B',
+        6 => 'SS',
+        7 => 'LF',
+        8 => 'CF',
+        9 => 'RF',
+    ];
+
+    const TRAJECTORIES = [
+        'G' => 'ground ball',
+        'L' => 'line drive',
+        'F' => 'fly ball',
+        'P' => 'pop up',
+        'FF' => 'foul fly',
+        'PF' => 'pop foul',
+    ];
+
+    const BASES = [
+        '0' => '1st',
+        '1' => '2nd',
+        '2' => '3rd',
+    ];
+
+    const HIT = [
+        '1' => 'singles',
+        '2' => 'doubles',
+        '3' => 'triples',
+        '4' => 'homers',
+    ];
+
+    /** @var ?string */
+    private $humanBuffer = null;
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
@@ -89,6 +127,7 @@ class Play extends Model
             assert($log->consume(' -> '));
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
+            $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
             if ($position == '1') {
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
@@ -108,8 +147,10 @@ class Play extends Model
                 // For each runner, advance one base.
                 foreach ($game->bases as $k => $p) {
                     if ($p) {
+                        $this->logBuffer($game->bases[$k]->person->lastName);
                         $this->advance($game, $k, $k+1);
                         $game->advanceRunner($p, 1, true);
+                        $this->log($this->humanBuffer . ".");
                     }
                 }
             } else if ($log->consume(',')) {
@@ -120,11 +161,14 @@ class Play extends Model
                 // Handle base runners.
                 foreach (array_reverse($actions, true) as $b => $action) {
                     if (!$action) continue;
+                    $this->logBuffer($game->bases[$b]->person->lastName);
                     foreach (preg_split('/\//', $action) as $event) {
                         $b = $this->handleBaseEvent($game, $b, $event);
                     }
+                    $this->log($this->humanBuffer . ".");
                 }
                 if ($br) {
+                    $this->logBuffer($game->hitting()->person->lastName);
                     $b = -1;
                     foreach (preg_split('/\//', $br) as $event) {
                         $event = new StringConsumer($event);
@@ -135,17 +179,21 @@ class Play extends Model
                             $game->hitting()->evt('SO');
                             $game->pitching()->evt('K');
                             $tb = self::getBases($event);
+                            $this->logBuffer("strikes out,");
                             if ($event == 'WP') {
                                 $game->pitching()->evt('WP');
                                 $b = $this->advance($game, -1, $tb - 1);
                                 $game->advanceRunner($game->hitting(), $tb, true);
+                                $this->logBuffer(" on wild pitch");
                             } elseif ($event == 'PB') {
                                 $game->fielding(2)->evt('PB');
                                 $b = $this->advance($game, -1, $tb - 1);
                                 $game->advanceRunner($game->hitting(), $tb, false, true);
+                                $this->logBuffer(" on passed ball");
                             } elseif ($event == 'BTS') {
                                 $game->fielding(2)->evt('PO');
                                 $game->out();
+                                $this->logBuffer("on bunted third strike");
                             } else {
                                 if ($this->handleFielding($game, $event)) {
                                     $b = $this->advance($game, -1, $tb - 1);
@@ -157,11 +205,13 @@ class Play extends Model
                             $game->pitching()->evt('BB');
                             $b = $this->advance($game, -1, 0);
                             $game->advanceRunner($game->hitting(), 1);
+                            $this->logBuffer("walks");
                         } elseif ($event->consume('HBP')) {
                             $game->hitting()->evt('HPB');
                             $game->pitching()->evt('HBP');
                             $b = $this->advance($game, -1, 0);
                             $game->advanceRunner($game->hitting(), 1);
+                            $this->logBuffer("hit by pitch");
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
                             $game->fielding('2')->evt('E');
@@ -191,6 +241,7 @@ class Play extends Model
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");
                                     $game->pitching()->evt('HA');
+                                    $this->logBuffer(self::HIT[$tb] . ",");
                                 }
                                 if ($tb < 4) {
                                     $b = $this->advance($game, -1, $tb - 1);
@@ -200,6 +251,7 @@ class Play extends Model
                                     $hit && $game->hitting()->evt('RBI');
                                 }
                             }
+                            $this->logBuffer("on a " . self::TRAJECTORIES[$bb]);
                         } elseif ($event->consume('MFF')) {
                             // Muffed foul fly, error, At Bat continues.
                             // Need to handle batter being an expected out.
@@ -211,11 +263,18 @@ class Play extends Model
                             $b = $this->handleBaseEvent($game, $b, $event);
                         }
                     }
+                    $this->log($this->humanBuffer . ".");
                     $game->hitting()->evt('PA');
                     $game->pitching()->evt('BFP');
                     $game->batterUp();
+                } else {
+                    $this->log("With {$game->hitting()->person->lastName} batting, ");
                 }
+                $this->logA("{$game->outs} out(s).");
                 if ($game->outs >= 3) {
+                    $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
+                    $this->game_event = 'End of the ' . ($game->half ? '' : 'top of the ') . $nf->format($game->inning) . ' inning.';
+                    $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
                     $game->sideAway();
                 }
                 return;
@@ -263,8 +322,10 @@ class Play extends Model
         if ($stat = $event->consume('SB')) {
             $countStats && $game->fielding(2)->evt('CSB');
             $game->advanceRunner($runner, 1);
+            $this->logBuffer("on stolen base");
         } elseif ($event->consume('CS')) {
             $countStats && $game->fielding(2)->evt('CCS');
+            $this->logBuffer("caught stealing");
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $bases = -10000000000;
                 $runner->evt('CS');
@@ -275,9 +336,11 @@ class Play extends Model
         } elseif ($event->consume('PB')) {
             $countStats && $game->fielding(2)->evt('PB');
             $game->advanceRunner($runner, $bases, false);
+            $this->logBuffer('on a passed ball');
         } elseif ($event->consume('WP')) {
             $countStats && $game->pitching()->evt('WP');
             $game->advanceRunner($runner, $bases, true);
+            $this->logBuffer('on a wild pitch');
         } elseif ($event->empty() && ($b + $bases > 2)) {
             // NOTE: for GIDP or ROE 2 outs need to use FC.
             $countStats && $game->hitting()->evt('RBI');
@@ -296,9 +359,11 @@ class Play extends Model
                     $event->consume('UA') ||
                     $bases < 0) {
             $this->handleFielding($game, $event, $hit, $countStats);
+            $this->logBuffer('unusually');
             $bases = -10000000000;
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('FC')) {
+            $this->logBuffer('on a fielder\'s choice');
             $game->advanceRunner($runner, $bases);
         } else {
             $descisive = str_contains($event, 'WT') || str_contains($event, 'E');
@@ -330,16 +395,20 @@ class Play extends Model
             if ($pos->consume('WT') || $pos->consume('E')) {
                 // Decisive, remove the runner.
                 $countStats && $game->fielding($pos)->evt('E');
+                $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
                 $hit = false;
                 return true;
             } elseif ($pos->consume('wt') || $pos->consume('e')) {
                 $countStats && $game->fielding($pos)->evt('E');
+                $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
                 $hit = false;
                 return true;
             } elseif ($k < count($handlers) - 1 && !array_key_exists((string)$pos, $handled)) {
                 $countStats && $game->fielding($pos)->evt('A');
+                $this->logBuffer(self::POSITIONS[(string)$pos] . ' to');
                 $handled[(string)$pos] = true;
             } elseif ($k == count($handlers) - 1) {
+                $this->logBuffer('put out by ' . self::POSITIONS[(string)$pos]);
                 $countStats && $game->fielding($pos)->evt('PO');
                 $game->out();
                 return false;
@@ -352,17 +421,44 @@ class Play extends Model
         assert($to > 2 || $to < 0 || $game->bases[$to] === null);
         assert($from < 0 || $game->bases[$from] !== null);
         if ($to < 0) {}
-        elseif ($to < 3) $game->bases[$to] = $game->bases[$from] ?? $game->hitting();
-        else {
+        elseif ($to < 3) {
+            $game->bases[$to] = $game->bases[$from] ?? $game->hitting();
+            $this->logBuffer("advances to " . self::BASES[$to]);
+        } else {
             $game->bases[$from]->evt('R');
             $game->score[$game->half]++;
+            $this->logBuffer("scores");
         }
         if ($from >= 0) $game->bases[$from] = null;
         return $to;
     }
 
-    public function human() : string {
-        return '';
+    private function log(?string $msg) {
+        if (!$msg) return;
+        if (!$this->human) {
+            $this->human = $msg;
+        } else {
+            $this->human = "{$msg} {$this->human}";
+        }
+        $this->humanBuffer = null;
+    }
+
+    private function logA(?string $msg) {
+        if (!$msg) return;
+        if (!$this->human) {
+            $this->human = $msg;
+        } else {
+            $this->human = "{$this->human} {$msg}";
+        }
+        $this->humanBuffer = null;
+    }
+
+    private function logBuffer(string $msg) {
+        if (!$this->humanBuffer) {
+            $this->humanBuffer = $msg;
+        } else {
+            $this->humanBuffer = "{$this->humanBuffer} {$msg}";
+        }
     }
 }
 

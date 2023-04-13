@@ -1,10 +1,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<table style='width: 100%'>
-    <tr>
+<link rel="stylesheet" href="/styles.css" />
+<table id='game-view'>
+    <tr style="max-height: 100%;">
         <td>
             <x-box-score :team="$game->away_team" :lineup="$game->lineup[0]" />
         </td>
-        <td style='text-align: center; width: 100%'>
+        <td style='text-align: center; width: 100%;'>
             <h2>{{ $game->firstPitch }} at {{ $game->location }}</h2>
             <h3>{{ implode(' - ', $game->score) }}</h3>
             <p>
@@ -90,15 +91,25 @@
                         <th>Third</th>
                     </tr>
                     <tr>
-                        <td><input id='pitches' autofocus /></td>
-                        <th><input id='batter' /></th>
-                        <th><input id='first' /></th>
-                        <th><input id='second' /></th>
-                        <th><input id='third' /></th>
+                        <td><input id='pitches' autofocus autocomplete='off' /></td>
+                        <th><input id='batter' autocomplete='off' /></th>
+                        <th><input id='first' autocomplete='off' /></th>
+                        <th><input id='second' autocomplete='off' /></th>
+                        <th><input id='third' autocomplete='off' /></th>
                     </tr>
                 </table>
                 <input type="submit" />
             </form>
+            <div id='play-by-play'>
+                @foreach ($game->plays as $play)
+                    @if ($play->human)
+                    <div>{{ $play->human }}</div>
+                    @endif
+                    @if ($play->game_event)
+                    <div class='game-event'>{{ $play->game_event }}</div>
+                    @endif
+                @endforeach
+            </div>
         </td>
         <td>
             <x-box-score :team="$game->home_team" :lineup="$game->lineup[1]" />

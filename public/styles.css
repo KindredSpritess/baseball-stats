@@ -1,0 +1,25 @@
+#play-by-play {
+  overflow: scroll;
+  height: 330px;
+}
+
+#play-by-play div {
+  padding: 10px;
+  text-align: left;
+}
+
+#play-by-play div:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+#play-by-play div.game-event {
+  background-color: #ffffe0;
+}
+
+#game-view {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

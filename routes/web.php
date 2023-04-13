@@ -2,6 +2,7 @@
 
 use App\Casts\GameState;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\TeamController;
 use App\Models\Game;
 use App\Models\Team;
@@ -35,4 +36,9 @@ Route::controller(GameController::class)->group(function() {
 
 Route::controller(TeamController::class)->group(function () {
     Route::get('/team/{team}', 'show')->name('team');
+});
+
+Route::controller(PersonController::class)->group(function () {
+    Route::get('/person/{person}', 'show')->name('person.show');
+    Route::get('/person/{person}/{team}', 'teamGames')->name('person.games');
 });
