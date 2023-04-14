@@ -35,6 +35,8 @@ Route::controller(GameController::class)->group(function() {
 });
 
 Route::controller(TeamController::class)->group(function () {
+    Route::get('/team/create', 'create');
+    Route::post('/team/create', 'store')->name('teamstore');
     Route::get('/team/{team}', 'show')->name('team');
 });
 

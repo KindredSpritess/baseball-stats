@@ -12,10 +12,14 @@ use Illuminate\Support\Facades\Log;
 
 class TeamController extends Controller
 {
-    public function create(Request $request) {
-        $team = new Team($request->query());
+    public function create() {
+        return view('team.create');
+    }
+
+    public function store(Request $request) {
+        $team = new Team($request->input());
         $team->save();
-        return new JsonResponse(['status' => 'success', 'created' => $team->id]);
+        return redirect()->route('team', ['team' => $team->id]);
     }
 
     public function show(Team $team) {
