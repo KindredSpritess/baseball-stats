@@ -19,7 +19,11 @@
         @foreach ($lineup as $player)
         <tr>
             <td>{{ $player->number }}</td>
-            <td style="text-align:left;"><span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</td>
+            <td style="text-align:left;">
+                <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
+                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
+                </a>
+            </td>
             <td>{{ $player->stats['PA'] ?? 0 }}</td>
             <td>{{ $player->stats['AB'] ?? 0 }}</td>
             <td>{{ $player->stats['R'] ?? 0 }}</td>
