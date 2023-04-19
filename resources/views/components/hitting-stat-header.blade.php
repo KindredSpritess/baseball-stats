@@ -1,0 +1,26 @@
+<thead>
+  <tr>
+    <td style="text-align:left;">Name</td>
+    <td>G</td>
+    <td>PA</td>
+    <td>AB</td>
+    <td>R</td>
+    <td>H</td>
+    <td>1B</td>
+    <td>2B</td>
+    <td>3B</td>
+    <td>HR</td>
+    <td>RBI</td>
+    <td>SO</td>
+    <td>BB</td>
+    <td>HBP</td>
+    <td>SB</td>
+    <td>CS</td>
+    <td>AVG</td>
+    <td>OBP</td>
+    <td>SLG</td>
+    <td>OPS</td>
+    <td>ISO</td>
+    <td>P/PA</td>
+  </tr>
+</thead>

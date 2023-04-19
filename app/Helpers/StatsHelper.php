@@ -47,6 +47,9 @@ class StatsHelper {
         $this->stats['OPS'] = $this->OBP + $this->SLG;
         $this->stats['ISO'] = $this->SLG - $this->AVG;
 
+        if ($this->PA) {
+            $this->stats['PPA'] = ($this->hStrikes + $this->hBalls) / $this->PA;
+        }
 
         // FPCT
         $this->stats['FI'] = $this->DO / 3;
@@ -64,6 +67,8 @@ class StatsHelper {
             $this->stats['KP9'] = $this->K / $this->IP * 9;
             $this->stats['BBP9'] = $this->BB / $this->IP * 9;
             if ($this->BB) $this->stats['KPBB'] = $this->K / $this->BB;
+            $this->stats['WHIP'] = ($this->BB + $this->H) / $this->IP;
+            $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
         }
 
         return $this;

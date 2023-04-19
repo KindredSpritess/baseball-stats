@@ -30,31 +30,7 @@
 <h2>Statistics</h2>
 <h3>Hitting</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>PA</td>
-            <td>AB</td>
-            <td>R</td>
-            <td>H</td>
-            <td>1B</td>
-            <td>2B</td>
-            <td>3B</td>
-            <td>HR</td>
-            <td>RBI</td>
-            <td>SO</td>
-            <td>BB</td>
-            <td>HBP</td>
-            <td>SB</td>
-            <td>CS</td>
-            <td>AVG</td>
-            <td>OBP</td>
-            <td>SLG</td>
-            <td>OPS</td>
-            <td>ISO</td>
-        </tr>
-    </thead>
+    <x-hitting-stat-header />
 @foreach ($games as $game)
     <tr>
         <td style="text-align:left;" sorttable_customkey="{{ $game->firstPitch }}">
@@ -89,47 +65,13 @@
     </tr>
 @endforeach
     <tfoot>
-        <tr>
-            <td>Totals</td>
-            <td>{{ $totals->G }}</td>
-            <td>{{ $totals->PA }}</td>
-            <td>{{ $totals->AB }}</td>
-            <td>{{ $totals->R }}</td>
-            <td>{{ $totals->H }}</td>
-            <td>{{ $totals->stat('1') }}</td>
-            <td>{{ $totals->stat('2') }}</td>
-            <td>{{ $totals->stat('3') }}</td>
-            <td>{{ $totals->stat('4') }}</td>
-            <td>{{ $totals->RBI }}</td>
-            <td>{{ $totals->SO }}</td>
-            <td>{{ $totals->BBs }}</td>
-            <td>{{ $totals->HPB }}</td>
-            <td>{{ $totals->SB }}</td>
-            <td>{{ $totals->CS }}</td>
-            <td>{{ number_format($totals->AVG, 3) }}</td>
-            <td>{{ number_format($totals->OBP, 3) }}</td>
-            <td>{{ number_format($totals->SLG, 3) }}</td>
-            <td>{{ number_format($totals->OPS, 3) }}</td>
-            <td>{{ number_format($totals->ISO, 3) }}</td>
-        </tr>
+        <x-hitting-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
 
 <h3>Fielding</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>INN</td>
-            <td>TC</td>
-            <td>PO</td>
-            <td>A</td>
-            <td>E</td>
-            <td>FPCT</td>
-            <td>PB</td>
-        </tr>
-    </thead>
+    <x-fielding-stat-header />
 @foreach ($games as $game)
     <tr>
         <td style="text-align:left;" sorttable_customkey="{{ $game->firstPitch }}">
@@ -169,30 +111,7 @@
 
 <h3>Pitching</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>INN</td>
-            <td>H</td>
-            <td>K</td>
-            <td>BB</td>
-            <td>HBP</td>
-            <td>ER</td>
-            <td>RA</td>
-            <td>WP</td>
-            <td>PO</td>
-            <td>BFP</td>
-            <td>Balls</td>
-            <td>Str</td>
-            <td>Pit</td>
-            <td>ERA</td>
-            <td>Strk %</td>
-            <td>K/9</td>
-            <td>BB/9</td>
-            <td>K/BB</td>
-        </tr>
-    </thead>
+    <x-pitching-stat-header />
 @foreach ($games as $game)
     @if ($stats[$game->id]->IP)
     <tr>

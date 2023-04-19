@@ -30,102 +30,18 @@
 <h2>Statistics</h2>
 <h3>Hitting</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>PA</td>
-            <td>AB</td>
-            <td>R</td>
-            <td>H</td>
-            <td>1B</td>
-            <td>2B</td>
-            <td>3B</td>
-            <td>HR</td>
-            <td>RBI</td>
-            <td>SO</td>
-            <td>BB</td>
-            <td>HBP</td>
-            <td>SB</td>
-            <td>CS</td>
-            <td>AVG</td>
-            <td>OBP</td>
-            <td>SLG</td>
-            <td>OPS</td>
-            <td>ISO</td>
-        </tr>
-    </thead>
+    <x-hitting-stat-header />
 @foreach ($people as $person)
-    <tr>
-        <td style="text-align:left;">
-            <a href="{{ route('person.show', ['person' => $person->id]) }}">
-                <span style="text-transform:uppercase;font-weight:520">{{ $person->lastName }}</span>,&nbsp;{{ $person->firstName }}
-            </a>
-        </td>
-        <td>{{ $stats[$person->id]->G }}</td>
-        <td>{{ $stats[$person->id]->PA }}</td>
-        <td>{{ $stats[$person->id]->AB }}</td>
-        <td>{{ $stats[$person->id]->R }}</td>
-        <td>{{ $stats[$person->id]->H }}</td>
-        <td>{{ $stats[$person->id]->stat('1') }}</td>
-        <td>{{ $stats[$person->id]->stat('2') }}</td>
-        <td>{{ $stats[$person->id]->stat('3') }}</td>
-        <td>{{ $stats[$person->id]->stat('4') }}</td>
-        <td>{{ $stats[$person->id]->RBI }}</td>
-        <td>{{ $stats[$person->id]->SO }}</td>
-        <td>{{ $stats[$person->id]->BBs }}</td>
-        <td>{{ $stats[$person->id]->HPB }}</td>
-        <td>{{ $stats[$person->id]->SB }}</td>
-        <td>{{ $stats[$person->id]->CS }}</td>
-        <td>{{ number_format($stats[$person->id]->AVG, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->OBP, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->SLG, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->OPS, 3) }}</td>
-        <td>{{ number_format($stats[$person->id]->ISO, 3) }}</td>
-    </tr>
+    <x-hitting-stat-line header="{{ $person->lastName }}, {{ $person->firstName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
 @endforeach
     <tfoot>
-        <tr>
-            <td>Totals</td>
-            <td>{{ $totals->G }}</td>
-            <td>{{ $totals->PA }}</td>
-            <td>{{ $totals->AB }}</td>
-            <td>{{ $totals->R }}</td>
-            <td>{{ $totals->H }}</td>
-            <td>{{ $totals->stat('1') }}</td>
-            <td>{{ $totals->stat('2') }}</td>
-            <td>{{ $totals->stat('3') }}</td>
-            <td>{{ $totals->stat('4') }}</td>
-            <td>{{ $totals->RBI }}</td>
-            <td>{{ $totals->SO }}</td>
-            <td>{{ $totals->BBs }}</td>
-            <td>{{ $totals->HPB }}</td>
-            <td>{{ $totals->SB }}</td>
-            <td>{{ $totals->CS }}</td>
-            <td>{{ number_format($totals->AVG, 3) }}</td>
-            <td>{{ number_format($totals->OBP, 3) }}</td>
-            <td>{{ number_format($totals->SLG, 3) }}</td>
-            <td>{{ number_format($totals->OPS, 3) }}</td>
-            <td>{{ number_format($totals->ISO, 3) }}</td>
-        </tr>
+        <x-hitting-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
 
 <h3>Fielding</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>INN</td>
-            <td>TC</td>
-            <td>PO</td>
-            <td>A</td>
-            <td>E</td>
-            <td>FPCT</td>
-            <td>PB</td>
-        </tr>
-    </thead>
+    <x-fielding-stat-header />
 @foreach ($people as $person)
     <tr>
         <td style="text-align:left;">
@@ -161,30 +77,7 @@
 
 <h3>Pitching</h3>
 <table class="sortable">
-    <thead>
-        <tr>
-            <td style="text-align:left;">Name</td>
-            <td>G</td>
-            <td>INN</td>
-            <td>H</td>
-            <td>K</td>
-            <td>BB</td>
-            <td>HBP</td>
-            <td>ER</td>
-            <td>RA</td>
-            <td>WP</td>
-            <td>PO</td>
-            <td>BFP</td>
-            <td>Balls</td>
-            <td>Str</td>
-            <td>Pit</td>
-            <td>ERA</td>
-            <td>Strk %</td>
-            <td>K/9</td>
-            <td>BB/9</td>
-            <td>K/BB</td>
-        </tr>
-    </thead>
+    <x-pitching-stat-header />
 @foreach ($people as $person)
     @if ($stats[$person->id]->IP)
     <tr>
@@ -212,6 +105,7 @@
         <td>{{ number_format($stats[$person->id]->KP9, 1) }}</td>
         <td>{{ number_format($stats[$person->id]->BBP9, 1) }}</td>
         <td>{{ number_format($stats[$person->id]->KPBB, 1) }}</td>
+        <td>{{ number_format($stats[$person->id]->FPSPCT, 2) }}</td>
     </tr>
     @endif
 @endforeach
@@ -237,6 +131,7 @@
             <td>{{ number_format($totals->KP9, 1) }}</td>
             <td>{{ number_format($totals->BBP9, 1) }}</td>
             <td>{{ number_format($totals->KPBB, 1) }}</td>
+            <td>{{ number_format($totals->FPSPCT, 2) }}</td>
         </tr>
     </tfoot>
 </table>

@@ -128,6 +128,7 @@ class Play extends Model
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
+            $this->logA(" {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.");
             if ($position == '1') {
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
@@ -139,9 +140,14 @@ class Play extends Model
             if ($log->consume('.')) {
                 $game->balls = min($game->balls + 1, 3);
                 $game->pitching()->evt('Balls');
+                $game->hitting()->evt('hBalls');
             } else if ($log->consume('c') || $log->consume('s') || $log->consume('f') || $log->consume('x')) {
+                if (($game->balls == 0) && ($game->strikes == 0)) {
+                    $game->pitching()->evt('FPS');
+                }
                 $game->strikes = min($game->strikes + 1, 2);
                 $game->pitching()->evt('Strikes');
+                $game->hitting()->evt('hStrikes');
             } else if ($log->consume('blk')) {
                 $game->pitching()->evt('BLK');
                 // For each runner, advance one base.

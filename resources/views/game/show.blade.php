@@ -1,5 +1,9 @@
-<script src="/jquery.min.js"></script>
-<link rel="stylesheet" href="/styles.css" />
+<head>
+    <script src="/jquery.min.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <title>{{ $game->away_team->short_name }} @ {{ $game->home_team->short_name }}</title>
+</head>
+<body>
 <table id='game-view'>
     <tr style="max-height: 100%;">
         <td>
@@ -164,5 +168,7 @@
         $('textarea').each((i, e) => {
             $(e).scrollTop(e.scrollHeight);
         });
+        $('#play-by-play').scrollTop($('#play-by-play')[0].scrollHeight);
     });
 </script>
+</body>

@@ -18,11 +18,10 @@
         </tr>
         @foreach ($lineup as $player)
         <tr>
-            <td>{{ $player->number }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td style="text-align:left;">
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
-                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
-                </a>
+                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</a><sup>#{{ $player->number }}</sup>
             </td>
             <td>{{ $player->stats['PA'] ?? 0 }}</td>
             <td>{{ $player->stats['AB'] ?? 0 }}</td>
