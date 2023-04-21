@@ -66,7 +66,7 @@ class Play extends Model
         // Lineups
         if ($log->consume('@')) {
             $matches = [];
-            assert(preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches));
+            preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
             $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
             $player = new Player();
             $player->team()->associate($team);
@@ -114,7 +114,7 @@ class Play extends Model
         // Defensive Substitution
         if ($log->consume('DSUB #')) {
             $player = Player::find($log->upto(':'));
-            assert($log->consume(': '));
+            throw_unless($log->consume(': '));
             $position = (string)$log;
             $replacing = $game->top ? $game->homeDefense[$position] : $game->awayDefense[$position];
             $game->substitute($game->top, $player, $replacing, $position);
@@ -124,7 +124,7 @@ class Play extends Model
         // Defensive swap
         if ($log->consume('DC #')) {
             $player = $game->lineup[($game->half+1)%2][$log->upto(' -> ') - 1];
-            assert($log->consume(' -> '));
+            throw_unless($log->consume(' -> '));
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
@@ -424,8 +424,8 @@ class Play extends Model
     }
 
     public function advance(Game $game, float $from, float $to) {
-        assert($to > 2 || $to < 0 || $game->bases[$to] === null);
-        assert($from < 0 || $game->bases[$from] !== null);
+        throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null);
+        throw_unless($from < 0 || $game->bases[$from] !== null);
         if ($to < 0) {}
         elseif ($to < 3) {
             $game->bases[$to] = $game->bases[$from] ?? $game->hitting();

@@ -158,7 +158,7 @@ class Game extends Model
     }
 
     public function batterUp() {
-        assert(count($this->bases) === 3);
+        throw_unless(count($this->bases) === 3);
         $this->balls = 0;
         $this->strikes = 0;
         $this->atBat[$this->half] += 1;
