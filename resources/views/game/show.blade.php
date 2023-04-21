@@ -78,6 +78,7 @@
                     </g>
                 </g>
             </svg>
+            @if (!$game->locked)
             <textarea id='plays' style="width:100%" rows="20">
 @foreach ($game->plays as $play)
 {{ $play->play }}
@@ -104,6 +105,7 @@
                 </table>
                 <input type="submit" />
             </form>
+            @endif
             <div id='play-by-play'>
                 @foreach ($game->plays as $play)
                     @if ($play->human)
