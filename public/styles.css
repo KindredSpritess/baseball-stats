@@ -23,3 +23,22 @@
   left: 0;
   right: 0;
 }
+
+table.stats-table td {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 3px;
+}
+table.stats-table tr td:first-of-type {
+  text-align: left;
+}
+table.stats-table thead td, table.stats-table tfoot td {
+  font-weight: bold;
+  background-color: #ddd;
+}
+table.stats-table thead td {
+  cursor: pointer;
+}
+table.stats-table tbody tr:nth-child(even) td {
+  background-color: #eee;
+}

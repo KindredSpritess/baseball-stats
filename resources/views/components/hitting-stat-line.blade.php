@@ -1,5 +1,9 @@
 <tr>
-    <td>
+    <td style="text-align:left;"
+        @isset($sort)
+        sorttable_customkey="{{ $sort }}"
+        @endisset
+    >
       @if (isset($link))
         <a href="{{ $link }}">{{ $header }}</a>
       @else
