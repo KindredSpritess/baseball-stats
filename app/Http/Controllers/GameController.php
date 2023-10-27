@@ -130,6 +130,20 @@ class GameController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Game  $game
+     * @return \Illuminate\Http\Response
+     */
+    public function view(Game $game)
+    {
+        // Force load.
+        $state = $game->state;
+        $game->locked = true;
+        return view('game.show', ['game' => $game]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Game  $game
