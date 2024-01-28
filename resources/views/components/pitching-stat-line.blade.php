@@ -25,6 +25,7 @@
     <td>{{ $stats->Strikes }}</td>
     <td>{{ $stats->Pitches }}</td>
     <td>{{ number_format($stats->ERA, 2) }}</td>
+    <td>{{ number_format($stats->WHIP, 3) }}</td>
     <td>{{ number_format($stats->StrkPct * 100, 1) }}%</td>
     <td>{{ number_format($stats->KP9, 1) }}</td>
     <td>{{ number_format($stats->BBP9, 1) }}</td>
