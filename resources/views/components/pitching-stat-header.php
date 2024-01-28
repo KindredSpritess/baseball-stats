@@ -16,6 +16,7 @@
     <td>Str</td>
     <td>Pit</td>
     <td>ERA</td>
+    <td>WHIP</td>
     <td>Strk %</td>
     <td>K/9</td>
     <td>BB/9</td>
