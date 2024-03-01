@@ -18,4 +18,6 @@
     <td>{{ $stats->E }}</td>
     <td>{{ number_format($stats->FPCT, 3) }}</td>
     <td>{{ $stats->PB }}</td>
+    <td>{{ $stats->CCS }}</td>
+    <td>{{ $stats->CSB }}</td>
 </tr>

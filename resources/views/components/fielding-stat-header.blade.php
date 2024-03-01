@@ -9,5 +9,7 @@
     <td>E</td>
     <td>FPCT</td>
     <td>PB</td>
+    <td>CS></td>
+    <td>SB</td>
   </tr>
 </thead>
