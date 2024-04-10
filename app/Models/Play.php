@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Dotenv\Util\Str;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use NumberFormatter;
 
 class Play extends Model
@@ -14,6 +12,15 @@ class Play extends Model
     use HasFactory;
 
     protected $fillable = ['play'];
+
+    protected static function booted() {
+        static::saved(function (self $play) {
+            if ($play->tempBallInPlay) {
+                $play->tempBallInPlay->play()->associate($play);
+                $play->tempBallInPlay->save();
+            }
+        });
+    }
 
     const POSITIONS = [
         1 => 'P',
@@ -51,6 +58,9 @@ class Play extends Model
 
     /** @var ?string */
     private $humanBuffer = null;
+
+    /** @var ?BallInPlay tempBallInPlay */
+    private $tempBallInPlay = null;
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
@@ -163,6 +173,12 @@ class Play extends Model
                 // We're into the play section.
                 $actions = preg_split('/,/', $log);
                 $br = array_shift($actions);
+                if (count($actions) > 3) {
+                    $this->handleBattedBall($game, array_pop($actions));
+                }
+                // if (count($actions) > 3) {
+                //     $this->handlePitchedBall(array_pop($actions));
+                // }
 
                 // Handle base runners.
                 foreach (array_reverse($actions, true) as $b => $action) {
@@ -439,6 +455,21 @@ class Play extends Model
         return $to;
     }
 
+    private function handleBattedBall(Game $game, string $action) {
+        if (empty($action)) return;
+        $battedBall = new BallInPlay([
+            'position' => array_map(fn ($p) => round($p, 2), explode(':', $action)),
+        ]);
+        $battedBall->player()->associate($game->hitting());
+
+        if ($this->exists) {
+            $battedBall->play()->associate($this);
+            $battedBall->save();
+        } else {
+            $this->tempBallInPlay = $battedBall;
+        }
+    }
+
     private function log(?string $msg) {
         if (!$msg) return;
         if (!$this->human) {
@@ -465,6 +496,11 @@ class Play extends Model
         } else {
             $this->humanBuffer = "{$this->humanBuffer} {$msg}";
         }
+    }
+
+    public function ballInPlay(): HasOne
+    {
+        return $this->hasOne(BallInPlay::class);
     }
 }
 

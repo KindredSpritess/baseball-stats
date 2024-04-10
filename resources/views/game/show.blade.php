@@ -21,62 +21,61 @@
                 {{ $game->inning }}
                 ({{ $game->balls }} - {{ $game->strikes }}) {{ $game->outs }} outs
             </p>
-            <svg height="440px" width="440px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 448.125 448.125" xml:space="preserve" fill="#00000000" stroke="#00000000">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier"> 
-                    <g transform="translate(0 -1020.36)" shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
-                        <path style="fill:#5A3392;" d="M224.109,1020.36c-51.375,0-104.961,18.027-145.844,50.219 c-37.233,29.316-61.724,68.332-77.844,120.094c-0.785,2.639-0.16,5.494,1.656,7.563l109.188,124.438l12.625-10.813l14.875,17.377 l-12.406,10.623l17,19.406l19.25-16.469l14.875,17.344l-19.031,16.313l21.719,24.75c-2.605,5.889-4.125,12.355-4.125,19.188 c0,26.418,21.648,48.094,48.063,48.094s47.969-21.678,47.969-48.094c0-6.807-1.486-13.25-4.063-19.125l21.812-24.875l-18.937-16.25 l14.875-17.344l19.156,16.377l17-19.406l-12.312-10.531l14.875-17.377l12.531,10.721l109.031-124.344 c1.816-2.068,2.442-4.924,1.656-7.563c-15.25-51.344-40.622-90.785-77.844-120.094c-40.883-32.192-94.374-50.219-145.75-50.219 L224.109,1020.36z">
-                        </path>
-                        <path style="fill:#FB9761;" d="M224.097,1183.03l121.063,105.998l-86.344,98.502c-8.749-9.23-21.048-15.064-34.719-15.064 c-13.677,0-26.001,5.83-34.781,15.064l-86.375-98.502L224.097,1183.03z"></path>
-                        <path style="fill:#4bb33d;" d="M224.097,1036.435c47.618,0,98.056,16.903,135.844,46.655 c33.519,26.396,55.683,62.189,70.281,108.906l-74.531,85l-126.375-110.623c-1.632-1.404-3.761-2.092-5.906-1.906 c-1.706,0.125-3.327,0.793-4.625,1.906L92.409,1276.997l-74.531-85c15.391-47.24,36.813-82.553,70.281-108.906 C125.946,1053.337,176.479,1036.434,224.097,1036.435L224.097,1036.435z"></path>
-                        <path style="fill:#4bb33d;" d="M224.088,1201.415l99.295,86.941l-70.819,80.791c-7.176-7.57-17.264-12.354-28.476-12.354 c-11.217,0-21.326,4.783-28.528,12.354l-70.844-80.791L224.088,1201.415z"></path>
-                        <g>
-                            <path style="fill:#FB9761;" d="M224.097,1260.374c8.931,0,15.969,7.131,15.969,16.063c0,8.932-7.037,15.938-15.969,15.938 c-8.931,0-16.062-7.006-16.062-15.938C208.034,1267.505,215.165,1260.374,224.097,1260.374z"></path>
-                            <path style="fill:#FB9761;" d="M224.097,1388.403c17.768,0,32.031,14.232,32.031,32s-14.263,32.031-32.031,32.031 s-32-14.264-32-32.031S206.329,1388.403,224.097,1388.403L224.097,1388.403z"></path>
-                        </g>
-                        <path style="fill:#4bb33d;" d="M224.09,1053.436c40.888,0,84.197,14.514,116.644,40.063c28.782,22.666,47.813,53.402,60.348,93.516 l-63.997,72.986l-108.514-94.988c-1.401-1.207-3.229-1.799-5.072-1.641c-1.465,0.107-2.857,0.684-3.971,1.641l-108.514,94.988 l-63.997-72.986c13.216-40.563,31.61-70.887,60.348-93.516C139.811,1067.95,183.202,1053.436,224.09,1053.436L224.09,1053.436z">                        </path>
-                        @if ($game->fielding('1'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=1280 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('1')->person->lastName }}, {{ $game->fielding('1')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('2'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1455 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('2')->person->lastName }}, {{ $game->fielding('2')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('3'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1330 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('3')->person->lastName }}, {{ $game->fielding('3')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('4'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=284 y=1230 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('4')->person->lastName }}, {{ $game->fielding('4')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('5'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=1330 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('5')->person->lastName }}, {{ $game->fielding('5')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('6'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=164 y=1230 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('6')->person->lastName }}, {{ $game->fielding('6')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('7'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=1150 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('7')->person->lastName }}, {{ $game->fielding('7')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('8'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1100 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('8')->person->lastName }}, {{ $game->fielding('8')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->fielding('9'))
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1150 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('9')->person->lastName }}, {{ $game->fielding('9')->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->hitting())
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1425 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->hitting()->person->lastName }}, {{ $game->hitting()->person->firstName[0] }}</text>
-                        @endif
-                        @if ($game->bases[0])
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=1300 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['0']->person->lastName }}</text>
-                        @endif
-                        @if ($game->bases[1])
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=1200 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['1']->person->lastName }}</text>
-                        @endif
-                        @if ($game->bases[2])
-                        <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=1300 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['2']->person->lastName }}</text>
-                        @endif
-                    </g>
+            <svg height="448.12701" width="447.94775" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 447.94775 448.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
+                <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
+                    <!-- Border -->
+                    <path style="fill:#5a3392" d="m 224.02066,0 c -51.375,0 -104.961,18.027 -145.843997,50.219 -37.233,29.316 -61.724,68.332 -77.84399963,120.094 -0.785,2.639 -0.16,30.431 1.65600003,32.5 L 180.08366,380.845 c -2.605,5.889 -4.125,12.355 -4.125,19.188 0,26.418 21.648,48.094 48.063,48.094 26.415,0 47.969,-21.678 47.969,-48.094 0,-6.807 -1.486,-13.25 -4.063,-19.125 l 178.031,-178.031 c 1.816,-2.068 2.442,-29.922 1.656,-32.561 -15.25,-51.344 -40.622,-90.785 -77.844,-120.094 -40.883,-32.192 -94.374,-50.219 -145.75,-50.219 z">&#10;                </path>&#10;                <path style="fill:#fb9761" d="m 224.00866,159.639 121.063,121.187 -86.344,86.344 c -8.749,-9.23 -21.048,-15.064 -34.719,-15.064 -13.677,0 -26.001,5.83 -34.781,15.064 l -86.375,-86.375 z" />
+                    <!-- Outfield -->
+                    <path style="fill:#4bb33d" d="m 224.00866,16.075 c 47.618,0 98.056,16.903 135.844,46.655 33.519,26.396 63.19668,78.8981 77.79468,125.6151 l -80.29468,79.7909 -128.125,-125.154 c -1.632,-1.404 -3.761,-2.092 -5.906,-1.906 -1.706,0.125 -3.327,0.793 -4.625,1.906 L 91.518069,269.4604 7.1171623,185.0595 C 22.508162,137.8195 54.602663,89.084 88.070663,62.731 125.85766,32.977 176.39066,16.074 224.00866,16.075 Z" />
+                    <!-- Infield -->
+                    <path style="fill:#4bb33d" d="m 223.99966,181.055 99.295,99.771 -67.255,69.37521 c -7.176,-7.57 -20.828,-13.76821 -32.04,-13.76821 -11.217,0 -24.789,5.49011 -31.991,13.06111 l -67.381,-68.66811 z" />
+                    <!-- Dirt -->
+                    <path style="fill:#fb9761" d="m 224.009,246.014 c 8.931,0 15.969,7.131 15.969,16.063 0,8.932 -7.037,15.938 -15.969,15.938 -8.931,0 -16.062,-7.006 -16.062,-15.938 -0.001,-8.932 7.13,-16.063 16.062,-16.063 z" />
+                    <path style="fill:#fb9761" d="m 224.009,368.043 c 17.768,0 32.031,14.232 32.031,32 0,17.768 -14.263,32.031 -32.031,32.031 -17.768,0 -32,-14.264 -32,-32.031 0,-17.767 14.232,-32 32,-32 z" />
                 </g>
+
+                @if ($game->fielding('1'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=260 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('1')->person->lastName }}, {{ $game->fielding('1')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('2'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=435 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('2')->person->lastName }}, {{ $game->fielding('2')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('3'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=310 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('3')->person->lastName }}, {{ $game->fielding('3')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('4'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=284 y=210 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('4')->person->lastName }}, {{ $game->fielding('4')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('5'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=310 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('5')->person->lastName }}, {{ $game->fielding('5')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('6'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=164 y=210 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('6')->person->lastName }}, {{ $game->fielding('6')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('7'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=130 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('7')->person->lastName }}, {{ $game->fielding('7')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('8'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=80 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('8')->person->lastName }}, {{ $game->fielding('8')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->fielding('9'))
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=130 font-weight="bold" fill="white" stroke="black" stroke-width="1px">{{ $game->fielding('9')->person->lastName }}, {{ $game->fielding('9')->person->firstName[0] }}</text>
+                @endif
+                @if ($game->hitting())
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=405 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->hitting()->person->lastName }}, {{ $game->hitting()->person->firstName[0] }}</text>
+                @endif
+                @if ($game->bases[0])
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=270 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['0']->person->lastName }}</text>
+                @endif
+                @if ($game->bases[1])
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=180 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['1']->person->lastName }}</text>
+                @endif
+                @if ($game->bases[2])
+                <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=280 font-weight="bold" fill="black" stroke="white" stroke-width="1px">{{ $game->bases['2']->person->lastName }}</text>
+                @endif
+                @foreach ($game->ballsInPlay as $ball)
+                    <circle cx="{{ $ball->position[0] }}" cy="{{ $ball->position[1] }}" r="10" fill="{{ $ball->lastPlay ? "red" : "cyan" }}" />
+                @endforeach
             </svg>
             @if (!$game->locked)
             <textarea id='plays' style="width:100%" rows="20">
@@ -87,6 +86,7 @@
             <button id='submitPlays'>Update From Start</button>
             <form id='log' action="">
                 <input type="hidden" name="play" id="gamelog" />
+                <input type="hidden" name="inplay" id="inplay" />
                 <table>
                     <tr>
                         <th>Pitches</th>
@@ -122,11 +122,15 @@
         </td>
     </tr>
 </table>
+@if (!$game->locked)
 <script>
     $('#log').on('submit', (event) => {
         event.preventDefault();
         const parts = [];
-        if ($('#third').val()) {
+        if ($('#inplay').val() && $('#batter').val()) {
+            parts.unshift($('#inplay').val());
+        }
+        if (parts.length || $('#third').val()) {
             parts.unshift($('#third').val());
         }
         if (parts.length || $('#second').val()) {
@@ -172,5 +176,23 @@
         });
         $('#play-by-play').scrollTop($('#play-by-play')[0].scrollHeight);
     });
+
+    let bb = null;
+    $('#Layer_1').on('click', e => {
+        const {offsetX, offsetY } = e.originalEvent;
+        // Draw a circle centered on pos, scaled to viewBox.
+        const cx = (offsetX / e.currentTarget.clientWidth * 447.94775).toFixed(2);
+        const cy = (offsetY / e.currentTarget.clientHeight * 448.12701).toFixed(2);
+        if (!bb) {
+            bb = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            bb.setAttribute('r', '10');
+            bb.setAttribute('fill', 'red');
+            document.getElementById('Layer_1').appendChild(bb);
+        }
+        bb.setAttribute('cx', cx);
+        bb.setAttribute('cy', cy);
+        $('#inplay').val(`${cx}:${cy}`);
+    });
 </script>
+@endif
 </body>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\GameState;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -28,11 +29,13 @@ class Game extends Model
     public array $defense = [[], []];
     public array $lineup = [[], []];
 
+    public Collection $ballsInPlay;
 
-    protected $fillable = ['location', 'firstPitch', 'duration'];
+    protected $fillable = ['location', 'firstPitch', 'duration', 'dimensions'];
 
     protected $casts = [
         'state' => GameState::class,
+        'dimensions' => 'array',
     ];
 
     public function home_team() {

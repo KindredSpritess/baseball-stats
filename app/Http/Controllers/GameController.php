@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Casts\GameState;
+use App\Models\BallInPlay;
 use App\Models\Game;
 use App\Models\Play;
 use App\Models\Team;
@@ -90,6 +91,7 @@ class GameController extends Controller
             $plays = $request->input('plays');
         }
         $game->players()->delete();
+        $game->plays()->delete();
         $plays = collect(preg_split("/\n/", $plays))
             ->filter(fn (string $play) => trim($play))
             ->map(fn (string $play) => new Play(['play' => $play]));
@@ -104,7 +106,6 @@ class GameController extends Controller
             }
         }
         $game->state = 'force encode';
-        $game->plays()->delete();
         $game->plays()->saveMany($plays);
         $game->push();
         foreach ($game->lineup as $lineup) {
@@ -126,6 +127,13 @@ class GameController extends Controller
     {
         // Force load.
         $state = $game->state;
+        // Load the balls in play, for the current hitter and the last play.
+        $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
+        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
+        if ($lastBallInPlay) {
+            $lastBallInPlay->lastPlay = true;
+        }
+        $game->ballsInPlay[] = $lastBallInPlay;
         return view('game.show', ['game' => $game]);
     }
 
@@ -139,6 +147,12 @@ class GameController extends Controller
     {
         // Force load.
         $state = $game->state;
+        // Load the balls in play, for the current hitter and the last play.
+        $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
+        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
+        if ($lastBallInPlay) {
+            $lastBallInPlay->lastPlay = true;
+        }
         $game->locked = true;
         return view('game.show', ['game' => $game]);
     }

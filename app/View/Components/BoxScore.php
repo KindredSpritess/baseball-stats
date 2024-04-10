@@ -19,6 +19,7 @@ class BoxScore extends Component
     {
         $this->totals = new StatsHelper([]);
         foreach ($lineup as $player) {
+            if (!$player) continue;
             $this->totals->merge($player->stats);
         }
         $this->totals->derive();
