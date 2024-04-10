@@ -132,8 +132,8 @@ class GameController extends Controller
         $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
         if ($lastBallInPlay) {
             $lastBallInPlay->lastPlay = true;
+            $game->ballsInPlay[] = $lastBallInPlay;
         }
-        $game->ballsInPlay[] = $lastBallInPlay;
         return view('game.show', ['game' => $game]);
     }
 
@@ -152,6 +152,7 @@ class GameController extends Controller
         $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
         if ($lastBallInPlay) {
             $lastBallInPlay->lastPlay = true;
+            $game->ballsInPlay[] = $lastBallInPlay;
         }
         $game->locked = true;
         return view('game.show', ['game' => $game]);
