@@ -117,6 +117,19 @@ class GameController extends Controller
         return new JsonResponse(['status' => 'success', 'state' => json_decode($gs->set($game, '', '', []), true)]);
     }
 
+    private function ballsInPlay(Game $game) {
+        $game->ballsInPlay = collect();
+        // Load the balls in play, for the current hitter and the last play.
+        if ($game->hitting()) {
+            $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
+        }
+        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
+        if ($lastBallInPlay) {
+            $lastBallInPlay->lastPlay = true;
+            $game->ballsInPlay[] = $lastBallInPlay;
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -127,13 +140,7 @@ class GameController extends Controller
     {
         // Force load.
         $state = $game->state;
-        // Load the balls in play, for the current hitter and the last play.
-        $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
-        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
-        if ($lastBallInPlay) {
-            $lastBallInPlay->lastPlay = true;
-            $game->ballsInPlay[] = $lastBallInPlay;
-        }
+        $this->ballsInPlay($game);
         return view('game.show', ['game' => $game]);
     }
 
@@ -147,13 +154,7 @@ class GameController extends Controller
     {
         // Force load.
         $state = $game->state;
-        // Load the balls in play, for the current hitter and the last play.
-        $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
-        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
-        if ($lastBallInPlay) {
-            $lastBallInPlay->lastPlay = true;
-            $game->ballsInPlay[] = $lastBallInPlay;
-        }
+        $this->ballsInPlay($game);
         $game->locked = true;
         return view('game.show', ['game' => $game]);
     }
