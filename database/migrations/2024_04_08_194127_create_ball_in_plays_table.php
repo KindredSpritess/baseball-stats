@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('player_id')->constrained()->cascadeOnDelete();
             $table->foreignId('play_id')->constrained()->cascadeOnDelete();
             $table->json('position')->nullable();
+            $table->string('type')->nullable();
             $table->integer('distance')->nullable();
         });
     }

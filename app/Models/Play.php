@@ -174,7 +174,7 @@ class Play extends Model
                 $actions = preg_split('/,/', $log);
                 $br = array_shift($actions);
                 if (count($actions) > 3) {
-                    $this->handleBattedBall($game, array_pop($actions));
+                    $this->handleBattedBall($game, array_pop($actions), new StringConsumer($br));
                 }
                 // if (count($actions) > 3) {
                 //     $this->handlePitchedBall(array_pop($actions));
@@ -455,10 +455,21 @@ class Play extends Model
         return $to;
     }
 
-    private function handleBattedBall(Game $game, string $action) {
+    private function handleBattedBall(Game $game, string $action, StringConsumer $br) {
         if (empty($action)) return;
         $battedBall = new BallInPlay([
             'position' => array_map(fn ($p) => round($p, 2), explode(':', $action)),
+            'type' => match(true) {
+                $br->consume('G') && true => 'G',
+                $br->consume('FF') && true => 'F',
+                $br->consume('F') && true => 'F',
+                $br->consume('L') && true => 'L',
+                $br->consume('PF') && true => 'P',
+                $br->consume('P') && true => 'P',
+                $br->consume('SAF') && true => 'F',
+                $br->consume('SAB') && true => 'G',
+                default => null,
+            },
         ]);
         $battedBall->player()->associate($game->hitting());
 

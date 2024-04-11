@@ -19,6 +19,7 @@ class BallInPlay extends Model
 
     protected $fillable = [
         'position',
+        'type',
     ];
 
     protected $casts = [

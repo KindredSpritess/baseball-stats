@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\StatsHelper;
+use App\Models\BallInPlay;
 use App\Models\Person;
 use App\Models\Player;
 use App\Models\Team;
@@ -43,6 +44,7 @@ class TeamController extends Controller
             'stats' => $players,
             'totals' => $totals,
             'people' => Person::whereIn('id', $people)->get(),
+            'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get(),
         ]);
     }
 

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\StatsHelper;
+use App\Models\BallInPlay;
 use App\Models\Person;
 use App\Models\Player;
 use App\Models\Team;
-use Illuminate\Http\Request;
 
 class PersonController extends Controller
 {
@@ -31,6 +31,7 @@ class PersonController extends Controller
             'stats' => $players,
             'totals' => $totals,
             'teams' => Team::whereIn('id', $teams)->get(),
+            'ballsInPlay' => BallInPlay::whereRelation('player', 'person_id', $person->id)->get(),
         ]);
     }
 
@@ -55,6 +56,7 @@ class PersonController extends Controller
             'games' => $games,
             'stats' => $stats,
             'totals' => $totals,
+            'ballsInPlay' => BallInPlay::whereRelation('player', 'person_id', $person->id)->whereRelation('player', 'team_id', $team->id)->get(),
         ]);
     }
 }

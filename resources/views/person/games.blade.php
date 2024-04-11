@@ -26,6 +26,9 @@
     </tfoot>
 </table>
 
+<h4>Spray Chart</h4>
+<x-field :ballsInPlay="$ballsInPlay" />
+
 <h3>Fielding</h3>
 <table class="sortable stats-table">
     <x-fielding-stat-header />
