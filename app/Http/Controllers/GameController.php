@@ -119,11 +119,13 @@ class GameController extends Controller
 
     private function ballsInPlay(Game $game) {
         $game->ballsInPlay = collect();
+        // TODO: Fix this, it breaks for unitizialized games.
+        return;
         // Load the balls in play, for the current hitter and the last play.
         if ($game->hitting()) {
             $game->ballsInPlay = BallInPlay::whereRelation('player', 'id', $game->hitting()->id)->get();
         }
-        $lastBallInPlay = BallInPlay::wherePlayId($game->plays()->orderByDesc('id')->first()->id)->first();
+        $lastBallInPlay = BallInPlay::whereRelation('play', 'id', )->first();
         if ($lastBallInPlay) {
             $lastBallInPlay->lastPlay = true;
             $game->ballsInPlay[] = $lastBallInPlay;
