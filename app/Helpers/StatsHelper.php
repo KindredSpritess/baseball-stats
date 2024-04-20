@@ -97,14 +97,17 @@ class StatsHelper {
         $this->stats['IP'] = $this->TO / 3;
         if ($this->TO) {
             $this->stats['ERA'] = $this->ER / $this->TO * 27;
-            $this->stats['Pitches'] = $this->Strikes + $this->Balls;
-            $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
             $this->stats['KP9'] = $this->K / $this->IP * 9;
             $this->stats['BBP9'] = $this->BB / $this->IP * 9;
             if ($this->BB) $this->stats['KPBB'] = $this->K / $this->BB;
             $this->stats['WHIP'] = ($this->BB + $this->HA) / $this->IP;
-            $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
         }
+
+    if ($this->BFP) {
+        $this->stats['Pitches'] = $this->Strikes + $this->Balls;
+        $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
+        $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
+    }
 
         return $this;
     }
