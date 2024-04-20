@@ -43,8 +43,8 @@ class PersonController extends Controller
         foreach ($players as $player) {
             $games[] = $player->game;
             $stats[$player->game->id] = new StatsHelper($player->stats);
-            $stats[$player->game->id]->derive();
             $totals->merge($stats[$player->game->id]);
+            $stats[$player->game->id]->derive();
         }
         $totals->derive();
         usort($games, function($a, $b) {
