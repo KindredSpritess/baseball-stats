@@ -5,6 +5,7 @@
             stroke: red;
             stroke-width: 3;
             z-index: 1000;
+            r: 10;
         }
     </style>
     <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
@@ -20,7 +21,7 @@
     </g>
 
     @foreach ($ballsInPlay as $ball)
-        <circle cx="{{ $ball->position[0] }}" cy="{{ $ball->position[1] }}" r="10" fill="@switch($ball->type)
+        <circle cx="{{ $ball->position[0] }}" cy="{{ $ball->position[1] }}" r="7" fill="@switch($ball->type)
           @case('G')yellow @break
           @case('F')orange @break
           @case('L')red @break
