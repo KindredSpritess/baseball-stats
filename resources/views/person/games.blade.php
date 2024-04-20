@@ -33,14 +33,25 @@
 <table class="sortable stats-table">
     <x-fielding-stat-header />
     @foreach ($games as $game)
+        @foreach ($stats[$game->id]->positional() as $line)
+            @if ($game->home == $team->id)
+                <x-fielding-stat-line header="{{ $game->away_team->name }}" :stats="$line" :link="route('game', $game->id)" />
+            @else
+                <x-fielding-stat-line header="@ {{ $game->home_team->name }}" :stats="$line" :link="route('game', $game->id)" />
+            @endif
+        @endforeach
+        @continue(count($stats[$game->id]->positional()) < 2)
         @if ($game->home == $team->id)
-            <x-fielding-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
+            <x-fielding-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" :hidePosition="true" />
         @else
-            <x-fielding-stat-line header="@ {{ $game->home_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
+            <x-fielding-stat-line header="@ {{ $game->home_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" :hidePosition="true" />
         @endif
     @endforeach
     <tfoot>
-        <x-fielding-stat-line header="Totals" :stats="$totals" />
+        @foreach ($totals->positional() as $line)
+            <x-fielding-stat-line header="" :stats="$line" />
+        @endforeach
+        <x-fielding-stat-line header="Totals" :stats="$totals" :hidePosition="true" />
     </tfoot>
 </table>
 
@@ -61,4 +72,17 @@
         <x-pitching-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
+
+<h3>Balls In Play at Position</h3>
+<div class='balls-in-play'>
+    @foreach ($totals->positional() as $line)
+    <div class='position'>
+        <object type="image/svg+xml" data="{{ route('person.inplays', [$person->id, $team->id, $line->Position]) }}">
+            Your browser does not support SVG
+        </object>
+        <h3>{{ App\Helpers\StatsHelper::position($line->Position) }}</h3>
+    </div>
+    @endforeach
+</div>
+
 @endsection

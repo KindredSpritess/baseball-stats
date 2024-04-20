@@ -25,10 +25,17 @@
 <table class="sortable stats-table">
     <x-fielding-stat-header />
 @foreach ($teams as $team)
-    <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
+    @foreach ($stats[$team->id]->positional() as $line)
+        <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$line" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
+    @endforeach
+    @continue(count($stats[$team->id]->positional()) < 2)
+    <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" :hidePosition="true" />
 @endforeach
     <tfoot>
-        <x-fielding-stat-line header="Totals" :stats="$totals" />
+        @foreach ($totals->positional() as $line)
+            <x-fielding-stat-line header="" :stats="$line" />
+        @endforeach
+        <x-fielding-stat-line header="Totals" :stats="$totals" :hidePosition="true" />
     </tfoot>
 </table>
 

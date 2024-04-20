@@ -45,3 +45,18 @@ table.stats-table tbody tr:nth-child(even) td {
 table.stats-table tbody tr:hover td {
   background-color: #ff0;
 }
+
+.balls-in-play {
+  padding: 10px;
+  margin-top: 10px;
+  display: flex;
+  /* break at 768px */
+  flex-wrap: wrap;
+}
+.balls-in-play .position {
+  width: 448px;
+  margin: 0 10px 10px 0;
+}
+.balls-in-play .position h3 {
+  text-align: center;
+}
