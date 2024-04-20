@@ -417,21 +417,25 @@ class Play extends Model
             if ($pos->consume('WT') || $pos->consume('E')) {
                 // Decisive, remove the runner.
                 $countStats && $game->fielding($pos)->evt('E');
+                $countStats && $game->fielding($pos)->evt("E.$pos");
                 $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
                 $hit = false;
                 return true;
             } elseif ($pos->consume('wt') || $pos->consume('e')) {
                 $countStats && $game->fielding($pos)->evt('E');
+                $countStats && $game->fielding($pos)->evt("E.$pos");
                 $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
                 $hit = false;
                 return true;
             } elseif ($k < count($handlers) - 1 && !array_key_exists((string)$pos, $handled)) {
                 $countStats && $game->fielding($pos)->evt('A');
+                $countStats && $game->fielding($pos)->evt("A.$pos");
                 $this->logBuffer(self::POSITIONS[(string)$pos] . ' to');
                 $handled[(string)$pos] = true;
             } elseif ($k == count($handlers) - 1) {
                 $this->logBuffer('put out by ' . self::POSITIONS[(string)$pos]);
                 $countStats && $game->fielding($pos)->evt('PO');
+                $countStats && $game->fielding($pos)->evt("PO.$pos");
                 $game->out();
                 return false;
             }

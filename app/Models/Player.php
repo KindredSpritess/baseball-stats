@@ -30,6 +30,9 @@ class Player extends Model
     public function evt(string $stat): void {
         $stats = $this->stats ?? [];
         $stats[$stat] = ($this->stats[$stat] ?? 0) + 1;
+        if (str_starts_with($stat, 'DO.')) {
+            $stats['G.' . $stat[-1]] = 1;
+        }
         $this->stats = $stats;
     }
 }

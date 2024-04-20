@@ -155,7 +155,10 @@ class Game extends Model
         }
         $this->pitching()->evt('TO');
         foreach ($this->defense[($this->half+1)%2] as $pos => $fielder) {
-            if (intval($pos)) $fielder->evt('DO');
+            if (intval($pos)) {
+                $fielder->evt('DO');
+                $fielder->evt("DO.$pos");
+            }
         }
     }
 

@@ -4,8 +4,19 @@ namespace App\Helpers;
 
 class StatsHelper {
 
-    public function __construct(private array $stats) {
-
+    public function __construct(private array $stats, private ?int $position = null) {
+        if (!is_null($position)) {
+            $stats = [];
+            foreach ($this->stats as $k => $v) {
+                if (str_ends_with($k, ".$position")) {
+                    $stats[substr($k, 0, -2)] = $v;
+                }
+                if ($position == 2 && in_array($k, ['CSB', 'CCS', 'PB'])) {
+                    $stats[$k] = $v;
+                }
+            }
+            $this->stats = $stats;
+        }
     }
 
     public function merge(StatsHelper|array|null $other): StatsHelper {
@@ -23,6 +34,19 @@ class StatsHelper {
 
     public function __get(string $stat) {
         return $this->stat($stat);
+    }
+
+    /**
+     * @return StatsHelper[]
+     */
+    public function positional(): array {
+        $out = [];
+        for ($i = 1; $i <= 9; $i++) {
+            $stats = new StatsHelper($this->stats, $i);
+            $stats->stats['Position'] = $i;
+            if ($stats->G) $out[] = $stats->derive();
+        }
+        return $out;
     }
 
     public function derive(): StatsHelper {
@@ -57,6 +81,17 @@ class StatsHelper {
         if ($this->TC) {
             $this->stats['FPCT'] = ($this->PO + $this->A) / $this->TC;
         }
+        $this->stats['RF'] = ($this->PO + $this->A) / $this->FI * 9;
+
+        // Positions
+        $this->stats['Positions'] = [];
+        for ($i = 1; $i <= 9; $i++) {
+            if ($this->{"DO.$i"}) {
+                if ($this->{"DO.$i"} > ($this->DO / 5)) {
+                    $this->stats['Positions'][] = $i;
+                }
+            }
+        }
 
         // ERA
         $this->stats['IP'] = $this->TO / 3;
@@ -84,5 +119,14 @@ class StatsHelper {
         } else {
             return "{$w}⅔";
         }
+    }
+
+    public static function position(int $n): string {
+        if ($n < 1 || $n > 9) return '';
+        return ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'][$n-1];
+    }
+
+    public static function positions(array $poisitions): string {
+        return implode(', ', array_map(fn($p) => self::position($p), $poisitions));
     }
 }
