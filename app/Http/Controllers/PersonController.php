@@ -59,4 +59,14 @@ class PersonController extends Controller
             'ballsInPlay' => BallInPlay::whereRelation('player', 'person_id', $person->id)->whereRelation('player', 'team_id', $team->id)->get(),
         ]);
     }
+
+    public function inPlays(Person $person, Team $team, $position) {
+        $posIndex = $position - 1;
+        $player_ids = $team->players()->where('person_id', $person->id)->pluck('id')->join(',');
+        $balls = BallInPlay::whereRaw("JSON_EXTRACT(fielders, '$[$posIndex]') IN ($player_ids)")->get();
+
+        return response(view('components.field', [
+            'ballsInPlay' => $balls,
+        ]))->header('Content-Type', 'image/svg+xml');
+    }
 }

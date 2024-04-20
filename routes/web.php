@@ -44,4 +44,5 @@ Route::controller(TeamController::class)->group(function () {
 Route::controller(PersonController::class)->group(function () {
     Route::get('/person/{person}', 'show')->name('person.show');
     Route::get('/person/{person}/{team}', 'teamGames')->name('person.games');
+    Route::get('/person/{person}/{team}/inplays/{position}', 'inplays')->name('person.inplays');
 });
