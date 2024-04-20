@@ -42,3 +42,6 @@ table.stats-table thead td {
 table.stats-table tbody tr:nth-child(even) td {
   background-color: #eee;
 }
+table.stats-table tbody tr:hover td {
+  background-color: #ff0;
+}
