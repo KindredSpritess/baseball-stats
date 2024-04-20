@@ -20,10 +20,12 @@ class BallInPlay extends Model
     protected $fillable = [
         'position',
         'type',
+        'fielders',
     ];
 
     protected $casts = [
         'position' => 'array',
+        'fielders' => 'array',
     ];
 
     public function play(): BelongsTo {

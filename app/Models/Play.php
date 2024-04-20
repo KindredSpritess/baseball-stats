@@ -470,6 +470,7 @@ class Play extends Model
                 $br->consume('SAB') && true => 'G',
                 default => null,
             },
+            'fielders' => array_map(fn ($p) => $game->fielding($p)?->id, [1, 2, 3, 4, 5, 6, 7, 8, 9]),
         ]);
         $battedBall->player()->associate($game->hitting());
 
