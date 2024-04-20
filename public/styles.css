@@ -60,3 +60,8 @@ table.stats-table tbody tr:hover td {
 .balls-in-play .position h3 {
   text-align: center;
 }
+.balls-in-play svg circle:hover {
+  stroke: red;
+  stroke-width: 3;
+  z-index: 1000;
+}
