@@ -60,7 +60,7 @@
 <table class="sortable stats-table">
     <x-pitching-stat-header />
     @foreach ($games as $game)
-        @if ($stats[$game->id]->IP)
+        @if ($stats[$game->id]->Pitches)
             @if ($game->home == $team->id)
                 <x-pitching-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
             @else
