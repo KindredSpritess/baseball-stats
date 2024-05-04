@@ -81,7 +81,9 @@ class StatsHelper {
         if ($this->TC) {
             $this->stats['FPCT'] = ($this->PO + $this->A) / $this->TC;
         }
-        $this->stats['RF'] = ($this->PO + $this->A) / $this->FI * 9;
+        if ($this->FI) {
+            $this->stats['RF'] = ($this->PO + $this->A) / $this->FI * 9;
+        }
 
         // Positions
         $this->stats['Positions'] = [];
