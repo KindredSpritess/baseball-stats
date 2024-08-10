@@ -3,6 +3,7 @@
 use App\Casts\GameState;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TeamController;
 use App\Models\Game;
 use App\Models\Team;
@@ -45,4 +46,8 @@ Route::controller(PersonController::class)->group(function () {
     Route::get('/person/{person}', 'show')->name('person.show');
     Route::get('/person/{person}/{team}', 'teamGames')->name('person.games');
     Route::get('/person/{person}/{team}/inplays/{position}', 'inplays')->name('person.inplays');
+});
+
+Route::controller(StatsController::class)->group(function () {
+    Route::get('/stats', 'show')->name('stats.show');
 });
