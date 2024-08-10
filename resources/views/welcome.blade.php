@@ -19,9 +19,10 @@ Welcome
         <ul>
         @foreach ($games as $game)
             @if ($game->home_team->season === $season)
-                <li><a href="{{ route('game', ['game' => $game->id]) }}">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</a></li>
+                <li><a href="{{ route('game.view', ['game' => $game->id]) }}">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</a> ({{ $game->firstPitch }})</li>
             @endif
         @endforeach
+            <li><a href="{{ route('game.create', ['season' => $season]) }}">New Game</li>
         </ul>
         <h3>Teams</h3>
         <ul>

@@ -28,7 +28,7 @@ Route::get('/', function () {
 });
 
 Route::controller(GameController::class)->group(function() {
-    Route::get('/game/create', 'create');
+    Route::get('/game/create', 'create')->name('game.create');
     Route::post('/game/store', 'store')->name('gamestore');
     Route::get('/game/{game}', 'show')->name('game');
     Route::get('/game/view/{game}', 'view')->name('game.view');
