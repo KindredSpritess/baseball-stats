@@ -60,3 +60,8 @@ table.stats-table tbody tr:hover td {
 .balls-in-play .position h3 {
   text-align: center;
 }
+
+svg {
+  height: auto;
+  width: 447.94775;
+}

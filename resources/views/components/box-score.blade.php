@@ -1,5 +1,5 @@
 <div style="padding:10px;">
-    <h3>{{ $team->name }}</h3>
+    <h3 id="{{ $team->short_name }}">{{ $team->name }}</h3>
     <table style="text-align:center">
         <tr>
             <th>#</th>
@@ -17,7 +17,7 @@
             <th>E</th>
         </tr>
         @foreach ($lineup as $player)
-        <tr>
+        <tr class="{{ $loop->index == $atbat ? 'atbat' : '' }}">
             <td>{{ $loop->iteration }}</td>
             <td style="text-align:left;">
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">

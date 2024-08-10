@@ -11,21 +11,28 @@
 <table class="sortable stats-table">
     <x-hitting-stat-header />
     @foreach ($people as $person)
-        <x-hitting-stat-line header="{{ strtoupper($person->lastName) }}, {{ $person->firstName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+        <x-hitting-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
     @endforeach
     <tfoot>
         <x-hitting-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
 
-<h4>Spray Chart</h4>
-<x-field :ballsInPlay="$ballsInPlay" />
+<h4 onclick="$('.balls-in-play').toggle()" style="text-decoration:underline dotted;cursor:pointer">Spray Charts</h4>
+<div class='balls-in-play' style="display:none;">
+@foreach ($people as $person)
+    <div class='position'>
+        <h5>{{ strtoupper($person->lastName) }}, {{ $person->firstName }}</h5>
+        <x-field :ballsInPlay="$person->ballsInPlay" />
+    </div>
+    @endforeach
+</div>
 
 <h3>Fielding</h3>
 <table class="sortable stats-table">
     <x-fielding-stat-header />
     @foreach ($people as $person)
-        <x-fielding-stat-line header="{{ strtoupper($person->lastName) }}, {{ $person->firstName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+        <x-fielding-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
     @endforeach
     <tfoot>
         <x-fielding-stat-line header="Totals" :stats="$totals" />
@@ -37,7 +44,7 @@
     <x-pitching-stat-header />
     @foreach ($people as $person)
         @if ($stats[$person->id]->IP)
-            <x-pitching-stat-line header="{{ strtoupper($person->lastName) }}, {{ $person->firstName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+            <x-pitching-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
         @endif
     @endforeach
     <tfoot>

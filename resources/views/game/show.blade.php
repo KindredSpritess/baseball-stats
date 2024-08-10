@@ -1,17 +1,33 @@
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/jquery.min.js"></script>
     <link rel="stylesheet" href="/styles.css" />
+    @if ($game->locked)
+    <link rel="stylesheet" href="/game.css" />
+    @endif
     <title>{{ $game->away_team->short_name }} @ {{ $game->home_team->short_name }}</title>
 </head>
 <body>
+@if ($game->locked)
+<div class="mobile-menu">
+    <a href="#play-by-play">Plays</a>
+    <a href="#away">{{ $game->away_team->short_name }}</a>
+    <a href="#home">{{ $game->home_team->short_name }}</a>
+</div>
+@endif
 <table id='game-view'>
     <tr style="max-height: 100%;">
-        <td>
-            <x-box-score :team="$game->away_team" :lineup="$game->lineup[0]" />
+        <td class='mobile-hide' x-column='away'>
+            <x-box-score :team="$game->away_team" :lineup="$game->lineup[0]" :atbat="$game->atBat[0]" />
         </td>
-        <td style='text-align: center; width: 100%;'>
+        <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='play-by-play'>
             <h2>{{ $game->firstPitch }} at {{ $game->location }}</h2>
+            @if ($game->locked)
+            <x-line-score :game="$game" />
+            @else
             <h3>{{ implode(' - ', $game->score) }}</h3>
+            @endif
             <p>
                 @if ($game->half)
                     ⬇️
@@ -21,7 +37,7 @@
                 {{ $game->inning }}
                 ({{ $game->balls }} - {{ $game->strikes }}) {{ $game->outs }} outs
             </p>
-            <svg height="448.12701" width="447.94775" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 447.94775 448.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 447.94775 448.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
                 <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
                     <!-- Border -->
                     <path style="fill:#5a3392" d="m 224.02066,0 c -51.375,0 -104.961,18.027 -145.843997,50.219 -37.233,29.316 -61.724,68.332 -77.84399963,120.094 -0.785,2.639 -0.16,30.431 1.65600003,32.5 L 180.08366,380.845 c -2.605,5.889 -4.125,12.355 -4.125,19.188 0,26.418 21.648,48.094 48.063,48.094 26.415,0 47.969,-21.678 47.969,-48.094 0,-6.807 -1.486,-13.25 -4.063,-19.125 l 178.031,-178.031 c 1.816,-2.068 2.442,-29.922 1.656,-32.561 -15.25,-51.344 -40.622,-90.785 -77.844,-120.094 -40.883,-32.192 -94.374,-50.219 -145.75,-50.219 z">&#10;                </path>&#10;                <path style="fill:#fb9761" d="m 224.00866,159.639 121.063,121.187 -86.344,86.344 c -8.749,-9.23 -21.048,-15.064 -34.719,-15.064 -13.677,0 -26.001,5.83 -34.781,15.064 l -86.375,-86.375 z" />
@@ -107,18 +123,18 @@
             </form>
             @endif
             <div id='play-by-play'>
-                @foreach ($game->plays as $play)
-                    @if ($play->human)
-                    <div>{{ $play->human }}</div>
-                    @endif
+                @foreach ($game->plays->reverse() as $play)
                     @if ($play->game_event)
                     <div class='game-event'>{{ $play->game_event }}</div>
+                    @endif
+                    @if ($play->human)
+                    <div>{{ $play->human }}</div>
                     @endif
                 @endforeach
             </div>
         </td>
-        <td>
-            <x-box-score :team="$game->home_team" :lineup="$game->lineup[1]" />
+        <td class='mobile-hide' x-column='home'>
+            <x-box-score :team="$game->home_team" :lineup="$game->lineup[1]" :atbat="$game->atBat[1]" />
         </td>
     </tr>
 </table>
@@ -193,6 +209,19 @@
         bb.setAttribute('cy', cy);
         $('#inplay').val(`${cx}:${cy}`);
     });
+</script>
+@else
+<script>
+    $(document).ready(() => {
+        const [, column] = (window.location.hash || '#play-by-play').split('#');
+        $(`[x-column=${column}]`).show();
+    });
+    $('.mobile-menu a').on('click', (e) => {
+        console.log(e);
+        const [, column] = e.target.href.split('#');
+        $('.mobile-hide').hide();
+        $(`[x-column=${column}]`).show();
+    })
 </script>
 @endif
 </body>

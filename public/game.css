@@ -1,0 +1,95 @@
+/* Mobile-first approach */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fixed top menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #5a3392;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 1000;
+}
+
+.mobile-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Adjustments for mobile view */
+#game-view {
+  margin-top: 50px; /* Height of the mobile menu */
+}
+
+#play-by-play {
+  overflow-y: scroll;
+  height: 200px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 5px;
+  text-align: center;
+}
+
+th {
+  background-color: #5a3392;
+  color: #fff;
+}
+
+/* Responsive tables */
+@media screen and (max-width: 768px) {
+  .responsive-table {
+    overflow-x: auto;
+  }
+
+  .mobile-hide {
+    display: none;
+  }
+
+  h2 {
+    display: none;
+  }
+
+  svg {
+    max-width: 100%;
+  }
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 769px) {
+  #game-view {
+    display: flex;
+    margin-top: 0;
+  }
+
+  #play-by-play {
+    height: 330px;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+
+  svg {
+    height: auto;
+    width: 447.94775;
+  }
+}
+
+tr.atbat {
+  background-color: lightyellow;
+}
