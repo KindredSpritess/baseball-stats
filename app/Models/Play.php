@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Number;
 use NumberFormatter;
 
 class Play extends Model
@@ -143,6 +144,27 @@ class Play extends Model
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
             }
+            return;
+        }
+
+        // Manfred Runner
+        if ($log->consume('MF #')) {
+            $player = $game->lineup[($game->half)%2][$log->upto(' -> ') - 1];
+            throw_unless($log->consume(' -> '));
+            $base = (string)$log;
+            $game->bases[$base - 1] = $player;
+            $this->log("Extra runner {$player->person->lastName} placed at " . Number::ordinal($base) . ".");
+            $this->logA(" {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.");
+            return;
+        }
+
+        // Override Count
+        if ($log->consume('SC ')) {
+            $count = [];
+            throw_unless(preg_match('<^(\d)-(\d)$>', (string)$log, $count));
+            $game->balls = intval($count[1]);
+            $game->strikes = intval($count[2]);
+            $this->log("Count set to {$log}.");
             return;
         }
 
