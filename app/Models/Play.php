@@ -99,8 +99,9 @@ class Play extends Model
         }
 
         // Pinch Hitter
-        if ($log->consume('PH#')) {
-            $game->substitute(!$game->top, Player::find($log), $game->top ? $game->awayLineup[$game->awayAtBat] : $game->homeLineup[$game->homeAtBat]);
+        if ($log->consume('PH @')) {
+            $player = $this->insertPlayer($game, $log);
+            $game->substitute(!$game->top, $player, $game->top ? $game->awayLineup[$game->awayAtBat] : $game->homeLineup[$game->homeAtBat]);
             return;
         }
 
@@ -111,24 +112,25 @@ class Play extends Model
                 '2' => $game->second,
                 '3' => $game->third,
             };
-            $log->consume('#');
-            $game->substitute(!$game->top, Player::find($log), $replacing);
+            $log->consume(' @');
+            $player = $this->insertPlayer($game, $log);
+            $game->substitute(!$game->top, $player, $replacing);
+            return;
+        }
+
+        // Defensive Substitution
+        if ($log->consume('DSUB @')) {
+            $position = 'EH';
+            $player = $this->insertPlayer($game, $log, $position);
+            $position = (string)$log;
+            $replacing = $game->top ? $game->homeDefense[$position] : $game->awayDefense[$position];
+            $game->substitute($game->top, $player, $replacing, $position);
             return;
         }
 
         // Skip Hitter
         if ($log->consume('-')) {
             $game->batterUp();
-            return;
-        }
-
-        // Defensive Substitution
-        if ($log->consume('DSUB #')) {
-            $player = Player::find($log->upto(':'));
-            throw_unless($log->consume(': '));
-            $position = (string)$log;
-            $replacing = $game->top ? $game->homeDefense[$position] : $game->awayDefense[$position];
-            $game->substitute($game->top, $player, $replacing, $position);
             return;
         }
 
@@ -182,8 +184,9 @@ class Play extends Model
                 $game->hitting()->evt('hStrikes');
             } else if ($log->consume('blk')) {
                 $game->pitching()->evt('BLK');
+                $this->log("{$game->pitching()->person->lastName} balks.");
                 // For each runner, advance one base.
-                foreach ($game->bases as $k => $p) {
+                foreach (array_reverse($game->bases, true) as $k => $p) {
                     if ($p) {
                         $this->logBuffer($game->bases[$k]->person->lastName);
                         $this->advance($game, $k, $k+1);
@@ -463,6 +466,29 @@ class Play extends Model
             }
         }
         return true;
+    }
+
+    private function insertPlayer(Game $game, StringConsumer $log, int &$position = 0): Player {
+        $matches = [];
+        preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
+        $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
+        $player = new Player();
+        $player->team()->associate($team);
+        $player->game()->associate($game);
+        $person = Person::where('firstName', $matches[3])->where('lastName', $matches[2])->first();
+        if (!$person) {
+            $person = new Person(['firstName' => $matches[3], 'lastName' => $matches[2]]);
+            $person->save();
+        }
+        $player->person()->associate($person);
+        $player->evt('G');
+        if (isset($matches[4])) {
+            $player->number = $matches[4];
+        }
+        $player->push();
+        $position = $matches[5];
+
+        return $player;
     }
 
     public function advance(Game $game, float $from, float $to) {
