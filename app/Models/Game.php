@@ -62,8 +62,9 @@ class Game extends Model
 
         $lineup =& $this->lineup[$home];
         if ($replacing) {
-            $key = array_search($replacing, $lineup, true);
-            $lineup[$key][] = $player;
+            $spots = array_filter($lineup, fn($spot) => in_array($replacing, $spot));
+            assert(count($spots) === 1);
+            $spots[0][] = $player;
             foreach ($this->bases as $k => $p) {
                 if ($p === $replacing) {
                     $this->bases[$k] = $player;
