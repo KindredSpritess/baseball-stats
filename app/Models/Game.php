@@ -63,7 +63,7 @@ class Game extends Model
         $lineup =& $this->lineup[$home];
         if ($replacing) {
             foreach ($lineup as &$spot) {
-                if (in_array($replacing, $spot)) {
+                if (in_array($replacing, $spot, true)) {
                     $spot[] = $player;
                     break;
                 }
