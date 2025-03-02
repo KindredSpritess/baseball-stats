@@ -48,11 +48,22 @@ class GameState implements CastsAttributes
             }
         };
 
+        $repairLineups = function (&$lineup) {
+            foreach ($lineup as $key => $spot) {
+                // If it's a Player, wrap it in an array
+                if (is_a($spot, Player::class)) {
+                    $lineup[$key] = [$spot];
+                }
+            }
+        };
+
         $decodeArray($game->half ? $game->home_team : $game->away_team, $game->bases, $value['bases'] ?? []);
         $decodeArray($game->away_team, $game->defense[0], $value['defense'][0] ?? []);
         $decodeArray($game->home_team, $game->defense[1], $value['defense'][1] ?? []);
         $decodeArray($game->away_team, $game->lineup[0], $value['lineup'][0] ?? []);
         $decodeArray($game->home_team, $game->lineup[1], $value['lineup'][1] ?? []);
+        $repairLineups($game->lineup[0]);
+        $repairLineups($game->lineup[1]);
         $game->runners = array_map(function ($r) use ($game) {
             $team = $game->half ? $game->away_team : $game->home_team;
             return [
