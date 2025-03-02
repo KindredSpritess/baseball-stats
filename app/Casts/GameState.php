@@ -35,9 +35,11 @@ class GameState implements CastsAttributes
         $game->atBat = $value['atBat'] ?? [0, 0];
 
         $players = [];
-        $decodeArray = function ($team, &$out, $in) use (&$players) {
-            foreach($in as $key => $value) {
-                if ($value) {
+        $decodeArray = function ($team, &$out, $in) use (&$players, &$decodeArray) {
+            foreach ($in as $key => $value) {
+                if (is_array($value)) {
+                    $decodeArray($team, $out[$key], $value);
+                } else if ($value) {
                     if (!isset($players[$value])) {
                         $players[$value] = $team->players()->find($value);
                     }
@@ -95,7 +97,10 @@ class GameState implements CastsAttributes
                 ];
             }, $game->runners),
             'defense' => array_map(function ($d) use ($getId) { return array_map($getId, $d); }, $game->defense),
-            'lineup' => array_map(function ($l) use ($getId) { return array_map($getId, $l); }, $game->lineup),
+            'lineup' => array_map(
+                fn ($l) => array_map(fn ($s) => array_map($getId, $s), $l),
+                $game->lineup
+            ),
         ];
         Log::info($out);
         return json_encode($out);

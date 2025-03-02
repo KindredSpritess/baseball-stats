@@ -63,7 +63,7 @@ class Game extends Model
         $lineup =& $this->lineup[$home];
         if ($replacing) {
             $key = array_search($replacing, $lineup, true);
-            $lineup[$key] = $player;
+            $lineup[$key][] = $player;
             foreach ($this->bases as $k => $p) {
                 if ($p === $replacing) {
                     $this->bases[$k] = $player;
@@ -75,7 +75,7 @@ class Game extends Model
                 unset($this->runners[$replacing->id]);
             }
         } else if ($fieldPos !== '1' || !isset($this->defense[$home]['DH'])) {
-            $lineup[] = $player;
+            $lineup[] = [$player];
         }
     }
 
@@ -175,7 +175,11 @@ class Game extends Model
     }
 
     public function hitting() : ?Player {
-        return $this->lineup[$this->half][$this->atBat[$this->half]] ?? null;
+        $spot = $this->lineup[$this->half][$this->atBat[$this->half]] ?? null;
+        if ($spot) {
+            return end($spot);
+        }
+        return null;
     }
 
     public function fielding(string $pos): ?Player {

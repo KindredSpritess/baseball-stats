@@ -69,8 +69,10 @@ class GameController extends Controller
         $game->plays()->save($play);
         $game->push();
         foreach ($game->lineup as $lineup) {
-            foreach ($lineup as $player) {
-                $player->save();
+            foreach ($lineup as $position) {
+                foreach ($position as $player) {
+                    $player->save();
+                }
             }
         }
         if ($json) {
@@ -109,8 +111,10 @@ class GameController extends Controller
         $game->plays()->saveMany($plays);
         $game->push();
         foreach ($game->lineup as $lineup) {
-            foreach ($lineup as $player) {
-                $player->save();
+            foreach ($lineup as $position) {
+                foreach ($position as $player) {
+                    $player->save();
+                }
             }
         }
         $gs = new GameState;

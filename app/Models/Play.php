@@ -120,11 +120,11 @@ class Play extends Model
 
         // Defensive Substitution
         if ($log->consume('DSUB @')) {
+            $home = ($game->half+1)%2;
             $position = 'EH';
             $player = $this->insertPlayer($game, $log, $position);
-            $position = (string)$log;
-            $replacing = $game->top ? $game->homeDefense[$position] : $game->awayDefense[$position];
-            $game->substitute($game->top, $player, $replacing, $position);
+            $replacing = $game->defense[$home][$position];
+            $game->substitute($home, $player, $replacing, $position);
             return;
         }
 
@@ -136,7 +136,7 @@ class Play extends Model
 
         // Defensive swap
         if ($log->consume('DC #')) {
-            $player = $game->lineup[($game->half+1)%2][$log->upto(' -> ') - 1];
+            $player = end($game->lineup[($game->half+1)%2][$log->upto(' -> ') - 1]);
             throw_unless($log->consume(' -> '));
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
@@ -151,7 +151,7 @@ class Play extends Model
 
         // Manfred Runner
         if ($log->consume('MF #')) {
-            $player = $game->lineup[($game->half)%2][$log->upto(' -> ') - 1];
+            $player = end($game->lineup[($game->half)%2][$log->upto(' -> ') - 1]);
             throw_unless($log->consume(' -> '));
             $base = (string)$log;
             $game->bases[$base - 1] = $player;
@@ -468,7 +468,7 @@ class Play extends Model
         return true;
     }
 
-    private function insertPlayer(Game $game, StringConsumer $log, int &$position = 0): Player {
+    private function insertPlayer(Game $game, StringConsumer $log, string &$position = ''): Player {
         $matches = [];
         preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
         $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;

@@ -16,9 +16,10 @@
             <th>A</th>
             <th>E</th>
         </tr>
-        @foreach ($lineup as $player)
+        @foreach ($lineup as $i => $spot)
+        @foreach ($spot as $player)
         <tr class="{{ $loop->index == $atbat ? 'atbat' : '' }}">
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $loop->index === 0 ? ($i+1) : '' }}</td>
             <td style="text-align:left;">
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
                     <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</a><sup>#{{ $player->number }}</sup>
@@ -35,6 +36,7 @@
             <td>{{ $player->stats['A'] ?? 0 }}</td>
             <td>{{ $player->stats['E'] ?? 0 }}</td>
         </tr>
+        @endforeach
         @endforeach
         <tr style="font-weight: bold;">
             <td colspan="2" style="text-align:left;">Total</td>

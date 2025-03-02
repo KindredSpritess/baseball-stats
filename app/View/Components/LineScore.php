@@ -19,15 +19,19 @@ class LineScore extends Component
     public function __construct(public Game $game)
     {
         $this->away = new StatsHelper([]);
-        foreach ($this->game->lineup[0] as $player) {
-            if (!$player) continue;
-            $this->away->merge($player->stats);
+        foreach ($this->game->lineup[0] as $spots) {
+            foreach ($spots as $player) {
+                if (!$player) continue;
+                $this->away->merge($player->stats);
+            }
         }
         $this->away->derive();
         $this->home = new StatsHelper([]);
-        foreach ($this->game->lineup[1] as $player) {
-            if (!$player) continue;
-            $this->home->merge($player->stats);
+        foreach ($this->game->lineup[1] as $spots) {
+            foreach ($spots as $player) {
+                if (!$player) continue;
+                $this->home->merge($player->stats);
+            }
         }
         $this->home->derive();
     }
