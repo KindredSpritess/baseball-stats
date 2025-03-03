@@ -69,7 +69,8 @@
             <th>S</th>
             <th>Pit</th>
         </tr>
-        @foreach ($lineup as $player)
+        @foreach ($lineup as $spot)
+        @foreach ($spot as $player)
         @if ($player->stats['Balls'] ?? $player->stats['Strikes'] ?? 0)
         <tr>
             <td>{{ $player->number }}</td>
@@ -86,6 +87,7 @@
             <td>{{ ($player->stats['Balls'] ?? 0) + ($player->stats['Strikes'] ?? 0) }}</td>
         </tr>
         @endif
+        @endforeach
         @endforeach
         <tr style="font-weight: bold;">
             <td colspan="2" style="text-align:left;">Total</td>
