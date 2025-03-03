@@ -18,7 +18,7 @@
         </tr>
         @foreach ($lineup as $i => $spot)
         @foreach ($spot as $player)
-        <tr class="{{ $loop->index == $atbat ? 'atbat' : '' }}">
+        <tr class="{{ $i == $atbat ? 'atbat' : '' }}">
             <td>{{ $loop->index === 0 ? ($i+1) : '' }}</td>
             <td style="text-align:left;">
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
