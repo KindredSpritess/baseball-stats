@@ -394,7 +394,11 @@ class Play extends Model
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('PO')) {
             $countStats && $game->pitching()->evt('POs');
-            if ($this->handleFielding($game, $event, $hit, $countStats)) {
+            if (!$this->handleFielding($game, $event, $hit, $countStats)) {
+                $bases = -10000000000;
+                $runner->evt('CS');
+                $game->advanceRunner($runner, $bases);
+            } else {
                 $game->advanceRunner($runner, $bases, false, true);
             }
         } elseif ($event->consume('MB') ||
