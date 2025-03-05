@@ -101,6 +101,7 @@ class Play extends Model
         // Pinch Hitter
         if ($log->consume('PH @')) {
             $player = $this->insertPlayer($game, $log);
+            $this->log($player->person->lastName . " pinch hits for {$game->hitting()->person->lastName}");
             $game->substitute($game->half, $player, $game->hitting());
             return;
         }
@@ -124,6 +125,7 @@ class Play extends Model
             $position = 'EH';
             $player = $this->insertPlayer($game, $log, $position);
             $replacing = $game->defense[$home][$position];
+            $this->log($player->person->lastName . " replaces {$replacing->person->lastName} playing " . (Play::POSITIONS[$position] ?? $position));
             $game->substitute($home, $player, $replacing, $position);
             return;
         }
