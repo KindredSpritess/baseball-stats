@@ -101,7 +101,7 @@ class Play extends Model
         // Pinch Hitter
         if ($log->consume('PH @')) {
             $player = $this->insertPlayer($game, $log);
-            $game->substitute(!$game->top, $player, $game->top ? $game->awayLineup[$game->awayAtBat] : $game->homeLineup[$game->homeAtBat]);
+            $game->substitute($game->half, $player, $game->hitting());
             return;
         }
 
