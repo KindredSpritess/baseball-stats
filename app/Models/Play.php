@@ -490,7 +490,9 @@ class Play extends Model
             $player->number = $matches[4];
         }
         $player->push();
-        $position = $matches[5];
+        if (isset($matches[5])) {
+            $position = $matches[5];
+        }
 
         return $player;
     }
