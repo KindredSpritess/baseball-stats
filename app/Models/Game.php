@@ -50,16 +50,6 @@ class Game extends Model
     }
 
     public function substitute(int $home, Player $player, ?Player $replacing = null, ?string $fieldPos = null) : void {
-        if (!$fieldPos) {
-            return;
-        }
-
-        $this->defense[$home][$fieldPos] = $player;
-        if ($fieldPos === '1') {
-            $player->evt('GP');
-            $this->expectedOuts = $this->outs;
-        }
-
         $lineup =& $this->lineup[$home];
         if ($replacing) {
             foreach ($lineup as &$spot) {
@@ -80,6 +70,16 @@ class Game extends Model
             }
         } else if ($fieldPos !== '1' || !isset($this->defense[$home]['DH'])) {
             $lineup[] = [$player];
+        }
+
+        if (!$fieldPos) {
+            return;
+        }
+
+        $this->defense[$home][$fieldPos] = $player;
+        if ($fieldPos === '1') {
+            $player->evt('GP');
+            $this->expectedOuts = $this->outs;
         }
     }
 
