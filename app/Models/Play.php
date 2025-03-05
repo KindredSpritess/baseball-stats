@@ -349,7 +349,7 @@ class Play extends Model
         $matches = [];
         $countStats = true;
         $hit = true;
-        $runner = $game->bases[$b];
+        $runner = $b > -1 ? $game->bases[$b] : $game->hitting();
         if (preg_match('/^\((.*)\)$/', $event, $matches)) {
             $event = $matches[1];
             $countStats = false;
