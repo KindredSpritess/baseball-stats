@@ -9,7 +9,6 @@ use App\Models\Player;
 use App\Models\Team;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class TeamController extends Controller
 {
