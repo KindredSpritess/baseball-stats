@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="/styles.css" />
     @if ($game->locked)
     <link rel="stylesheet" href="/game.css" />
+    @else
+    <link rel="stylesheet" href="/css/player-lineup-add.css" />
+    <script src="/js/player-lineup-add.js"></script>
     @endif
     <title>{{ $game->away_team->short_name }} @ {{ $game->home_team->short_name }}</title>
 </head>
@@ -27,6 +30,27 @@
             <x-line-score :game="$game" />
             @else
             <h3>{{ implode(' - ', $game->score) }}</h3>
+            
+            <!-- Button to show player lineup add component -->
+            <div class="add-player-button-container">
+                <button id="show-add-player" class="btn btn-primary">Add Player to Lineup</button>
+            </div>
+
+            <!-- Player Lineup Add Component (initially hidden, shown via hash) -->
+            <div class="lineup-add-container" style="display: none;">
+                <div class="team-selector">
+                    <button class="team-btn" data-team="away">{{ $game->away_team->short_name }}</button>
+                    <button class="team-btn active" data-team="home">{{ $game->home_team->short_name }}</button>
+                </div>
+
+                <div id="away-team-add" class="team-add-section" style="display: none;">
+                    <x-player-lineup-add :game="$game" :team="$game->away_team" />
+                </div>
+
+                <div id="home-team-add" class="team-add-section">
+                    <x-player-lineup-add :game="$game" :team="$game->home_team" />
+                </div>
+            </div>
             @endif
             <p>
                 @if ($game->half)
@@ -191,6 +215,35 @@
             $(e).scrollTop(e.scrollHeight);
         });
         $('#play-by-play').scrollTop($('#play-by-play')[0].scrollHeight);
+        
+        // Add Player button click handler
+        $('#show-add-player').on('click', function() {
+            // Get current hash
+            const currentHash = window.location.hash;
+            
+            // Check if we already have team parameter
+            let team = 'home'; // Default to home team
+            if (currentHash.includes('team=away')) {
+                team = 'away';
+            }
+            
+            // Update hash to show add player component with team
+            window.location.hash = `#add-player&team=${team}`;
+        });
+        
+        // Hide add player button when component is shown
+        $(window).on('hashchange', function() {
+            if (window.location.hash.includes('add-player')) {
+                $('.add-player-button-container').hide();
+            } else {
+                $('.add-player-button-container').show();
+            }
+        });
+        
+        // Initial check for hash
+        if (window.location.hash.includes('add-player')) {
+            $('.add-player-button-container').hide();
+        }
     });
 
     let bb = null;
