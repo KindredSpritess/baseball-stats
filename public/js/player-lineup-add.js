@@ -33,9 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (teamToShow === 'home') {
                 homeTeamAdd.style.display = 'block';
                 awayTeamAdd.style.display = 'none';
+                homeTeamAdd.querySelector('.player-search').focus();
             } else {
                 homeTeamAdd.style.display = 'none';
                 awayTeamAdd.style.display = 'block';
+                awayTeamAdd.querySelector('.player-search').focus();
             }
         } else {
             // Hide the lineup add component if not explicitly shown
