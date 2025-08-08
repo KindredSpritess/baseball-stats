@@ -28,6 +28,18 @@ class StatsController extends Controller
                     }
                 }
                 break;
+            case $request->input('all-seasons'):
+                $teams = Team::all();
+                foreach ($teams as $team) {
+                    foreach ($team->players as $player) {
+                        $id = $player->person->id;
+                        if (!isset($players[$id])) {
+                            $players[$id] = new StatsHelper([]);
+                        }
+                        $players[$id]->merge($player->stats);
+                    }
+                }
+                break;
             default:
                 return response(400);
         }
