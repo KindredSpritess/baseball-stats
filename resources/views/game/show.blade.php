@@ -6,9 +6,11 @@
     @if ($game->locked)
     <link rel="stylesheet" href="/game.css" />
     @else
+    <link rel="stylesheet" href="/scorers.css" />
     <link rel="stylesheet" href="/css/player-lineup-add.css" />
     <script src="/js/player-lineup-add.js"></script>
     @endif
+    <script src="https://kit.fontawesome.com/cc3e56010d.js" crossorigin="anonymous"></script>
     <title>{{ $game->away_team->short_name }} @ {{ $game->home_team->short_name }}</title>
 </head>
 <body>
@@ -22,7 +24,7 @@
 <table id='game-view'>
     <tr style="max-height: 100%;">
         <td class='mobile-hide' x-column='away'>
-            <x-box-score :team="$game->away_team" :lineup="$game->lineup[0]" :atbat="$game->atBat[0]" />
+            <x-box-score :team="$game->away_team" :lineup="$game->lineup[0]" :atbat="$game->atBat[0]" :defending="!!($game->half)" />
         </td>
         <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='play-by-play'>
             <h2>{{ $game->firstPitch }} at {{ $game->location }}</h2>
@@ -30,7 +32,7 @@
             <x-line-score :game="$game" />
             @else
             <h3>{{ implode(' - ', $game->score) }}</h3>
-            
+
             <!-- Button to show player lineup add component -->
             <div class="add-player-button-container">
                 <button id="show-add-player" class="btn btn-primary">Add Player to Lineup</button>
@@ -138,9 +140,9 @@
                     <tr>
                         <td><input id='pitches' autofocus autocomplete='off' /></td>
                         <th><input id='batter' autocomplete='off' /></th>
-                        <th><input id='first' autocomplete='off' /></th>
-                        <th><input id='second' autocomplete='off' /></th>
-                        <th><input id='third' autocomplete='off' /></th>
+                        <th><input id='first' autocomplete='off' @disabled(!$game->bases[0]) /></th>
+                        <th><input id='second' autocomplete='off' @disabled(!$game->bases[1]) /></th>
+                        <th><input id='third' autocomplete='off' @disabled(!$game->bases[2]) /></th>
                     </tr>
                 </table>
                 <input type="submit" />
@@ -158,12 +160,17 @@
             </div>
         </td>
         <td class='mobile-hide' x-column='home'>
-            <x-box-score :team="$game->home_team" :lineup="$game->lineup[1]" :atbat="$game->atBat[1]" />
+            <x-box-score :team="$game->home_team" :lineup="$game->lineup[1]" :atbat="$game->atBat[1]" :defending="!($game->half)" />
         </td>
     </tr>
 </table>
 @if (!$game->locked)
 <script>
+    function dsub(spot) {
+        $('#pitches').val(`DC #${spot} -> `);
+        $('#pitches').focus();
+    }
+
     $('#log').on('submit', (event) => {
         event.preventDefault();
         const parts = [];

@@ -93,3 +93,7 @@ th {
 tr.atbat {
   background-color: lightyellow;
 }
+
+.scorers {
+  display: none !important;
+}

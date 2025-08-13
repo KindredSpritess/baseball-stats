@@ -2,7 +2,7 @@
     <h3 id="{{ $team->short_name }}">{{ $team->name }}</h3>
     <table style="text-align:center">
         <tr>
-            <th>#</th>
+            <th class="scorers">#</th>
             <th style="text-align:left;">Name</th>
             <th>PA</th>
             <th>AB</th>
@@ -19,10 +19,19 @@
         @foreach ($lineup as $i => $spot)
         @foreach ($spot as $player)
         <tr class="{{ $i == $atbat ? 'atbat' : '' }}">
-            <td>{{ $loop->index === 0 ? ($i+1) : '' }}</td>
+            <td class="scorers">{{ $loop->index === 0 ? ($i+1) : '' }}</td>
             <td style="text-align:left;">
+                @spaceless
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
-                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</a><sup>#{{ $player->number }}</sup>
+                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
+                </a>
+                @if ($player->number)
+                    <sup>#{{ $player->number }}</sup>
+                @endif
+                @if ($defending)
+                <i class="fa-solid fa-up-down-left-right scorers" onclick="dsub({{ $i + 1 }})"></i>
+                @endif
+                @endspaceless
             </td>
             <td>{{ $player->stats['PA'] ?? 0 }}</td>
             <td>{{ $player->stats['AB'] ?? 0 }}</td>
@@ -39,7 +48,8 @@
         @endforeach
         @endforeach
         <tr style="font-weight: bold;">
-            <td colspan="2" style="text-align:left;">Total</td>
+            <td class="scorers" colspan="2" style="text-align:left;">Total</td>
+            <td class="viewers" style="text-align:left;">Total</td>
             <td>{{ $totals->PA }}</td>
             <td>{{ $totals->AB }}</td>
             <td>{{ $totals->R }}</td>
@@ -56,7 +66,7 @@
     <h4>Pitching</h4>
     <table style="text-align:center">
         <tr>
-            <th>#</th>
+            <th class="scorers">#</th>
             <th style="text-align:left;">Name</th>
             <th>INN</th>
             <th>ER</th>
@@ -73,7 +83,7 @@
         @foreach ($spot as $player)
         @if ($player->stats['Balls'] ?? $player->stats['Strikes'] ?? 0)
         <tr>
-            <td>{{ $player->number }}</td>
+            <td class="scorers">{{ $player->number }}</td>
             <td style="text-align:left;"><span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</td>
             <td>{{ App\Helpers\StatsHelper::innings_format(($player->stats['TO'] ?? 0) / 3) }}</td>
             <td>{{ $player->stats['ER'] ?? 0 }}</td>
@@ -90,7 +100,8 @@
         @endforeach
         @endforeach
         <tr style="font-weight: bold;">
-            <td colspan="2" style="text-align:left;">Total</td>
+            <td class="scorers" colspan="2" style="text-align:left;">Total</td>
+            <td class="viewers" style="text-align:left;">Total</td>
             <td>{{ App\Helpers\StatsHelper::innings_format($totals->IP) }}</td>
             <td>{{ $totals->ER }}</td>
             <td>{{ $totals->RA }}</td>

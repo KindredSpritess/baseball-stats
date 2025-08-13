@@ -15,7 +15,7 @@ class BoxScore extends Component
      *
      * @return void
      */
-    public function __construct(public Team $team, public array $lineup, public int $atbat)
+    public function __construct(public Team $team, public array $lineup, public int $atbat, public bool $defending)
     {
         $this->totals = new StatsHelper([]);
         foreach ($lineup as $spot) {
