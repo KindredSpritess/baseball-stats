@@ -70,6 +70,9 @@ class Play extends Model
             return;
         }
 
+        $this->inning = $game->inning;
+        $this->inning_half = $game->half;
+
         if ($log->consume('Side Away')) {
             $game->sideAway();
         }
@@ -296,6 +299,7 @@ class Play extends Model
                                     $b = $this->advance($game, -1, $tb - 1);
                                 } else {
                                     $game->score[$game->half]++;
+                                    $this->run_scoring = true;
                                     $game->hitting()->evt('R');
                                     $hit && $game->hitting()->evt('RBI');
                                 }
@@ -509,6 +513,7 @@ class Play extends Model
         } else {
             $game->bases[$from]->evt('R');
             $game->score[$game->half]++;
+            $this->run_scoring = true;
             $this->logBuffer("scores");
         }
         if ($from >= 0) $game->bases[$from] = null;
