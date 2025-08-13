@@ -97,3 +97,19 @@ tr.atbat {
 .scorers {
   display: none !important;
 }
+
+.innings-selector {
+  margin: 20px 0 10px 0;
+}
+
+.inning-link {
+  margin-right: 5px;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  border: 1px solid #5a3392;
+  background-color: #5a3392;
+  padding: 2px;
+  text-align: center;
+  border-radius: 4px;
+}

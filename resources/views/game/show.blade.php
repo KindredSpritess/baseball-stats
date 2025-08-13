@@ -148,13 +148,21 @@
                 <input type="submit" />
             </form>
             @endif
+            <!-- Put a clickable innings selector. -->
+            @if ($game->locked)
+                <div class="innings-selector">
+                    @for ($i = 1; $i <= $game->inning; $i++)
+                    <a href="#play-by-play" class="inning-link" data-inning="{{ $i }}">{{ $i }}</a>
+                    @endfor
+                </div>
+            @endif
             <div id='play-by-play'>
-                @foreach ($game->plays->reverse() as $i => $play)
-                    @if ($play->game_event)
-                    <div class='game-event'>{{ $play->game_event }}</div>
-                    @endif
+                @foreach ($game->plays as $i => $play)
                     @if ($play->human)
                     <div @class([ 'run-scoring' => $play->run_scoring ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->human }}</div>
+                    @endif
+                    @if ($play->game_event)
+                    <div class='game-event'>{{ $play->game_event }}</div>
                     @endif
                 @endforeach
             </div>
@@ -306,7 +314,13 @@
         const [, column] = e.target.href.split('#');
         $('.mobile-hide').hide();
         $(`[x-column=${column}]`).show();
-    })
+    });
+
+    $('.inning-link').on('click', (e) => {
+        e.preventDefault();
+        const inning = $(e.target).data('inning');
+        $(`#play-by-play [data-inning="${inning}"]`)[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 </script>
 @endif
 </body>
