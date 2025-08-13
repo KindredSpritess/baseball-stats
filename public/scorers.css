@@ -1,3 +1,7 @@
 .viewers {
   display: none;
 }
+
+.highlighted {
+  background-color: #ff0 !important;
+}

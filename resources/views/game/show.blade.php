@@ -149,12 +149,12 @@
             </form>
             @endif
             <div id='play-by-play'>
-                @foreach ($game->plays->reverse() as $play)
+                @foreach ($game->plays->reverse() as $i => $play)
                     @if ($play->game_event)
                     <div class='game-event'>{{ $play->game_event }}</div>
                     @endif
                     @if ($play->human)
-                    <div>{{ $play->human }}</div>
+                    <div @class([ 'run-scoring' => $play->run_scoring ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->human }}</div>
                     @endif
                 @endforeach
             </div>
@@ -170,6 +170,31 @@
         $('#pitches').val(`DC #${spot} -> `);
         $('#pitches').focus();
     }
+
+    // When the plays textarea is in focused, get the cursor position and highlight the equivalent play in the play-by-play section
+    $('#plays').on('click', function() {
+        const cursorPos = this.selectionStart;
+        const lines = this.value.split('\n');
+        let currentLine = 0;
+        let charCount = 0;
+
+        for (let i = 0; i < lines.length; i++) {
+            charCount += lines[i].length + 1; // +1 for the newline character
+            if (charCount > cursorPos) {
+                currentLine = i;
+                break;
+            }
+        }
+
+        $('#play-by-play div').removeClass('highlighted');
+        $(`#play-by-play [data-play-id="${currentLine}"]`).addClass('highlighted');
+        // Scroll to the highlighted play
+        const highlightedPlay = $(`#play-by-play [data-play-id="${currentLine}"]`);
+        if (highlightedPlay.length) {
+            highlightedPlay[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // $('#play-by-play').scrollTop(highlightedPlay.position().top + $('#play-by-play').scrollTop() - $('#play-by-play').height() / 2);
+        }
+    });
 
     $('#log').on('submit', (event) => {
         event.preventDefault();

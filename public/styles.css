@@ -16,6 +16,16 @@
   background-color: #ffffe0;
 }
 
+#play-by-play div:nth-child(odd).run-scoring {
+  background-color: #ffdddd;
+  font-weight: bold;
+}
+
+#play-by-play div:nth-child(even).run-scoring {
+  background-color: #ffbbbb;
+  font-weight: bold;
+}
+
 #game-view {
   position: absolute;
   top: 0;
