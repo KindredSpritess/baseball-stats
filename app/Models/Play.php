@@ -74,6 +74,9 @@ class Play extends Model
         $this->inning_half = $game->half;
 
         if ($log->consume('Side Away')) {
+            $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
+            $this->game_event = 'End of the ' . ($game->half ? '' : 'top of the ') . $nf->format($game->inning) . ' inning.';
+            $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
             $game->sideAway();
         }
 
