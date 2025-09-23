@@ -6,6 +6,7 @@ use App\Http\Controllers\PersonController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TeamController;
 use App\Models\Game;
+use App\Models\Redirect;
 use App\Models\Team;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -51,3 +52,7 @@ Route::controller(PersonController::class)->group(function () {
 Route::controller(StatsController::class)->group(function () {
     Route::get('/stats', 'show')->name('stats.show');
 });
+
+Route::get('/volunteer-form/{redirect:key}', function(Redirect $redirect) {
+    return redirect($redirect->destination);
+})->name('volunteer');
