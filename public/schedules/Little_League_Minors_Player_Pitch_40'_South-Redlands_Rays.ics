@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629486@mygameday.app
 SUMMARY:Southern Stars vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251004T080000
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629466@mygameday.app
 SUMMARY:Redlands Rays vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20251011T080000
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629432@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251018T080000
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629436@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251108T103000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629439@mygameday.app
 SUMMARY:Redlands Rays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251115T080000
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629476@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251122T080000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629456@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251129T103000
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629449@mygameday.app
 SUMMARY:Redlands Rays vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251206T080000
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629460@mygameday.app
 SUMMARY:Redlands Rays vs Western Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20260124T080000
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629454@mygameday.app
 SUMMARY:Redlands Rays vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20260207T080000
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629434@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20260214T080000
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629441@mygameday.app
 SUMMARY:Southern Stars vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20260221T080000
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629424@mygameday.app
 SUMMARY:Redlands Rays vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20260228T080000
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2

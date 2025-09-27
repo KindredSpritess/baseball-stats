@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631352@mygameday.app
 SUMMARY:Pine Hills White vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251004T130000
 DTSTART;TZID=Australia/Brisbane:20251004T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630975@mygameday.app
 SUMMARY:Pine Hills Black vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251011T130000
 DTSTART;TZID=Australia/Brisbane:20251011T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631214@mygameday.app
 SUMMARY:Pine Hills Gold vs Pine Hills Black
+DTSTAMP;TZID=Australia/Brisbane:20251018T130000
 DTSTART;TZID=Australia/Brisbane:20251018T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630963@mygameday.app
 SUMMARY:Pine Hills Gold vs Windsor Royals Blue
+DTSTAMP;TZID=Australia/Brisbane:20251101T103000
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631584@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251108T103000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631322@mygameday.app
 SUMMARY:Pine Hills Gold vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20251115T153000
 DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631280@mygameday.app
 SUMMARY:Narangba Demons Blue vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251122T130000
 DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631399@mygameday.app
 SUMMARY:Narangba Demons Green vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251129T130000
 DTSTART;TZID=Australia/Brisbane:20251129T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631680@mygameday.app
 SUMMARY:Pine Hills Gold vs All Stars
+DTSTAMP;TZID=Australia/Brisbane:20251206T130000
 DTSTART;TZID=Australia/Brisbane:20251206T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631026@mygameday.app
 SUMMARY:Windsor Royals Red vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20260124T103000
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631539@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20260131T103000
 DTSTART;TZID=Australia/Brisbane:20260131T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631488@mygameday.app
 SUMMARY:Pine Hills Gold vs Pine Hills White
+DTSTAMP;TZID=Australia/Brisbane:20260207T103000
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631570@mygameday.app
 SUMMARY:Pine Hills Gold vs Redcliffe Padres Red
+DTSTAMP;TZID=Australia/Brisbane:20260214T130000
 DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631118@mygameday.app
 SUMMARY:Pine Hills Gold vs Narangba Demons Blue
+DTSTAMP;TZID=Australia/Brisbane:20260221T130000
 DTSTART;TZID=Australia/Brisbane:20260221T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631512@mygameday.app
 SUMMARY:Windsor Royals Blue vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20260228T103000
 DTSTART;TZID=Australia/Brisbane:20260228T103000
 DURATION:PT2H
 LOCATION:Windsor Royals

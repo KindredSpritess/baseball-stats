@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629100@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20251004T080000
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629142@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Stealers
+DTSTAMP;TZID=Australia/Brisbane:20251011T080000
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629097@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Sluggers
+DTSTAMP;TZID=Australia/Brisbane:20251018T080000
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629224@mygameday.app
 SUMMARY:Windsor Royals Blue vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251025T103000
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
 LOCATION:Windsor Royals LL Minors Field
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629206@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Redcliffe Padres Red
+DTSTAMP;TZID=Australia/Brisbane:20251101T080000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629034@mygameday.app
 SUMMARY:Narangba Demons Thunder vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251115T080000
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629136@mygameday.app
 SUMMARY:Pine Rivers Rapids vs All Stars
+DTSTAMP;TZID=Australia/Brisbane:20251122T080000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629198@mygameday.app
 SUMMARY:Windsor Royals Red vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251129T080000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Windsor Royals  Downey Park
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629169@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251206T080000
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629203@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20260124T103000
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628999@mygameday.app
 SUMMARY:Narangba Demons Sluggers vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20260131T080000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629003@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Windsor Royals Blue
+DTSTAMP;TZID=Australia/Brisbane:20260207T080000
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629043@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20260214T080000
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629207@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Thunder
+DTSTAMP;TZID=Australia/Brisbane:20260228T080000
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids

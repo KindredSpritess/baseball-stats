@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631070@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251004T180000
 DTSTART;TZID=Australia/Brisbane:20251004T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631180@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251011T180000
 DTSTART;TZID=Australia/Brisbane:20251011T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631051@mygameday.app
 SUMMARY:Redcliffe Padres vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251018T180000
 DTSTART;TZID=Australia/Brisbane:20251018T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631626@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251025T180000
 DTSTART;TZID=Australia/Brisbane:20251025T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631010@mygameday.app
 SUMMARY:Redcliffe Padres vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251108T180000
 DTSTART;TZID=Australia/Brisbane:20251108T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631081@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251115T180000
 DTSTART;TZID=Australia/Brisbane:20251115T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631531@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251122T180000
 DTSTART;TZID=Australia/Brisbane:20251122T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631319@mygameday.app
 SUMMARY:Narangba Demons vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251129T180000
 DTSTART;TZID=Australia/Brisbane:20251129T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631073@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260110T180000
 DTSTART;TZID=Australia/Brisbane:20260110T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631382@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260117T180000
 DTSTART;TZID=Australia/Brisbane:20260117T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631351@mygameday.app
 SUMMARY:Redcliffe Padres vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20260124T180000
 DTSTART;TZID=Australia/Brisbane:20260124T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631046@mygameday.app
 SUMMARY:Redcliffe Padres vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260131T180000
 DTSTART;TZID=Australia/Brisbane:20260131T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631684@mygameday.app
 SUMMARY:Redcliffe Padres vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20260214T180000
 DTSTART;TZID=Australia/Brisbane:20260214T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630995@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20260221T180000
 DTSTART;TZID=Australia/Brisbane:20260221T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631091@mygameday.app
 SUMMARY:Narangba Demons vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260228T180000
 DTSTART;TZID=Australia/Brisbane:20260228T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1

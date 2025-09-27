@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631254@mygameday.app
 SUMMARY:Southern Stars vs Narangba Demons Blue
+DTSTAMP;TZID=Australia/Brisbane:20251004T130000
 DTSTART;TZID=Australia/Brisbane:20251004T130000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631519@mygameday.app
 SUMMARY:Carina White-sox vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251011T130000
 DTSTART;TZID=Australia/Brisbane:20251011T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631564@mygameday.app
 SUMMARY:Southern Stars vs Pine Hills 
+DTSTAMP;TZID=Australia/Brisbane:20251018T103000
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631543@mygameday.app
 SUMMARY:Redcliffe Padres vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251101T130000
 DTSTART;TZID=Australia/Brisbane:20251101T130000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631481@mygameday.app
 SUMMARY:Southern Stars vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251108T130000
 DTSTART;TZID=Australia/Brisbane:20251108T130000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631641@mygameday.app
 SUMMARY:Southern Stars vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251122T130000
 DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631443@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251129T130000
 DTSTART;TZID=Australia/Brisbane:20251129T130000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631545@mygameday.app
 SUMMARY:Narangba Demons Blue vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251206T153000
 DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631343@mygameday.app
 SUMMARY:Southern Stars vs Carina White-sox
+DTSTAMP;TZID=Australia/Brisbane:20260124T130000
 DTSTART;TZID=Australia/Brisbane:20260124T130000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630962@mygameday.app
 SUMMARY:Pine Hills  vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20260131T153000
 DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631353@mygameday.app
 SUMMARY:Carina Red-sox  vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20260207T130000
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631290@mygameday.app
 SUMMARY:Southern Stars vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260214T130000
 DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631645@mygameday.app
 SUMMARY:Narangba Demons Green vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20260221T130000
 DTSTART;TZID=Australia/Brisbane:20260221T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631699@mygameday.app
 SUMMARY:Southern Stars vs Carina Red-sox 
+DTSTAMP;TZID=Australia/Brisbane:20260228T130000
 DTSTART;TZID=Australia/Brisbane:20260228T130000
 DURATION:PT2H
 LOCATION:Southern Stars 

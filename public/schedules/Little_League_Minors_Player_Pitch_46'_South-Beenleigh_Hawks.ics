@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629234@mygameday.app
 SUMMARY:Beenleigh Hawks vs Western Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251004T080000
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629159@mygameday.app
 SUMMARY:Redlands Manta Rays vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251011T080000
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629239@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251018T080000
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629212@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251025T080000
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629019@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251101T080000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629012@mygameday.app
 SUMMARY:Toowoomba Rangers vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251108T103000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Toowoomba Rangers
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629178@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251122T080000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629080@mygameday.app
 SUMMARY:Beenleigh Hawks vs Runcorn Indians
+DTSTAMP;TZID=Australia/Brisbane:20251129T080000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629181@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251206T080000
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629115@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Manta Rays
+DTSTAMP;TZID=Australia/Brisbane:20260124T080000
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629065@mygameday.app
 SUMMARY:Beenleigh Hawks vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20260131T080000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629081@mygameday.app
 SUMMARY:Beenleigh Hawks vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260207T080000
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629026@mygameday.app
 SUMMARY:Carina Redsox vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20260214T103000
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629235@mygameday.app
 SUMMARY:Beenleigh Hawks vs Toowoomba Rangers
+DTSTAMP;TZID=Australia/Brisbane:20260221T080000
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629201@mygameday.app
 SUMMARY:Redlands Stingrays vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20260228T080000
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2

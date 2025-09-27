@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631141@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251004T103000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631176@mygameday.app
 SUMMARY:Windsor Royals Red vs Runcorn Indians
+DTSTAMP;TZID=Australia/Brisbane:20251011T080000
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630954@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251018T080000
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631295@mygameday.app
 SUMMARY:Windsor Royals Red vs Windsor Royals Blue
+DTSTAMP;TZID=Australia/Brisbane:20251025T080000
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631059@mygameday.app
 SUMMARY:Windsor Royals Red vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251101T080000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631696@mygameday.app
 SUMMARY:Windsor Royals Red vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251108T080000
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631270@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251122T080000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631266@mygameday.app
 SUMMARY:Western Bulldogs vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251129T080000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631243@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251206T080000
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631366@mygameday.app
 SUMMARY:Windsor Royals Red vs Pine Hills Black
+DTSTAMP;TZID=Australia/Brisbane:20260124T080000
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631662@mygameday.app
 SUMMARY:Pine Hills Gold vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20260131T080000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631277@mygameday.app
 SUMMARY:Windsor Royals Red vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20260207T080000
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631149@mygameday.app
 SUMMARY:Windsor Royals Red vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260214T080000
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631687@mygameday.app
 SUMMARY:Runcorn Indians vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20260221T080000
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1

@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631272@mygameday.app
 SUMMARY:Windsor Royals Red vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251004T130000
 DTSTART;TZID=Australia/Brisbane:20251004T130000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631420@mygameday.app
 SUMMARY:Redlands Manta Rays vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251011T153000
 DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631401@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251018T130000
 DTSTART;TZID=Australia/Brisbane:20251018T130000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631063@mygameday.app
 SUMMARY:Narangba Demons vs Redlands Manta Rays
+DTSTAMP;TZID=Australia/Brisbane:20251025T130000
 DTSTART;TZID=Australia/Brisbane:20251025T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631305@mygameday.app
 SUMMARY:Beenleigh Hawks vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251101T153000
 DTSTART;TZID=Australia/Brisbane:20251101T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630959@mygameday.app
 SUMMARY:Narangba Demons vs Western Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251108T153000
 DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631307@mygameday.app
 SUMMARY:Redlands Stingrays vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251115T130000
 DTSTART;TZID=Australia/Brisbane:20251115T130000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631230@mygameday.app
 SUMMARY:Narangba Demons vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251122T130000
 DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631532@mygameday.app
 SUMMARY:Windsor Royals Blue vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251129T130000
 DTSTART;TZID=Australia/Brisbane:20251129T130000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631346@mygameday.app
 SUMMARY:Narangba Demons vs Redcliffe Padres Red
+DTSTAMP;TZID=Australia/Brisbane:20251206T153000
 DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631447@mygameday.app
 SUMMARY:Narangba Demons vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20260124T153000
 DTSTART;TZID=Australia/Brisbane:20260124T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631098@mygameday.app
 SUMMARY:Narangba Demons vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20260131T130000
 DTSTART;TZID=Australia/Brisbane:20260131T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631362@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20260207T130000
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631200@mygameday.app
 SUMMARY:Narangba Demons vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20260214T130000
 DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631669@mygameday.app
 SUMMARY:Western Bulldogs vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20260221T153000
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
@@ -119,6 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630953@mygameday.app
 SUMMARY:Narangba Demons vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20260228T130000
 DTSTART;TZID=Australia/Brisbane:20260228T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1

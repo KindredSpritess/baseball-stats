@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627898@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redlands Mantarays
+DTSTAMP;TZID=Australia/Brisbane:20251006T201500
 DTSTART;TZID=Australia/Brisbane:20251006T201500
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627928@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20251013T190000
 DTSTART;TZID=Australia/Brisbane:20251013T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627736@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20251020T190000
 DTSTART;TZID=Australia/Brisbane:20251020T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627498@mygameday.app
 SUMMARY:Redlands Roughtails vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251027T201500
 DTSTART;TZID=Australia/Brisbane:20251027T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628245@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20251103T190000
 DTSTART;TZID=Australia/Brisbane:20251103T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627814@mygameday.app
 SUMMARY:Redlands Mantarays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251110T201500
 DTSTART;TZID=Australia/Brisbane:20251110T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628251@mygameday.app
 SUMMARY:Indians Sioux vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251117T190000
 DTSTART;TZID=Australia/Brisbane:20251117T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627517@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251124T190000
 DTSTART;TZID=Australia/Brisbane:20251124T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627910@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redlands Roughtails
+DTSTAMP;TZID=Australia/Brisbane:20251201T190000
 DTSTART;TZID=Australia/Brisbane:20251201T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628001@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251208T190000
 DTSTART;TZID=Australia/Brisbane:20251208T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628091@mygameday.app
 SUMMARY:Redlands Mantarays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260105T201500
 DTSTART;TZID=Australia/Brisbane:20260105T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628088@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20260112T183000
 DTSTART;TZID=Australia/Brisbane:20260112T183000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627610@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20260119T190000
 DTSTART;TZID=Australia/Brisbane:20260119T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627987@mygameday.app
 SUMMARY:Redlands Roughtails vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260202T183000
 DTSTART;TZID=Australia/Brisbane:20260202T183000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627708@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20260209T183000
 DTSTART;TZID=Australia/Brisbane:20260209T183000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -119,6 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628202@mygameday.app
 SUMMARY:Redlands Mantarays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260216T190000
 DTSTART;TZID=Australia/Brisbane:20260216T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -126,6 +142,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627609@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20260223T190000
 DTSTART;TZID=Australia/Brisbane:20260223T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
@@ -133,6 +150,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628035@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20260302T190000
 DTSTART;TZID=Australia/Brisbane:20260302T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1

@@ -14,6 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631173@mygameday.app
 SUMMARY:Carina Redsox vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251004T180000
 DTSTART;TZID=Australia/Brisbane:20251004T180000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -21,6 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631089@mygameday.app
 SUMMARY:Windsor Royals vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251011T153000
 DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -28,6 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631470@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251018T153000
 DTSTART;TZID=Australia/Brisbane:20251018T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -35,6 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631113@mygameday.app
 SUMMARY:Windsor Royals vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251025T153000
 DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -42,6 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631289@mygameday.app
 SUMMARY:Redlands Rays vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251101T153000
 DTSTART;TZID=Australia/Brisbane:20251101T153000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -49,6 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631700@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251108T153000
 DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -56,6 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631218@mygameday.app
 SUMMARY:Carina Redsox vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251115T153000
 DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631606@mygameday.app
 SUMMARY:Windsor Royals vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251122T153000
 DTSTART;TZID=Australia/Brisbane:20251122T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -70,6 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631444@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251129T153000
 DTSTART;TZID=Australia/Brisbane:20251129T153000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -77,6 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631007@mygameday.app
 SUMMARY:Windsor Royals vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251206T153000
 DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
 LOCATION:All Stars Diamond 2
@@ -84,6 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631311@mygameday.app
 SUMMARY:Redlands Rays vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20260124T153000
 DTSTART;TZID=Australia/Brisbane:20260124T153000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -91,6 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631646@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260131T153000
 DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -98,6 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631386@mygameday.app
 SUMMARY:Carina Redsox vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20260207T153000
 DTSTART;TZID=Australia/Brisbane:20260207T153000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -105,6 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631469@mygameday.app
 SUMMARY:Redlands Rays vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20260214T130000
 DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -112,6 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631067@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20260221T153000
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -119,6 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631273@mygameday.app
 SUMMARY:Windsor Royals vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20260228T130000
 DTSTART;TZID=Australia/Brisbane:20260228T130000
 DURATION:PT2H
 LOCATION:Windsor Royals
