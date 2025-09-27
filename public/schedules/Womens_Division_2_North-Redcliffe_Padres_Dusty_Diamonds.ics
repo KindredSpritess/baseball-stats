@@ -1,0 +1,114 @@
+BEGIN:VCALENDAR
+NAME:Redcliffe Padres Dusty Diamonds Schedule
+TZID:Australia/Brisbane
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids White
+DTSTART:20251004T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Redcliffe Padres Ruby Red
+DTSTART:20251011T180000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Windsor Royals Red
+DTSTART:20251018T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Green vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251025T153000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pine Rivers Rapids Green vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251101T153000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Hills Lightning
+DTSTART:20251108T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Ruby Red vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251115T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Blue vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251122T153000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Rose Gold vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251129T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pine Rivers Rapids White vs Redcliffe Padres Dusty Diamonds
+DTSTART:20251206T153000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Narangba Demons Green
+DTSTART:20260110T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Windsor Royals Red vs Redcliffe Padres Dusty Diamonds
+DTSTART:20260117T153000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Windsor Royals Blue vs Redcliffe Padres Dusty Diamonds
+DTSTART:20260124T180000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids Green
+DTSTART:20260131T180000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pine Hills Lightning vs Redcliffe Padres Dusty Diamonds
+DTSTART:20260207T153000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Narangba Demons Blue
+DTSTART:20260214T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Windsor Royals Blue
+DTSTART:20260221T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Dusty Diamonds vs Redcliffe Padres Rose Gold
+DTSTART:20260228T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+END:VCALENDAR

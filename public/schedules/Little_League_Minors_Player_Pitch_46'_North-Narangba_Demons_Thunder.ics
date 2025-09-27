@@ -1,0 +1,96 @@
+BEGIN:VCALENDAR
+NAME:Narangba Demons Thunder Schedule
+TZID:Australia/Brisbane
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Windsor Royals Red
+DTSTART:20251004T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Grey vs Narangba Demons Thunder
+DTSTART:20251011T080000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Narangba Demons Stealers
+DTSTART:20251018T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Sluggers vs Narangba Demons Thunder
+DTSTART:20251025T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Windsor Royals Blue
+DTSTART:20251101T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Redcliffe Padres Red vs Narangba Demons Thunder
+DTSTART:20251108T080000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Pine Rivers Rapids
+DTSTART:20251115T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:All Stars vs Narangba Demons Thunder
+DTSTART:20251129T080000
+DURATION:PT2H
+LOCATION:All Stars Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Windsor Royals Red vs Narangba Demons Thunder
+DTSTART:20251206T080000
+DURATION:PT2H
+LOCATION:Windsor Royals  Downey Park
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Redcliffe Padres Grey
+DTSTART:20260124T103000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Stealers vs Narangba Demons Thunder
+DTSTART:20260131T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Narangba Demons Sluggers
+DTSTART:20260207T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Windsor Royals Blue vs Narangba Demons Thunder
+DTSTART:20260214T080000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Narangba Demons Thunder vs Redcliffe Padres Red
+DTSTART:20260221T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pine Rivers Rapids vs Narangba Demons Thunder
+DTSTART:20260228T080000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+END:VCALENDAR
