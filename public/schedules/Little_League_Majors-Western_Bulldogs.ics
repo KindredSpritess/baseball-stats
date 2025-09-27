@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Western Bulldogs Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631656@mygameday.app
 SUMMARY:Narangba Demons vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631486@mygameday.app
 SUMMARY:Western Bulldogs vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631435@mygameday.app
 SUMMARY:Redlands Rays vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631493@mygameday.app
 SUMMARY:Western Bulldogs vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631275@mygameday.app
 SUMMARY:Southern Stars vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631082@mygameday.app
 SUMMARY:Runcorn Indians vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 3
 END:VEVENT
 BEGIN:VEVENT
+UID:630955@mygameday.app
 SUMMARY:Western Bulldogs vs Redcliffe Padres Grey
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631266@mygameday.app
 SUMMARY:Western Bulldogs vs Windsor Royals Red
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631014@mygameday.app
 SUMMARY:Windsor Royals Blue vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631008@mygameday.app
 SUMMARY:Western Bulldogs vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631192@mygameday.app
 SUMMARY:Pine Hills Black vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631222@mygameday.app
 SUMMARY:Western Bulldogs vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631388@mygameday.app
 SUMMARY:Western Bulldogs vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631235@mygameday.app
 SUMMARY:Ipswich Musketeers vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631224@mygameday.app
 SUMMARY:Western Bulldogs vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

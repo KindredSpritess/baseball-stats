@@ -1,99 +1,123 @@
 BEGIN:VCALENDAR
 SUMMARY:Beenleigh Hawks Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629501@mygameday.app
 SUMMARY:Beenleigh Hawks vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629496@mygameday.app
 SUMMARY:Redlands Stingrays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629525@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629527@mygameday.app
 SUMMARY:Redlands Devil Rays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629512@mygameday.app
 SUMMARY:Beenleigh Hawks vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20251101T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629532@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629504@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629518@mygameday.app
 SUMMARY:Carina Redsox vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629492@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Devil Rays
 DTSTART;TZID=Australia/Brisbane:20251129T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629523@mygameday.app
 SUMMARY:Runcorn Indians vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629520@mygameday.app
 SUMMARY:Beenleigh Hawks vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260124T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629516@mygameday.app
 SUMMARY:Redlands Stingrays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260131T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629497@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629493@mygameday.app
 SUMMARY:Redlands Devil Rays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629515@mygameday.app
 SUMMARY:Beenleigh Hawks vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629506@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260228T103000
 DURATION:PT2H

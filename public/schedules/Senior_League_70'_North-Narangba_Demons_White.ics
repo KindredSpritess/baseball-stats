@@ -1,99 +1,123 @@
 BEGIN:VCALENDAR
 SUMMARY:Narangba Demons White Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631462@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:631036@mygameday.app
 SUMMARY:Windsor Royals vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Windsor Royals  Downey Park
 END:VEVENT
 BEGIN:VEVENT
+UID:631135@mygameday.app
 SUMMARY:Pine Hills Gold vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631411@mygameday.app
 SUMMARY:Narangba Demons Blue vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631434@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631514@mygameday.app
 SUMMARY:Narangba Demons White vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251108T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631308@mygameday.app
 SUMMARY:Narangba Demons White vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251115T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631431@mygameday.app
 SUMMARY:Narangba Demons Green vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20251122T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:630982@mygameday.app
 SUMMARY:Narangba Demons White vs Redcliffe Padres Grey
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631056@mygameday.app
 SUMMARY:Narangba Demons White vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20251206T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631651@mygameday.app
 SUMMARY:Narangba Demons White vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20260124T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631585@mygameday.app
 SUMMARY:Narangba Demons White vs Narangba Demons Blue
 DTSTART;TZID=Australia/Brisbane:20260131T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631634@mygameday.app
 SUMMARY:All Stars vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
 LOCATION:All Stars Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631037@mygameday.app
 SUMMARY:Narangba Demons White vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631576@mygameday.app
 SUMMARY:Pine Hills Black vs Narangba Demons White
 DTSTART;TZID=Australia/Brisbane:20260221T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631624@mygameday.app
 SUMMARY:Narangba Demons White vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20260228T103000
 DURATION:PT2H

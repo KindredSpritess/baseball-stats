@@ -1,81 +1,102 @@
 BEGIN:VCALENDAR
 SUMMARY:Beenleigh Hawks Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629429@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629432@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629427@mygameday.app
 SUMMARY:Carina Redsox vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629480@mygameday.app
 SUMMARY:Beenleigh Hawks vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629457@mygameday.app
 SUMMARY:Southern Stars vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:629464@mygameday.app
 SUMMARY:Beenleigh Hawks vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629481@mygameday.app
 SUMMARY:Beenleigh Hawks vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629449@mygameday.app
 SUMMARY:Redlands Rays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:629468@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629455@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629431@mygameday.app
 SUMMARY:Beenleigh Hawks vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629473@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629475@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

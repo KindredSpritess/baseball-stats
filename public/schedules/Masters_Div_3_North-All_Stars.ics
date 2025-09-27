@@ -1,99 +1,123 @@
 BEGIN:VCALENDAR
 SUMMARY:All Stars Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629341@mygameday.app
 SUMMARY:Narangba Demons Blue vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251006T183000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629263@mygameday.app
 SUMMARY:All Stars vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20251013T201500
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629356@mygameday.app
 SUMMARY:All Stars vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20251020T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629387@mygameday.app
 SUMMARY:Narangba Demons Green vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251027T201500
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629314@mygameday.app
 SUMMARY:Redcliffe Padres vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251110T190000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629421@mygameday.app
 SUMMARY:Pine Rivers Rapids Gold vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251117T183000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629255@mygameday.app
 SUMMARY:All Stars vs Narangba Demons Blue
 DTSTART;TZID=Australia/Brisbane:20251124T201500
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629388@mygameday.app
 SUMMARY:All Stars vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20251201T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629293@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251208T183000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629373@mygameday.app
 SUMMARY:Narangba Demons Green vs All Stars
 DTSTART;TZID=Australia/Brisbane:20260105T201500
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629254@mygameday.app
 SUMMARY:All Stars vs Redcliffe Padres
 DTSTART;TZID=Australia/Brisbane:20260119T201500
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629272@mygameday.app
 SUMMARY:All Stars vs Pine Rivers Rapids Gold
 DTSTART;TZID=Australia/Brisbane:20260202T201500
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629276@mygameday.app
 SUMMARY:Narangba Demons Blue vs All Stars
 DTSTART;TZID=Australia/Brisbane:20260209T183000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629389@mygameday.app
 SUMMARY:All Stars vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20260216T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629301@mygameday.app
 SUMMARY:All Stars vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20260223T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629346@mygameday.app
 SUMMARY:All Stars vs Narangba Demons Green
 DTSTART;TZID=Australia/Brisbane:20260302T190000
 DURATION:PT2H

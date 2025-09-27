@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Redlands Stingrays Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:628987@mygameday.app
 SUMMARY:Redlands Stingrays vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:629051@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628979@mygameday.app
 SUMMARY:Redlands Stingrays vs Toowoomba Rangers
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:629096@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628982@mygameday.app
 SUMMARY:Redlands Stingrays vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:629121@mygameday.app
 SUMMARY:Redlands Stingrays vs Redlands Manta Rays
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:629178@mygameday.app
 SUMMARY:Beenleigh Hawks vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629149@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629103@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629017@mygameday.app
 SUMMARY:Redlands Stingrays vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629092@mygameday.app
 SUMMARY:Toowoomba Rangers vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20260131T100000
 DURATION:PT2H
 LOCATION:Toowoomba Rangers
 END:VEVENT
 BEGIN:VEVENT
+UID:629162@mygameday.app
 SUMMARY:Redlands Stingrays vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628983@mygameday.app
 SUMMARY:Runcorn Indians vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 3
 END:VEVENT
 BEGIN:VEVENT
+UID:629201@mygameday.app
 SUMMARY:Redlands Stingrays vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

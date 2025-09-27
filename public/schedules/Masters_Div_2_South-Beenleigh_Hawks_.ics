@@ -1,111 +1,137 @@
 BEGIN:VCALENDAR
 SUMMARY:Beenleigh Hawks  Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:627806@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Indians Sioux
 DTSTART;TZID=Australia/Brisbane:20251006T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:627506@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Roughtails
 DTSTART;TZID=Australia/Brisbane:20251013T183000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:627698@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Mantarays
 DTSTART;TZID=Australia/Brisbane:20251020T201500
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:627943@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251027T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:628245@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251103T190000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:627664@mygameday.app
 SUMMARY:Indians Sioux vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251110T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628004@mygameday.app
 SUMMARY:Redlands Roughtails vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251117T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:627615@mygameday.app
 SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251124T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:627847@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251201T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:628001@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251208T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:627815@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Indians Sioux
 DTSTART;TZID=Australia/Brisbane:20260105T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:628234@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Roughtails
 DTSTART;TZID=Australia/Brisbane:20260112T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:627540@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Mantarays
 DTSTART;TZID=Australia/Brisbane:20260119T201500
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:628150@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260202T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:627708@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260209T183000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:627535@mygameday.app
 SUMMARY:Indians Sioux vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260216T201500
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628063@mygameday.app
 SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260223T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:627469@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Roughtails
 DTSTART;TZID=Australia/Brisbane:20260302T190000
 DURATION:PT2H

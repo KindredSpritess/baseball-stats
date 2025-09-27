@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Redlands Rays Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631288@mygameday.app
 SUMMARY:Pine Hills Black vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631242@mygameday.app
 SUMMARY:Redlands Rays vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631435@mygameday.app
 SUMMARY:Redlands Rays vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631276@mygameday.app
 SUMMARY:Runcorn Indians vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631696@mygameday.app
 SUMMARY:Windsor Royals Red vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631023@mygameday.app
 SUMMARY:Narangba Demons vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631031@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631349@mygameday.app
 SUMMARY:Redlands Rays vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631131@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631445@mygameday.app
 SUMMARY:Redlands Rays vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631220@mygameday.app
 SUMMARY:Windsor Royals Blue vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631132@mygameday.app
 SUMMARY:Redlands Rays vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631138@mygameday.app
 SUMMARY:Redlands Rays vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631263@mygameday.app
 SUMMARY:Pine Hills Gold vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:630967@mygameday.app
 SUMMARY:Redlands Rays vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

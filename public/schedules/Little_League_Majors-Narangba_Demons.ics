@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Narangba Demons Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631656@mygameday.app
 SUMMARY:Narangba Demons vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631100@mygameday.app
 SUMMARY:Southern Stars vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631559@mygameday.app
 SUMMARY:Narangba Demons vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631093@mygameday.app
 SUMMARY:Narangba Demons vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631690@mygameday.app
 SUMMARY:Narangba Demons vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631009@mygameday.app
 SUMMARY:Windsor Royals Blue vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631023@mygameday.app
 SUMMARY:Narangba Demons vs Redlands Rays
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631165@mygameday.app
 SUMMARY:Pine Hills Black vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631611@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631144@mygameday.app
 SUMMARY:Ipswich Musketeers vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631436@mygameday.app
 SUMMARY:Narangba Demons vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631277@mygameday.app
 SUMMARY:Windsor Royals Red vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631388@mygameday.app
 SUMMARY:Western Bulldogs vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631652@mygameday.app
 SUMMARY:Narangba Demons vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:630967@mygameday.app
 SUMMARY:Redlands Rays vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

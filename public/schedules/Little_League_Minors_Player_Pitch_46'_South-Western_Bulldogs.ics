@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Western Bulldogs Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629234@mygameday.app
 SUMMARY:Beenleigh Hawks vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629124@mygameday.app
 SUMMARY:Western Bulldogs vs Toowoomba Rangers
 DTSTART;TZID=Australia/Brisbane:20251011T093000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629148@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Manta Rays
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629096@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629079@mygameday.app
 SUMMARY:Western Bulldogs vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629059@mygameday.app
 SUMMARY:Runcorn Indians vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 3
 END:VEVENT
 BEGIN:VEVENT
+UID:628996@mygameday.app
 SUMMARY:Western Bulldogs vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629241@mygameday.app
 SUMMARY:Western Bulldogs vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629181@mygameday.app
 SUMMARY:Western Bulldogs vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629143@mygameday.app
 SUMMARY:Toowoomba Rangers vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260124T093000
 DURATION:PT2H
 LOCATION:Toowoomba Rangers
 END:VEVENT
 BEGIN:VEVENT
+UID:629061@mygameday.app
 SUMMARY:Redlands Manta Rays vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629162@mygameday.app
 SUMMARY:Redlands Stingrays vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629161@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629075@mygameday.app
 SUMMARY:Ipswich Musketeers vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

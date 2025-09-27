@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Beenleigh Hawks  Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631660@mygameday.app
 SUMMARY:Surfers Paradise vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
 LOCATION:Surfers Paradise Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631229@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251018T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631044@mygameday.app
 SUMMARY:Indians Kiowa vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631583@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20251101T180000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631589@mygameday.app
 SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251108T180000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631688@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631248@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Surfers Paradise
 DTSTART;TZID=Australia/Brisbane:20251129T180000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631667@mygameday.app
 SUMMARY:Redlands Stingrays vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20251206T180000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631147@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Indians Kiowa
 DTSTART;TZID=Australia/Brisbane:20260110T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631571@mygameday.app
 SUMMARY:Carina Redsox vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260117T153000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631088@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Mantarays
 DTSTART;TZID=Australia/Brisbane:20260124T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631174@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631376@mygameday.app
 SUMMARY:Surfers Paradise vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260214T153000
 DURATION:PT2H
 LOCATION:Surfers Paradise Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631324@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:631321@mygameday.app
 SUMMARY:Indians Kiowa vs Beenleigh Hawks 
 DTSTART;TZID=Australia/Brisbane:20260228T153000
 DURATION:PT2H

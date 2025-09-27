@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Mt Gravatt Eagles Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629071@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629239@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Beenleigh Hawks
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629117@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Redlands Manta Rays
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629079@mygameday.app
 SUMMARY:Western Bulldogs vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629233@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629220@mygameday.app
 SUMMARY:Toowoomba Rangers vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20251115T093000
 DURATION:PT2H
 LOCATION:Toowoomba Rangers
 END:VEVENT
 BEGIN:VEVENT
+UID:629132@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Carina Redsox
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629149@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Redlands Stingrays
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629226@mygameday.app
 SUMMARY:Runcorn Indians vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 3
 END:VEVENT
 BEGIN:VEVENT
+UID:629065@mygameday.app
 SUMMARY:Beenleigh Hawks vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
+UID:629208@mygameday.app
 SUMMARY:Redlands Manta Rays vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629161@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629104@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
+UID:629229@mygameday.app
 SUMMARY:Carina Redsox vs Mt Gravatt Eagles
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

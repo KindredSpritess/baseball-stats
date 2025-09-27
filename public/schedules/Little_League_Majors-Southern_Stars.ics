@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Southern Stars Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631190@mygameday.app
 SUMMARY:Pine Hills Gold vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631100@mygameday.app
 SUMMARY:Southern Stars vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631511@mygameday.app
 SUMMARY:Southern Stars vs Redcliffe Padres Grey
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631059@mygameday.app
 SUMMARY:Windsor Royals Red vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631275@mygameday.app
 SUMMARY:Southern Stars vs Western Bulldogs
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631612@mygameday.app
 SUMMARY:Ipswich Musketeers vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631031@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631581@mygameday.app
 SUMMARY:Southern Stars vs Runcorn Indians
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631607@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
 END:VEVENT
 BEGIN:VEVENT
+UID:631264@mygameday.app
 SUMMARY:Southern Stars vs Windsor Royals Blue
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631683@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:631553@mygameday.app
 SUMMARY:Southern Stars vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631551@mygameday.app
 SUMMARY:Southern Stars vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
+UID:631652@mygameday.app
 SUMMARY:Narangba Demons vs Southern Stars
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631495@mygameday.app
 SUMMARY:Southern Stars vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

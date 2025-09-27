@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Narangba Demons Stealers Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629152@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629142@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629116@mygameday.app
 SUMMARY:Narangba Demons Thunder vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629101@mygameday.app
 SUMMARY:Narangba Demons Stealers vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629158@mygameday.app
 SUMMARY:Windsor Royals Red vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:629050@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Redcliffe Padres Grey
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629237@mygameday.app
 SUMMARY:Narangba Demons Sluggers vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629118@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Windsor Royals Blue
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629014@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629203@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629070@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Narangba Demons Thunder
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629114@mygameday.app
 SUMMARY:All Stars vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:All Stars Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628976@mygameday.app
 SUMMARY:Narangba Demons Stealers vs Windsor Royals Red
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629028@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons Stealers
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H

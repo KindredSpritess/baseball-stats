@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Ipswich Musketeers Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631491@mygameday.app
 SUMMARY:Windsor Royals vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251004T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
+UID:631505@mygameday.app
 SUMMARY:Narangba Demons vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251011T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631626@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redcliffe Padres
 DTSTART;TZID=Australia/Brisbane:20251025T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:630961@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20251101T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
 END:VEVENT
 BEGIN:VEVENT
+UID:631360@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20251108T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631317@mygameday.app
 SUMMARY:Ipswich Musketeers vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20251115T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631531@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redcliffe Padres
 DTSTART;TZID=Australia/Brisbane:20251122T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631685@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mudgeeraba Redsox
 DTSTART;TZID=Australia/Brisbane:20251206T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631666@mygameday.app
 SUMMARY:Windsor Royals vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260110T180000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631107@mygameday.app
 SUMMARY:Narangba Demons vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260117T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631046@mygameday.app
 SUMMARY:Redcliffe Padres vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260131T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:631150@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Ipswich Musketeers
 DTSTART;TZID=Australia/Brisbane:20260207T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
 END:VEVENT
 BEGIN:VEVENT
+UID:631244@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20260214T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:631572@mygameday.app
 SUMMARY:Ipswich Musketeers vs Narangba Demons
 DTSTART;TZID=Australia/Brisbane:20260221T180000
 DURATION:PT2H

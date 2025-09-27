@@ -1,87 +1,109 @@
 BEGIN:VCALENDAR
 SUMMARY:Pine Hills Black Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:628803@mygameday.app
 SUMMARY:Pine Hills Black vs Narangba Demons Defenders
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628652@mygameday.app
 SUMMARY:All Stars White vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:All Stars Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628677@mygameday.app
 SUMMARY:Windsor Royals vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Windsor Royals LL Minors Field
 END:VEVENT
 BEGIN:VEVENT
+UID:628543@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628851@mygameday.app
 SUMMARY:Pine Hills White vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628874@mygameday.app
 SUMMARY:Pine Hills Black vs Redcliffe Padres Grey
 DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628810@mygameday.app
 SUMMARY:Narangba Demons Aces vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628895@mygameday.app
 SUMMARY:All Stars Black vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:All Stars Diamond 3
 END:VEVENT
 BEGIN:VEVENT
+UID:628484@mygameday.app
 SUMMARY:Pine Hills Black vs Redcliffe Padres Red
 DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628510@mygameday.app
 SUMMARY:Pine Hills Black vs Pine Rivers Rapids
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628618@mygameday.app
 SUMMARY:Narangba Demons Defenders vs Pine Hills Black
 DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628744@mygameday.app
 SUMMARY:Pine Hills Black vs All Stars White
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:628857@mygameday.app
 SUMMARY:Pine Hills Black vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:628865@mygameday.app
 SUMMARY:Pine Hills Black vs Pine Hills Gold
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H

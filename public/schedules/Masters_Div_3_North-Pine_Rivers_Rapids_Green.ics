@@ -1,93 +1,116 @@
 BEGIN:VCALENDAR
 SUMMARY:Pine Rivers Rapids Green Schedule
+BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629257@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Green
 DTSTART;TZID=Australia/Brisbane:20251013T201500
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629356@mygameday.app
 SUMMARY:All Stars vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20251020T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629407@mygameday.app
 SUMMARY:Redcliffe Padres vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20251027T190000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
+UID:629398@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Pine Rivers Rapids Gold
 DTSTART;TZID=Australia/Brisbane:20251103T190000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629417@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Blue
 DTSTART;TZID=Australia/Brisbane:20251110T201500
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629286@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20251117T201500
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629283@mygameday.app
 SUMMARY:Narangba Demons Green vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20251201T190000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629293@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs All Stars
 DTSTART;TZID=Australia/Brisbane:20251208T183000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629403@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Redcliffe Padres
 DTSTART;TZID=Australia/Brisbane:20260105T201500
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629330@mygameday.app
 SUMMARY:Pine Rivers Rapids Gold vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20260112T201500
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629364@mygameday.app
 SUMMARY:Narangba Demons Blue vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20260119T201500
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629361@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Windsor Royals
 DTSTART;TZID=Australia/Brisbane:20260202T183000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629270@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Green
 DTSTART;TZID=Australia/Brisbane:20260216T190000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
 BEGIN:VEVENT
+UID:629301@mygameday.app
 SUMMARY:All Stars vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20260223T190000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
+UID:629371@mygameday.app
 SUMMARY:Redcliffe Padres vs Pine Rivers Rapids Green
 DTSTART;TZID=Australia/Brisbane:20260302T201500
 DURATION:PT2H
