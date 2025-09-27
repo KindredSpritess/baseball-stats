@@ -8,8 +8,8 @@ use App\Http\Controllers\TeamController;
 use App\Models\Game;
 use App\Models\Redirect;
 use App\Models\Team;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,3 +56,9 @@ Route::controller(StatsController::class)->group(function () {
 Route::get('/volunteer-form/{redirect:key}', function(Redirect $redirect) {
     return redirect($redirect->destination);
 })->name('volunteer');
+
+Route::get('/schedule', function() {
+    return view('schedules', [
+        'calendars' => glob(public_path('schedules/*')),
+    ]);
+})->name('schedules');
