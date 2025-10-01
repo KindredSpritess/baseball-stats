@@ -14,15 +14,15 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631176@mygameday.app
 SUMMARY:Windsor Royals Red vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251011T080000
-DTSTART;TZID=Australia/Brisbane:20251011T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
-LOCATION:Windsor Royals
+LOCATION:Windsor Royals  Downey Park
 END:VEVENT
 BEGIN:VEVENT
 UID:631065@mygameday.app
 SUMMARY:Runcorn Indians vs Redcliffe Padres Red
-DTSTAMP;TZID=Australia/Brisbane:20251018T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -30,7 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631524@mygameday.app
 SUMMARY:Runcorn Indians vs Pine Rivers Rapids
-DTSTAMP;TZID=Australia/Brisbane:20251025T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631276@mygameday.app
 SUMMARY:Runcorn Indians vs Redlands Rays
-DTSTAMP;TZID=Australia/Brisbane:20251101T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631016@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251108T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
@@ -54,7 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631082@mygameday.app
 SUMMARY:Runcorn Indians vs Western Bulldogs
-DTSTAMP;TZID=Australia/Brisbane:20251115T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 3
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631616@mygameday.app
 SUMMARY:Windsor Royals Blue vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251122T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631581@mygameday.app
 SUMMARY:Southern Stars vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251129T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Southern Stars 
@@ -78,7 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631686@mygameday.app
 SUMMARY:Pine Hills Black vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251206T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631476@mygameday.app
 SUMMARY:Runcorn Indians vs Pine Hills Gold
-DTSTAMP;TZID=Australia/Brisbane:20260124T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631436@mygameday.app
 SUMMARY:Narangba Demons vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20260131T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -102,7 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631510@mygameday.app
 SUMMARY:Runcorn Indians vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260207T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -110,7 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631687@mygameday.app
 SUMMARY:Runcorn Indians vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20260221T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -118,7 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631224@mygameday.app
 SUMMARY:Western Bulldogs vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20260228T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1

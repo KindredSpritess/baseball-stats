@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627806@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20251006T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -22,23 +22,23 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627928@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20251013T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251013T190000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
+LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:627578@mygameday.app
 SUMMARY:Indians Sioux vs Redlands Roughtails
-DTSTAMP;TZID=Australia/Brisbane:20251020T183000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251020T183000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627823@mygameday.app
-SUMMARY:Indians Sioux vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251027T183000
+SUMMARY:Indians Sioux vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251027T183000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628187@mygameday.app
 SUMMARY:Mt Gravatt Eagles vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20251103T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251103T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
@@ -54,7 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627664@mygameday.app
 SUMMARY:Indians Sioux vs Beenleigh Hawks 
-DTSTAMP;TZID=Australia/Brisbane:20251110T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251110T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628251@mygameday.app
 SUMMARY:Indians Sioux vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251117T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251117T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -70,15 +70,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627970@mygameday.app
 SUMMARY:Indians Sioux vs Redlands Roughtails
-DTSTAMP;TZID=Australia/Brisbane:20251124T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251124T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627786@mygameday.app
-SUMMARY:Redlands Mantarays vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20251201T201500
+SUMMARY:Redlands Stingrays vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251201T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627996@mygameday.app
 SUMMARY:Indians Sioux vs Mt Gravatt Eagles
-DTSTAMP;TZID=Australia/Brisbane:20251208T201500
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251208T201500
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627815@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20260105T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260105T190000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -102,23 +102,23 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628088@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20260112T183000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260112T183000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
+LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:627793@mygameday.app
 SUMMARY:Redlands Roughtails vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20260119T201500
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260119T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627704@mygameday.app
-SUMMARY:Indians Sioux vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20260202T201500
+SUMMARY:Indians Sioux vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260202T201500
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -126,7 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628237@mygameday.app
 SUMMARY:Indians Sioux vs Mt Gravatt Eagles
-DTSTAMP;TZID=Australia/Brisbane:20260209T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260209T190000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -134,7 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:627535@mygameday.app
 SUMMARY:Indians Sioux vs Beenleigh Hawks 
-DTSTAMP;TZID=Australia/Brisbane:20260216T201500
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260216T201500
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -142,7 +142,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628046@mygameday.app
 SUMMARY:Redlands Roughtails vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20260223T183000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260223T183000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -150,9 +150,9 @@ END:VEVENT
 BEGIN:VEVENT
 UID:628035@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20260302T190000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260302T190000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
+LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 END:VCALENDAR

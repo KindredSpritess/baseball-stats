@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631163@mygameday.app
 SUMMARY:Narangba Demons Blue vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251004T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -22,7 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631521@mygameday.app
 SUMMARY:Pine Hills Lightning vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251011T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -30,7 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631293@mygameday.app
 SUMMARY:Windsor Royals Blue vs Redcliffe Padres Ruby Red
-DTSTAMP;TZID=Australia/Brisbane:20251018T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631369@mygameday.app
 SUMMARY:Windsor Royals Blue vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20251025T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631380@mygameday.app
 SUMMARY:Windsor Royals Blue vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20251101T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -54,7 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631706@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251108T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631209@mygameday.app
 SUMMARY:Windsor Royals Blue vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20251115T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631090@mygameday.app
 SUMMARY:Windsor Royals Blue vs Pine Rivers Rapids White
-DTSTAMP;TZID=Australia/Brisbane:20251122T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -78,7 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631614@mygameday.app
 SUMMARY:Windsor Royals Blue vs Narangba Demons Green
-DTSTAMP;TZID=Australia/Brisbane:20251129T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T180000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631339@mygameday.app
 SUMMARY:Windsor Royals Blue vs Narangba Demons Blue
-DTSTAMP;TZID=Australia/Brisbane:20251206T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631605@mygameday.app
 SUMMARY:Windsor Royals Red vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260110T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260110T153000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -102,7 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631125@mygameday.app
 SUMMARY:Redcliffe Padres Ruby Red vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260117T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260117T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -110,7 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631459@mygameday.app
 SUMMARY:Windsor Royals Blue vs Redcliffe Padres Dusty Diamonds
-DTSTAMP;TZID=Australia/Brisbane:20260124T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -118,7 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631464@mygameday.app
 SUMMARY:Redcliffe Padres Rose Gold vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260131T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -126,7 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631659@mygameday.app
 SUMMARY:Windsor Royals Blue vs Pine Rivers Rapids Green
-DTSTAMP;TZID=Australia/Brisbane:20260207T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -134,7 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631216@mygameday.app
 SUMMARY:Pine Rivers Rapids White vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260214T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T180000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -142,7 +142,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631234@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260221T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -150,7 +150,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631644@mygameday.app
 SUMMARY:Narangba Demons Green vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20260228T153000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T153000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1

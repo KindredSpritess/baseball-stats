@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631491@mygameday.app
 SUMMARY:Windsor Royals vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251004T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -22,7 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631180@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
-DTSTAMP;TZID=Australia/Brisbane:20251011T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251011T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -30,7 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631679@mygameday.app
 SUMMARY:Windsor Royals vs Mudgeeraba Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251018T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631228@mygameday.app
 SUMMARY:Windsor Royals vs Narangba Demons
-DTSTAMP;TZID=Australia/Brisbane:20251101T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631360@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20251108T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -54,7 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631081@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20251115T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631025@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20251129T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631423@mygameday.app
 SUMMARY:Windsor Royals vs Narangba Demons
-DTSTAMP;TZID=Australia/Brisbane:20251206T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -78,7 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631666@mygameday.app
 SUMMARY:Windsor Royals vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260110T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260110T180000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631382@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
-DTSTAMP;TZID=Australia/Brisbane:20260117T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260117T180000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631115@mygameday.app
 SUMMARY:Mudgeeraba Redsox vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20260124T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T180000
 DURATION:PT2H
 LOCATION:Mudgeeraba Redsox
@@ -102,7 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631453@mygameday.app
 SUMMARY:Narangba Demons vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20260207T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -110,7 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631244@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20260214T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T180000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 2
@@ -118,7 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630995@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20260221T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T180000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
@@ -126,7 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631237@mygameday.app
 SUMMARY:Windsor Royals vs Mudgeeraba Redsox
-DTSTAMP;TZID=Australia/Brisbane:20260228T180000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T180000
 DURATION:PT2H
 LOCATION:Windsor Royals

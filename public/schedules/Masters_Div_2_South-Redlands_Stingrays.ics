@@ -1,5 +1,5 @@
 BEGIN:VCALENDAR
-SUMMARY:Redlands Mantarays Schedule
+SUMMARY:Redlands Stingrays Schedule
 BEGIN:VTIMEZONE
 TZID:Australia/Brisbane
 BEGIN:STANDARD
@@ -13,144 +13,144 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627898@mygameday.app
-SUMMARY:Ipswich Musketeers vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251006T201500
+SUMMARY:Ipswich Musketeers vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T201500
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
+LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:628086@mygameday.app
-SUMMARY:Mt Gravatt Eagles vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251013T190000
+SUMMARY:Mt Gravatt Eagles vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251013T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
 UID:627698@mygameday.app
-SUMMARY:Beenleigh Hawks  vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251020T201500
+SUMMARY:Beenleigh Hawks  vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251020T201500
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
 UID:627823@mygameday.app
-SUMMARY:Indians Sioux vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251027T183000
+SUMMARY:Indians Sioux vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251027T183000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627913@mygameday.app
-SUMMARY:Redlands Mantarays vs Redlands Roughtails
-DTSTAMP;TZID=Australia/Brisbane:20251103T183000
+SUMMARY:Redlands Stingrays vs Redlands Roughtails
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251103T183000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627814@mygameday.app
-SUMMARY:Redlands Mantarays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251110T201500
+SUMMARY:Redlands Stingrays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251110T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627803@mygameday.app
-SUMMARY:Mt Gravatt Eagles vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251117T190000
+SUMMARY:Mt Gravatt Eagles vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251117T190000
 DURATION:PT2H
 LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
 UID:627615@mygameday.app
-SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
-DTSTAMP;TZID=Australia/Brisbane:20251124T201500
+SUMMARY:Redlands Stingrays vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251124T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627786@mygameday.app
-SUMMARY:Redlands Mantarays vs Indians Sioux
-DTSTAMP;TZID=Australia/Brisbane:20251201T201500
+SUMMARY:Redlands Stingrays vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251201T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627544@mygameday.app
-SUMMARY:Redlands Roughtails vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20251208T201500
+SUMMARY:Redlands Roughtails vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251208T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:628091@mygameday.app
-SUMMARY:Redlands Mantarays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260105T201500
+SUMMARY:Redlands Stingrays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260105T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627632@mygameday.app
-SUMMARY:Redlands Mantarays vs Mt Gravatt Eagles
-DTSTAMP;TZID=Australia/Brisbane:20260112T201500
+SUMMARY:Redlands Stingrays vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260112T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627540@mygameday.app
-SUMMARY:Beenleigh Hawks  vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20260119T201500
+SUMMARY:Beenleigh Hawks  vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260119T201500
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
 UID:627704@mygameday.app
-SUMMARY:Indians Sioux vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20260202T201500
+SUMMARY:Indians Sioux vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260202T201500
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627863@mygameday.app
-SUMMARY:Redlands Roughtails vs Redlands Mantarays
-DTSTAMP;TZID=Australia/Brisbane:20260209T183000
+SUMMARY:Redlands Roughtails vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260209T183000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:628202@mygameday.app
-SUMMARY:Redlands Mantarays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260216T190000
+SUMMARY:Redlands Stingrays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260216T190000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
+LOCATION:Ipswich Musketeers Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:628063@mygameday.app
-SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
-DTSTAMP;TZID=Australia/Brisbane:20260223T201500
+SUMMARY:Redlands Stingrays vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260223T201500
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627626@mygameday.app
-SUMMARY:Redlands Mantarays vs Mt Gravatt Eagles
-DTSTAMP;TZID=Australia/Brisbane:20260302T183000
+SUMMARY:Redlands Stingrays vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260302T183000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1

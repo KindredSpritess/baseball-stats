@@ -14,39 +14,39 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629519@mygameday.app
 SUMMARY:Redlands Devil Rays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251004T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:629535@mygameday.app
-SUMMARY:Carina Redsox vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251011T103000
+SUMMARY:Runcorn Indians vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
+LOCATION:Runcorn Indians Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629525@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251018T103000
-DTSTART;TZID=Australia/Brisbane:20251018T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251018T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
 END:VEVENT
 BEGIN:VEVENT
 UID:629503@mygameday.app
-SUMMARY:Carina Redsox vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251025T103000
+SUMMARY:Redlands Stingrays vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:629528@mygameday.app
 SUMMARY:Western Bulldogs vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251101T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
@@ -54,63 +54,63 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629499@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Devil Rays
-DTSTAMP;TZID=Australia/Brisbane:20251108T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629524@mygameday.app
-SUMMARY:Runcorn Indians vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251115T103000
-DTSTART;TZID=Australia/Brisbane:20251115T103000
+SUMMARY:Carina Redsox vs Runcorn Indians
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251115T080000
 DURATION:PT2H
-LOCATION:Runcorn Indians Diamond 1
+LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629518@mygameday.app
 SUMMARY:Carina Redsox vs Beenleigh Hawks
-DTSTAMP;TZID=Australia/Brisbane:20251122T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629526@mygameday.app
-SUMMARY:Redlands Stingrays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251129T103000
-DTSTART;TZID=Australia/Brisbane:20251129T103000
+SUMMARY:Carina Redsox vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
+LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629490@mygameday.app
 SUMMARY:Carina Redsox vs Western Bulldogs
-DTSTAMP;TZID=Australia/Brisbane:20251206T130000
-DTSTART;TZID=Australia/Brisbane:20251206T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629513@mygameday.app
 SUMMARY:Redlands Devil Rays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20260124T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Surfers Paradise Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629534@mygameday.app
-SUMMARY:Carina Redsox vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20260131T130000
-DTSTART;TZID=Australia/Brisbane:20260131T130000
+SUMMARY:Runcorn Indians vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260131T103000
 DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
+LOCATION:Runcorn Indians Diamond 3
 END:VEVENT
 BEGIN:VEVENT
 UID:629497@mygameday.app
 SUMMARY:Beenleigh Hawks vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20260207T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
 LOCATION:Beenleigh Hawks
@@ -118,24 +118,24 @@ END:VEVENT
 BEGIN:VEVENT
 UID:629531@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20260214T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629502@mygameday.app
-SUMMARY:Western Bulldogs vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20260221T103000
+SUMMARY:Carina Redsox vs Western Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
+LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:629498@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Devil Rays
-DTSTAMP;TZID=Australia/Brisbane:20260228T103000
-DTSTART;TZID=Australia/Brisbane:20260228T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260228T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT

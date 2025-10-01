@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631141@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20251004T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -22,7 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631486@mygameday.app
 SUMMARY:Western Bulldogs vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251011T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 3 (LL)
@@ -30,7 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631374@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251018T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631177@mygameday.app
 SUMMARY:Ipswich Musketeers vs Pine Hills Black
-DTSTAMP;TZID=Australia/Brisbane:20251025T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631697@mygameday.app
 SUMMARY:Ipswich Musketeers vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251101T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -54,7 +54,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631365@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251108T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 4 (LL)
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631612@mygameday.app
 SUMMARY:Ipswich Musketeers vs Southern Stars
-DTSTAMP;TZID=Australia/Brisbane:20251115T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631601@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251122T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T080000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -78,7 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631349@mygameday.app
 SUMMARY:Redlands Rays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251129T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630977@mygameday.app
 SUMMARY:Pine Hills Gold vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251206T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 2
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631144@mygameday.app
 SUMMARY:Ipswich Musketeers vs Narangba Demons
-DTSTAMP;TZID=Australia/Brisbane:20260124T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
@@ -102,7 +102,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631510@mygameday.app
 SUMMARY:Runcorn Indians vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260207T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -110,7 +110,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631149@mygameday.app
 SUMMARY:Windsor Royals Red vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260214T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Windsor Royals
@@ -118,15 +118,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631235@mygameday.app
 SUMMARY:Ipswich Musketeers vs Western Bulldogs
-DTSTAMP;TZID=Australia/Brisbane:20260221T080000
-DTSTART;TZID=Australia/Brisbane:20260221T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 2
+LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631495@mygameday.app
 SUMMARY:Southern Stars vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20260228T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Southern Stars 

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631497@mygameday.app
 SUMMARY:Redlands Stingrays vs Western Bulldogs Red
-DTSTAMP;TZID=Australia/Brisbane:20251004T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T130000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -22,7 +22,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631427@mygameday.app
 SUMMARY:Redlands Stingrays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251011T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -30,7 +30,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631529@mygameday.app
 SUMMARY:Runcorn Indians vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251018T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Runcorn Indians Diamond 1
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631185@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251025T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
@@ -46,15 +46,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631516@mygameday.app
 SUMMARY:Redlands Stingrays vs Toowoomba Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251101T130000
-DTSTART;TZID=Australia/Brisbane:20251101T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631526@mygameday.app
-SUMMARY:Redlands Rays vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251108T103000
+SUMMARY:Redlands Mantarays vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -62,7 +62,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631087@mygameday.app
 SUMMARY:Redlands Stingrays vs Western Bulldogs Blue
-DTSTAMP;TZID=Australia/Brisbane:20251115T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630987@mygameday.app
 SUMMARY:Western Bulldogs Red vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251122T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
@@ -78,7 +78,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631549@mygameday.app
 SUMMARY:Redlands Stingrays vs Western Bulldogs White
-DTSTAMP;TZID=Australia/Brisbane:20251129T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
@@ -86,7 +86,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631554@mygameday.app
 SUMMARY:Redlands Stingrays vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251206T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T130000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -94,7 +94,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631663@mygameday.app
 SUMMARY:Western Bulldogs White vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20260124T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
@@ -102,15 +102,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631206@mygameday.app
 SUMMARY:Toowoomba Musketeers vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20260131T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T130000
 DURATION:PT2H
 LOCATION:Ipswich Musketeers Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631372@mygameday.app
-SUMMARY:Redlands Stingrays vs Redlands Rays
-DTSTAMP;TZID=Australia/Brisbane:20260207T103000
+SUMMARY:Redlands Stingrays vs Redlands Mantarays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
@@ -118,7 +118,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631441@mygameday.app
 SUMMARY:Western Bulldogs Blue vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20260214T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 2
@@ -126,7 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631079@mygameday.app
 SUMMARY:Western Bulldogs Red vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20260221T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
@@ -134,7 +134,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631269@mygameday.app
 SUMMARY:Redlands Stingrays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20260228T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631239@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons Green
-DTSTAMP;TZID=Australia/Brisbane:20251004T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -22,15 +22,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631463@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251011T100000
-DTSTART;TZID=Australia/Brisbane:20251011T100000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251011T080000
 DURATION:PT2H
-LOCATION:Windsor Royals  Downey Park
+LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
 UID:631301@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Rivers Rapids
-DTSTAMP;TZID=Australia/Brisbane:20251018T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -38,7 +38,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631490@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251025T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -46,7 +46,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631164@mygameday.app
 SUMMARY:Narangba Demons Blue vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251101T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
@@ -54,15 +54,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631474@mygameday.app
 SUMMARY:All Stars vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251108T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
-LOCATION:All Stars Diamond 2
+LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:630979@mygameday.app
 SUMMARY:Pine Hills Gold vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251115T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T130000
 DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
@@ -70,7 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631385@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Hills Black
-DTSTAMP;TZID=Australia/Brisbane:20251122T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -78,15 +78,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630982@mygameday.app
 SUMMARY:Narangba Demons White vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251129T103000
-DTSTART;TZID=Australia/Brisbane:20251129T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
-LOCATION:Narangba Demons Diamond 2
+LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631563@mygameday.app
 SUMMARY:Narangba Demons Green vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20251206T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T103000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
@@ -94,15 +94,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631078@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20260124T103000
-DTSTART;TZID=Australia/Brisbane:20260124T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260124T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631483@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Redcliffe Padres Grey
-DTSTAMP;TZID=Australia/Brisbane:20260131T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T103000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
@@ -110,15 +110,15 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631225@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Hills Gold
-DTSTAMP;TZID=Australia/Brisbane:20260207T130000
-DTSTART;TZID=Australia/Brisbane:20260207T130000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260207T080000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 2
+LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631128@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons Blue
-DTSTAMP;TZID=Australia/Brisbane:20260214T103000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -126,7 +126,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:630992@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs All Stars
-DTSTAMP;TZID=Australia/Brisbane:20260221T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
@@ -134,9 +134,9 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631231@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Redcliffe Padres Red
-DTSTAMP;TZID=Australia/Brisbane:20260228T080000
-DTSTART;TZID=Australia/Brisbane:20260228T080000
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260228T103000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
+LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 END:VCALENDAR
