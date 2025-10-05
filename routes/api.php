@@ -20,18 +20,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::controller(TeamController::class)->group(function() {
-    Route::put('/team', 'create');
-    Route::put('/team/{team}/player', 'addPlayer');
-});
+// Route::controller(TeamController::class)->group(function() {
+//     Route::put('/team', 'create');
+//     Route::put('/team/{team}/player', 'addPlayer');
+// });
 
-Route::controller(GameController::class)->group(function() {
-    Route::get('/game/create', 'create');
-    Route::post('/game/store', 'store');
-    Route::put('/game/{game}/log', 'play')->name('gamelog');
-    Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');
-});
+// Route::controller(GameController::class)->group(function() {
+//     Route::get('/game/create', 'create');
+//     Route::post('/game/store', 'store');
+//     Route::put('/game/{game}/log', 'play')->name('gamelog');
+//     Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');
+// });
 
 Route::controller(\App\Http\Controllers\PersonController::class)->group(function() {
     Route::get('/players/search', 'search');
+    Route::get('/players/team/{team}', 'teamPlayers');
 });

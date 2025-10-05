@@ -245,6 +245,7 @@
             },
             data: {
                 'plays': $('#plays').val(),
+                '_token': '{{ csrf_token() }}',
             },
             method: 'PATCH'
         }).then(() => {location.reload()});

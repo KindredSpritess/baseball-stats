@@ -109,4 +109,15 @@ class PersonController extends Controller
 
         return response()->json($persons);
     }
+
+    public function teamPlayers(Team $team): JsonResponse
+    {
+        $players = Player::where('team_id', $team->id)
+            ->with('person')
+            ->get()
+            ->groupBy(fn ($player) => "{$player->person->lastName}, {$player->person->firstName}")
+            ->map(fn ($group) => $group->filter(fn ($player) => $player->number)->mode('number'));
+
+        return response()->json($players);
+    }
 }
