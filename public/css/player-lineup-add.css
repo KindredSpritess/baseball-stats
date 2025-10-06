@@ -149,3 +149,37 @@
     color: white;
     border-color: #007bff;
 }
+
+/* Two-column layout for form and previous players */
+.form-and-players-container {
+    display: flex;
+    gap: 20px;
+}
+
+.form-column {
+    flex: 1;
+}
+
+.previous-players-column {
+    flex: 1;
+}
+
+/* Previous players list styling */
+.previous-player-item {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s;
+}
+
+.previous-player-item:hover {
+    background-color: #e9e9e9;
+}
+
+.previous-players-list {
+    max-height: 300px;
+    overflow-y: auto;
+}

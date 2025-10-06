@@ -112,11 +112,26 @@ class PersonController extends Controller
 
     public function teamPlayers(Team $team): JsonResponse
     {
+        // Extract game id from the referrer.
+        $referrer = request()->headers->get('referer');
+        $matches = [];
+        preg_match('/\/game\/(\d+)/', $referrer, $matches);
         $players = Player::where('team_id', $team->id)
+            // Exclude players already in the lineup for the game
+            ->when(isset($matches[1]), function ($query) use ($matches) {
+                $query->whereNotIn('person_id', function ($subquery) use ($matches) {
+                    $subquery->select('person_id')
+                        ->from('players')
+                        ->where('game_id', $matches[1]);
+                });
+            })
             ->with('person')
             ->get()
             ->groupBy(fn ($player) => "{$player->person->lastName}, {$player->person->firstName}")
-            ->map(fn ($group) => $group->filter(fn ($player) => $player->number)->mode('number'));
+            ->map(fn ($group) => [
+                'number' => $group->filter(fn ($player) => $player->number)->mode('number'),
+                'person' => $group->first()->person
+            ]);
 
         return response()->json($players);
     }

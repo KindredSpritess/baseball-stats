@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const playerPositionInput = playerForm.querySelector('.player-position-input');
         const selectedPositionText = playerForm.querySelector('.selected-position span');
         const playerSuggestions = playerForm.querySelector('.suggestions-container');
+        const previousPlayersList = playerForm.closest('.form-and-players-container').querySelector('.previous-players-list');
         const teamShortName = playerForm.querySelector('.team-short-name').value;
         const teamId = playerForm.querySelector('.team-id').value;
         const action = playerForm.getAttribute('action');
@@ -98,6 +99,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let selectedPerson = null;
         let debounceTimer;
+
+        // Function to load previous players from the team
+        function loadPreviousPlayers() {
+            fetch(`/api/players/team/${teamId}`)
+                .then(response => response.json())
+                .then(data => {
+                    previousPlayersList.innerHTML = '';
+
+                    Object.entries(data).forEach(([name, playerData]) => {
+                        const item = document.createElement('div');
+                        item.className = 'previous-player-item';
+                        item.textContent = `${name}${playerData.number ? ` #${playerData.number}` : ''}`;
+
+                        item.addEventListener('click', () => {
+                            selectedPerson = playerData.person;
+                            playerSearchInput.value = name;
+                            if (playerData.number) {
+                                playerNumberInput.value = playerData.number;
+                            }
+                            playerSuggestions.style.display = 'none';
+                            // Focus on position selection
+                            playerNumberInput.focus();
+                        });
+
+                        previousPlayersList.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading previous players:', error);
+                });
+        }
 
         // Function to fetch player suggestions
         function fetchPlayerSuggestions(query) {
@@ -191,6 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         playerForm.querySelector(`.position-btn[data-position="EH"]`).click();
+
+        // Load previous players for the team
+        loadPreviousPlayers();
 
         // Form submission
         playerForm.addEventListener('submit', function(e) {
