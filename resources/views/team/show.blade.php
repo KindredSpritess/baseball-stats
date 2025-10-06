@@ -23,7 +23,7 @@
 @foreach ($people as $person)
     <div class='position'>
         <h5>{{ strtoupper($person->lastName) }}, {{ $person->firstName }}</h5>
-        <x-field :ballsInPlay="$person->ballsInPlay" />
+        <x-field :ballsInPlay="$ballsInPlay[$person->id] ?? []" />
     </div>
     @endforeach
 </div>

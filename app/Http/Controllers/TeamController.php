@@ -43,7 +43,7 @@ class TeamController extends Controller
             'stats' => $players,
             'totals' => $totals,
             'people' => Person::whereIn('id', $people)->get(),
-            'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get(),
+            'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
         ]);
     }
 
