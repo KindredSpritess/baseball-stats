@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:628525@mygameday.app
-SUMMARY:Pine Hills Gold vs Pine Hills White
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:628763@mygameday.app
 SUMMARY:Pine Hills White vs Narangba Demons Aces
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

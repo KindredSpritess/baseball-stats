@@ -12,20 +12,12 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631693@mygameday.app
-SUMMARY:Ipswich Musketeers vs Surfers Paradise
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631442@mygameday.app
 SUMMARY:Redlands Stingrays vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251011T180000
+DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631467@mygameday.app

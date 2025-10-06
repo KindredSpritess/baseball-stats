@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:629519@mygameday.app
-SUMMARY:Redlands Devil Rays vs Carina Redsox
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:629495@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Devil Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -55,7 +47,7 @@ BEGIN:VEVENT
 UID:629499@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Devil Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T130000
+DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT

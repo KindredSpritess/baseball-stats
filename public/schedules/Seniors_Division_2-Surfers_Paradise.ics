@@ -1,0 +1,142 @@
+BEGIN:VCALENDAR
+SUMMARY:Surfers Paradise Schedule
+BEGIN:VTIMEZONE
+TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+UID:633036@mygameday.app
+SUMMARY:Surfers Paradise vs Coomera Cubs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251012T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633513@mygameday.app
+SUMMARY:Windsor Royals vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251019T133000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+UID:633417@mygameday.app
+SUMMARY:Surfers Paradise vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251026T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633619@mygameday.app
+SUMMARY:Carina Redsox vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251102T160000
+DURATION:PT2H
+LOCATION:Carina RedSox Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633032@mygameday.app
+SUMMARY:Surfers Paradise vs Wests Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251109T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633309@mygameday.app
+SUMMARY:Surfers Paradise vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251116T093000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633265@mygameday.app
+SUMMARY:Pine Hills Lightning vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251130T110000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633142@mygameday.app
+SUMMARY:Coomera Cubs vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251207T110000
+DURATION:PT2H
+LOCATION:Coomera Cubs
+END:VEVENT
+BEGIN:VEVENT
+UID:633555@mygameday.app
+SUMMARY:Surfers Paradise vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260111T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633333@mygameday.app
+SUMMARY:Surfers Paradise vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260118T083000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633624@mygameday.app
+SUMMARY:Surfers Paradise vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260125T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633466@mygameday.app
+SUMMARY:Surfers Paradise vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260201T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633456@mygameday.app
+SUMMARY:Wests Bulldogs vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260208T110000
+DURATION:PT2H
+LOCATION:Wests Bulldogs Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633179@mygameday.app
+SUMMARY:Redcliffe Padres vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260215T110000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633151@mygameday.app
+SUMMARY:Narangba Demons vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260222T133000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633470@mygameday.app
+SUMMARY:Surfers Paradise vs Pine Hills Lightning
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260301T110000
+DURATION:PT2H
+LOCATION:Surfers Paradise Diamond 1
+END:VEVENT
+END:VCALENDAR

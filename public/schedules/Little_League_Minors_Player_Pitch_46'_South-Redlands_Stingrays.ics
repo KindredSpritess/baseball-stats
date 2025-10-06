@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631897@mygameday.app
-SUMMARY:Western Bulldogs vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631946@mygameday.app
 SUMMARY:Redlands Stingrays vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -81,7 +73,7 @@ SUMMARY:Redlands Stingrays vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631936@mygameday.app
@@ -105,7 +97,7 @@ SUMMARY:Redlands Stingrays vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631913@mygameday.app

@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:629076@mygameday.app
-SUMMARY:Narangba Demons Thunder vs Windsor Royals Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Narangba Demons Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:629113@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Narangba Demons Thunder
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

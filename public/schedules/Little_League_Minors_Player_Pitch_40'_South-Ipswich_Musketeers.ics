@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:632624@mygameday.app
-SUMMARY:Redlands Manta Rays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
-END:VEVENT
-BEGIN:VEVENT
 UID:632639@mygameday.app
 SUMMARY:Ipswich Musketeers vs Beenleigh Hawks
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631190@mygameday.app
-SUMMARY:Pine Hills Gold vs Southern Stars
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631100@mygameday.app
 SUMMARY:Southern Stars vs Narangba Demons
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

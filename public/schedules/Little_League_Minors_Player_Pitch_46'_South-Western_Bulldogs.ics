@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631897@mygameday.app
-SUMMARY:Western Bulldogs vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631957@mygameday.app
 SUMMARY:Runcorn Indians vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -49,7 +41,7 @@ SUMMARY:Redlands Manta Rays vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631934@mygameday.app
@@ -119,9 +111,9 @@ BEGIN:VEVENT
 UID:632008@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260214T080000
+DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
+LOCATION:Wests Bulldogs Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
 UID:631944@mygameday.app

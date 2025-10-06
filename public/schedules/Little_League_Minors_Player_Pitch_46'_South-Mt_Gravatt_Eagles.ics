@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631970@mygameday.app
-SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Mt Gravatt Eagles
-END:VEVENT
-BEGIN:VEVENT
 UID:631904@mygameday.app
 SUMMARY:Toowoomba Rangers vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -105,7 +97,7 @@ SUMMARY:Redlands Stingrays vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:632019@mygameday.app
@@ -119,7 +111,7 @@ BEGIN:VEVENT
 UID:631965@mygameday.app
 SUMMARY:Carina White vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260214T103000
+DTSTART;TZID=Australia/Brisbane:20260214T080000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT

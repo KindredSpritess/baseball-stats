@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:628575@mygameday.app
-SUMMARY:All Stars Black vs Windsor Royals
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:All Stars Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:628700@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -49,7 +41,7 @@ SUMMARY:Windsor Royals vs Narangba Demons Defenders
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
-LOCATION:Windsor Royals  Downey Park
+LOCATION:Windsor Royals LL Minors Field
 END:VEVENT
 BEGIN:VEVENT
 UID:628733@mygameday.app
@@ -105,7 +97,7 @@ SUMMARY:Windsor Royals vs All Stars Black
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
-LOCATION:Windsor Royals
+LOCATION:Windsor Royals LL Minors Field
 END:VEVENT
 BEGIN:VEVENT
 UID:628501@mygameday.app

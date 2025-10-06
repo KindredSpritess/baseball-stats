@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631655@mygameday.app
-SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids White
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631433@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Redcliffe Padres Ruby Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -119,7 +111,7 @@ BEGIN:VEVENT
 UID:631691@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260131T180000
+DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT

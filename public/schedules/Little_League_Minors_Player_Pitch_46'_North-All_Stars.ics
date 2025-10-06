@@ -47,9 +47,9 @@ BEGIN:VEVENT
 UID:628997@mygameday.app
 SUMMARY:Windsor Royals Blue vs All Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T080000
+DTSTART;TZID=Australia/Brisbane:20251108T103000
 DURATION:PT2H
-LOCATION:Windsor Royals  Downey Park
+LOCATION:Windsor Royals LL Minors Field
 END:VEVENT
 BEGIN:VEVENT
 UID:629041@mygameday.app

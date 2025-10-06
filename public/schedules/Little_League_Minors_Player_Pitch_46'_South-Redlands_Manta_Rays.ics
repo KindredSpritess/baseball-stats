@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631982@mygameday.app
-SUMMARY:Redlands Manta Rays vs Toowoomba Rangers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
-END:VEVENT
-BEGIN:VEVENT
 UID:631946@mygameday.app
 SUMMARY:Redlands Stingrays vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -39,7 +31,7 @@ BEGIN:VEVENT
 UID:631907@mygameday.app
 SUMMARY:Carina White vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251025T103000
+DTSTART;TZID=Australia/Brisbane:20251025T080000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
@@ -49,7 +41,7 @@ SUMMARY:Redlands Manta Rays vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631938@mygameday.app
@@ -119,9 +111,9 @@ BEGIN:VEVENT
 UID:632008@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260214T080000
+DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
+LOCATION:Wests Bulldogs Diamond 3 (LL)
 END:VEVENT
 BEGIN:VEVENT
 UID:631888@mygameday.app

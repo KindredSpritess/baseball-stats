@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631596@mygameday.app
-SUMMARY:Redlands Mantarays vs Toowoomba Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631152@mygameday.app
 SUMMARY:Toowoomba Musketeers vs Western Bulldogs Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

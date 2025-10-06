@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631239@mygameday.app
-SUMMARY:Redcliffe Padres Grey vs Narangba Demons Green
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631379@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -81,13 +73,13 @@ SUMMARY:Windsor Royals vs Narangba Demons Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
-LOCATION:Windsor Royals  Downey Park
+LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631563@mygameday.app
 SUMMARY:Narangba Demons Green vs Redcliffe Padres Grey
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251206T103000
+DTSTART;TZID=Australia/Brisbane:20251206T080000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT

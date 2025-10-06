@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631575@mygameday.app
-SUMMARY:Narangba Demons Blue vs Redcliffe Padres Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Narangba Demons Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631265@mygameday.app
 SUMMARY:Pine Hills Black vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -73,7 +65,7 @@ SUMMARY:Narangba Demons Blue vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T103000
 DURATION:PT2H
-LOCATION:Narangba Demons Diamond 1
+LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631515@mygameday.app

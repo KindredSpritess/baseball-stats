@@ -47,7 +47,7 @@ BEGIN:VEVENT
 UID:631589@mygameday.app
 SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T180000
+DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT

@@ -12,20 +12,12 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:630966@mygameday.app
-SUMMARY:Carina Redsox vs Runcorn Indians
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:630985@mygameday.app
 SUMMARY:Redlands Mantarays vs Runcorn Indians
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251011T130000
+DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
+LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631529@mygameday.app
@@ -129,7 +121,7 @@ SUMMARY:Carina Redsox vs Runcorn Indians
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T103000
 DURATION:PT2H
-LOCATION:Runcorn Indians Diamond 1
+LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631675@mygameday.app

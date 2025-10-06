@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:632679@mygameday.app
-SUMMARY:Western Bulldogs vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:632668@mygameday.app
 SUMMARY:Redlands Stingrays vs Southern Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -1,0 +1,150 @@
+BEGIN:VCALENDAR
+SUMMARY:Ipswich Musketeers Schedule
+BEGIN:VTIMEZONE
+TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+UID:633269@mygameday.app
+SUMMARY:Windsor Royals Red vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251012T133000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+UID:633506@mygameday.app
+SUMMARY:Redlands Rays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251019T083000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633062@mygameday.app
+SUMMARY:Beenleigh Hawks vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251026T160000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
+UID:633484@mygameday.app
+SUMMARY:Windsor Royals Blue vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251102T133000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+UID:633119@mygameday.app
+SUMMARY:Ipswich Musketeers vs Wests Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251109T133000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633289@mygameday.app
+SUMMARY:Ipswich Musketeers vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251116T083000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633268@mygameday.app
+SUMMARY:Ipswich Musketeers vs Narangba Demons Blue
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251123T120000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633482@mygameday.app
+SUMMARY:Pine Hills Lightning vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251130T083000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633336@mygameday.app
+SUMMARY:Ipswich Musketeers vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251207T133000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633182@mygameday.app
+SUMMARY:Ipswich Musketeers vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260111T133000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633178@mygameday.app
+SUMMARY:Coomera Cubs vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260118T083000
+DURATION:PT2H
+LOCATION:Coomera Cubs
+END:VEVENT
+BEGIN:VEVENT
+UID:633574@mygameday.app
+SUMMARY:Indians Apache vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260125T083000
+DURATION:PT2H
+LOCATION:Runcorn Indians Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633004@mygameday.app
+SUMMARY:Ipswich Musketeers vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260201T083000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633216@mygameday.app
+SUMMARY:Ipswich Musketeers vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260208T133000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633503@mygameday.app
+SUMMARY:Ipswich Musketeers vs Beenleigh Hawks
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260215T110000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633502@mygameday.app
+SUMMARY:Wests Bulldogs vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260222T110000
+DURATION:PT2H
+LOCATION:Wests Bulldogs Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633012@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260301T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+END:VCALENDAR

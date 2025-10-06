@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631970@mygameday.app
-SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Mt Gravatt Eagles
-END:VEVENT
-BEGIN:VEVENT
 UID:632026@mygameday.app
 SUMMARY:Beenleigh Hawks vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

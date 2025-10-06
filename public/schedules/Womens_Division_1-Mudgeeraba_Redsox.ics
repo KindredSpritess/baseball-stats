@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631070@mygameday.app
-SUMMARY:Mudgeeraba Redsox vs Redcliffe Padres
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T180000
-DURATION:PT2H
-LOCATION:Mudgeeraba Redsox
-END:VEVENT
-BEGIN:VEVENT
 UID:631679@mygameday.app
 SUMMARY:Windsor Royals vs Mudgeeraba Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

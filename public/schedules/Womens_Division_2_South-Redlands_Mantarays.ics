@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631095@mygameday.app
-SUMMARY:Redlands Mantarays vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631124@mygameday.app
 SUMMARY:Indians Kiowa vs Redlands Mantarays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -47,7 +39,7 @@ BEGIN:VEVENT
 UID:631589@mygameday.app
 SUMMARY:Redlands Mantarays vs Beenleigh Hawks 
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T180000
+DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
@@ -71,7 +63,7 @@ BEGIN:VEVENT
 UID:631172@mygameday.app
 SUMMARY:Redlands Mantarays vs Indians Kiowa
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251129T153000
+DTSTART;TZID=Australia/Brisbane:20251129T180000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT

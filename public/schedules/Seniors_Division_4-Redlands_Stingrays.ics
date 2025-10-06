@@ -1,0 +1,150 @@
+BEGIN:VCALENDAR
+SUMMARY:Redlands Stingrays Schedule
+BEGIN:VTIMEZONE
+TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+UID:633449@mygameday.app
+SUMMARY:Narangba Demons vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251012T110000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633641@mygameday.app
+SUMMARY:Redlands Stingrays vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251019T110000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633469@mygameday.app
+SUMMARY:Redlands Stingrays vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251026T133000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+UID:633445@mygameday.app
+SUMMARY:Carina Redsox vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251102T110000
+DURATION:PT2H
+LOCATION:Carina RedSox Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633153@mygameday.app
+SUMMARY:Redlands Stingrays vs Pine Hills Lightning
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251109T133000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+UID:633136@mygameday.app
+SUMMARY:Redlands Stingrays vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251116T133000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+UID:633572@mygameday.app
+SUMMARY:Pine Rivers Rapids vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251123T133000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+BEGIN:VEVENT
+UID:633023@mygameday.app
+SUMMARY:Redlands Stingrays vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251130T110000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633488@mygameday.app
+SUMMARY:Redlands Stingrays vs Mt Gravatt Eagles
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251207T110000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633389@mygameday.app
+SUMMARY:Redlands Devilrays vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260111T110000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+UID:633005@mygameday.app
+SUMMARY:Redlands Stingrays vs Toowoomba Rangers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260118T133000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633181@mygameday.app
+SUMMARY:Beenleigh Hawks vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260125T133000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
+UID:633071@mygameday.app
+SUMMARY:Redlands Stingrays vs All Stars
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260201T133000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
+UID:633070@mygameday.app
+SUMMARY:Redlands Stingrays vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260208T110000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633657@mygameday.app
+SUMMARY:Windsor Royals vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260215T083000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+UID:633111@mygameday.app
+SUMMARY:Redcliffe Padres vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260222T133000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633447@mygameday.app
+SUMMARY:Pine Hills Lightning vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260301T110000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+END:VCALENDAR

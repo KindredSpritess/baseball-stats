@@ -1,0 +1,150 @@
+BEGIN:VCALENDAR
+SUMMARY:Mudgeeraba Redsox Schedule
+BEGIN:VTIMEZONE
+TZID:Australia/Brisbane
+BEGIN:STANDARD
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1000
+TZNAME:BT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+VERSION:2.0
+PRODID:-//MyGameDay//EN
+BEGIN:VEVENT
+UID:633199@mygameday.app
+SUMMARY:Narangba Demons Green vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251012T133000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633046@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Windsor Royals Red
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251019T110000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633452@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Redcliffe Padres
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251026T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633072@mygameday.app
+SUMMARY:Carina Redsox vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251102T133000
+DURATION:PT2H
+LOCATION:Carina RedSox Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633234@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Pine Hills Lightning
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251109T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633289@mygameday.app
+SUMMARY:Ipswich Musketeers vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251116T083000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633430@mygameday.app
+SUMMARY:Windsor Royals Blue vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251123T110000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
+UID:633230@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Wests Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251130T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633102@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Indians Apache
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251207T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633085@mygameday.app
+SUMMARY:Redlands Rays vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260111T083000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633003@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Narangba Demons Blue
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260118T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633112@mygameday.app
+SUMMARY:Coomera Cubs vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260125T083000
+DURATION:PT2H
+LOCATION:Coomera Cubs
+END:VEVENT
+BEGIN:VEVENT
+UID:633508@mygameday.app
+SUMMARY:Beenleigh Hawks vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260201T133000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
+UID:633016@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260208T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+BEGIN:VEVENT
+UID:633260@mygameday.app
+SUMMARY:Redcliffe Padres vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260215T083000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633294@mygameday.app
+SUMMARY:Pine Hills Lightning vs Mudgeeraba Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260222T083000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:633012@mygameday.app
+SUMMARY:Mudgeeraba Redsox vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20260301T083000
+DURATION:PT2H
+LOCATION:Mudgeeraba Redsox
+END:VEVENT
+END:VCALENDAR

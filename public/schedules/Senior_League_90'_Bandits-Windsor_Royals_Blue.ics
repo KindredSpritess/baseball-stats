@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631548@mygameday.app
-SUMMARY:Beenleigh Hawks vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T130000
-DURATION:PT2H
-LOCATION:Beenleigh Hawks
-END:VEVENT
-BEGIN:VEVENT
 UID:631085@mygameday.app
 SUMMARY:Windsor Royals Blue vs Windsor Royals Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -71,7 +63,7 @@ BEGIN:VEVENT
 UID:631210@mygameday.app
 SUMMARY:Windsor Royals Blue vs Beenleigh Hawks
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251122T130000
+DTSTART;TZID=Australia/Brisbane:20251122T153000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT

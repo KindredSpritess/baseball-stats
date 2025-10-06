@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631332@mygameday.app
-SUMMARY:Pine Rivers Rapids Green vs Redcliffe Padres Rose Gold
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Pine Rivers Rapids
-END:VEVENT
-BEGIN:VEVENT
 UID:631102@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -32,6 +24,14 @@ UID:631187@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T153000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+BEGIN:VEVENT
+UID:631332@mygameday.app
+SUMMARY:Pine Rivers Rapids Green vs Redcliffe Padres Rose Gold
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251021T183000
 DURATION:PT2H
 LOCATION:Pine Rivers Rapids
 END:VEVENT
@@ -63,7 +63,7 @@ BEGIN:VEVENT
 UID:631259@mygameday.app
 SUMMARY:Narangba Demons Blue vs Pine Rivers Rapids Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251115T153000
+DTSTART;TZID=Australia/Brisbane:20251115T180000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
@@ -119,7 +119,7 @@ BEGIN:VEVENT
 UID:631691@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260131T180000
+DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT

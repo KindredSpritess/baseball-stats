@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631590@mygameday.app
-SUMMARY:Pine Hills Lightning vs Redcliffe Padres Ruby Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631521@mygameday.app
 SUMMARY:Pine Hills Lightning vs Windsor Royals Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -36,12 +28,12 @@ DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631471@mygameday.app
-SUMMARY:Redcliffe Padres Rose Gold vs Pine Hills Lightning
+UID:631369@mygameday.app
+SUMMARY:Pine Hills Lightning vs Windsor Royals Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
+LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631451@mygameday.app

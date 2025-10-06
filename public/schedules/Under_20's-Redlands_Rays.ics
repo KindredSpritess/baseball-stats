@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631692@mygameday.app
-SUMMARY:Redlands Rays vs Redcliffe Padres
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631089@mygameday.app
 SUMMARY:Windsor Royals vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -31,9 +23,9 @@ BEGIN:VEVENT
 UID:631430@mygameday.app
 SUMMARY:Redcliffe Padres vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251025T153000
+DTSTART;TZID=Australia/Brisbane:20251025T180000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 2
+LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631289@mygameday.app
@@ -52,12 +44,12 @@ DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631606@mygameday.app
-SUMMARY:Windsor Royals vs Redlands Rays
+UID:631186@mygameday.app
+SUMMARY:Redcliffe Padres vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T153000
 DURATION:PT2H
-LOCATION:Windsor Royals
+LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631355@mygameday.app

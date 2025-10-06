@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631092@mygameday.app
-SUMMARY:Pine Hills Black vs Pine Rivers Rapids
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T130000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631383@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -63,7 +55,7 @@ BEGIN:VEVENT
 UID:631066@mygameday.app
 SUMMARY:Windsor Royals Blue vs Pine Rivers Rapids
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251122T103000
+DTSTART;TZID=Australia/Brisbane:20251122T130000
 DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
@@ -127,7 +119,7 @@ BEGIN:VEVENT
 UID:631039@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Rivers Rapids
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260228T103000
+DTSTART;TZID=Australia/Brisbane:20260228T080000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT

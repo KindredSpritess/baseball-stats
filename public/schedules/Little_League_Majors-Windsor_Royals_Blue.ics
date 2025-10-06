@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631602@mygameday.app
-SUMMARY:Windsor Royals Blue vs Redcliffe Padres Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Windsor Royals
-END:VEVENT
-BEGIN:VEVENT
 UID:631374@mygameday.app
 SUMMARY:Ipswich Musketeers vs Windsor Royals Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -97,7 +89,7 @@ SUMMARY:Windsor Royals Blue vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
-LOCATION:All Stars Diamond 2
+LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
 UID:631473@mygameday.app

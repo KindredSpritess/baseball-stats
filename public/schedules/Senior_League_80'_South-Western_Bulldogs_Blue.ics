@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631143@mygameday.app
-SUMMARY:Western Bulldogs Blue vs Western Bulldogs White
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631152@mygameday.app
 SUMMARY:Toowoomba Musketeers vs Western Bulldogs Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -121,7 +113,7 @@ SUMMARY:Western Bulldogs Blue vs Redlands Stingrays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 2
+LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631292@mygameday.app

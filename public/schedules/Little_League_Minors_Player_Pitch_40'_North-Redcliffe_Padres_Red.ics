@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:628742@mygameday.app
-SUMMARY:All Stars White vs Redcliffe Padres Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:All Stars Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:628700@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631391@mygameday.app
-SUMMARY:Carina Redsox vs Indians Kiowa
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T180000
-DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631298@mygameday.app
 SUMMARY:Redlands Mantarays vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

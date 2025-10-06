@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:632624@mygameday.app
-SUMMARY:Redlands Manta Rays vs Ipswich Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
-END:VEVENT
-BEGIN:VEVENT
 UID:632674@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -73,7 +65,7 @@ SUMMARY:Redlands Manta Rays vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T080000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 3 (LL)
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:632637@mygameday.app

@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:629501@mygameday.app
-SUMMARY:Beenleigh Hawks vs Western Bulldogs
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Beenleigh Hawks
-END:VEVENT
-BEGIN:VEVENT
 UID:629495@mygameday.app
 SUMMARY:Western Bulldogs vs Redlands Devil Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -87,7 +79,7 @@ BEGIN:VEVENT
 UID:629490@mygameday.app
 SUMMARY:Carina Redsox vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251206T103000
+DTSTART;TZID=Australia/Brisbane:20251206T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
@@ -121,13 +113,13 @@ SUMMARY:Western Bulldogs vs Runcorn Indians
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T103000
 DURATION:PT2H
-LOCATION:Wests Bulldogs Diamond 1
+LOCATION:Wests Bulldogs Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:629502@mygameday.app
 SUMMARY:Carina Redsox vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260221T103000
+DTSTART;TZID=Australia/Brisbane:20260221T080000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT

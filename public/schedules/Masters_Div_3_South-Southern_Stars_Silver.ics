@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:627231@mygameday.app
-SUMMARY:Carina Redsox vs Southern Stars Silver
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251006T183000
-DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:627261@mygameday.app
 SUMMARY:Wests Bulldogs vs Southern Stars Silver
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

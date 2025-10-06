@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631163@mygameday.app
-SUMMARY:Narangba Demons Blue vs Windsor Royals Blue
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T153000
-DURATION:PT2H
-LOCATION:Narangba Demons Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631521@mygameday.app
 SUMMARY:Pine Hills Lightning vs Windsor Royals Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -36,8 +28,8 @@ DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
-UID:631369@mygameday.app
-SUMMARY:Windsor Royals Blue vs Windsor Royals Red
+UID:631471@mygameday.app
+SUMMARY:Windsor Royals Blue vs Redcliffe Padres Rose Gold
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T180000
 DURATION:PT2H

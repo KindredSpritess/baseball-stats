@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631654@mygameday.app
-SUMMARY:Redcliffe Padres Grey vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T130000
-DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:630972@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Redcliffe Padres Grey
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

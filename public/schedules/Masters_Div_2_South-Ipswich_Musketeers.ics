@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:627898@mygameday.app
-SUMMARY:Ipswich Musketeers vs Redlands Stingrays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251006T201500
-DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:627928@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -111,9 +103,9 @@ BEGIN:VEVENT
 UID:627610@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260119T190000
+DTSTART;TZID=Australia/Brisbane:20260112T190000
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 2
+LOCATION:Mt Gravatt Eagles
 END:VEVENT
 BEGIN:VEVENT
 UID:627987@mygameday.app
@@ -135,9 +127,9 @@ BEGIN:VEVENT
 UID:628202@mygameday.app
 SUMMARY:Redlands Stingrays vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260216T190000
+DTSTART;TZID=Australia/Brisbane:20260216T201500
 DURATION:PT2H
-LOCATION:Ipswich Musketeers Diamond 2
+LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:627609@mygameday.app

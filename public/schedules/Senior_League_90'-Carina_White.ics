@@ -12,15 +12,7 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631995@mygameday.app
-SUMMARY:Carina White vs Narangba Demons Blue
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T130000
-DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
-END:VEVENT
-BEGIN:VEVENT
-UID:631994@mygameday.app
+UID:632784@mygameday.app
 SUMMARY:Pine Hills Lightning vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T130000
@@ -28,15 +20,15 @@ DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631975@mygameday.app
-SUMMARY:Southern Stars vs Carina White
+UID:632853@mygameday.app
+SUMMARY:Carina White vs Southern Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
-LOCATION:Southern Stars 
+LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:632014@mygameday.app
+UID:632826@mygameday.app
 SUMMARY:Redcliffe Padres vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T130000
@@ -44,23 +36,23 @@ DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631984@mygameday.app
-SUMMARY:Carina White vs Narangba Demons Green
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T153000
-DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
-END:VEVENT
-BEGIN:VEVENT
-UID:631887@mygameday.app
+UID:632795@mygameday.app
 SUMMARY:Carina Red vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251115T130000
+DTSTART;TZID=Australia/Brisbane:20251108T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:632017@mygameday.app
+UID:632845@mygameday.app
+SUMMARY:Carina White vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251115T153000
+DURATION:PT2H
+LOCATION:Carina RedSox Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:632764@mygameday.app
 SUMMARY:Carina White vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T153000
@@ -68,7 +60,7 @@ DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:632001@mygameday.app
+UID:632829@mygameday.app
 SUMMARY:Redlands Rays vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T130000
@@ -76,15 +68,15 @@ DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:632035@mygameday.app
+UID:632818@mygameday.app
 SUMMARY:Narangba Demons Blue vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251206T153000
+DTSTART;TZID=Australia/Brisbane:20251206T130000
 DURATION:PT2H
 LOCATION:Narangba Demons Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631992@mygameday.app
+UID:632793@mygameday.app
 SUMMARY:Carina White vs Pine Hills Lightning
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T130000
@@ -92,15 +84,15 @@ DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:632033@mygameday.app
-SUMMARY:Carina White vs Southern Stars
+UID:632841@mygameday.app
+SUMMARY:Southern Stars vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T130000
 DURATION:PT2H
-LOCATION:Carina RedSox Diamond 1
+LOCATION:Southern Stars 
 END:VEVENT
 BEGIN:VEVENT
-UID:631942@mygameday.app
+UID:632722@mygameday.app
 SUMMARY:Carina White vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T153000
@@ -108,7 +100,7 @@ DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631894@mygameday.app
+UID:632697@mygameday.app
 SUMMARY:Narangba Demons Green vs Carina White
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T130000
@@ -116,7 +108,7 @@ DURATION:PT2H
 LOCATION:Narangba Demons Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:632000@mygameday.app
+UID:632769@mygameday.app
 SUMMARY:Carina White vs Carina Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T153000

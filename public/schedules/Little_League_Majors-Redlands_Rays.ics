@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631288@mygameday.app
-SUMMARY:Pine Hills Black vs Redlands Rays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T080000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631242@mygameday.app
 SUMMARY:Redlands Rays vs Pine Hills Gold
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -71,7 +63,7 @@ BEGIN:VEVENT
 UID:631349@mygameday.app
 SUMMARY:Redlands Rays vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251129T080000
+DTSTART;TZID=Australia/Brisbane:20251129T103000
 DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
@@ -97,7 +89,7 @@ SUMMARY:Windsor Royals Blue vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T080000
 DURATION:PT2H
-LOCATION:All Stars Diamond 2
+LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
 UID:631132@mygameday.app

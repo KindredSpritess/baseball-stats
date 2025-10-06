@@ -44,14 +44,6 @@ DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631606@mygameday.app
-SUMMARY:Windsor Royals vs Redlands Rays
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251122T153000
-DURATION:PT2H
-LOCATION:Windsor Royals
-END:VEVENT
-BEGIN:VEVENT
 UID:631444@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

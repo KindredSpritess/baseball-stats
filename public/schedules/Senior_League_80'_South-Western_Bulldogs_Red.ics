@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631497@mygameday.app
-SUMMARY:Redlands Stingrays vs Western Bulldogs Red
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T130000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
-END:VEVENT
-BEGIN:VEVENT
 UID:631661@mygameday.app
 SUMMARY:Western Bulldogs White vs Western Bulldogs Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -63,7 +55,7 @@ BEGIN:VEVENT
 UID:630983@mygameday.app
 SUMMARY:Carina Redsox vs Western Bulldogs Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251115T103000
+DTSTART;TZID=Australia/Brisbane:20251115T130000
 DURATION:PT2H
 LOCATION:Carina RedSox Diamond 1
 END:VEVENT
@@ -119,7 +111,7 @@ BEGIN:VEVENT
 UID:631012@mygameday.app
 SUMMARY:Western Bulldogs Red vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260214T103000
+DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:Wests Bulldogs Diamond 1
 END:VEVENT

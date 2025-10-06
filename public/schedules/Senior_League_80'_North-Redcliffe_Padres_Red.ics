@@ -12,14 +12,6 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631665@mygameday.app
-SUMMARY:Redcliffe Padres Red vs Narangba Demons Green
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:631108@mygameday.app
 SUMMARY:Redcliffe Padres Red vs All Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
@@ -111,7 +103,7 @@ BEGIN:VEVENT
 UID:631648@mygameday.app
 SUMMARY:All Stars vs Redcliffe Padres Red
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260214T103000
+DTSTART;TZID=Australia/Brisbane:20260214T130000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT

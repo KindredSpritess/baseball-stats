@@ -12,20 +12,12 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
-UID:631596@mygameday.app
-SUMMARY:Redlands Mantarays vs Toowoomba Musketeers
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251004T103000
-DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:630985@mygameday.app
 SUMMARY:Redlands Mantarays vs Runcorn Indians
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251011T130000
+DTSTART;TZID=Australia/Brisbane:20251011T103000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
+LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:630990@mygameday.app
