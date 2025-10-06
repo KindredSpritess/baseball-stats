@@ -207,7 +207,7 @@ class Play extends Model
                 $actions = preg_split('/,/', $log);
                 $br = array_shift($actions);
                 if (count($actions) > 3) {
-                    $this->handleBattedBall($game, array_pop($actions), new StringConsumer($br));
+                    $ballLocation = array_pop($actions);
                 }
                 // if (count($actions) > 3) {
                 //     $this->handlePitchedBall(array_pop($actions));
@@ -307,6 +307,7 @@ class Play extends Model
                                     $hit && $game->hitting()->evt('RBI');
                                 }
                             }
+                            $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null);
                             $this->logBuffer("on a " . self::TRAJECTORIES[$bb]);
                         } elseif ($event->consume('MFF')) {
                             // Muffed foul fly, error, At Bat continues.
@@ -475,6 +476,7 @@ class Play extends Model
                 $countStats && $game->fielding($pos)->evt('PO');
                 $countStats && $game->fielding($pos)->evt("PO.$pos");
                 $game->out();
+                $hit = false;
                 return false;
             }
         }
@@ -523,21 +525,22 @@ class Play extends Model
         return $to;
     }
 
-    private function handleBattedBall(Game $game, string $action, StringConsumer $br) {
+    private function handleBattedBall(Game $game, string $type, bool $hit, int $bases, ?string $action) {
         if (empty($action)) return;
         $battedBall = new BallInPlay([
             'position' => array_map(fn ($p) => round($p, 2), explode(':', $action)),
-            'type' => match(true) {
-                $br->consume('G') && true => 'G',
-                $br->consume('FF') && true => 'F',
-                $br->consume('F') && true => 'F',
-                $br->consume('L') && true => 'L',
-                $br->consume('PF') && true => 'P',
-                $br->consume('P') && true => 'P',
-                $br->consume('SAF') && true => 'F',
-                $br->consume('SAB') && true => 'G',
+            'type' => match($type) {
+                'G' => 'G',
+                'FF' => 'F',
+                'F' => 'F',
+                'L' => 'L',
+                'PF' => 'P',
+                'P' => 'P',
+                'SAF' => 'F',
+                'SAB' => 'G',
                 default => null,
             },
+            'result' => $hit ? ($bases < 4 ? "{$bases}B" : 'HR') : 'O',
             'fielders' => array_map(fn ($p) => $game->fielding($p)?->id, [1, 2, 3, 4, 5, 6, 7, 8, 9]),
         ]);
         $battedBall->player()->associate($game->hitting());

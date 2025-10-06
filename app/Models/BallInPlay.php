@@ -20,6 +20,7 @@ class BallInPlay extends Model
     protected $fillable = [
         'position',
         'type',
+        'result',
         'fielders',
     ];
 
