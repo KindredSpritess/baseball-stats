@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633424@mygameday.app
-SUMMARY:Beenleigh Hawks vs Windsor Royals Red
+DESCRIPTION:Status: Results Entered\nScore: 1 - 13\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633424&amp;c=0-13003-0-654298-0&amp;pool=1
+SUMMARY:Beenleigh Hawks (1) vs Windsor Royals Red (13)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T110000
 DURATION:PT2H

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633090@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 12 - 10\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633090&amp;c=0-13003-0-654296-0&amp;pool=1
-SUMMARY:Pine Hills Lightning vs Redlands Rays
+SUMMARY:Pine Hills Lightning (12) vs Redlands Rays (10)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T140000
 DURATION:PT2H
@@ -22,7 +22,8 @@ LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:633027@mygameday.app
-SUMMARY:Pine Hills Lightning vs Redlands Rays
+DESCRIPTION:Status: Results Entered\nScore: 4 - 1\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633027&amp;c=0-13003-0-654296-0&amp;pool=1
+SUMMARY:Pine Hills Lightning (4) vs Redlands Rays (1)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251003T190000
 DURATION:PT2H

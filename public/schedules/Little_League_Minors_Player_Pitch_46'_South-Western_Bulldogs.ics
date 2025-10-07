@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631897@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 6 - 2\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631897&amp;c=0-13003-0-654607-0&amp;pool=1
-SUMMARY:Western Bulldogs vs Redlands Stingrays
+SUMMARY:Western Bulldogs (6) vs Redlands Stingrays (2)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H

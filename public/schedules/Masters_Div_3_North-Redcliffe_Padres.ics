@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629402@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 6 - 24\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629402&amp;c=0-13003-0-654312-0&amp;pool=1
-SUMMARY:Pine Rivers Rapids Gold vs Redcliffe Padres
+SUMMARY:Pine Rivers Rapids Gold (6) vs Redcliffe Padres (24)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T201500
 DURATION:PT2H

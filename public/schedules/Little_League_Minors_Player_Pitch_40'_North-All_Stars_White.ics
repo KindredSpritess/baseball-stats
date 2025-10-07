@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:628742@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 0 - 11\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=628742&amp;c=0-13003-0-654605-0&amp;pool=1
-SUMMARY:All Stars White vs Redcliffe Padres Red
+SUMMARY:All Stars White (0) vs Redcliffe Padres Red (11)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T080000
 DURATION:PT2H

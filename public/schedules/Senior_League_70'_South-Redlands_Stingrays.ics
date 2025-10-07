@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629509@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 9 - 12\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629509&amp;c=0-13003-0-654656-0&amp;pool=1
-SUMMARY:Runcorn Indians vs Redlands Stingrays
+SUMMARY:Runcorn Indians (9) vs Redlands Stingrays (12)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H

@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631832@mygameday.app
-SUMMARY:Southern Stars vs Beenleigh Hawks 
+DESCRIPTION:Status: Results Entered\nScore: 12 - 12\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631832&amp;c=0-13003-0-654294-0&amp;pool=1
+SUMMARY:Southern Stars (12) vs Beenleigh Hawks  (12)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T083000
 DURATION:PT2H

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633401@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 10 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633401&amp;c=0-13003-0-654299-0&amp;pool=1
-SUMMARY:Toowoomba Rangers vs Narangba Demons
+SUMMARY:Toowoomba Rangers (10) vs Narangba Demons (0)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T120000
 DURATION:PT2H

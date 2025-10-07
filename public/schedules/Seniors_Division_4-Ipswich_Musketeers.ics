@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633530@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 5 - 9\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633530&amp;c=0-13003-0-654300-0&amp;pool=1
-SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
+SUMMARY:Ipswich Musketeers (5) vs Mt Gravatt Eagles (9)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251003T193000
 DURATION:PT2H

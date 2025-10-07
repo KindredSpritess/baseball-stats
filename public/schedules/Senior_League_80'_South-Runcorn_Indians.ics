@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:630966@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 14 - 12\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=630966&amp;c=0-13003-0-654754-0&amp;pool=1
-SUMMARY:Carina Redsox vs Runcorn Indians
+SUMMARY:Carina Redsox (14) vs Runcorn Indians (12)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H

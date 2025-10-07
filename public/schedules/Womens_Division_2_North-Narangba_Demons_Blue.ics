@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631163@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 11 - 6\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631163&amp;c=0-13003-0-654313-0&amp;pool=1
-SUMMARY:Narangba Demons Blue vs Windsor Royals Blue
+SUMMARY:Narangba Demons Blue (11) vs Windsor Royals Blue (6)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T153000
 DURATION:PT2H

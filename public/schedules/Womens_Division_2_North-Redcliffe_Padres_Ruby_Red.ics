@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631590@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 3 - 21\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631590&amp;c=0-13003-0-654313-0&amp;pool=1
-SUMMARY:Pine Hills Lightning vs Redcliffe Padres Ruby Red
+SUMMARY:Pine Hills Lightning (3) vs Redcliffe Padres Ruby Red (21)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T153000
 DURATION:PT2H

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631143@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 13 - 6\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631143&amp;c=0-13003-0-654754-0&amp;pool=1
-SUMMARY:Western Bulldogs Blue vs Western Bulldogs White
+SUMMARY:Western Bulldogs Blue (13) vs Western Bulldogs White (6)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H

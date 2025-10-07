@@ -33,7 +33,7 @@ SUMMARY:Redlands Mantarays vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T153000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631068@mygameday.app
@@ -129,6 +129,6 @@ SUMMARY:Redlands Mantarays vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 1
+LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 END:VCALENDAR

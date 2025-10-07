@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631692@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 1 - 9\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631692&amp;c=0-13003-0-654426-0&amp;pool=1
-SUMMARY:Redcliffe Padres vs Windsor Royals
+SUMMARY:Redcliffe Padres (1) vs Windsor Royals (9)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T153000
 DURATION:PT2H
@@ -29,12 +29,12 @@ DURATION:PT2H
 LOCATION:Windsor Royals
 END:VEVENT
 BEGIN:VEVENT
-UID:631470@mygameday.app
-SUMMARY:Redcliffe Padres vs Windsor Royals
+UID:631113@mygameday.app
+SUMMARY:Windsor Royals vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251018T153000
+DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 2
+LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631289@mygameday.app
@@ -45,18 +45,26 @@ DURATION:PT2H
 LOCATION:Redlands Rays Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631700@mygameday.app
+UID:631604@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251108T153000
+DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
 LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631444@mygameday.app
+UID:631186@mygameday.app
+SUMMARY:Windsor Royals vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251122T153000
+DURATION:PT2H
+LOCATION:All Stars Diamond 1
+END:VEVENT
+BEGIN:VEVENT
+UID:631355@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251129T153000
+DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
 LOCATION:All Stars Diamond 1
 END:VEVENT
@@ -69,27 +77,27 @@ DURATION:PT2H
 LOCATION:Redlands Rays Diamond 2
 END:VEVENT
 BEGIN:VEVENT
-UID:631646@mygameday.app
+UID:631146@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260131T153000
+DTSTART;TZID=Australia/Brisbane:20260207T180000
 DURATION:PT2H
-LOCATION:Windsor Royals
+LOCATION:Redcliffe Padres Diamond 1
 END:VEVENT
 BEGIN:VEVENT
 UID:631469@mygameday.app
-SUMMARY:Redlands Rays vs Windsor Royals
+SUMMARY:Windsor Royals vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T153000
 DURATION:PT2H
-LOCATION:Redlands Rays Diamond 2
+LOCATION:All Stars Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631067@mygameday.app
+UID:631709@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20260221T153000
+DTSTART;TZID=Australia/Brisbane:20260228T153000
 DURATION:PT2H
-LOCATION:Windsor Royals
+LOCATION:All Stars Diamond 1
 END:VEVENT
 END:VCALENDAR

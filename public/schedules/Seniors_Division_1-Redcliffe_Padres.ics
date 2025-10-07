@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633645@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 12 - 13\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633645&amp;c=0-13003-0-654296-0&amp;pool=1
-SUMMARY:Redcliffe Padres vs Carina Redsox
+SUMMARY:Redcliffe Padres (12) vs Carina Redsox (13)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T140000
 DURATION:PT2H
@@ -23,7 +23,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:633371@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 7 - 11\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633371&amp;c=0-13003-0-654296-0&amp;pool=1
-SUMMARY:Redcliffe Padres vs Carina Redsox
+SUMMARY:Redcliffe Padres (7) vs Carina Redsox (11)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251003T190000
 DURATION:PT2H

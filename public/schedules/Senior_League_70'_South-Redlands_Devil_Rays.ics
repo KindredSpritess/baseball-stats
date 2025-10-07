@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629519@mygameday.app
-SUMMARY:Redlands Devil Rays vs Carina Redsox
+DESCRIPTION:Status: Results Entered\nScore: 16 - 8\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629519&amp;c=0-13003-0-654656-0&amp;pool=1
+SUMMARY:Redlands Devil Rays (16) vs Carina Redsox (8)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H

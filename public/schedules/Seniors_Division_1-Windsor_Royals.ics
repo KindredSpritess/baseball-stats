@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633272@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 20 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633272&amp;c=0-13003-0-654296-0&amp;pool=1
-SUMMARY:Windsor Royals vs Wests Bulldogs
+SUMMARY:Windsor Royals (20) vs Wests Bulldogs (0)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T160000
 DURATION:PT2H
@@ -23,7 +23,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:633473@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 35 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633473&amp;c=0-13003-0-654296-0&amp;pool=1
-SUMMARY:Windsor Royals vs Wests Bulldogs
+SUMMARY:Windsor Royals (35) vs Wests Bulldogs (0)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251003T190000
 DURATION:PT2H

@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631462@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 13 - 3\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631462&amp;c=0-13003-0-654759-0&amp;pool=1
-SUMMARY:Pine Rivers Rapids vs Narangba Demons White
+SUMMARY:Pine Rivers Rapids (13) vs Narangba Demons White (3)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T103000
 DURATION:PT2H

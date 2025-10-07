@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627231@mygameday.app
-SUMMARY:Carina Redsox vs Southern Stars Silver
+DESCRIPTION:Status: Results Entered\nScore: 7 - 7\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=627231&amp;c=0-13003-0-654308-0&amp;pool=1
+SUMMARY:Carina Redsox (7) vs Southern Stars Silver (7)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T183000
 DURATION:PT2H

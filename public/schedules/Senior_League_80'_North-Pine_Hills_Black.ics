@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:631092@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 8 - 16\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631092&amp;c=0-13003-0-654755-0&amp;pool=1
-SUMMARY:Pine Hills Black vs Pine Rivers Rapids
+SUMMARY:Pine Hills Black (8) vs Pine Rivers Rapids (16)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T130000
 DURATION:PT2H

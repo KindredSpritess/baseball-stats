@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:629295@mygameday.app
-SUMMARY:Narangba Demons vs Redcliffe Padres Grey
+DESCRIPTION:Status: Results Entered\nScore: 14 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629295&amp;c=0-13003-0-654310-0&amp;pool=1
+SUMMARY:Narangba Demons (14) vs Redcliffe Padres Grey (0)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T201500
 DURATION:PT2H

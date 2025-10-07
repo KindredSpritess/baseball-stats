@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:632691@mygameday.app
-SUMMARY:Mt Gravatt Eagles vs Redlands Rays
+DESCRIPTION:Status: Results Entered\nScore: 12 - 10\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=632691&amp;c=0-13003-0-654799-0&amp;pool=1
+SUMMARY:Mt Gravatt Eagles (12) vs Redlands Rays (10)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T110000
 DURATION:PT2H

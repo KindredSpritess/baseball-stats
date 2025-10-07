@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627275@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 9 - 8\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=627275&amp;c=0-13003-0-654308-0&amp;pool=1
-SUMMARY:Ipswich Musketeers vs Southern Stars Maroon
+SUMMARY:Ipswich Musketeers (9) vs Southern Stars Maroon (8)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T183000
 DURATION:PT2H

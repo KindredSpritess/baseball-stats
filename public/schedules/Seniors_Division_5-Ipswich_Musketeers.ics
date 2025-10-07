@@ -14,7 +14,7 @@ PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:633642@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 12 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633642&amp;c=0-13003-0-654299-0&amp;pool=1
-SUMMARY:Ipswich Musketeers vs Indians Arapaho
+SUMMARY:Ipswich Musketeers (12) vs Indians Arapaho (0)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251005T110000
 DURATION:PT2H

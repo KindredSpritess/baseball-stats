@@ -20,14 +20,6 @@ DURATION:PT2H
 LOCATION:Pine Hills Diamond 1
 END:VEVENT
 BEGIN:VEVENT
-UID:631352@mygameday.app
-SUMMARY:Pine Hills White vs Pine Hills Gold
-DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251007T180000
-DURATION:PT2H
-LOCATION:Pine Hills Diamond 1
-END:VEVENT
-BEGIN:VEVENT
 UID:630975@mygameday.app
 SUMMARY:Pine Hills Black vs Pine Hills Gold
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

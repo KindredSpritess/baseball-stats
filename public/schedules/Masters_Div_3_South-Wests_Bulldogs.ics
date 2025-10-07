@@ -13,7 +13,8 @@ VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
 UID:627427@mygameday.app
-SUMMARY:Wests Bulldogs vs Beenleigh Hawks 
+DESCRIPTION:Status: Results Entered\nScore: 2 - 11\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=627427&amp;c=0-13003-0-654308-0&amp;pool=1
+SUMMARY:Wests Bulldogs (2) vs Beenleigh Hawks  (11)
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251006T183000
 DURATION:PT2H
