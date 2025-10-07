@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633568@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 9 - 6\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633568&amp;c=0-13003-0-654298-0&amp;pool=1
+SUMMARY:Narangba Demons Blue vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:633648@mygameday.app
 SUMMARY:Redlands Rays vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

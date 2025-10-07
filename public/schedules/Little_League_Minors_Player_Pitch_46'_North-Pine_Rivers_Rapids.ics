@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629100@mygameday.app
+SUMMARY:Pine Rivers Rapids vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T160000
+DURATION:PT2H
+LOCATION:Pine Rivers Rapids
+END:VEVENT
+BEGIN:VEVENT
 UID:629142@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Stealers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

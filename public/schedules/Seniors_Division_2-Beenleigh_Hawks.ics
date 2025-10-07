@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633091@mygameday.app
+SUMMARY:Beenleigh Hawks vs Surfers Paradise
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T133000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
 UID:633252@mygameday.app
 SUMMARY:Pine Hills Lightning vs Beenleigh Hawks
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

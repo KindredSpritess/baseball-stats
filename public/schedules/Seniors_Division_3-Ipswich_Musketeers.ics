@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633403@mygameday.app
+SUMMARY:Ipswich Musketeers vs Indians Apache
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T133000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:633269@mygameday.app
 SUMMARY:Windsor Royals Red vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

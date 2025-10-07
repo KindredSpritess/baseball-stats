@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632683@mygameday.app
+SUMMARY:Southern Stars vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Southern Stars 
+END:VEVENT
+BEGIN:VEVENT
 UID:632674@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Manta Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

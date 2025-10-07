@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632776@mygameday.app
+SUMMARY:Windsor Royals vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T103000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
 UID:632839@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

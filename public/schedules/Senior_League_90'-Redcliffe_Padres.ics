@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632822@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 10 - 2\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=632822&amp;c=0-13003-0-654757-0&amp;pool=1
+SUMMARY:Redcliffe Padres vs Carina Red
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T130000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:632806@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

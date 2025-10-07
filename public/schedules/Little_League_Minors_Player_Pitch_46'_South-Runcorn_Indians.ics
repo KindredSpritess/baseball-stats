@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631945@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 10 - 2\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631945&amp;c=0-13003-0-654607-0&amp;pool=1
+SUMMARY:Runcorn Indians vs Carina White
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Runcorn Indians Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:631957@mygameday.app
 SUMMARY:Runcorn Indians vs Western Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

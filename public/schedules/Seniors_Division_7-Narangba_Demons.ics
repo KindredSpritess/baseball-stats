@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631764@mygameday.app
+SUMMARY:Mt Gravatt Eagles vs Narangba Demons
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Mt Gravatt Eagles
+END:VEVENT
+BEGIN:VEVENT
 UID:631839@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Narangba Demons
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

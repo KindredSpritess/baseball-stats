@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633214@mygameday.app
+SUMMARY:Beenleigh Hawks vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
 UID:633397@mygameday.app
 SUMMARY:Beenleigh Hawks vs Wests Bulldogs
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

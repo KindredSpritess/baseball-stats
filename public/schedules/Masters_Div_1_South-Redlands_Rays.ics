@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:628238@mygameday.app
+SUMMARY:Wests Bulldogs vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T201500
+DURATION:PT2H
+LOCATION:Southern Stars 
+END:VEVENT
+BEGIN:VEVENT
 UID:628131@mygameday.app
 SUMMARY:Carina Redsox vs Redlands Rays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

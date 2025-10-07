@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632696@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 11 - 12\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=632696&amp;c=0-13003-0-654757-0&amp;pool=1
+SUMMARY:Carina White vs Narangba Demons Blue
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T130000
+DURATION:PT2H
+LOCATION:Carina RedSox Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:632798@mygameday.app
 SUMMARY:Pine Hills Lightning vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

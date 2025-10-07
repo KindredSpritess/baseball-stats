@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633242@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 4 - 6\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633242&amp;c=0-13003-0-654300-0&amp;pool=1
+SUMMARY:All Stars vs Redlands Stingrays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T133000
+DURATION:PT2H
+LOCATION:All Stars Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:633449@mygameday.app
 SUMMARY:Narangba Demons vs Redlands Stingrays
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

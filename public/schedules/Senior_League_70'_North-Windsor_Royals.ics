@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631394@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 12 - 16\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631394&amp;c=0-13003-0-654759-0&amp;pool=1
+SUMMARY:All Stars vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T103000
+DURATION:PT2H
+LOCATION:All Stars Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:631463@mygameday.app
 SUMMARY:Windsor Royals vs Redcliffe Padres Grey
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

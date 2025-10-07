@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633202@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 4 - 8\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633202&amp;c=0-13003-0-654295-0&amp;pool=1
+SUMMARY:Redcliffe Padres vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T110000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:633435@mygameday.app
 SUMMARY:Carina Redsox vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

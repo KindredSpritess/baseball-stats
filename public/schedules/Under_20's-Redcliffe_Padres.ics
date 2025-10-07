@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631692@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 1 - 9\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631692&amp;c=0-13003-0-654426-0&amp;pool=1
+SUMMARY:Redcliffe Padres vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T153000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:631470@mygameday.app
 SUMMARY:Redcliffe Padres vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

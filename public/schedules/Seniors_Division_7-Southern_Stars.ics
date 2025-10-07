@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631832@mygameday.app
+SUMMARY:Southern Stars vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Southern Stars 
+END:VEVENT
+BEGIN:VEVENT
 UID:631819@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Southern Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

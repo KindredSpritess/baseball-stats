@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632809@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 10 - 5\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=632809&amp;c=0-13003-0-654757-0&amp;pool=1
+SUMMARY:Pine Hills Lightning vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T153000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:632839@mygameday.app
 SUMMARY:Redlands Rays vs Southern Stars
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

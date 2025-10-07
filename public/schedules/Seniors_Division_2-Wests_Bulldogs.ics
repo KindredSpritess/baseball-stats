@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:633176@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 17 - 1\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=633176&amp;c=0-13003-0-654295-0&amp;pool=1
+SUMMARY:Windsor Royals vs Wests Bulldogs
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T130000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
 UID:633516@mygameday.app
 SUMMARY:Wests Bulldogs vs Redcliffe Padres
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631750@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 9 - 15\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631750&amp;c=0-13003-0-654294-0&amp;pool=1
+SUMMARY:Wests Bulldogs vs Pine Rivers Rapids
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Wests Bulldogs Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:631802@mygameday.app
 SUMMARY:Wests Bulldogs vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

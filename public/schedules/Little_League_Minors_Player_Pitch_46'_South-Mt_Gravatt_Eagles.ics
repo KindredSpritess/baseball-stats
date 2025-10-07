@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631970@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 10 - 5\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631970&amp;c=0-13003-0-654607-0&amp;pool=1
+SUMMARY:Mt Gravatt Eagles vs Ipswich Musketeers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Mt Gravatt Eagles
+END:VEVENT
+BEGIN:VEVENT
 UID:631904@mygameday.app
 SUMMARY:Toowoomba Rangers vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

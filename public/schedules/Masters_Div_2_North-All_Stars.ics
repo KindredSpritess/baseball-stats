@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629360@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 9 - 9\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629360&amp;c=0-13003-0-654306-0&amp;pool=1
+SUMMARY:All Stars vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:All Stars Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:629321@mygameday.app
 SUMMARY:All Stars vs Pine Hills Black
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631499@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 8 - 15\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631499&amp;c=0-13003-0-654755-0&amp;pool=1
+SUMMARY:Narangba Demons Blue vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T130000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:631383@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Narangba Demons Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

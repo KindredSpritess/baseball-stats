@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629258@mygameday.app
+SUMMARY:Windsor Royals vs Narangba Demons Green
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
 UID:629257@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Narangba Demons Green
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

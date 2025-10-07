@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631982@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 11 - 3\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631982&amp;c=0-13003-0-654607-0&amp;pool=1
+SUMMARY:Redlands Manta Rays vs Toowoomba Rangers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T103000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 3 (LL)
+END:VEVENT
+BEGIN:VEVENT
 UID:631904@mygameday.app
 SUMMARY:Toowoomba Rangers vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

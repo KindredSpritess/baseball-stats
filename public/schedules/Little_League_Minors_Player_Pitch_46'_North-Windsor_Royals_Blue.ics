@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629122@mygameday.app
+SUMMARY:Windsor Royals Blue vs Narangba Demons Sluggers
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Windsor Royals
+END:VEVENT
+BEGIN:VEVENT
 UID:629057@mygameday.app
 SUMMARY:Redcliffe Padres Red vs Windsor Royals Blue
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629412@mygameday.app
+SUMMARY:Redcliffe Padres Red vs Windsor Royals
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:629311@mygameday.app
 SUMMARY:Pine Hills White vs Windsor Royals
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

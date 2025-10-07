@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632691@mygameday.app
+SUMMARY:Mt Gravatt Eagles vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T110000
+DURATION:PT2H
+LOCATION:Mt Gravatt Eagles
+END:VEVENT
+BEGIN:VEVENT
 UID:632792@mygameday.app
 SUMMARY:Ipswich Musketeers vs Mt Gravatt Eagles
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

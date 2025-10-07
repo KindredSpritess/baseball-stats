@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:627427@mygameday.app
+SUMMARY:Wests Bulldogs vs Beenleigh Hawks 
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T183000
+DURATION:PT2H
+LOCATION:Southern Stars 
+END:VEVENT
+BEGIN:VEVENT
 UID:627358@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Southern Stars Maroon
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

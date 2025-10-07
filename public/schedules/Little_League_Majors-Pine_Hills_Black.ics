@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631288@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 9 - 10\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631288&amp;c=0-13003-0-654554-0&amp;pool=1
+SUMMARY:Pine Hills Black vs Redlands Rays
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:630999@mygameday.app
 SUMMARY:Redcliffe Padres Grey vs Pine Hills Black
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

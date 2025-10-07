@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629519@mygameday.app
+SUMMARY:Redlands Devil Rays vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T103000
+DURATION:PT2H
+LOCATION:Redlands Rays Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:629535@mygameday.app
 SUMMARY:Runcorn Indians vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

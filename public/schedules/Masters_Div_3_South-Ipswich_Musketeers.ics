@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:627275@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 9 - 8\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=627275&amp;c=0-13003-0-654308-0&amp;pool=1
+SUMMARY:Ipswich Musketeers vs Southern Stars Maroon
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T183000
+DURATION:PT2H
+LOCATION:Ipswich Musketeers Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:627310@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Ipswich Musketeers
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:629303@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 4 - 13\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=629303&amp;c=0-13003-0-654306-0&amp;pool=1
+SUMMARY:Redcliffe Padres vs Pine Hills Gold
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:629343@mygameday.app
 SUMMARY:Windsor Royals vs Pine Hills Gold
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

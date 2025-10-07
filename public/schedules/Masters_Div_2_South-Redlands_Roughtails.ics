@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:627554@mygameday.app
+SUMMARY:Mt Gravatt Eagles vs Redlands Roughtails
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:Mt Gravatt Eagles
+END:VEVENT
+BEGIN:VEVENT
 UID:627506@mygameday.app
 SUMMARY:Beenleigh Hawks  vs Redlands Roughtails
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

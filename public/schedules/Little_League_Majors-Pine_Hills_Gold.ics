@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:631190@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 16 - 1\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631190&amp;c=0-13003-0-654554-0&amp;pool=1
+SUMMARY:Pine Hills Gold vs Southern Stars
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T103000
+DURATION:PT2H
+LOCATION:Pine Hills Diamond 1
+END:VEVENT
+BEGIN:VEVENT
 UID:631242@mygameday.app
 SUMMARY:Redlands Rays vs Pine Hills Gold
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

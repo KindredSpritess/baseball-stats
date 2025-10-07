@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:627806@mygameday.app
+SUMMARY:Beenleigh Hawks  vs Indians Sioux
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251006T190000
+DURATION:PT2H
+LOCATION:Beenleigh Hawks
+END:VEVENT
+BEGIN:VEVENT
 UID:627928@mygameday.app
 SUMMARY:Ipswich Musketeers vs Indians Sioux
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

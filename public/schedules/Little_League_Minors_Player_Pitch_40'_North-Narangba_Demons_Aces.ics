@@ -12,6 +12,14 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:628832@mygameday.app
+SUMMARY:Narangba Demons Aces vs Redcliffe Padres Grey
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251004T080000
+DURATION:PT2H
+LOCATION:Narangba Demons Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:628763@mygameday.app
 SUMMARY:Pine Hills White vs Narangba Demons Aces
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000

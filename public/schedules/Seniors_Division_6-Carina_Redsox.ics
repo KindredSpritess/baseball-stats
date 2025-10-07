@@ -12,6 +12,15 @@ END:VTIMEZONE
 VERSION:2.0
 PRODID:-//MyGameDay//EN
 BEGIN:VEVENT
+UID:632821@mygameday.app
+DESCRIPTION:Status: Results Entered\nScore: 0 - 0\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=632821&amp;c=0-13003-0-654799-0&amp;pool=1
+SUMMARY:Redcliffe Padres vs Carina Redsox
+DTSTAMP;TZID=Australia/Brisbane:20251001T000000
+DTSTART;TZID=Australia/Brisbane:20251005T083000
+DURATION:PT2H
+LOCATION:Redcliffe Padres Diamond 2
+END:VEVENT
+BEGIN:VEVENT
 UID:632788@mygameday.app
 SUMMARY:Pine Rivers Rapids vs Carina Redsox
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
