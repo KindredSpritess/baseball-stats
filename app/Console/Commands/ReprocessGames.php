@@ -115,8 +115,7 @@ class ReprocessGames extends Command
         }
 
         // Force re-encoding of game state
-        $gs = new GameState;
-        $gs->set($game, '', '', []);
+        $game->state = 'force encode';
         $game->save();
     }
 }
