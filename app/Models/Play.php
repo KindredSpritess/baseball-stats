@@ -24,15 +24,15 @@ class Play extends Model
     }
 
     const POSITIONS = [
-        1 => 'P',
-        2 => 'C',
-        3 => '1B',
-        4 => '2B',
-        5 => '3B',
-        6 => 'SS',
-        7 => 'LF',
-        8 => 'CF',
-        9 => 'RF',
+        1 => 'pitcher',
+        2 => 'catcher',
+        3 => 'first base',
+        4 => 'second base',
+        5 => 'third base',
+        6 => 'shortstop',
+        7 => 'left field',
+        8 => 'center field',
+        9 => 'right field',
     ];
 
     const TRAJECTORIES = [
@@ -42,6 +42,15 @@ class Play extends Model
         'P' => 'pop up',
         'FF' => 'foul fly',
         'PF' => 'pop foul',
+    ];
+
+    const OUT_TRAJECTORIES = [
+        'G' => 'grounds out to :fielder',
+        'L' => 'lines out to :fielder',
+        'F' => 'flies out to :fielder',
+        'P' => 'pops out to :fielder',
+        'FF' => 'flies out to :fielder in foul territory',
+        'PF' => 'pops out to :fielder in foul territory',
     ];
 
     const BASES = [
@@ -60,6 +69,9 @@ class Play extends Model
 
     /** @var ?string */
     private $humanBuffer = null;
+
+    /** @var ?string */
+    private $fieldingBuffer = null;
 
     /** @var ?BallInPlay tempBallInPlay */
     private $tempBallInPlay = null;
@@ -231,30 +243,32 @@ class Play extends Model
                     foreach (preg_split('/\//', $br) as $event) {
                         $event = new StringConsumer($event);
                         if ($b > -1) {
+                            $this->logBuffer(",");
                             $b = $this->handleBaseEvent($game, $b, $event);
                         } elseif ($event->consume('K')) {
                             $game->hitting()->evt('AB');
                             $game->hitting()->evt('SO');
                             $game->pitching()->evt('K');
                             $tb = self::getBases($event);
-                            $this->logBuffer("strikes out,");
+                            $this->logBuffer("strikes out");
                             if ($event == 'WP') {
                                 $game->pitching()->evt('WP');
-                                $b = $this->advance($game, -1, $tb - 1);
+                                $b = $this->advance($game, -1, $tb - 1, "and reaches :base on wild pitch");
                                 $game->advanceRunner($game->hitting(), $tb, true);
-                                $this->logBuffer(" on wild pitch");
                             } elseif ($event == 'PB') {
                                 $game->fielding(2)->evt('PB');
-                                $b = $this->advance($game, -1, $tb - 1);
+                                $b = $this->advance($game, -1, $tb - 1, "and reaches :base on passed ball");
                                 $game->advanceRunner($game->hitting(), $tb, false, true);
-                                $this->logBuffer(" on passed ball");
                             } elseif ($event == 'BTS') {
                                 $game->fielding(2)->evt('PO');
                                 $game->out();
                                 $this->logBuffer("on bunted third strike");
+                            } elseif ($event == '2') {
+                                $game->fielding(2)->evt('PO');
+                                $game->out();
                             } else {
                                 if ($this->handleFielding($game, $event)) {
-                                    $b = $this->advance($game, -1, $tb - 1);
+                                    $b = $this->advance($game, -1, $tb - 1, "reaches :base on {$this->fieldingBuffer}");
                                     $game->advanceRunner($game->hitting(), $tb, false, true);
                                 }
                             }
@@ -273,9 +287,8 @@ class Play extends Model
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
                             $game->fielding('2')->evt('E');
-                            $b = $this->advance($game, -1, 0, false);
+                            $b = $this->advance($game, -1, 0, "reaches :base on catcher's interference");
                             $game->advanceRunner($game->hitting(), 1, false);
-                            $this->logBuffer("reaches on catcher's interference");
                         } elseif (($sac = $event->consume('SAF')) ||
                                   ($sac = $event->consume('SAB'))) {
                             $tb = self::getBases($event);
@@ -294,29 +307,43 @@ class Play extends Model
                             $game->hitting()->evt('AB');
                             $game->hitting()->evt("BIP$bb");
                             $hit = true;
+                            // reaches on an error by the fielder
+                            // grounds out to the fielder.
                             $tb = self::getBases($event);
                             if ($this->handleFielding($game, $event, $hit)) {
                                 $game->advanceRunner($game->hitting(), $tb, $hit, !$hit);
+                                $format = null;
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");
                                     $game->pitching()->evt('HA');
-                                    $this->logBuffer(self::HIT[$tb] . ",");
+                                    $format = __(":type on a :trajectory", [
+                                        'type' => self::HIT[$tb],
+                                        'trajectory' => self::TRAJECTORIES[$bb],
+                                    ]);
+                                } else {
+                                    $format = __(":type to :base on {$this->fieldingBuffer}", [
+                                        'type' => $tb < 4 ? self::HIT[$tb] : 'scores',
+                                        'base' => self::BASES[$tb - 1],
+                                    ]);
                                 }
                                 if ($tb < 4) {
-                                    $b = $this->advance($game, -1, $tb - 1);
+                                    $b = $this->advance($game, -1, $tb - 1, $format);
                                 } else {
                                     $game->score[$game->half]++;
                                     $this->run_scoring = true;
                                     $game->hitting()->evt('R');
                                     $hit && $game->hitting()->evt('RBI');
                                 }
+                            } else {
+                                $this->logBuffer(__(self::OUT_TRAJECTORIES[$bb], ["fielder" => $this->fieldingBuffer]));
                             }
                             $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null);
-                            $this->logBuffer("on a " . self::TRAJECTORIES[$bb]);
                         } elseif ($event->consume('MFF')) {
                             // Muffed foul fly, error, At Bat continues.
                             // Need to handle batter being an expected out.
                             $this->handleFielding($game, "E{$event}");
+                            $this->plate_appearance = false;
+                            $this->log("With {$game->hitting()->person->lastName} batting, {$this->fieldingBuffer} on foul fly.");
                             $game->advanceRunner($game->hitting(), 0, false, true);
                             return;
                         } else {
@@ -436,9 +463,16 @@ class Play extends Model
             $descisive = str_contains($event, 'WT') || str_contains($event, 'E');
             if ($this->handleFielding($game, $event, $hit, $countStats)) {
                 $game->advanceRunner($runner, $bases, $hit, $descisive);
+                if ($this->fieldingBuffer !== null) {
+                    $logFormat = '[0,2] to :base on ' . $this->fieldingBuffer . '|[3,*] scores on ' . $this->fieldingBuffer;
+                }
             } else {
                 $bases = -10000000000;
                 $game->advanceRunner($runner, $bases);
+                $this->logBuffer(__("put out at :base by :fielding", [
+                    'base' => self::BASES[$b+1],
+                    'fielding' => $this->fieldingBuffer,
+                ]));
             }
         }
         if ($stat) $countStats && $game->bases[$b]->evt($stat);
@@ -450,8 +484,10 @@ class Play extends Model
      * @return bool true if no out was made.
      */
     public function handleFielding(Game $game, StringConsumer|string $event, bool &$hit = true, bool $countStats = true): bool {
+        $this->fieldingBuffer = null;
         if (!((string)$event)) return true;
         if ((string)$event === 'FC') {
+            $this->fieldingBuffer = 'fielder\'s choice';
             $hit = false;
             return true;
         }
@@ -459,30 +495,30 @@ class Play extends Model
         $handlers = preg_split('/-/', $event);
         foreach ($handlers as $k => $pos) {
             $pos = new StringConsumer($pos);
-            if ($pos->consume('WT') || $pos->consume('E')) {
+            if ($type = ($pos->consume('WT') || $pos->consume('E'))) {
                 // Decisive, remove the runner.
                 $countStats && $game->fielding($pos)->evt('E');
                 $countStats && $game->fielding($pos)->evt("E.$pos");
-                $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
+                $this->fieldingBuffer = ($type == 'E' ? 'fielding ' : 'throwing ') . 'error by ' . self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 $hit = false;
                 return true;
-            } elseif ($pos->consume('wt') || $pos->consume('e')) {
+            } elseif ($type = ($pos->consume('wt') || $pos->consume('e'))) {
                 $countStats && $game->fielding($pos)->evt('E');
                 $countStats && $game->fielding($pos)->evt("E.$pos");
-                $this->logBuffer('error by ' . self::POSITIONS[(string)$pos]);
+                $this->fieldingBuffer = ($type == 'e' ? 'fielding ' : 'throwing ') . 'error by ' . self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 $hit = false;
                 return true;
             } elseif ($k < count($handlers) - 1 && !array_key_exists((string)$pos, $handled)) {
                 $countStats && $game->fielding($pos)->evt('A');
                 $countStats && $game->fielding($pos)->evt("A.$pos");
-                $this->logBuffer(self::POSITIONS[(string)$pos] . ' to');
+                $this->fieldingBuffer .= self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName . ' to ';
                 $handled[(string)$pos] = true;
             } elseif ($k == count($handlers) - 1) {
-                $this->logBuffer('put out by ' . self::POSITIONS[(string)$pos]);
                 $countStats && $game->fielding($pos)->evt('PO');
                 $countStats && $game->fielding($pos)->evt("PO.$pos");
                 $game->out();
                 $hit = false;
+                $this->fieldingBuffer .= self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 return false;
             }
         }
@@ -528,7 +564,7 @@ class Play extends Model
             $game->bases[$from]->evt('R');
             $game->score[$game->half]++;
             $this->run_scoring = true;
-            if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => self::BASES[$to]]));
+            if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => 'home']));
         }
         if ($from >= 0) $game->bases[$from] = null;
         return $to;
@@ -585,6 +621,8 @@ class Play extends Model
     private function logBuffer(string $msg) {
         if (!$this->humanBuffer) {
             $this->humanBuffer = $msg;
+        } else if ($msg == ',') {
+            $this->humanBuffer = "{$this->humanBuffer},";
         } else {
             $this->humanBuffer = "{$this->humanBuffer} {$msg}";
         }
