@@ -37,7 +37,7 @@
 <table id='game-view'>
     <tr style="max-height: 100%;">
         <td class='mobile-hide' x-column='away'>
-            <x-box-score :game="$game" :team="$game->away_team" :lineup="$game->lineup[0]" :atbat="$game->atBat[0]" :defending="!!($game->half)" />
+            <x-box-score :game="$game" :home="false" />
         </td>
         <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='play-by-play'>
             <h2>{{ $game->firstPitch }} at {{ $game->location }}</h2>
@@ -183,7 +183,7 @@
             </div>
         </td>
         <td class='mobile-hide' x-column='home'>
-            <x-box-score :game="$game" :team="$game->home_team" :lineup="$game->lineup[1]" :atbat="$game->atBat[1]" :defending="!($game->half)" />
+            <x-box-score :game="$game" :home="true" />
         </td>
     </tr>
 </table>

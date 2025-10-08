@@ -154,6 +154,7 @@ class Play extends Model
             if ($position == '1') {
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
+                $game->pitchers[($game->half+1)%2][] = $player;
             }
             return;
         }

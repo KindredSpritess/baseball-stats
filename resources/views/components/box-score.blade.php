@@ -79,8 +79,7 @@
             <th style="background-color: var(--team-secondary); color: var(--team-primary);">S</th>
             <th style="background-color: var(--team-secondary); color: var(--team-primary);">Pit</th>
         </tr>
-        @foreach ($lineup as $spot)
-        @foreach ($spot as $player)
+        @foreach ($pitchers as $player)
         @if ($player->stats['Balls'] ?? $player->stats['Strikes'] ?? 0)
         <tr>
             <td class="scorers">{{ $player->number }}</td>
@@ -97,7 +96,6 @@
             <td>{{ ($player->stats['Balls'] ?? 0) + ($player->stats['Strikes'] ?? 0) }}</td>
         </tr>
         @endif
-        @endforeach
         @endforeach
         <tr style="font-weight: bold;">
             <td class="scorers" colspan="2" style="text-align:left;">Total</td>

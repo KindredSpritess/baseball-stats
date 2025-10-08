@@ -28,6 +28,8 @@ class Game extends Model
     public array $defense = [[], []];
     public array $lineup = [[], []];
 
+    public array $pitchers = [[], []];
+
     public Collection $ballsInPlay;
 
     protected $fillable = ['location', 'firstPitch', 'duration', 'dimensions'];
@@ -80,6 +82,7 @@ class Game extends Model
         if ($fieldPos === '1') {
             $player->evt('GP');
             $this->expectedOuts = $this->outs;
+            $this->pitchers[$home][] = $player;
         }
     }
 
