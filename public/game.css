@@ -46,7 +46,7 @@ th, td {
 }
 
 th {
-  background-color: #5a3392;
+  /* background-color: #5a3392; */
   color: #fff;
 }
 
@@ -112,4 +112,16 @@ tr.atbat {
   padding: 2px;
   text-align: center;
   border-radius: 4px;
+}
+
+.line-score .home th {
+  background-color: var(--home-primary);
+}
+
+.line-score .away th {
+  background-color: var(--away-primary);
+}
+
+.line-score .header {
+  background: linear-gradient(135deg, var(--away-primary) 0%, var(--home-primary) 100%);
 }

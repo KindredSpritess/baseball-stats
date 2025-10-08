@@ -45,9 +45,10 @@ class Play extends Model
     ];
 
     const BASES = [
-        '0' => '1st',
-        '1' => '2nd',
-        '2' => '3rd',
+        '0' => 'first',
+        '1' => 'second',
+        '2' => 'third',
+        '3' => 'home',
     ];
 
     const HIT = [
@@ -72,6 +73,7 @@ class Play extends Model
 
         $this->inning = $game->inning;
         $this->inning_half = $game->half;
+        $this->plate_appearance = false;
 
         if ($log->consume('Side Away')) {
             $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
@@ -149,7 +151,6 @@ class Play extends Model
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
-            $this->logA(" {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.");
             if ($position == '1') {
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
@@ -192,7 +193,6 @@ class Play extends Model
                 $game->hitting()->evt('hStrikes');
             } else if ($log->consume('blk')) {
                 $game->pitching()->evt('BLK');
-                $this->log("{$game->pitching()->person->lastName} balks.");
                 // For each runner, advance one base.
                 foreach (array_reverse($game->bases, true) as $k => $p) {
                     if ($p) {
@@ -202,6 +202,7 @@ class Play extends Model
                         $this->log($this->humanBuffer . ".");
                     }
                 }
+                $this->log("{$game->pitching()->person->lastName} balks.");
             } else if ($log->consume(',')) {
                 // We're into the play section.
                 $actions = preg_split('/,/', $log);
@@ -223,6 +224,7 @@ class Play extends Model
                     $this->log($this->humanBuffer . ".");
                 }
                 if ($br) {
+                    $this->plate_appearance = true;
                     $this->logBuffer($game->hitting()->person->lastName);
                     $b = -1;
                     foreach (preg_split('/\//', $br) as $event) {
@@ -258,20 +260,21 @@ class Play extends Model
                         } elseif ($event->consume('BB')) {
                             $game->hitting()->evt('BBs');
                             $game->pitching()->evt('BB');
-                            $b = $this->advance($game, -1, 0);
-                            $game->advanceRunner($game->hitting(), 1);
                             $this->logBuffer("walks");
+                            $b = $this->advance($game, -1, 0, false);
+                            $game->advanceRunner($game->hitting(), 1);
                         } elseif ($event->consume('HBP')) {
                             $game->hitting()->evt('HPB');
                             $game->pitching()->evt('HBP');
-                            $b = $this->advance($game, -1, 0);
+                            $b = $this->advance($game, -1, 0, false);
                             $game->advanceRunner($game->hitting(), 1);
                             $this->logBuffer("hit by pitch");
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
                             $game->fielding('2')->evt('E');
-                            $b = $this->advance($game, -1, 0);
+                            $b = $this->advance($game, -1, 0, false);
                             $game->advanceRunner($game->hitting(), 1, false);
+                            $this->logBuffer("reaches on catcher's interference");
                         } elseif (($sac = $event->consume('SAF')) ||
                                   ($sac = $event->consume('SAB'))) {
                             $tb = self::getBases($event);
@@ -327,11 +330,11 @@ class Play extends Model
                 } else {
                     $this->log("With {$game->hitting()->person->lastName} batting, ");
                 }
-                $this->logA("{$game->outs} out(s).");
+                $this->logA(trans_choice(":outs out.|:outs out.", $game->outs, ['outs' => $game->outs]));
                 if ($game->outs >= 3) {
                     $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
                     $this->game_event = 'End of the ' . ($game->half ? '' : 'top of the ') . $nf->format($game->inning) . ' inning.';
-                    $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
+                    $this->game_event .= " {$game->away_team->name} {$game->score[0]} to {$game->home_team->name} {$game->score[1]}.";
                     $game->sideAway();
                 }
                 return;
@@ -374,15 +377,17 @@ class Play extends Model
             $game->runners[$runner->id]['pitcher']->stats = $stats;
         }
 
+        $logFormat = null;
+
         $bases = self::getBases($event);
         $stat = null;
         if ($stat = $event->consume('SB')) {
             $countStats && $game->fielding(2)->evt('CSB');
             $game->advanceRunner($runner, 1);
-            $this->logBuffer("on stolen base");
+            $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
             $countStats && $game->fielding(2)->evt('CCS');
-            $this->logBuffer("caught stealing");
+            $logFormat = "caught stealing :base";
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $bases = -10000000000;
                 $runner->evt('CS');
@@ -393,11 +398,11 @@ class Play extends Model
         } elseif ($event->consume('PB')) {
             $countStats && $game->fielding(2)->evt('PB');
             $game->advanceRunner($runner, $bases, false);
-            $this->logBuffer('on a passed ball');
+            $logFormat = '[0,2] to :base on a passed ball|[3,*] scores on a passed ball';
         } elseif ($event->consume('WP')) {
             $countStats && $game->pitching()->evt('WP');
             $game->advanceRunner($runner, $bases, true);
-            $this->logBuffer('on a wild pitch');
+            $logFormat = '[0,2] to :base on a wild pitch|[3,*] scores on a wild pitch';
         } elseif ($event->empty() && ($b + $bases > 2)) {
             // NOTE: for GIDP or ROE 2 outs need to use FC.
             $countStats && $game->hitting()->evt('RBI');
@@ -424,7 +429,7 @@ class Play extends Model
             $bases = -10000000000;
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('FC')) {
-            $this->logBuffer('on a fielder\'s choice');
+            $logFormat = '[0,2] to :base on throw|[3,*] scores on throw';
             $game->advanceRunner($runner, $bases);
         } else {
             $descisive = str_contains($event, 'WT') || str_contains($event, 'E');
@@ -436,7 +441,7 @@ class Play extends Model
             }
         }
         if ($stat) $countStats && $game->bases[$b]->evt($stat);
-        $this->advance($game, $b, $b + $bases);
+        $this->advance($game, $b, $b + $bases, $logFormat);
         return $b + $bases;
     }
 
@@ -508,18 +513,21 @@ class Play extends Model
         return $player;
     }
 
-    public function advance(Game $game, float $from, float $to) {
+    public function advance(Game $game, int $from, int $to, ?string $logFormat = null) {
         throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null);
         throw_unless($from < 0 || $game->bases[$from] !== null);
+        if (is_null($logFormat)) {
+            $logFormat = "[0,2] to :base|[3,*] scores";
+        }
         if ($to < 0) {}
         elseif ($to < 3) {
             $game->bases[$to] = $game->bases[$from] ?? $game->hitting();
-            $this->logBuffer("advances to " . self::BASES[$to]);
+            if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => self::BASES[$to]]));
         } else {
             $game->bases[$from]->evt('R');
             $game->score[$game->half]++;
             $this->run_scoring = true;
-            $this->logBuffer("scores");
+            if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => self::BASES[$to]]));
         }
         if ($from >= 0) $game->bases[$from] = null;
         return $to;

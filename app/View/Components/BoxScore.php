@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Helpers\StatsHelper;
+use App\Models\Game;
 use App\Models\Team;
 use Illuminate\View\Component;
 
@@ -15,7 +16,7 @@ class BoxScore extends Component
      *
      * @return void
      */
-    public function __construct(public Team $team, public array $lineup, public int $atbat, public bool $defending)
+    public function __construct(public Game $game, public Team $team, public array $lineup, public int $atbat, public bool $defending)
     {
         $this->totals = new StatsHelper([]);
         foreach ($lineup as $spot) {

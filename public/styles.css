@@ -1,29 +1,45 @@
 #play-by-play {
   overflow: scroll;
   height: 330px;
+  background-color: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
 }
 
 #play-by-play div {
-  padding: 10px;
+  padding: 2px 2px 2px 30px;
   text-align: left;
 }
 
-#play-by-play div:nth-child(odd) {
-  background-color: #f2f2f2;
+#play-by-play div.plate-appearance, #play-by-play div.game-event {
+  padding: 10px;
+  text-align: left;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #d0d2d5;
+}
+
+#play-by-play div.plate-appearance:nth-child(odd) {
+  background-color: #f8fafc;
+}
+
+#play-by-play div.plate-appearance:nth-child(even) {
+  background-color: #ffffff;
 }
 
 #play-by-play div.game-event {
-  background-color: #ffffe0;
+  background-color: #fff8e1;
+  border-left: 4px solid #f57c00;
+  font-weight: 500;
 }
 
-#play-by-play div:nth-child(odd).run-scoring {
-  background-color: #ffdddd;
+#play-by-play div.run-scoring {
+  background: linear-gradient(135deg, #fff9c4 0%, #ffeb3b 100%);
   font-weight: bold;
+  color: #e65100;
 }
 
-#play-by-play div:nth-child(even).run-scoring {
-  background-color: #ffbbbb;
-  font-weight: bold;
+#play-by-play div.run-scoring.plate-appearance {
+  border-left: 4px solid #f57f17;
 }
 
 #game-view {
@@ -32,6 +48,7 @@
   bottom: 0;
   left: 0;
   right: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 table.stats-table td {
@@ -62,16 +79,71 @@ table.stats-table tbody tr:hover td {
   display: flex;
   /* break at 768px */
   flex-wrap: wrap;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e1e5e9;
 }
 .balls-in-play .position {
   width: 448px;
   margin: 0 10px 10px 0;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  padding: 10px;
+  border: 1px solid #e1e5e9;
 }
 .balls-in-play .position h3 {
   text-align: center;
+  color: #37474f;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 svg {
   height: auto;
   width: 447.94775;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* Team color styles */
+.fielder-text {
+  fill: var(--fielding-primary, white);
+  stroke: var(--fielding-secondary, black);
+  stroke-width: 1px;
+}
+
+.batter-text, .runner-text {
+  fill: var(--batting-primary, black);
+  stroke: var(--batting-secondary, white);
+  stroke-width: 1px;
+}
+
+.away-team-colors {
+  --team-primary: var(--away-primary);
+  --team-secondary: var(--away-secondary);
+}
+
+.home-team-colors {
+  --team-primary: var(--home-primary);
+  --team-secondary: var(--home-secondary);
+}
+
+.box-score-away {
+  border-left: 4px solid var(--away-primary);
+  background: linear-gradient(135deg, rgba(30, 136, 234, 0.05) 0%, rgba(229, 57, 53, 0.05) 100%);
+}
+
+.box-score-home {
+  border-left: 4px solid var(--home-primary);
+  background: linear-gradient(135deg, rgba(67, 160, 71, 0.05) 0%, rgba(253, 216, 53, 0.05) 100%);
+}
+
+#play-by-play div.game-event-away {
+  border-left: 4px solid var(--away-primary);
+  background: linear-gradient(135deg, rgb(from var(--away-primary) r g b / 0.08) 0%, rgb(from var(--home-primary) r g b / 0.08) 100%);
+}
+
+#play-by-play div.game-event-home {
+  border-left: 4px solid var(--home-primary);
+  background: linear-gradient(135deg, rgb(from var(--home-primary) r g b / 0.08) 0%, rgb(from var(--away-primary) r g b / 0.08) 100%);
 }

@@ -9,7 +9,13 @@ class Team extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['short_name', 'name', 'season'];
+    protected $fillable = [
+        'short_name',
+        'name',
+        'season',
+        'primary_color',
+        'secondary_color',
+    ];
 
     public function players() {
         return $this->hasMany(Player::class);

@@ -1,20 +1,20 @@
-<div style="padding:10px;">
-    <h3 id="{{ $team->short_name }}">{{ $team->name }}</h3>
+<div style="padding:10px;" class="{{ $team->id === $game->away_team->id ? 'away-team-colors box-score-away' : 'home-team-colors box-score-home' }}">
+    <h3 id="{{ $team->short_name }}" style="color: var(--team-primary); border-bottom: 2px solid var(--team-secondary); padding-bottom: 5px;">{{ $team->name }}</h3>
     <table style="text-align:center">
         <tr>
-            <th class="scorers">#</th>
-            <th style="text-align:left;">Name</th>
-            <th>PA</th>
-            <th>AB</th>
-            <th>R</th>
-            <th>H</th>
-            <th>RBI</th>
-            <th>SO</th>
-            <th>BB</th>
-            <th>&nbsp;</th>
-            <th>PO</th>
-            <th>A</th>
-            <th>E</th>
+            <th class="scorers" style="background-color: var(--team-primary); color: white;">#</th>
+            <th style="text-align:left; background-color: var(--team-primary); color: white;">Name</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">PA</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">AB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">R</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">H</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">RBI</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">SO</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">BB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">&nbsp;</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">PO</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">A</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">E</th>
         </tr>
         @foreach ($lineup as $i => $spot)
         @foreach ($spot as $player)
@@ -63,21 +63,21 @@
             <td>{{ $totals->E }}</td>
         </tr>
     </table>
-    <h4>Pitching</h4>
+    <h4 style="color: var(--team-primary); border-bottom: 1px solid var(--team-secondary);">Pitching</h4>
     <table style="text-align:center">
         <tr>
-            <th class="scorers">#</th>
-            <th style="text-align:left;">Name</th>
-            <th>INN</th>
-            <th>ER</th>
-            <th>R</th>
-            <th>H</th>
-            <th>K</th>
-            <th>BB</th>
-            <th>TBF</th>
-            <th>B</th>
-            <th>S</th>
-            <th>Pit</th>
+            <th class="scorers" style="background-color: var(--team-primary); color: white;">#</th>
+            <th style="text-align:left; background-color: var(--team-primary); color: white;">Name</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">INN</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">ER</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">R</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">H</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">K</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">BB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">TBF</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">B</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">S</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">Pit</th>
         </tr>
         @foreach ($lineup as $spot)
         @foreach ($spot as $player)

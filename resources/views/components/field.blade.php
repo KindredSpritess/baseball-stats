@@ -37,12 +37,12 @@
                 default => 'circle'
             };
             $color = match($ball->result) {
-                'O' => '#c3c2c3',
-                '1B' => '#fc6101',
-                '2B' => '#765eec',
-                '3B' => '#ffb001',
-                'HR' => '#dc2780',
-                default => '#c3c2c3'
+                'O' => '#9e9e9e',
+                '1B' => '#4caf50',
+                '2B' => '#2196f3',
+                '3B' => '#ff9800',
+                'HR' => '#ffd700',
+                default => '#9e9e9e'
             };
         @endphp
         @if($shape === 'circle')
@@ -69,8 +69,8 @@
     @endforeach
 
     <!-- Legend -->
-    <g transform="translate(320, 350)">
-        <rect x="-5" y="-5" width="130" height="100" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
+    <g transform="translate(355, 350)">
+        <rect x="-5" y="-5" width="95" height="100" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
 
         <!-- Shapes by Type -->
         <polygon points="5,4 10,10 5,16 0,10" fill="none" stroke="black" stroke-width="2"/>
@@ -87,23 +87,23 @@
         <text fill="black" x="15" y="75" font-family="Arial" font-size="13">Ground Ball</text>
     </g>
 
-    <g transform="translate(38, 350)">
+    <g transform="translate(8, 350)">
         <rect x="-5" y="-5" width="77" height="90" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
 
         <!-- Colors by Result -->
-        <circle cx="5" cy="10" r="5" fill="#c3c2c3"/>
+        <circle cx="5" cy="10" r="5" fill="#9e9e9e"/>
         <text fill="black" x="15" y="14" font-family="Arial" font-size="11">Out</text>
 
-        <circle cx="5" cy="25" r="5" fill="#fc6101"/>
+        <circle cx="5" cy="25" r="5" fill="#4caf50"/>
         <text fill="black" x="15" y="28" font-family="Arial" font-size="11">Single</text>
 
-        <circle cx="5" cy="40" r="5" fill="#765eec"/>
+        <circle cx="5" cy="40" r="5" fill="#2196f3"/>
         <text fill="black" x="15" y="43" font-family="Arial" font-size="11">Double</text>
 
-        <circle cx="5" cy="55" r="5" fill="#ffb001"/>
+        <circle cx="5" cy="55" r="5" fill="#ff9800"/>
         <text fill="black" x="15" y="58" font-family="Arial" font-size="11">Triple</text>
 
-        <circle cx="5" cy="70" r="5" fill="#dc2780"/>
+        <circle cx="5" cy="70" r="5" fill="#ffd700"/>
         <text fill="black" x="15" y="73" font-family="Arial" font-size="11">Home Run</text>
     </g>
 </svg>
