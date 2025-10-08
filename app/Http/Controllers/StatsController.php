@@ -54,7 +54,7 @@ class StatsController extends Controller
             'stats' => $players,
             'totals' => $totals,
             'people' => Person::whereIn('id', array_keys($players))->get(),
-            'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get(),
+            'ballsInPlay' => [],
         ]);
     }
 
