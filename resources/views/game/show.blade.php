@@ -240,6 +240,10 @@
         if (parts.length || $('#pitches').val()) {
             parts.unshift($('#pitches').val());
         }
+        if ($('#pitches').val().includes('x') && !$('#inplay').val()) {
+            alert('No ball in play.');
+            return;
+        }
         $.ajax("{{ route('gamelog', ['game' => $game->id]) }}", {
             accepts: {
                 gamestate: 'application/json'
@@ -276,17 +280,17 @@
         $('#show-add-player').on('click', function() {
             // Get current hash
             const currentHash = window.location.hash;
-            
+
             // Check if we already have team parameter
             let team = 'home'; // Default to home team
             if (currentHash.includes('team=away')) {
                 team = 'away';
             }
-            
+
             // Update hash to show add player component with team
             window.location.hash = `#add-player&team=${team}`;
         });
-        
+
         // Hide add player button when component is shown
         $(window).on('hashchange', function() {
             if (window.location.hash.includes('add-player')) {
@@ -295,7 +299,7 @@
                 $('.add-player-button-container').show();
             }
         });
-        
+
         // Initial check for hash
         if (window.location.hash.includes('add-player')) {
             $('.add-player-button-container').hide();
