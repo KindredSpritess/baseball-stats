@@ -97,7 +97,8 @@ class ReprocessGames extends Command
             try {
                 $play->apply($game);
             } catch (\Exception $e) {
-                Log::error("Error with line $k in game {$game->id}: {$play->play}");
+                $this->error("Current game state: " . json_encode($game->state));
+                $this->error("Error with line $k in game {$game->id}: {$play->play}");
                 throw $e;
             }
         }
