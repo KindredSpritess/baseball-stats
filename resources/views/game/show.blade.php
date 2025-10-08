@@ -135,7 +135,7 @@
                 @endforeach
             </svg>
             @if (!$game->locked)
-            <textarea id='plays' style="width:100%" rows="20">
+            <textarea id='plays' style="width:100%" rows="20" spellcheck="false">
 @foreach ($game->plays as $play)
 {{ $play->play }}
 @endforeach
@@ -253,7 +253,11 @@
                 '_token': '{{ csrf_token() }}',
             },
             method: 'PUT'
-        }).then(() => {location.reload()});
+        }).then(() => {
+            location.reload()
+        }, (req) => {
+            alert(`Error submitting play. ${req.responseJSON.message}`);
+        });
     });
 
     $('#submitPlays').on('click', (e) => {
@@ -267,7 +271,21 @@
                 '_token': '{{ csrf_token() }}',
             },
             method: 'PATCH'
-        }).then(() => {location.reload()});
+        }).then(() => {
+            location.reload();
+        }, (req) => {
+            alert(`Error submitting plays. ${req.responseJSON.message} on line ${req.responseJSON.line}`);
+            // Select the line in the textarea
+            const lines = $('#plays').val().split('\n');
+            let charCount = 0;
+            for (let i = 0; i < req.responseJSON.line - 1 && i < lines.length; i++) {
+                charCount += lines[i].length + 1; // +1 for the newline character
+            }
+            $('#plays').focus();
+            $('#plays')[0].setSelectionRange(charCount, charCount + lines[req.responseJSON.line - 1].length);
+            $('#plays').trigger('click');
+            e.target.disabled = false;
+        });
     });
 
     $(document).ready(function(){

@@ -64,7 +64,18 @@ class GameController extends Controller
             $play = new Play(['play' => $request->input('play')]);
             $json = $request->accepts('application/json');
         }
-        $play->apply($game);
+        try {
+            $play->apply($game);
+        } catch (Exception $e) {
+            if ($json) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ], 400);
+            } else {
+                return redirect()->route('game', ['game' => $game->id])->with('error', $e->getMessage());
+            }
+        }
         $game->state = 'force encode';
         $game->plays()->save($play);
         $game->push();
@@ -104,7 +115,12 @@ class GameController extends Controller
                 $play->apply($game);
             } catch (\Exception $e) {
                 Log::error("Error with line $k: {$play->play}");
-                throw $e;
+                return response([
+                    'status' => 'error',
+                    'stackTrace' => $e->getTraceAsString(),
+                    'message' => $e->getMessage(),
+                    'line' => $k + 1
+                ], 400);
             }
         }
         $game->state = 'force encode';

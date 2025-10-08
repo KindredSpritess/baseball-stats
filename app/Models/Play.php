@@ -159,7 +159,7 @@ class Play extends Model
         // Defensive swap
         if ($log->consume('DC #')) {
             $player = end($game->lineup[($game->half+1)%2][$log->upto(' -> ') - 1]);
-            throw_unless($log->consume(' -> '));
+            throw_unless($log->consume(' -> '), 'Expected " -> "');
             $position = (string)$log;
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
@@ -174,7 +174,7 @@ class Play extends Model
         // Manfred Runner
         if ($log->consume('MF #')) {
             $player = end($game->lineup[($game->half)%2][$log->upto(' -> ') - 1]);
-            throw_unless($log->consume(' -> '));
+            throw_unless($log->consume(' -> '), 'Expected " -> "');
             $base = (string)$log;
             $game->bases[$base - 1] = $player;
             $this->log("Extra runner {$player->person->lastName} placed at " . Number::ordinal($base) . ".");
@@ -185,7 +185,7 @@ class Play extends Model
         // Override Count
         if ($log->consume('SC ')) {
             $count = [];
-            throw_unless(preg_match('<^(\d)-(\d)$>', (string)$log, $count));
+            throw_unless(preg_match('<^(\d)-(\d)$>', (string)$log, $count), 'Expected count format "X-Y"');
             $game->balls = intval($count[1]);
             $game->strikes = intval($count[2]);
             $this->log("Count set to {$log}.");
@@ -551,8 +551,8 @@ class Play extends Model
     }
 
     public function advance(Game $game, int $from, int $to, ?string $logFormat = null) {
-        throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null);
-        throw_unless($from < 0 || $game->bases[$from] !== null);
+        throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null, "Cannot advance to occupied base");
+        throw_unless($from < 0 || $game->bases[$from] !== null, "No runner on base to advance");
         if (is_null($logFormat)) {
             $logFormat = "[0,2] to :base|[3,*] scores";
         }
