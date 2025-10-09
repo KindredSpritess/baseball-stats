@@ -461,16 +461,29 @@ class Play extends Model
                 $game->advanceRunner($runner, $bases, false, true);
                 $logFormat = '[0,2] picked off, reaches :base on ' . $this->fieldingBuffer . '|[3,*] picked off, scores on ' . $this->fieldingBuffer;
             }
-        } elseif ($event->consume('MB') ||
-                    $event->consume('PPR') ||
-                    $event->consume('ROL') ||
-                    $event->consume('INT') ||
-                    $event->consume('RRO') ||
-                    $event->consume('HBB') ||
-                    $event->consume('UA') ||
+        } elseif (($rule = $event->consume('MB') ?:
+                    $event->consume('PPR') ?:
+                    $event->consume('ROL') ?:
+                    $event->consume('INT') ?:
+                    $event->consume('RRO') ?:
+                    $event->consume('HBB') ?:
+                    $event->consume('UA')) ||
                     $bases < 0) {
             $this->handleFielding($game, $event, $hit, $countStats);
-            $this->logBuffer('unusually');
+            $logFormat = match($rule) {
+                'MB' => 'missed :base, putout by :fielding',
+                'PPR' => 'passed runner, putout by :fielding',
+                'ROL' => 'out of the baseline when advancing to :base, putout by :fielding',
+                'INT' => 'out on interference when advancing to :base, putout by :fielding',
+                'RRO' => 'advances :base on a runner\'s obstruction',
+                'HBB' => 'hit by a batted ball, putout by :fielding',
+                default => 'putout at :base unusually, :fielding',
+            };
+
+            $this->logBuffer(__($logFormat, [
+                'base' => self::BASES[$b+1],
+                'fielding' => $this->fieldingBuffer,
+            ]));
             $bases = -10000000000;
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('FC')) {
