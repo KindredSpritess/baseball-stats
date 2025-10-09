@@ -453,8 +453,13 @@ class Play extends Model
                 $bases = -10000000000;
                 $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
+                $this->logBuffer(__("picked off at :base by :fielding", [
+                    'base' => self::BASES[$b],
+                    'fielding' => $this->fieldingBuffer,
+                ]));
             } else {
                 $game->advanceRunner($runner, $bases, false, true);
+                $logFormat = '[0,2] picked off, reaches :base on ' . $this->fieldingBuffer . '|[3,*] picked off, scores on ' . $this->fieldingBuffer;
             }
         } elseif ($event->consume('MB') ||
                     $event->consume('PPR') ||
