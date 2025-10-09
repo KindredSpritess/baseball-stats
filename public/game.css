@@ -1,8 +1,79 @@
-/* Mobile-first approach */
+/* Mobi/* Fixed top menu */
+/* .mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8fafc;
+  color: #fff;
+  padding: 8px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 1000;
+  border-bottom: 1px solid #e1e5e9;
+}oach */
 body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+}
+
+/* Mobile menu team colors */
+.mobile-menu-away {
+  background: var(--away-primary);
+}
+
+.mobile-menu-home {
+  background: var(--home-primary);
+}
+
+/* Innings selector */
+.innings-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.inning-link {
+  display: inline-block;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 44px;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.inning-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Mobile responsive improvements */
+@media screen and (max-width: 768px) {
+  .innings-selector {
+    padding: 8px;
+    gap: 6px;
+  }
+  
+  .inning-link {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-width: 40px;
+  }
+
+  #game-view > tbody > tr > td {
+    padding: 0;
+  }
 }
 
 /* Fixed top menu */
@@ -13,26 +84,50 @@ body {
   right: 0;
   background-color: #5a3392;
   color: #fff;
-  padding: 10px;
+  height: 34px;
+  /* padding: 8px; */
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-around; */
+  justify-items: stretch;
   z-index: 1000;
 }
 
-.mobile-menu a {
-  color: #fff;
+.mobile-menu div {
+  color: #333;
   text-decoration: none;
   font-weight: bold;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  align-self: stretch;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.mobile-menu-play {
+  background: linear-gradient(135deg, var(--away-primary) 0%, var(--home-primary) 100%);
+}
+
+.mobile-menu div a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.mobile-menu a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Adjustments for mobile view */
 #game-view {
-  margin-top: 50px; /* Height of the mobile menu */
+  margin-top: 34px; /* Height of the mobile menu */
+  padding: 0;
 }
 
 #play-by-play {
   overflow-y: scroll;
-  height: 200px;
+  height: calc(100vh - 50px);
+  margin: 0;
+  padding: 0;
 }
 
 table {
@@ -65,7 +160,7 @@ th {
   }
 
   svg {
-    max-width: 100%;
+    max-width: 50%;
   }
 }
 
@@ -99,19 +194,24 @@ tr.atbat {
 }
 
 .innings-selector {
-  margin: 20px 0 10px 0;
+  margin: 5px 0 0px 0;
+  justify-content: space-between;
 }
 
 .inning-link {
-  margin-right: 5px;
   cursor: pointer;
   color: white;
   text-decoration: none;
-  border: 1px solid #5a3392;
-  background-color: #5a3392;
+  /* border: 1px solid #5a3392; */
+  background: linear-gradient(90deg, var(--away-primary) 0%, var(--home-primary) 100%);
   padding: 2px;
   text-align: center;
   border-radius: 4px;
+}
+
+.inning-link.inning-selected {
+  font-weight: bold;
+  border: 2px solid #333;
 }
 
 .line-score .home th {

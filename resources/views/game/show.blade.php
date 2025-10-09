@@ -15,7 +15,7 @@
     <style>
         :root {
             --away-primary: {{ $game->away_team->primary_color ?? '#1e88eA' }};
-            --away-secondary: {{ $game->away_team->secondary_color ?? '#e53935' }};
+            --away-secondary: {{ $game->away_team->secondary_color ?? '#ffffff' }};
             --home-primary: {{ $game->home_team->primary_color ?? '#43a047' }};
             --home-secondary: {{ $game->home_team->secondary_color ?? '#fdd835' }};
             --fielding-primary: {{ $game->half ? 'var(--away-primary)' : 'var(--home-primary)' }};
@@ -29,9 +29,9 @@
 <body>
 @if ($game->locked)
 <div class="mobile-menu">
-    <a href="#play-by-play">Plays</a>
-    <a href="#away">{{ $game->away_team->short_name }}</a>
-    <a href="#home">{{ $game->home_team->short_name }}</a>
+    <div class="mobile-menu-away"><a href="#away">{{ $game->away_team->short_name }}</a></div>
+    <div class="mobile-menu-play"><a href="#play-by-play">Plays</a></div>
+    <div class="mobile-menu-home"><a href="#home">{{ $game->home_team->short_name }}</a></div>
 </div>
 @endif
 <table id='game-view'>
@@ -177,7 +177,7 @@
                     <div @class([ 'run-scoring' => $play->run_scoring, 'plate-appearance' => $play->plate_appearance ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->human }}</div>
                     @endif
                     @if ($play->game_event)
-                    <div class='game-event {{ $play->inning_half ? "game-event-home" : "game-event-away" }}'>{{ $play->game_event }}</div>
+                    <div class='game-event {{ $play->inning_half ? "game-event-home" : "game-event-away" }}' data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->game_event }}</div>
                     @endif
                 @endforeach
             </div>
@@ -346,6 +346,11 @@
     $(document).ready(() => {
         const [, column] = (window.location.hash || '#play-by-play').split('#');
         $(`[x-column=${column}]`).show();
+        // Click the current inning link to filter plays
+        /* @if ($game->locked) */
+        const currentInning = "{{ $game->inning }}";
+        $(`.inning-link[data-inning="${currentInning}"]`).click();
+        /* @endif */
     });
     $('.mobile-menu a').on('click', (e) => {
         console.log(e);
@@ -357,7 +362,11 @@
     $('.inning-link').on('click', (e) => {
         e.preventDefault();
         const inning = $(e.target).data('inning');
-        $(`#play-by-play [data-inning="${inning}"]`)[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        $(`.inning-link.inning-selected`).removeClass('inning-selected');
+        $(e.target).addClass('inning-selected');
+        $(`#play-by-play div:not([data-inning="${inning}"])`).hide();
+        $(`#play-by-play [data-inning="${inning}"]`).show();
+        $('#play-by-play').scrollTop(0);
     });
 </script>
 @endif
