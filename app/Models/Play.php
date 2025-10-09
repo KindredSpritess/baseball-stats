@@ -94,6 +94,18 @@ class Play extends Model
             $game->sideAway();
         }
 
+        if ($log->consume('Game Over')) {
+            $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
+            // Because we might get called at the end of an inning, we need to make sure the game's inning is that of the last play.
+            $lastPlay = $game->plays()->orderByDesc('id')->first();
+            $game->inning = $lastPlay?->inning ?? $game->inning;
+            $game->half = $lastPlay?->inning_half ?? $game->half;
+            $this->game_event = 'End of the game. Final score: ';
+            $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
+            $game->locked = true;
+            return;
+        }
+
         // Lineups
         if ($log->consume('@')) {
             $matches = [];

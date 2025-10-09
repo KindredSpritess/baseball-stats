@@ -112,6 +112,10 @@ class GameController extends Controller
         $gs->get($game, 'state', '{}', []);
         foreach ($plays as $k => $play) {
             try {
+                if ($play->play === 'Game Over') {
+                    $game->inning = $plays[$k - 1]->inning ?? $game->inning;
+                    $game->half = $plays[$k - 1]->inning_half ?? $game->half;
+                }
                 $play->apply($game);
             } catch (\Exception $e) {
                 Log::error("Error with line $k: {$play->play}");
