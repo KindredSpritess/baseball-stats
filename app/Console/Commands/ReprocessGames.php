@@ -15,7 +15,7 @@ class ReprocessGames extends Command
      *
      * @var string
      */
-    protected $signature = 'games:reprocess {game? : The ID of a specific game to reprocess} {--all : Reprocess all games}';
+    protected $signature = 'games:reprocess {game? : The ID of a specific game to reprocess} {--all : Reprocess all games} {--force : Force reprocessing of locked games}';
 
     /**
      * The console command description.
@@ -68,7 +68,7 @@ class ReprocessGames extends Command
 
     private function reprocessGame(Game $game)
     {
-        if ($game->locked) {
+        if ($game->locked && !$this->option('force')) {
             throw new \Exception('Cannot reprocess locked game.');
         }
 
@@ -95,6 +95,10 @@ class ReprocessGames extends Command
 
         foreach ($plays as $k => $play) {
             try {
+                if ($play->play === 'Game Over') {
+                    $game->inning = $plays[$k - 1]->inning ?? $game->inning;
+                    $game->half = $plays[$k - 1]->inning_half ?? $game->half;
+                }
                 $play->apply($game);
             } catch (\Exception $e) {
                 $this->error("Current game state: " . json_encode($game->state));
