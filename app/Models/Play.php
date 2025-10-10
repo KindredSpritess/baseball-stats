@@ -333,7 +333,7 @@ class Play extends Model
                                         'trajectory' => self::TRAJECTORIES[$bb],
                                     ]);
                                 } else {
-                                    $format = __(":type to :base on {$this->fieldingBuffer}", [
+                                    $format = __("reaches :base on {$this->fieldingBuffer}", [
                                         'type' => $tb < 4 ? self::HIT[$tb] : 'scores',
                                         'base' => self::BASES[$tb - 1],
                                     ]);
