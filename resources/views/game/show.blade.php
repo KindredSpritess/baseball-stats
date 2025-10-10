@@ -6,7 +6,7 @@
     @if ($game->locked)
     <link rel="stylesheet" href="/game.css" />
     <!-- meta refresh 30 seconds. -->
-    <meta http-equiv="refresh" content="30">
+    <!-- <meta http-equiv="refresh" content="30"> -->
     @else
     <link rel="stylesheet" href="/scorers.css" />
     <link rel="stylesheet" href="/css/player-lineup-add.css" />

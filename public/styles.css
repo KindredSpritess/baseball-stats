@@ -128,18 +128,6 @@ svg {
   --team-secondary: var(--home-secondary);
 }
 
-.box-score-away {
-  border-left: 4px solid var(--away-primary);
-  border-right: 4px solid var(--away-primary);
-  background: linear-gradient(135deg, rgba(30, 136, 234, 0.05) 0%, rgba(229, 57, 53, 0.05) 100%);
-}
-
-.box-score-home {
-  border-left: 4px solid var(--home-primary);
-  border-right: 4px solid var(--home-primary);
-  background: linear-gradient(135deg, rgba(67, 160, 71, 0.05) 0%, rgba(253, 216, 53, 0.05) 100%);
-}
-
 #play-by-play div.game-event-away {
   border-left: 4px solid var(--away-primary);
   background: linear-gradient(135deg, rgb(from var(--away-primary) r g b / 0.08) 0%, rgb(from var(--home-primary) r g b / 0.08) 100%);

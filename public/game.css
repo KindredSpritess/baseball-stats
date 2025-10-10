@@ -73,6 +73,8 @@ body {
 
   #game-view > tbody > tr > td {
     padding: 0;
+    vertical-align: top;
+    height: calc(100vh - 34px);
   }
 }
 
@@ -125,7 +127,7 @@ body {
 
 #play-by-play {
   overflow-y: scroll;
-  height: calc(100vh - 50px);
+  height: calc(100cqh - 50px);
   margin: 0;
   padding: 0;
 }
@@ -155,7 +157,7 @@ th {
     display: none;
   }
 
-  h2 {
+  .geotemporal {
     display: none;
   }
 
@@ -182,6 +184,18 @@ th {
   svg {
     height: auto;
     width: 447.94775;
+  }
+
+  .box-score-away {
+    border-left: 4px solid var(--away-primary);
+    border-right: 4px solid var(--away-primary);
+    background: linear-gradient(135deg, rgba(30, 136, 234, 0.05) 0%, rgba(229, 57, 53, 0.05) 100%);
+  }
+
+  .box-score-home {
+    border-left: 4px solid var(--home-primary);
+    border-right: 4px solid var(--home-primary);
+    background: linear-gradient(135deg, rgba(67, 160, 71, 0.05) 0%, rgba(253, 216, 53, 0.05) 100%);
   }
 }
 
