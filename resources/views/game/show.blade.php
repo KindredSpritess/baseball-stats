@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/styles.css" />
     @if ($game->locked)
     <link rel="stylesheet" href="/game.css" />
+    <!-- meta refresh 30 seconds. -->
+    <meta http-equiv="refresh" content="30">
     @else
     <link rel="stylesheet" href="/scorers.css" />
     <link rel="stylesheet" href="/css/player-lineup-add.css" />
@@ -24,7 +26,8 @@
             --batting-secondary: {{ $game->half ? 'var(--home-secondary)' : 'var(--away-secondary)' }};
         }
     </style>
-    <title>{{ $game->away_team->short_name }} @ {{ $game->home_team->short_name }}</title>
+    <title>{{ $game->away_team->name }} @ {{ $game->home_team->name }}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
 @if ($game->locked)
@@ -40,7 +43,6 @@
             <x-box-score :game="$game" :home="false" />
         </td>
         <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='play-by-play'>
-            <h2>{{ $game->firstPitch }} at {{ $game->location }}</h2>
             @if ($game->locked)
             <x-line-score :game="$game" />
             @else
@@ -67,6 +69,7 @@
                 </div>
             </div>
             @endif
+            <h3 class="geotemporal">{{ Carbon\Carbon::parse($game->firstPitch)->format('M jS g:i') }} at {{ $game->location }}</h3>
             <p>
                 @if ($game->half)
                     ⬇️

@@ -6,10 +6,7 @@
         <script src="/sorttable.js"></script>
         <script src="/jquery.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        @if ($game->locked ?? false)
-        <!-- meta refresh 30 seconds. -->
-        <meta http-equiv="refresh" content="30">
-        @endif
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     </head>
     <body>
         <div class="container">
