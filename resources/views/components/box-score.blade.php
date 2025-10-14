@@ -67,7 +67,7 @@
         </tr>
     </table>
 
-    @if ($totals->stats['2'] ?? 0)
+    @if ($totals->stats('2') ?? 0)
     <div class="viewers extra-stats">
         <b>2B:</b>
         @foreach ($lineup as $i => $spot)
@@ -79,7 +79,7 @@
         @endforeach
     </div>
     @endif
-    @if ($totals->stats['3'] ?? 0)
+    @if ($totals->stats('3') ?? 0)
     <div class="viewers extra-stats">
         <b>3B:</b>
         @foreach ($lineup as $i => $spot)
@@ -91,7 +91,7 @@
         @endforeach
     </div>
     @endif
-    @if ($totals->stats['4'] ?? 0)
+    @if ($totals->stats('4') ?? 0)
     <div class="viewers extra-stats">
         <b>HR:</b>
         @foreach ($lineup as $i => $spot)
