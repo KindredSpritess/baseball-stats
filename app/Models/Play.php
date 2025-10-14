@@ -273,10 +273,12 @@ class Play extends Model
                                 $game->advanceRunner($game->hitting(), $tb, false, true);
                             } elseif ($event == 'BTS') {
                                 $game->fielding(2)->evt('PO');
+                                $game->fielding(2)->evt('PO.2');
                                 $game->out();
                                 $this->logBuffer("on bunted third strike");
                             } elseif ($event == '2') {
                                 $game->fielding(2)->evt('PO');
+                                $game->fielding(2)->evt('PO.2');
                                 $game->out();
                             } else {
                                 if ($this->handleFielding($game, $event)) {
