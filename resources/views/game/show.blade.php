@@ -347,7 +347,7 @@
 @else
 <script>
     $(document).ready(() => {
-        const [, column] = (window.location.hash || '#play-by-play').split('#');
+        const [, column] = (window.location.hash || '#plays-main').split('#');
         $(`[x-column=${column}]`).show();
         // Click the current inning link to filter plays
         /* @if ($game->locked) */
