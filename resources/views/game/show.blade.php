@@ -33,7 +33,7 @@
 @if ($game->locked)
 <div class="mobile-menu">
     <div class="mobile-menu-away"><a href="#away">{{ $game->away_team->short_name }}</a></div>
-    <div class="mobile-menu-play"><a href="#play-by-play">Plays</a></div>
+    <div class="mobile-menu-play"><a href="#plays-main">Plays</a></div>
     <div class="mobile-menu-home"><a href="#home">{{ $game->home_team->short_name }}</a></div>
 </div>
 @endif
@@ -42,7 +42,7 @@
         <td class='mobile-hide' x-column='away'>
             <x-box-score :game="$game" :home="false" />
         </td>
-        <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='play-by-play'>
+        <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='plays-main'>
             @if ($game->locked)
             <x-line-score :game="$game" />
             @else

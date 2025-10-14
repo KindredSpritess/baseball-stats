@@ -65,7 +65,8 @@ class StatsHelper {
 
         // SLG
         if ($this->AB) {
-            $this->stats['SLG'] = ($this->stat('1') + 2*$this->stat('2') + 3*$this->stat('3') + 4*$this->stat('4')) / ($this->AB);
+            $this->stats['TB'] = $this->stat('1') + 2*$this->stat('2') + 3*$this->stat('3') + 4*$this->stat('4');
+            $this->stats['SLG'] = $this->TB / ($this->AB);
         }
 
         $this->stats['OPS'] = $this->OBP + $this->SLG;

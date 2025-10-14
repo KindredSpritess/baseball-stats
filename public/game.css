@@ -64,7 +64,7 @@ body {
     padding: 8px;
     gap: 6px;
   }
-  
+
   .inning-link {
     padding: 10px 14px;
     font-size: 13px;
@@ -147,6 +147,10 @@ th {
   color: #fff;
 }
 
+.box-score-away h3, .box-score-home h3 {
+  margin: 0;
+}
+
 /* Responsive tables */
 @media screen and (max-width: 768px) {
   .responsive-table {
@@ -163,6 +167,12 @@ th {
 
   svg {
     max-width: 50%;
+  }
+
+  .extra-stats {
+    text-align: left;
+    padding: 5px 5px 0px 5px;
+    font-size: 12px;
   }
 }
 
@@ -196,6 +206,10 @@ th {
     border-left: 4px solid var(--home-primary);
     border-right: 4px solid var(--home-primary);
     background: linear-gradient(135deg, rgba(67, 160, 71, 0.05) 0%, rgba(253, 216, 53, 0.05) 100%);
+  }
+
+  .extra-stats {
+    display: none;
   }
 }
 

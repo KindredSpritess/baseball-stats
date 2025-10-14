@@ -14,6 +14,7 @@ class BoxScore extends Component
     public Team $team;
     public array $lineup;
     public array $pitchers;
+    public array $stats = [];
     public int $atbat;
     public bool $defending;
 
@@ -34,6 +35,8 @@ class BoxScore extends Component
         foreach ($this->lineup as $spot) {
             foreach ($spot as $player) {
                 if (!$player) continue;
+                $this->stats[$player->id] = new StatsHelper($player->stats);
+                $this->stats[$player->id]->derive();
                 $this->totals->merge($player->stats);
             }
         }
