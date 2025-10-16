@@ -98,6 +98,7 @@ class ReprocessGames extends Command
                 if ($play->play === 'Game Over') {
                     $game->inning = $plays[$k - 1]->inning ?? $game->inning;
                     $game->half = $plays[$k - 1]->inning_half ?? $game->half;
+                    $game->ended = true;
                 }
                 $play->apply($game);
             } catch (\Exception $e) {

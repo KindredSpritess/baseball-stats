@@ -4,8 +4,6 @@ namespace App\Casts;
 
 use App\Models\Game;
 use App\Models\Player;
-use App\Models\Team;
-use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Facades\Log;
 
@@ -33,6 +31,7 @@ class GameState implements CastsAttributes
 
         $game->score = $value['score'] ?? [0, 0];
         $game->atBat = $value['atBat'] ?? [0, 0];
+        $game->ended = $value['ended'] ?? false;
 
         $players = [];
         $decodeArray = function ($team, &$out, $in) use (&$players, &$decodeArray) {
@@ -100,6 +99,7 @@ class GameState implements CastsAttributes
             'outs' => $game->outs,
             'score' => $game->score,
             'atBat' => $game->atBat,
+            'ended' => $game->ended,
             'bases' => array_map(fn($p) => ($p ? $p->id : null), $game->bases),
             'runners' => array_map(function ($r) use ($getId) {
                 return [
