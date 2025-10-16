@@ -25,12 +25,13 @@
             <td class="scorers">{{ $loop->index === 0 ? ($i+1) : '' }}</td>
             <td style="text-align:left;">
                 @spaceless
-                <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
-                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
-                </a>
                 @if ($player->number)
                     <sup>#{{ $player->number }}</sup>
                 @endif
+                <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
+                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
+                </a>
+                <sup>{{ $defenders[$player->id] ?? 'EH'}}</sup>
                 @if ($defending)
                 <i class="fa-solid fa-up-down-left-right scorers" onclick="dsub({{ $i + 1 }})"></i>
                 @endif

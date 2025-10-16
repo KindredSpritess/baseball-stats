@@ -14,9 +14,24 @@ class BoxScore extends Component
     public Team $team;
     public array $lineup;
     public array $pitchers;
+    public array $defenders = [];
     public array $stats = [];
     public int $atbat;
     public bool $defending;
+
+    const POSITIONS = [
+        1 => 'P',
+        2 => 'C',
+        3 => '1B',
+        4 => '2B',
+        5 => '3B',
+        6 => 'SS',
+        7 => 'LF',
+        8 => 'CF',
+        9 => 'RF',
+        'DH' => 'DH',
+        'EH' => 'EH',
+    ];
 
     /**
      * Create a new component instance.
@@ -30,6 +45,9 @@ class BoxScore extends Component
         $this->pitchers = $game->pitchers[$home ? 1 : 0];
         $this->atbat = $game->atBat[$home ? 1 : 0];
         $this->defending = boolval($home ? !$game->half : $game->half == 0);
+        $defense = collect($game->defense[$home ? 1 : 0])->map(function($p) {
+            return $p ? $p->id : null;
+        })->flip();
 
         $this->totals = new StatsHelper([]);
         foreach ($this->lineup as $spot) {
@@ -38,6 +56,9 @@ class BoxScore extends Component
                 $this->stats[$player->id] = new StatsHelper($player->stats);
                 $this->stats[$player->id]->derive();
                 $this->totals->merge($player->stats);
+                if (isset($defense[$player->id])) {
+                    $this->defenders[$player->id] = self::POSITIONS[$defense[$player->id]];
+                }
             }
         }
         $this->totals->derive();
