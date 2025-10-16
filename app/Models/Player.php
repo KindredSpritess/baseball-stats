@@ -27,6 +27,10 @@ class Player extends Model
         return $this->belongsTo(Game::class);
     }
 
+    public function ballsInPlay() {
+        return $this->hasMany(BallInPlay::class);
+    }
+
     public function evt(string $stat): void {
         $stats = $this->stats ?? [];
         $stats[$stat] = ($this->stats[$stat] ?? 0) + 1;

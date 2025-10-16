@@ -127,6 +127,19 @@ class StatsHelper {
         }
     }
 
+    public function humanStat(string $stat): string {
+        $val = $this->stat($stat);
+        $stat = match ($stat) {
+            'BBs' => 'BB',
+            '1', '2', '3', '4' => $stat . 'B',
+            default => $stat,
+        };
+        if ($val) {
+            return trans_choice(":stat|:value:stat", $val, ['value' => $val, 'stat' => $stat]);
+        }
+        return '';
+    }
+
     public static function position(int $n): string {
         if ($n < 1 || $n > 9) return '';
         return ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'][$n-1];
