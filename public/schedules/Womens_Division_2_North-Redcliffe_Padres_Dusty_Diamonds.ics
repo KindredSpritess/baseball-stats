@@ -6,7 +6,7 @@ BEGIN:STANDARD
 TZOFFSETFROM:+1000
 TZOFFSETTO:+1000
 TZNAME:BT
-DTSTART:19700101T000000
+DTSTART:20251016T152255
 END:STANDARD
 END:VTIMEZONE
 VERSION:2.0
@@ -15,6 +15,7 @@ BEGIN:VEVENT
 UID:631655@mygameday.app
 DESCRIPTION:Status: Results Entered\nScore: 18 - 2\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631655&amp;c=0-13003-0-654313-0&amp;pool=1
 SUMMARY:Redcliffe Padres Dusty Diamonds (18) vs Pine Rivers Rapids White (2)
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251004T153000
 DURATION:PT2H
@@ -22,15 +23,18 @@ LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631433@mygameday.app
-SUMMARY:Redcliffe Padres Dusty Diamonds vs Redcliffe Padres Ruby Red
+DESCRIPTION:Status: Results Entered\nScore: 22 - 4\nDetails: https://websites.mygameday.app/round_info.cgi?a=MATCH&amp;fixture=631433&amp;c=0-13003-0-654313-0&amp;pool=1
+SUMMARY:Redcliffe Padres Dusty Diamonds (22) vs Redcliffe Padres Ruby Red (4)
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
-DTSTART;TZID=Australia/Brisbane:20251011T180000
+DTSTART;TZID=Australia/Brisbane:20251011T153000
 DURATION:PT2H
-LOCATION:Redcliffe Padres Diamond 1
+LOCATION:Redcliffe Padres Diamond 2
 END:VEVENT
 BEGIN:VEVENT
 UID:631033@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Windsor Royals Red
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251018T180000
 DURATION:PT2H
@@ -39,6 +43,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631396@mygameday.app
 SUMMARY:Narangba Demons Green vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251025T153000
 DURATION:PT2H
@@ -47,6 +52,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631208@mygameday.app
 SUMMARY:Pine Rivers Rapids Green vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251101T153000
 DURATION:PT2H
@@ -55,6 +61,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631279@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Hills Lightning
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251108T153000
 DURATION:PT2H
@@ -63,6 +70,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631689@mygameday.app
 SUMMARY:Redcliffe Padres Ruby Red vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251115T153000
 DURATION:PT2H
@@ -71,6 +79,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631303@mygameday.app
 SUMMARY:Narangba Demons Blue vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251122T153000
 DURATION:PT2H
@@ -79,6 +88,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631003@mygameday.app
 SUMMARY:Redcliffe Padres Rose Gold vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251129T153000
 DURATION:PT2H
@@ -87,6 +97,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631250@mygameday.app
 SUMMARY:Pine Rivers Rapids White vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20251206T153000
 DURATION:PT2H
@@ -95,6 +106,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631375@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Narangba Demons Green
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260110T153000
 DURATION:PT2H
@@ -103,6 +115,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631028@mygameday.app
 SUMMARY:Windsor Royals Red vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260117T153000
 DURATION:PT2H
@@ -111,6 +124,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631459@mygameday.app
 SUMMARY:Windsor Royals Blue vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260124T180000
 DURATION:PT2H
@@ -119,6 +133,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631691@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Pine Rivers Rapids Green
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260131T153000
 DURATION:PT2H
@@ -127,6 +142,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631348@mygameday.app
 SUMMARY:Pine Hills Lightning vs Redcliffe Padres Dusty Diamonds
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260207T153000
 DURATION:PT2H
@@ -135,6 +151,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631097@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Narangba Demons Blue
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260214T153000
 DURATION:PT2H
@@ -143,6 +160,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631234@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Windsor Royals Blue
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260221T153000
 DURATION:PT2H
@@ -151,6 +169,7 @@ END:VEVENT
 BEGIN:VEVENT
 UID:631361@mygameday.app
 SUMMARY:Redcliffe Padres Dusty Diamonds vs Redcliffe Padres Rose Gold
+DTSTAMP:20251016T152515
 DTSTAMP;TZID=Australia/Brisbane:20251001T000000
 DTSTART;TZID=Australia/Brisbane:20260228T153000
 DURATION:PT2H
