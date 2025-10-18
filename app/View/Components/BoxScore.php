@@ -44,7 +44,7 @@ class BoxScore extends Component
         $this->lineup = $game->lineup[$home ? 1 : 0];
         $this->pitchers = $game->pitchers[$home ? 1 : 0];
         $this->atbat = $game->atBat[$home ? 1 : 0];
-        $this->defending = boolval($home ? !$game->half : $game->half == 0);
+        $this->defending = boolval($home ? !$game->half : $game->half);
         $defense = collect($game->defense[$home ? 1 : 0])->map(function($p) {
             return $p ? $p->id : null;
         })->flip();
