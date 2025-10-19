@@ -71,73 +71,43 @@
     @if ($totals->stat('2') ?? 0)
     <div class="viewers extra-stats">
         <b>2B:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['2'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['2'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('2').
     </div>
     @endif
     @if ($totals->stat('3') ?? 0)
     <div class="viewers extra-stats">
         <b>3B:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['3'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['3'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('3').
     </div>
     @endif
     @if ($totals->stat('4') ?? 0)
     <div class="viewers extra-stats">
         <b>HR:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['4'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['4'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('4').
+    </div>
+    @endif
+    @if ($totals->HPB ?? 0)
+    <div class="viewers extra-stats">
+        <b>HBP:</b>
+        @playersStat('HPB').
     </div>
     @endif
     @if ($totals->TB ?? 0)
     <div class="viewers extra-stats">
         <b>Total Bases:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($stats[$player->id]->TB ?? 0)
-                {{ $player->person->lastName }} {{ $stats[$player->id]->TB ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('TB').
     </div>
     @endif
     @if ($totals->SB)
     <div class="viewers extra-stats">
         <b>Stolen Bases:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['SB'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['SB'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('SB').
     </div>
     @endif
     @if ($totals->CS)
     <div class="viewers extra-stats">
         <b>Caught Stealing:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['CS'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['CS'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('CS').
     </div>
     @endif
 
@@ -145,25 +115,13 @@
     @if ($totals->PB)
     <div class="viewers extra-stats">
         <b>Passed Balls:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['PB'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['PB'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('PB').
     </div>
     @endif
     @if ($totals->E)
     <div class="viewers extra-stats">
         <b>Errors:</b>
-        @foreach ($lineup as $i => $spot)
-        @foreach ($spot as $player)
-            @if ($player->stats['E'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['E'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
-        @endforeach
+        @playersStat('E').
     </div>
     @endif
 
@@ -217,24 +175,16 @@
             <td>{{ $totals->Pitches }}</td>
         </tr>
     </table>
-    @if ($totals->HPB)
+    @if ($totals->HBP)
     <div class="viewers extra-stats">
         <b>HBP:</b>
-        @foreach ($pitchers as $i => $player)
-            @if ($player->stats['HPB'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['HPB'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
+        @playersStat('HBP').
     </div>
     @endif
     @if ($totals->WP)
     <div class="viewers extra-stats">
         <b>Wild Pitches:</b>
-        @foreach ($pitchers as $i => $player)
-            @if ($player->stats['WP'] ?? 0)
-                {{ $player->person->lastName }} {{ $player->stats['WP'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-            @endif
-        @endforeach
+        @playersStat('WP').
     </div>
     @endif
     <div class="viewers extra-stats">
@@ -245,8 +195,6 @@
     </div>
     <div class="viewers extra-stats">
         <b>Batters faced:</b>
-        @foreach ($pitchers as $player)
-            {{ $player->person->lastName }} {{ $player->stats['BFP'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
-        @endforeach
+        @playersStat('BFP').
     </div>
 </div>

@@ -34,5 +34,16 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('stat', function(string $stat) {
             return "<?php echo \$stats->humanStat({$stat}); ?>";
         });
+        Blade::directive('playersStat', function (string $stat) {
+            return <<<PHP
+                <?php
+                    echo collect(\$lineup)
+                        ->flatten()
+                        ->filter(fn(\$player) => \$stats[\$player->id]->stat({$stat}))
+                        ->map(fn (\$player) => \$player->person->lastName . (\$stats[\$player->id]->stat({$stat}) > 1 ? ' ' . \$stats[\$player->id]->stat({$stat}) : ''))
+                        ->join(', ');
+                ?>
+            PHP;
+        });
     }
 }
