@@ -23,10 +23,10 @@ class TeamController extends Controller
     }
 
     public function show(Team $team) {
-        $players = [];
+        $players = collect();
         foreach ($team->players as $player) {
             $id = $player->person->id;
-            if (!isset($players[$id])) {
+            if (!$players->has($id)) {
                 $players[$id] = new StatsHelper([]);
             }
             $players[$id]->merge($player->stats);
