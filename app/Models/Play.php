@@ -333,7 +333,7 @@ class Play extends Model
                             // grounds out to the fielder.
                             $tb = self::getBases($event);
                             if ($this->handleFielding($game, $event, $hit)) {
-                                $game->advanceRunner($game->hitting(), $tb, $hit, !$hit);
+                                $game->advanceRunner($game->hitting(), $tb, $hit, !$hit && (string)$event !== 'FC');
                                 $format = null;
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");
