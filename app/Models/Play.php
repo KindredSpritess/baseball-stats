@@ -312,7 +312,10 @@ class Play extends Model
                             $game->hitting()->evt($sac);
                             $hit = true;
                             if ($this->handleFielding($game, $event, $hit)) {
-                                $b = $this->advance($game, -1, $tb - 1);
+                                $b = $this->advance($game, -1, $tb - 1,  __("reaches :base on sacrifce {$this->fieldingBuffer}", [
+                                    'type' => $tb < 4 ? self::HIT[$tb] : 'scores',
+                                    'base' => self::BASES[$tb - 1],
+                                ]));
                                 $game->advanceRunner($game->hitting(), $tb, $hit, !$hit);
                             } else {
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$sac], ["fielder" => $this->fieldingBuffer]));
