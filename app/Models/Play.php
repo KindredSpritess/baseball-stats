@@ -437,11 +437,14 @@ class Play extends Model
             $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
             $countStats && $game->fielding(2)->evt('CCS');
-            $logFormat = "caught stealing :base";
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $bases = -10000000000;
                 $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
+                $this->logBuffer(__("caught stealing :base by :fielding", [
+                    'base' => self::BASES[$b+1],
+                    'fielding' => $this->fieldingBuffer,
+                ]));
             } else {
                 $game->advanceRunner($runner, $bases, false, true);
             }
