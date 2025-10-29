@@ -51,6 +51,8 @@ class Play extends Model
         'P' => 'pops out to :fielder',
         'FF' => 'flies out to :fielder in foul territory',
         'PF' => 'pops out to :fielder in foul territory',
+        'SAF' => 'out on sacrifice fly to :fielder',
+        'SAB' => 'out on sacrifice bunt to :fielder',
     ];
 
     const BASES = [
@@ -312,6 +314,8 @@ class Play extends Model
                             if ($this->handleFielding($game, $event, $hit)) {
                                 $b = $this->advance($game, -1, $tb - 1);
                                 $game->advanceRunner($game->hitting(), $tb, $hit, !$hit);
+                            } else {
+                                $this->logBuffer(__(self::OUT_TRAJECTORIES[$sac], ["fielder" => $this->fieldingBuffer]));
                             }
                         } elseif (($bb = $event->consume('G')) ||
                                   ($bb = $event->consume('FF')) ||
