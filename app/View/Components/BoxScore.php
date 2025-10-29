@@ -51,13 +51,13 @@ class BoxScore extends Component
 
         $playerStats = function($player) use (&$defense) {
             if (!$player) return;
-            if (isset($defense[$player->id])) {
+            if (isset($this->stats[$player->id])) {
                 return;
             }
             $this->stats[$player->id] = new StatsHelper($player->stats);
             $this->stats[$player->id]->derive();
             $this->totals->merge($player->stats);
-            if (isset($defense[$player->id])) {
+            if (isset($defense[$player->id]) && isset(self::POSITIONS[$defense[$player->id]])) {
                 $this->defenders[$player->id] = self::POSITIONS[$defense[$player->id]];
             }
         };
