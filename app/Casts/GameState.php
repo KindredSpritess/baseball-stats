@@ -5,7 +5,6 @@ namespace App\Casts;
 use App\Models\Game;
 use App\Models\Player;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Support\Facades\Log;
 
 class GameState implements CastsAttributes
 {
@@ -116,7 +115,6 @@ class GameState implements CastsAttributes
             ),
             'pitchers' => array_map(function ($p) use ($getId) { return array_map($getId, $p); }, $game->pitchers),
         ];
-        Log::info($out);
         return json_encode($out);
     }
 }
