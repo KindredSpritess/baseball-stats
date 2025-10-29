@@ -49,17 +49,27 @@ class BoxScore extends Component
             return $p ? $p->id : null;
         })->flip();
 
+        $playerStats = function($player) use (&$defense) {
+            if (!$player) return;
+            if (isset($defense[$player->id])) {
+                return;
+            }
+            $this->stats[$player->id] = new StatsHelper($player->stats);
+            $this->stats[$player->id]->derive();
+            $this->totals->merge($player->stats);
+            if (isset($defense[$player->id])) {
+                $this->defenders[$player->id] = self::POSITIONS[$defense[$player->id]];
+            }
+        };
+
         $this->totals = new StatsHelper([]);
         foreach ($this->lineup as $spot) {
             foreach ($spot as $player) {
-                if (!$player) continue;
-                $this->stats[$player->id] = new StatsHelper($player->stats);
-                $this->stats[$player->id]->derive();
-                $this->totals->merge($player->stats);
-                if (isset($defense[$player->id])) {
-                    $this->defenders[$player->id] = self::POSITIONS[$defense[$player->id]];
-                }
+                $playerStats($player);
             }
+        }
+        foreach ($this->pitchers as $player) {
+            $playerStats($player);
         }
         $this->totals->derive();
     }
