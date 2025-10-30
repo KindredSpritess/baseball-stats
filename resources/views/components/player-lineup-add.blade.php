@@ -10,6 +10,7 @@
                 @method('PUT')
                 <input type="hidden" class="team-short-name" value="{{ $team->short_name }}">
                 <input type="hidden" class="team-id" value="{{ $team->id }}">
+                <input type="hidden" class="sub-prefix" />
                 <div class="form-group">
                     <label for="player-search">Player Name:</label>
                     <input 
@@ -38,6 +39,8 @@
                         <button type="button" class="position-btn" data-position="9">9 - RF</button>
                         <button type="button" class="position-btn" data-position="DH">DH</button>
                         <button type="button" class="position-btn" data-position="EH">EH</button>
+                        <button type="button" class="position-btn" data-position="PH">PH</button>
+                        <button type="button" class="position-btn" data-position="PR">PR</button>
                     </div>
                     <input type="hidden" class="player-position-input">
                     <div class="selected-position">Selected: <span>None</span></div>

@@ -100,43 +100,43 @@
                     </g>
 
                     @if ($game->fielding('1'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=260 font-weight="bold" class="fielder-text">{{ $game->fielding('1')->person->lastName }}, {{ $game->fielding('1')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=260 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '1')">{{ $game->fielding('1')->person->lastName }}, {{ $game->fielding('1')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('2'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=435 font-weight="bold" class="fielder-text">{{ $game->fielding('2')->person->lastName }}, {{ $game->fielding('2')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=435 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '2')">{{ $game->fielding('2')->person->lastName }}, {{ $game->fielding('2')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('3'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=310 font-weight="bold" class="fielder-text">{{ $game->fielding('3')->person->lastName }}, {{ $game->fielding('3')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=310 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '3')">{{ $game->fielding('3')->person->lastName }}, {{ $game->fielding('3')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('4'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=284 y=210 font-weight="bold" class="fielder-text">{{ $game->fielding('4')->person->lastName }}, {{ $game->fielding('4')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=284 y=210 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '4')">{{ $game->fielding('4')->person->lastName }}, {{ $game->fielding('4')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('5'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=310 font-weight="bold" class="fielder-text">{{ $game->fielding('5')->person->lastName }}, {{ $game->fielding('5')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=310 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '5')">{{ $game->fielding('5')->person->lastName }}, {{ $game->fielding('5')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('6'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=164 y=210 font-weight="bold" class="fielder-text">{{ $game->fielding('6')->person->lastName }}, {{ $game->fielding('6')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=164 y=210 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '6')">{{ $game->fielding('6')->person->lastName }}, {{ $game->fielding('6')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('7'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=130 font-weight="bold" class="fielder-text">{{ $game->fielding('7')->person->lastName }}, {{ $game->fielding('7')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=130 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '7')">{{ $game->fielding('7')->person->lastName }}, {{ $game->fielding('7')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('8'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=80 font-weight="bold" class="fielder-text">{{ $game->fielding('8')->person->lastName }}, {{ $game->fielding('8')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=80 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '8')">{{ $game->fielding('8')->person->lastName }}, {{ $game->fielding('8')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->fielding('9'))
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=130 font-weight="bold" class="fielder-text">{{ $game->fielding('9')->person->lastName }}, {{ $game->fielding('9')->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=130 font-weight="bold" class="fielder-text" onclick="sub('DSUB', '9')">{{ $game->fielding('9')->person->lastName }}, {{ $game->fielding('9')->person->firstName[0] }}</text>
                     @endif
                     @if ($game->hitting())
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=405 font-weight="bold" class="batter-text">{{ $game->hitting()->person->lastName }}, {{ $game->hitting()->person->firstName[0] }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=405 font-weight="bold" class="batter-text" onclick="sub('PH', 'PH')">{{ $game->hitting()->person->lastName }}, {{ $game->hitting()->person->firstName[0] }}</text>
                     @endif
                     @if ($game->bases[0])
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=270 font-weight="bold" class="runner-text">{{ $game->bases['0']->person->lastName }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=344 y=270 font-weight="bold" class="runner-text" onclick="sub('PR1', 'PR')">{{ $game->bases['0']->person->lastName }}</text>
                     @endif
                     @if ($game->bases[1])
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=180 font-weight="bold" class="runner-text">{{ $game->bases['1']->person->lastName }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=224 y=180 font-weight="bold" class="runner-text" onclick="sub('PR2', 'PR')">{{ $game->bases['1']->person->lastName }}</text>
                     @endif
                     @if ($game->bases[2])
-                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=280 font-weight="bold" class="runner-text">{{ $game->bases['2']->person->lastName }}</text>
+                    <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=280 font-weight="bold" class="runner-text" onclick="sub('PR3', 'PR')">{{ $game->bases['2']->person->lastName }}</text>
                     @endif
                     @if ($game->locked && $game->hitting() && !$game->ended)
                     @foreach ($game->hitting()->ballsInPlay as $ball)
@@ -273,6 +273,19 @@
         $('#pitches').focus();
     }
 
+    function sub(type, pos) {
+        if ($('#pitches').val().includes('x')) {
+            return;
+        }
+        window.location.hash = '#';
+        const defense = type.includes('DSUB');
+        const bottom = parseInt("{{ $game->half }}");
+        const team = bottom ^ defense ? 'home' : 'away';
+
+        // Update hash to show add player component with team
+        window.location.hash = `#add-player&team=${team}&type=${type}&pos=${pos}`;
+    }
+
     // When the plays textarea is in focused, get the cursor position and highlight the equivalent play in the play-by-play section
     $('#plays').on('click', function() {
         const cursorPos = this.selectionStart;
@@ -405,6 +418,9 @@
 
     let bb = null;
     $('#Layer_1').on('click', e => {
+        if (!$('#pitches').val().includes('x')) {
+            return;
+        }
         const {offsetX, offsetY } = e.originalEvent;
         // Draw a circle centered on pos, scaled to viewBox.
         const cx = (offsetX / e.currentTarget.clientWidth * 447.94775).toFixed(2);

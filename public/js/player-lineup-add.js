@@ -7,18 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to update UI based on hash
     function updateFromHash() {
-        const hash = window.location.hash;
+        const hash = Object.fromEntries(new URLSearchParams(window.location.hash.slice(1)));
 
         // Check if we should show the lineup add component
-        if (hash.includes('add-player')) {
+        if ('add-player' in hash) {
             lineupAddContainer.style.display = 'block';
 
             // Determine which team to show
-            let teamToShow = 'home'; // Default to home
-
-            if (hash.includes('team=away')) {
-                teamToShow = 'away';
-            }
+            const teamToShow = hash['team'] || 'home'; // Default to home
 
             // Update active button
             teamBtns.forEach(btn => {
@@ -29,15 +25,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Show corresponding team section
-            if (teamToShow === 'home') {
-                homeTeamAdd.style.display = 'block';
-                awayTeamAdd.style.display = 'none';
-                homeTeamAdd.querySelector('.player-search').focus();
-            } else {
-                homeTeamAdd.style.display = 'none';
-                awayTeamAdd.style.display = 'block';
-                awayTeamAdd.querySelector('.player-search').focus();
+            homeTeamAdd.style.display = 'none';
+            awayTeamAdd.style.display = 'none';
+            teamAdd = teamToShow === 'home' ? homeTeamAdd : awayTeamAdd;
+            teamAdd.style.display = 'block';
+            teamAdd.querySelector('.player-search').focus();
+            if (hash['pos']) {
+                const positionButton = teamAdd.querySelector(`.position-btn[data-position="${hash['pos']}"]`);
+                if (positionButton) {
+                    positionButton.click();
+                }
+            }
+            if (hash['type']) {
+                const subPrefixInput = teamAdd.querySelector('.sub-prefix');
+                if (subPrefixInput) {
+                    subPrefixInput.value = hash['type'];
+                }
             }
         } else {
             // Hide the lineup add component if not explicitly shown
@@ -96,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const teamId = playerForm.querySelector('.team-id').value;
         const action = playerForm.getAttribute('action');
         const token = playerForm.querySelector('input[name="_token"]').value;
+        const subPrefixInput = playerForm.querySelector('.sub-prefix');
 
         let selectedPerson = null;
         let debounceTimer;
@@ -246,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = selectedPerson ? `${selectedPerson.lastName}, ${selectedPerson.firstName}` : playerSearchInput.value;
             const playerNumber = playerNumberInput.value ? ` #${playerNumberInput.value}` : '';
             const position = playerPositionInput.value ? `: ${playerPositionInput.value}` : '';
+            const subPrefix = subPrefixInput.value ? `${subPrefixInput.value} ` : '';
 
             // Submit the form using AJAX
             $.ajax(action, {
@@ -253,12 +258,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     gamestate: 'application/json'
                 },
                 data: {
-                    'play': `@${teamShortName} ${playerName}${playerNumber}${position}`,
+                    'play': `${subPrefix}@${teamShortName} ${playerName}${playerNumber}${position}`,
                     '_token': token,
                 },
                 method: 'PUT'
             }).then(() => {
-                // Reload the page but preserve the hash
+                // Reload the page but preserve the hash if not a substitution.
+                if (subPrefix) {
+                    location.hash = '';
+                }
                 location.reload();
             });
         });
