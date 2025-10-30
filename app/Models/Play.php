@@ -356,6 +356,7 @@ class Play extends Model
                                     $this->run_scoring = true;
                                     $game->hitting()->evt('R');
                                     $hit && $game->hitting()->evt('RBI');
+                                    $this->logBuffer($format);
                                 }
                             } else {
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$bb], ["fielder" => $this->fieldingBuffer]));
