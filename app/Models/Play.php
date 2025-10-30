@@ -137,20 +137,21 @@ class Play extends Model
         if ($log->consume('PH @')) {
             $player = $this->insertPlayer($game, $log);
             $this->log($player->person->lastName . " pinch hits for {$game->hitting()->person->lastName}");
-            $game->substitute($game->half, $player, $game->hitting());
+            $game->substitute($game->half, $player, $game->hitting(), 'PH');
             return;
         }
 
         // Pinch Runner
         if ($log->consume('PR')) {
-            $replacing = match ($log[0]) {
-                '1' => $game->first,
-                '2' => $game->second,
-                '3' => $game->third,
+            $replacing = match (true) {
+                boolval($log->consume('1')) => $game->bases[0],
+                boolval($log->consume('2')) => $game->bases[1],
+                boolval($log->consume('3')) => $game->bases[2],
             };
             $log->consume(' @');
             $player = $this->insertPlayer($game, $log);
-            $game->substitute(!$game->top, $player, $replacing);
+            $this->log($player->person->lastName . " pinch runs for {$replacing->person->lastName}");
+            $game->substitute($game->half, $player, $replacing, 'PR');
             return;
         }
 
