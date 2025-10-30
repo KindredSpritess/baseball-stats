@@ -31,6 +31,11 @@ class BoxScore extends Component
         9 => 'RF',
         'DH' => 'DH',
         'EH' => 'EH',
+        'PH' => 'PH',
+        'PR' => 'PR',
+        'PR1' => 'PR',
+        'PR2' => 'PR',
+        'PR3' => 'PR',
     ];
 
     /**
