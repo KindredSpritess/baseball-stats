@@ -119,6 +119,11 @@ class ReprocessGames extends Command
                 }
             }
         }
+        foreach ($game->pitchers as $pitchers) {
+            foreach ($pitchers as $player) {
+                $player->save();
+            }
+        }
 
         // Force re-encoding of game state
         $game->state = 'force encode';
