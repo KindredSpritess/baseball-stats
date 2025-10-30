@@ -46,15 +46,4 @@ class TeamController extends Controller
             'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
         ]);
     }
-
-    public function addPlayer(Team $team, Request $request) {
-        $query = $request->query();
-        $person = new Person($query);
-        $person->save();
-        $player = new Player($query);
-        $player->team()->associate($team);
-        $player->person()->associate($person);
-        $player->save();
-        return new JsonResponse(['status' => 'success', 'created' => $player->id]);
-    }
 }
