@@ -86,6 +86,11 @@ class GameController extends Controller
                 }
             }
         }
+        foreach ($game->pitchers as $pitchers) {
+            foreach ($pitchers as $player) {
+                $player->save();
+            }
+        }
         if ($json) {
             $gs = new GameState;
             return new JsonResponse(['status' => 'success', 'state' => $gs->set($game, '', '', [])]);
