@@ -31,9 +31,11 @@
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
                     <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
                 </a>
+                @if ($loop->last)
                 <sup>{{ $defenders[$player->id] ?? 'EH'}}</sup>
+                @endif
                 @if ($defending)
-                <i class="fa-solid fa-up-down-left-right scorers" onclick="dsub({{ $i + 1 }})"></i>
+                <i class="fa-solid fa-up-down-left-right scorers" onclick="dsub('{{ $i + 1 }}')"></i>
                 @endif
                 @endspaceless
             </td>
