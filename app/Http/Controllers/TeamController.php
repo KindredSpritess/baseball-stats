@@ -22,7 +22,7 @@ class TeamController extends Controller
         return redirect()->route('team', ['team' => $team->id]);
     }
 
-    public function show(Team $team) {
+    public function show(Request $request, Team $team) {
         $players = collect();
         foreach ($team->players as $player) {
             $id = $player->person->id;
@@ -44,6 +44,9 @@ class TeamController extends Controller
             'totals' => $totals,
             'people' => Person::whereIn('id', $people)->get(),
             'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
+            'minPA' => $request->query('qualified') === 'all' ? 0 : $team->games()->count() * ($totals->PA / $totals->GS - 1),
+            'minIP' => $request->query('qualified') === 'all' ? 0 : $team->games()->count() / 3,
+            'minFI' => $request->query('qualified') === 'all' ? 0 : $totals->FI / 9 / 2,
         ]);
     }
 }
