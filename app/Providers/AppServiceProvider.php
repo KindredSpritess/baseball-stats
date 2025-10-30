@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
                 <?php
                     echo collect(\$lineup)
                         ->flatten()
+                        ->concat(\$pitchers)
+                        ->unique('id')
                         ->filter(fn(\$player) => \$stats[\$player->id]->stat({$stat}))
                         ->map(fn (\$player) => \$player->person->lastName . (\$stats[\$player->id]->stat({$stat}) > 1 ? ' ' . \$stats[\$player->id]->stat({$stat}) : ''))
                         ->join(', ');
