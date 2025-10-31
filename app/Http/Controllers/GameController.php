@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Casts\GameState;
+use App\Helpers\StatsHelper;
 use App\Models\BallInPlay;
 use App\Models\Game;
 use App\Models\Play;
@@ -228,5 +229,22 @@ class GameController extends Controller
     public function destroy(Game $game)
     {
         //
+    }
+
+    public function get(Game $game) {
+        $gs = new GameState;
+        $state = $game->state;
+        $stats = [];
+        foreach ($game->away_team->players as $player) {
+            $helper = new StatsHelper($player->stats);
+            $helper->derive();
+            $stats[$player->person->lastName] = $helper->toArray();
+        }
+        return response()->json([
+            'game' => $game,
+            'state' => json_decode($gs->set($game, '', '', []), true),
+            'plays' => $game->plays,
+            'stats' => $stats,
+        ]);
     }
 }

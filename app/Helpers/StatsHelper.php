@@ -36,6 +36,10 @@ class StatsHelper {
         return $this->stat($stat);
     }
 
+    public function toArray(): array {
+        return $this->stats;
+    }
+
     /**
      * @return StatsHelper[]
      */
@@ -106,11 +110,11 @@ class StatsHelper {
             $this->stats['WHIP'] = ($this->BB + $this->HA) / $this->IP;
         }
 
-    if ($this->BFP) {
-        $this->stats['Pitches'] = $this->Strikes + $this->Balls;
-        $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
-        $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
-    }
+        if ($this->BFP) {
+            $this->stats['Pitches'] = $this->Strikes + $this->Balls;
+            $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
+            $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
+        }
 
         return $this;
     }
