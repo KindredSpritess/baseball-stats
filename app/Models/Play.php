@@ -208,6 +208,12 @@ class Play extends Model
             return;
         }
 
+        // Human Readable Alert
+        if ($log->consume('!')) {
+            $this->log(trim((string)$log));
+            return;
+        }
+
         while (!$log->empty()) {
             if ($log->consume('.')) {
                 $game->balls = min($game->balls + 1, 3);
