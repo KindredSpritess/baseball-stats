@@ -10,7 +10,7 @@
             {{ $header }}
         @endisset
     </td>
-    <td>{{ $stats->GP }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ $stats->GP }}</td>@endunless
     <td>{{ App\Helpers\StatsHelper::innings_format($stats->IP) }}</td>
     <td>{{ $stats->HA }}</td>
     <td>{{ $stats->K }}</td>
@@ -24,11 +24,11 @@
     <td>{{ $stats->Balls }}</td>
     <td>{{ $stats->Strikes }}</td>
     <td>{{ $stats->Pitches }}</td>
-    <td>{{ number_format($stats->ERA, 2) }}</td>
-    <td>{{ number_format($stats->WHIP, 3) }}</td>
-    <td>{{ number_format($stats->StrkPct * 100, 1) }}%</td>
-    <td>{{ number_format($stats->KP9, 1) }}</td>
-    <td>{{ number_format($stats->BBP9, 1) }}</td>
-    <td>{{ number_format($stats->KPBB, 1) }}</td>
-    <td>{{ number_format($stats->FPSPCT, 2) }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->ERA, 2) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->WHIP, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->StrkPct * 100, 1) }}%</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->KP9, 1) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->BBP9, 1) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->KPBB, 1) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->FPSPCT, 2) }}</td>@endunless
 </tr>

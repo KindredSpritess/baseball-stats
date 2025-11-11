@@ -7,6 +7,7 @@ use App\Helpers\StatsHelper;
 use App\Models\BallInPlay;
 use App\Models\Game;
 use App\Models\Play;
+use App\Models\Player;
 use App\Models\Team;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -245,6 +246,32 @@ class GameController extends Controller
             'state' => json_decode($gs->set($game, '', '', []), true),
             'plays' => $game->plays,
             'stats' => $stats,
+        ]);
+    }
+
+    public function boxscore(Game $game) {
+        $gs = new GameState;
+        $state = $game->state;
+
+        $stats = [];
+        foreach ($game->players as $player) {
+            $id = $player->person->id;
+            $stats[$id] = new StatsHelper($player->stats);
+            $stats[$id]->derive();
+        }
+        $teams = [$game->away_team, $game->home_team];
+        foreach ($teams as $team) {
+            $team->totals = new StatsHelper([]);
+            $game->players()->whereTeamId($team->id)->each(fn (Player $player) => $team->totals->merge($player->stats));
+            $team->totals->derive();
+        }
+
+        return view('game.boxscore', [
+            'game' => $game,
+            'people' => $game->players->pluck('person')->unique('id')->keyBy('id'),
+            'stats' => $stats,
+            'teams' => $teams,
+            'state' => json_decode($gs->set($game, '', '', []), true),
         ]);
     }
 }

@@ -36,6 +36,7 @@ Route::controller(GameController::class)->group(function() {
     Route::get('/game/view/{game}', 'view')->name('game.view');
     Route::put('/game/{game}/log', 'play')->name('gamelog');
     Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');
+    Route::get('/game/{game}/boxscore', 'boxscore')->name('game.boxscore');
 });
 
 Route::controller(TeamController::class)->group(function () {

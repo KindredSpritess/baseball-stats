@@ -10,7 +10,7 @@
         {{ $header }}
       @endif
     </td>
-    <td>{{ $stats->G }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ $stats->G }}</td>@endunless
     <td>{{ $stats->PA }}</td>
     <td>{{ $stats->AB }}</td>
     <td>{{ $stats->R }}</td>
@@ -25,10 +25,11 @@
     <td>{{ $stats->HPB }}</td>
     <td>{{ $stats->SB }}</td>
     <td>{{ $stats->CS }}</td>
-    <td>{{ number_format($stats->AVG, 3) }}</td>
-    <td>{{ number_format($stats->OBP, 3) }}</td>
-    <td>{{ number_format($stats->SLG, 3) }}</td>
-    <td>{{ number_format($stats->OPS, 3) }}</td>
-    <td>{{ number_format($stats->ISO, 3) }}</td>
-    <td>{{ number_format($stats->PPA, 2)}}</td>
+    <td>{{ $stats->GDP }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->AVG, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->OBP, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->SLG, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->OPS, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->ISO, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->PPA, 2)}}</td>@endunless
 </tr>
