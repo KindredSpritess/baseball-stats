@@ -78,6 +78,8 @@ class Play extends Model
     /** @var ?BallInPlay tempBallInPlay */
     private $tempBallInPlay = null;
 
+    private $lastPitch = null;
+
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
         // Comment
@@ -219,7 +221,9 @@ class Play extends Model
                 $game->balls = min($game->balls + 1, 3);
                 $game->pitching()->evt('Balls');
                 $game->hitting()->evt('hBalls');
-            } else if ($log->consume('c') || $log->consume('s') || $log->consume('f') || $log->consume('x')) {
+                $this->lastPitch = '.';
+            } else if ($p = ($log->consume('c') ?: $log->consume('s') ?: $log->consume('f') ?: $log->consume('x') ?: $log->consume('t'))) {
+                $this->lastPitch = $p;
                 if (($game->balls == 0) && ($game->strikes == 0)) {
                     $game->pitching()->evt('FPS');
                 }
@@ -271,8 +275,15 @@ class Play extends Model
                             $game->hitting()->evt('AB');
                             $game->hitting()->evt('SO');
                             $game->pitching()->evt('K');
+                            $game->hitting()->evt($this->lastPitch === 'c' ? 'SOC' : 'SOS');
+                            $game->pitching()->evt($this->lastPitch === 'c' ? 'KC' : 'KS');
                             $tb = self::getBases($event);
-                            $this->logBuffer("strikes out");
+                            $this->logBuffer(match ($this->lastPitch) {
+                                'c' => "strikes out looking",
+                                's' => "strikes out swinging",
+                                't' => "strikes out on a foul tip",
+                                default => "strikes out"
+                            });
                             if ($event == 'WP') {
                                 $game->pitching()->evt('WP');
                                 $b = $this->advance($game, -1, $tb - 1, "and reaches :base on wild pitch");
