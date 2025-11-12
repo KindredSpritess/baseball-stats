@@ -73,6 +73,8 @@
     </tfoot>
 </table>
 
+<x-run-origins-chart :id="'runDistributionChart'" :walks="$totals->stat('RA.W')" :hits="$totals->stat('RA.H')" :errors="$totals->stat('RA.E')" />
+
 <h3>Balls In Play at Position</h3>
 <div class='balls-in-play'>
     @foreach ($totals->positional() as $line)
