@@ -46,6 +46,8 @@ class Play extends Model
 
     const OUT_TRAJECTORIES = [
         'G' => 'grounds out to :fielder',
+        'GDP' => 'grounds into double play; :fielder',
+        'GTP' => 'grounds into triple play; :fielder',
         'L' => 'lines out to :fielder',
         'F' => 'flies out to :fielder',
         'P' => 'pops out to :fielder',
@@ -79,6 +81,9 @@ class Play extends Model
     private $tempBallInPlay = null;
 
     private $lastPitch = null;
+
+    private $forceOuts = 0;
+    private $forced = [];
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
@@ -246,6 +251,10 @@ class Play extends Model
                 // We're into the play section.
                 $actions = preg_split('/,/', $log);
                 $br = array_shift($actions);
+                $this->forced[] = boolval($br);
+                foreach ($actions as $i => $action) {
+                    $this->forced[] = $this->forced[$i] && $action;
+                }
                 if (count($actions) > 3) {
                     $ballLocation = array_pop($actions);
                 }
@@ -258,7 +267,10 @@ class Play extends Model
                     if (!$action) continue;
                     $this->logBuffer($game->bases[$b]->person->lastName);
                     foreach (preg_split('/\//', $action) as $event) {
+                        $sb = $b;
                         $b = $this->handleBaseEvent($game, $b, $event);
+                        // Only the first event will force.
+                        $this->forced[$sb] = false;
                     }
                     $this->log($this->humanBuffer . ".");
                 }
@@ -376,6 +388,12 @@ class Play extends Model
                                     $this->logBuffer($format);
                                 }
                             } else {
+                                if ($bb == 'G' && $this->forceOuts) {
+                                    $bb = $this->forceOuts == 2 ? 'GTP' : 'GDP';
+                                    $this->forceOuts = 2;
+                                } else {
+                                    $this->forceOuts = 0;
+                                }
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$bb], ["fielder" => $this->fieldingBuffer]));
                             }
                             $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null);
@@ -391,6 +409,9 @@ class Play extends Model
                             $game->hitting()->evt('AB');
                             $b = $this->handleBaseEvent($game, $b, $event);
                         }
+                    }
+                    if ($this->forceOuts >= 2) {
+                        $game->hitting()->evt('GDP');
                     }
                     $this->log($this->humanBuffer . ".");
                     $game->hitting()->evt('PA');
@@ -529,6 +550,7 @@ class Play extends Model
                     $logFormat = '[0,2] to :base on ' . $this->fieldingBuffer . '|[3,*] scores on ' . $this->fieldingBuffer;
                 }
             } else {
+                $this->forceOuts += $this->forced[$b] ?? 0 ? 1 : 0;
                 $bases = -10000000000;
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("put out at :base by :fielding", [

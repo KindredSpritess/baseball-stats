@@ -72,9 +72,9 @@
         <x-pitching-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
-@endif
 
 <x-run-origins-chart :id="'runDistributionChart'" :walks="$totals->stat('RA.W')" :hits="$totals->stat('RA.H')" :errors="$totals->stat('RA.E')" />
+@endif
 
 <h3>Balls In Play at Position</h3>
 <div class='balls-in-play'>
