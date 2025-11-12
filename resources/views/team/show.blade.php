@@ -13,7 +13,7 @@
         @if ($stats[$person->id]->PA < $minPA)
             @continue
         @endif
-        <x-hitting-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+        <x-hitting-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team])" />
     @endforeach
     <tfoot>
         <x-hitting-stat-line header="Totals" :stats="$totals" />
@@ -39,7 +39,7 @@
         @if ($stats[$person->id]->FI < $minFI)
             @continue
         @endif
-        <x-fielding-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+        <x-fielding-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team])" />
     @endforeach
     <tfoot>
         <x-fielding-stat-line header="Totals" :stats="$totals" />
@@ -53,7 +53,7 @@
         @if ($stats[$person->id]->IP < $minIP)
             @continue
         @endif
-        <x-pitching-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.show', ['person' => $person->id])" />
+        <x-pitching-stat-line header="{{ $person->firstName }} {{ $person->lastName }}" :stats="$stats[$person->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team])" />
     @endforeach
     <tfoot>
         <x-pitching-stat-line header="Totals" :stats="$totals" />
