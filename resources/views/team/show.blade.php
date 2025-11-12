@@ -20,6 +20,8 @@
     </tfoot>
 </table>
 
+<x-run-origins-chart :id="'runsScoredChart'" :walks="$totals->stat('R.W')" :hits="$totals->stat('R.H')" :errors="$totals->stat('R.E')" />
+
 <h4 onclick="$('.balls-in-play').toggle()" style="text-decoration:underline dotted;cursor:pointer">Spray Charts</h4>
 <div class='balls-in-play' style="display:none;">
 @foreach ($people->sortBy(fn($person) => $person->lastName) as $person)
@@ -57,4 +59,7 @@
         <x-pitching-stat-line header="Totals" :stats="$totals" />
     </tfoot>
 </table>
+
+<x-run-origins-chart :id="'runsAllowedChart'" :walks="$totals->stat('RA.W')" :hits="$totals->stat('RA.H')" :errors="$totals->stat('RA.E')" />
 </body>
+@endsection

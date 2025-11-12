@@ -70,7 +70,8 @@ class GameState implements CastsAttributes
                 'pitcher' => $team->players()->find($r['pitcher']),
                 'base' => $r['base'],
                 'earned' => $r['earned'],
-                'expectedOuts' => $r['expectedOuts']
+                'expectedOuts' => $r['expectedOuts'],
+                'origin' => $r['origin'] ?? null,
             ];
         }, $value['runners'] ?? []);
     
@@ -105,7 +106,8 @@ class GameState implements CastsAttributes
                     'pitcher' => $getId($r['pitcher']),
                     'base' => $r['base'],
                     'earned' => $r['earned'],
-                    'expectedOuts' => $r['expectedOuts']
+                    'expectedOuts' => $r['expectedOuts'],
+                    'origin' => $r['origin'] ?? null,
                 ];
             }, $game->runners),
             'defense' => array_map(function ($d) use ($getId) { return array_map($getId, $d); }, $game->defense),

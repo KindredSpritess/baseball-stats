@@ -287,11 +287,11 @@ class Play extends Model
                             if ($event == 'WP') {
                                 $game->pitching()->evt('WP');
                                 $b = $this->advance($game, -1, $tb - 1, "and reaches :base on wild pitch");
-                                $game->advanceRunner($game->hitting(), $tb, true);
+                                $game->advanceRunner($game->hitting(), $tb, true, false, 'E');
                             } elseif ($event == 'PB') {
                                 $game->fielding(2)->evt('PB');
                                 $b = $this->advance($game, -1, $tb - 1, "and reaches :base on passed ball");
-                                $game->advanceRunner($game->hitting(), $tb, false, true);
+                                $game->advanceRunner($game->hitting(), $tb, false, true, 'E');
                             } elseif ($event == 'BTS') {
                                 $game->fielding(2)->evt('PO');
                                 $game->fielding(2)->evt('PO.2');
@@ -304,7 +304,7 @@ class Play extends Model
                             } else {
                                 if ($this->handleFielding($game, $event)) {
                                     $b = $this->advance($game, -1, $tb - 1, "reaches :base on {$this->fieldingBuffer}");
-                                    $game->advanceRunner($game->hitting(), $tb, false, true);
+                                    $game->advanceRunner($game->hitting(), $tb, false, true, 'E');
                                 }
                             }
                         } elseif ($event->consume('BB')) {
@@ -312,18 +312,18 @@ class Play extends Model
                             $game->pitching()->evt('BB');
                             $this->logBuffer("walks");
                             $b = $this->advance($game, -1, 0, false);
-                            $game->advanceRunner($game->hitting(), 1);
+                            $game->advanceRunner($game->hitting(), 1, true, false, 'W');
                         } elseif ($event->consume('HBP')) {
                             $game->hitting()->evt('HPB');
                             $game->pitching()->evt('HBP');
                             $b = $this->advance($game, -1, 0, false);
-                            $game->advanceRunner($game->hitting(), 1);
+                            $game->advanceRunner($game->hitting(), 1, true, false, 'W');
                             $this->logBuffer("hit by pitch");
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
                             $game->fielding('2')->evt('E');
                             $b = $this->advance($game, -1, 0, "reaches :base on catcher's interference");
-                            $game->advanceRunner($game->hitting(), 1, false);
+                            $game->advanceRunner($game->hitting(), 1, false, true, 'E');
                         } elseif (($sac = $event->consume('SAF')) ||
                                   ($sac = $event->consume('SAB'))) {
                             $tb = self::getBases($event);
@@ -351,7 +351,7 @@ class Play extends Model
                             // grounds out to the fielder.
                             $tb = self::getBases($event);
                             if ($this->handleFielding($game, $event, $hit)) {
-                                $game->advanceRunner($game->hitting(), $tb, $hit, !$hit && (string)$event !== 'FC');
+                                $game->advanceRunner($game->hitting(), $tb, $hit, !$hit && (string)$event !== 'FC', $hit ? 'H' : 'E');
                                 $format = null;
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");

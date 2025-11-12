@@ -136,3 +136,8 @@ svg {
   border-left: 4px solid var(--home-primary);
   background: linear-gradient(135deg, rgb(from var(--home-primary) r g b / 0.08) 0%, rgb(from var(--away-primary) r g b / 0.08) 100%);
 }
+
+.pie-chart {
+  max-width: 400px;
+  margin: 20px auto;
+}

@@ -102,6 +102,7 @@ class Game extends Model
                                   float $bases,
                                   bool $earned = true,
                                   bool $decisiveError = false,
+                                  ?string $origin = null,
                                   bool $replaces = false) {
         if (!isset($this->runners[$player->id])) {
             $this->runners[$player->id] = [
@@ -109,6 +110,7 @@ class Game extends Model
                 'base' => 0,
                 'earned' => ($decisiveError || $this->expectedOuts > 2) ? -100000000000 : 0,
                 'expectedOuts' => (int)$this->expectedOuts,
+                'origin' => $origin ?? null,
             ];
         }
 
@@ -146,7 +148,9 @@ class Game extends Model
             unset($this->runners[$player->id]);
         }
         if ($runner['base'] >= 4) {
+            $player->evt("R.{$runner['origin']}");
             $runner['pitcher']->evt('RA');
+            $runner['pitcher']->evt("RA.{$runner['origin']}");
             $runner['base'] = -100000000000;
             if ($runner['earned'] < 0) {
                 unset($this->runners[$player->id]);

@@ -4,7 +4,6 @@
 @endsection
 
 @section('content')
-
 @for ($home = 0; $home <= 1; $home++)
     <h1>{{ $teams[$home]->name }}</h1>
     <h3>Hitting</h3>
@@ -41,5 +40,8 @@
             <x-pitching-stat-line header="Totals" :stats="$teams[$home]->totals" singleGameStats="true" />
         </tfoot>
     </table>
+
+    <x-run-origins-chart :id="'runDistributionChart.' . $home" :walks="$teams[$home]->totals->stat('RA.W')" :hits="$teams[$home]->totals->stat('RA.H')" :errors="$teams[$home]->totals->stat('RA.E')" />
 @endfor
 </body>
+@endsection
