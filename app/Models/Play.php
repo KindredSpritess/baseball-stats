@@ -190,6 +190,9 @@ class Play extends Model
                 $player->evt('GP');
                 $game->expectedOuts = $game->outs;
                 $game->pitchers[($game->half+1)%2][] = $player;
+                foreach ($game->bases as $runner) {
+                    if ($runner) $game->pitching()->evt('IR');
+                }
             }
             return;
         }
@@ -377,6 +380,7 @@ class Play extends Model
                                         'type' => $tb < 4 ? self::HIT[$tb] : 'scores',
                                         'base' => self::BASES[$tb - 1],
                                     ]);
+                                    $game->pitching()->evt('ABOE');
                                 }
                                 if ($tb < 4) {
                                     $b = $this->advance($game, -1, $tb - 1, $format);

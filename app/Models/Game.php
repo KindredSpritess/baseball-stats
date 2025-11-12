@@ -84,6 +84,10 @@ class Game extends Model
             $player->evt('GP');
             $this->expectedOuts = $this->outs;
             $this->pitchers[$home][] = $player;
+            // Add inherited runners.
+            foreach ($this->bases as $runner) {
+                if ($runner) $this->pitching()->evt('IR');
+            }
         }
     }
 
@@ -154,6 +158,10 @@ class Game extends Model
             $runner['base'] = -100000000000;
             if ($runner['earned'] < 0) {
                 unset($this->runners[$player->id]);
+            }
+            if ($this->pitching()->isNot($runner['pitcher'])) {
+                // Inherited runner scored.
+                $this->pitching()->evt('IRS');
             }
         }
     }
