@@ -44,6 +44,11 @@ class RenamePersonCommand extends Command
         $oldLastName = $person->lastName;
         $oldName = "{$oldLastName}, {$oldFirstName}";
 
+        if (!$this->confirm("Are you sure you want to rename {$oldFirstName} {$oldLastName} (ID: {$personId}) to {$newFirstName} {$newLastName}? This will update all associated plays.", false)) {
+            $this->info('Rename cancelled.');
+            return 0;
+        }
+
         // Update the person
         $person->update([
             'firstName' => $newFirstName,
