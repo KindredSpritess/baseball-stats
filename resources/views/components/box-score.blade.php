@@ -199,4 +199,13 @@
         <b>Batters faced:</b>
         @playersStat('BFP').
     </div>
+    @if ($totals->IR)
+    <div class="viewers extra-stats">
+        <b>Inherited Runners-Scored:</b>
+        @foreach ($pitchers as $player)
+            @if ($player->stats['IR'] ?? 0)
+            {{ $player->person->lastName }} {{ $player->stats['IR'] ?? 0 }}-{{ $player->stats['IRS'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
+            @endif
+        @endforeach
+    @endif
 </div>
