@@ -79,6 +79,13 @@ class Game extends Model
             return;
         }
 
+        // Remove player from previous position.
+        foreach ($this->defense[$home] as $pos => $p) {
+            if ($p->is($player)) {
+                unset($this->defense[$home][$pos]);
+                break;
+            }
+        }
         $this->defense[$home][$fieldPos] = $player;
         if ($fieldPos === '1') {
             $player->evt('GP');

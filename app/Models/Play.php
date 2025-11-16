@@ -184,6 +184,12 @@ class Play extends Model
             $player = end($game->lineup[($game->half+1)%2][$log->upto(' -> ') - 1]);
             throw_unless($log->consume(' -> '), 'Expected " -> "');
             $position = (string)$log;
+            foreach ($game->defense[($game->half+1)%2] as $pos => $p) {
+                if ($p->is($player)) {
+                    unset($game->defense[($game->half+1)%2][$pos]);
+                    break;
+                }
+            }
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
             if ($position == '1') {
