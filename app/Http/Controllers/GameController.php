@@ -262,8 +262,12 @@ class GameController extends Controller
         $teams = [$game->away_team, $game->home_team];
         foreach ($teams as $team) {
             $team->totals = new StatsHelper([]);
+            $team->ballsInPlay = BallInPlay::whereIn('player_id',
+                $game->players()->whereTeamId($team->id)->pluck('id')
+            )->get();
             $game->players()->whereTeamId($team->id)->each(fn (Player $player) => $team->totals->merge($player->stats));
             $team->totals->derive();
+
         }
 
         return view('game.boxscore', [
