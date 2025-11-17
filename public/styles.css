@@ -5,7 +5,7 @@
   border: 1px solid #e1e5e9;
 }
 
-#play-by-play div {
+#play-by-play div:not(.plate-appearance-container) {
   padding: 2px 2px 2px 30px;
   text-align: left;
 }
@@ -17,11 +17,11 @@
   border-bottom: 1px solid #d0d2d5;
 }
 
-#play-by-play div.plate-appearance:nth-child(odd) {
+#play-by-play div.plate-appearance-container:nth-child(odd) {
   background-color: #f8fafc;
 }
 
-#play-by-play div.plate-appearance:nth-child(even) {
+#play-by-play div.plate-appearance-container:nth-child(even) {
   background-color: #ffffff;
 }
 
@@ -39,6 +39,10 @@
 
 #play-by-play div.run-scoring.plate-appearance {
   border-left: 4px solid #f57f17;
+}
+
+#play-by-play div:not(.selected) div.pitch {
+  display: none !important;
 }
 
 #game-view {

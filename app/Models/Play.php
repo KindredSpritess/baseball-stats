@@ -87,6 +87,7 @@ class Play extends Model
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
+        $this->command = true;
         // Comment
         if ($log->consume('#')) {
             return;
@@ -230,13 +231,20 @@ class Play extends Model
             return;
         }
 
+        $this->command = false;
+
         while (!$log->empty()) {
-            if ($log->consume('.')) {
+            if ($log->consume('.') ?: $log->consume('b')) {
                 $game->balls = min($game->balls + 1, 3);
                 $game->pitching()->evt('Balls');
                 $game->hitting()->evt('hBalls');
                 $this->lastPitch = '.';
-            } else if ($p = ($log->consume('c') ?: $log->consume('s') ?: $log->consume('f') ?: $log->consume('x') ?: $log->consume('t'))) {
+            } else if ($p = ($log->consume('c') ?:  // Called Strike
+                             $log->consume('s') ?:  // Swinging Strike
+                             $log->consume('f') ?:  // Foul
+                             $log->consume('r') ?:  // Foul (runner going)
+                             $log->consume('x') ?:  // In Play
+                             $log->consume('t'))) {
                 $this->lastPitch = $p;
                 if (($game->balls == 0) && ($game->strikes == 0)) {
                     $game->pitching()->evt('FPS');

@@ -47,5 +47,22 @@ class AppServiceProvider extends ServiceProvider
                 ?>
             PHP;
         });
+        Blade::directive('pitch', function (string $pitch) {
+            return <<<PHP
+                <?php
+                    echo match ($pitch) {
+                        's' => 'Swinging Strike',
+                        'c' => 'Called Strike',
+                        '.' => 'Ball',
+                        'b' => 'Ball in dirt',
+                        'x' => 'In Play',
+                        't' => 'Foul Tip',
+                        'r' => 'Foul (runner going)',
+                        'f' => 'Foul',
+                        default => "Unknown Pitch $pitch"
+                    };
+                ?>
+            PHP;
+        });
     }
 }

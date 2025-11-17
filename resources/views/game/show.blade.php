@@ -251,14 +251,29 @@
                 </div>
             @endif
             <div id='play-by-play'>
+                <div class='plate-appearance-container'>
                 @foreach ($game->plays as $i => $play)
+                    @unless ($play->command)
+                        @foreach (str_split(explode(',', $play->play)[0]) as $pitch)
+                            <div class='pitch {{ $pitch }}' data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">@pitch($pitch)</div>
+                        @endforeach
+                    @endunless
                     @if ($play->human)
                     <div @class([ 'run-scoring' => $play->run_scoring, 'plate-appearance' => $play->plate_appearance ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->human }}</div>
+                    @if ($play->plate_appearance)
+                    </div><div class='plate-appearance-container'>
+                    @endif
                     @endif
                     @if ($play->game_event)
+                    </div>
                     <div class='game-event {{ $play->inning_half ? "game-event-home" : "game-event-away" }}' data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->game_event }}</div>
+                    <div class='plate-appearance-container'>
                     @endif
                 @endforeach
+                @unless ($game->ended)
+                <div @class([ 'plate-appearance' => true ]) data-inning="{{ $game->inning }}" data-inning-half="{{ $game->half }}">{{ $game->hitting()->person->firstName }} {{ $game->hitting()->person->lastName }} at bat</div>
+                @endunless
+                </div>
             </div>
         </td>
         <td class='mobile-hide' x-column='home'>
@@ -443,6 +458,7 @@
             const [, column] = (window.location.hash || '#plays-main').split('#');
             $(`[x-column]`).hide();
             $(`[x-column=${column}]`).show();
+            $('.plate-appearance-container').last().addClass('selected');
         }
         // Click the current inning link to filter plays
         /* @if ($game->locked) */
@@ -462,9 +478,13 @@
         const inning = $(e.target).data('inning');
         $(`.inning-link.inning-selected`).removeClass('inning-selected');
         $(e.target).addClass('inning-selected');
-        $(`#play-by-play div:not([data-inning="${inning}"])`).hide();
+        $(`#play-by-play div:not([data-inning="${inning}"]):not(.plate-appearance-container)`).hide();
         $(`#play-by-play [data-inning="${inning}"]`).show();
         $('#play-by-play').scrollTop(0);
+    });
+
+    $('.plate-appearance-container').on('click', (e) => {
+        $(e.currentTarget).toggleClass('selected');
     });
 
     // When touching an svg with a title, show the title as a tooltip
