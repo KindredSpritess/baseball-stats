@@ -259,7 +259,7 @@
                         @endforeach
                     @endunless
                     @if ($play->human)
-                    <div @class([ 'run-scoring' => $play->run_scoring, 'plate-appearance' => $play->plate_appearance ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}">{{ $play->human }}</div>
+                    <div @class([ 'run-scoring' => $play->run_scoring, 'plate-appearance' => $play->plate_appearance ]) data-play-id="{{ $i }}" data-inning="{{ $play->inning }}" data-inning-half="{{ $play->inning_half }}"><i class="fa-solid fa-chevron-down toggle-icon"></i>{{ $play->human }}</div>
                     @if ($play->plate_appearance)
                     </div><div class='plate-appearance-container'>
                     @endif
@@ -271,7 +271,7 @@
                     @endif
                 @endforeach
                 @unless ($game->ended)
-                <div @class([ 'plate-appearance' => true ]) data-inning="{{ $game->inning }}" data-inning-half="{{ $game->half }}">{{ $game->hitting()->person->firstName }} {{ $game->hitting()->person->lastName }} at bat</div>
+                <div @class([ 'plate-appearance' => true ]) data-inning="{{ $game->inning }}" data-inning-half="{{ $game->half }}"><i class="fa-solid fa-chevron-down toggle-icon"></i> {{ $game->hitting()->person->firstName }} {{ $game->hitting()->person->lastName }} at bat</div>
                 @endunless
                 </div>
             </div>
@@ -484,7 +484,11 @@
     });
 
     $('.plate-appearance-container').on('click', (e) => {
-        $(e.currentTarget).toggleClass('selected');
+        const selected = $(e.currentTarget).hasClass('selected');
+        $('.plate-appearance-container.selected').removeClass('selected');
+        if (!selected) {
+            $(e.currentTarget).addClass('selected');
+        }
     });
 
     // When touching an svg with a title, show the title as a tooltip

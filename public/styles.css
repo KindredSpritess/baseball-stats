@@ -17,6 +17,20 @@
   border-bottom: 1px solid #d0d2d5;
 }
 
+#play-by-play .plate-appearance .toggle-icon {
+  display: inline;
+}
+
+#play-by-play .toggle-icon {
+  display: none;
+  float: right;
+  transition: transform 0.2s ease;
+}
+
+#play-by-play .plate-appearance-container.selected .toggle-icon {
+  transform: rotate(180deg);
+}
+
 #play-by-play div.plate-appearance-container:nth-child(odd) {
   background-color: #f8fafc;
 }
