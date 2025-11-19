@@ -61,6 +61,10 @@ class StatsHelper {
         if ($this->AB) {
             $this->stats['AVG'] = $this->H / $this->AB;
         }
+        $this->stats['BIP'] = $this->AB - $this->SO - $this->stat('4');
+        if ($this->BIP) {
+            $this->stats['BABIP'] = ($this->H - $this->stat('4')) / $this->BIP;
+        }
 
         // OBP
         if ($this->PA - $this->SAB) {

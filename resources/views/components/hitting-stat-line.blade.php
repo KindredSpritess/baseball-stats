@@ -30,6 +30,7 @@
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->OBP, 3) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->SLG, 3) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->OPS, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->BABIP, 3) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->ISO, 3) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->PPA, 2)}}</td>@endunless
 </tr>
