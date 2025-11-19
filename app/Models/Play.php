@@ -406,6 +406,7 @@ class Play extends Model
                                     $this->logBuffer($format);
                                 }
                             } else {
+                                $game->pitching()->evt($bb == 'G' ? 'GO' : 'AO');
                                 if ($bb == 'G' && $this->forceOuts) {
                                     $bb = $this->forceOuts == 2 ? 'GTP' : 'GDP';
                                     $this->forceOuts = 2;

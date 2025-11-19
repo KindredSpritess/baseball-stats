@@ -196,6 +196,12 @@
         @endforeach
     </div>
     <div class="viewers extra-stats">
+        <b>Groundouts-Flyouts:</b>
+        @foreach ($pitchers as $player)
+            {{ $player->person->lastName }} {{ $player->stats['GO'] ?? 0 }}-{{ $player->stats['AO'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
+        @endforeach
+    </div>
+    <div class="viewers extra-stats">
         <b>Batters faced:</b>
         @playersStat('BFP').
     </div>
