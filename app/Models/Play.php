@@ -351,6 +351,7 @@ class Play extends Model
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
                             $game->fielding('2')->evt('E');
+                            $game->pitching()->evt('ABOE');
                             $b = $this->advance($game, -1, 0, "reaches :base on catcher's interference");
                             $game->advanceRunner($game->hitting(), 1, false, true, 'E');
                         } elseif (($sac = $event->consume('SAF')) ||
