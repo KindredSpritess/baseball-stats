@@ -31,4 +31,6 @@
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->BBP9, 1) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->KPBB, 1) }}</td>@endunless
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->FPSPCT, 2) }}</td>@endunless
+    @if ($singleGameStats ?? false)<td>{{ $stats->FPS }}</td>@endif
+    <td>{{ $stats->stat('IR') }}/{{ $stats->stat('IRS') }}</td>
 </tr>
