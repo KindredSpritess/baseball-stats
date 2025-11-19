@@ -38,15 +38,16 @@ class TeamController extends Controller
         }
         $totals->derive();
         $people = Player::where('team_id', $team->id)->select('person_id')->distinct()->get();
+        $qualified = $totals->GS && $request->query('qualified') !== 'all';
         return view('team.show', [
             'team' => $team,
             'stats' => $players,
             'totals' => $totals,
             'people' => Person::whereIn('id', $people)->get(),
             'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
-            'minPA' => $request->query('qualified') === 'all' ? 0 : $team->games()->count() * ($totals->PA / $totals->GS - 1),
-            'minIP' => $request->query('qualified') === 'all' ? 0 : $team->games()->count() / 3,
-            'minFI' => $request->query('qualified') === 'all' ? 0 : $totals->FI / 9 / 2,
+            'minPA' => $qualified ? $team->games()->count() * ($totals->PA / $totals->GS - 1) : 0,
+            'minIP' => $qualified ? $team->games()->count() / 3 : 0,
+            'minFI' => $qualified ? $totals->FI / 9 / 2 : 0,
         ]);
     }
 }
