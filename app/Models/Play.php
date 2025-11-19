@@ -233,6 +233,21 @@ class Play extends Model
 
         $this->command = false;
 
+        if ($log->consume('blk')) {
+            $game->pitching()->evt('BLK');
+            // For each runner, advance one base.
+            foreach (array_reverse($game->bases, true) as $k => $p) {
+                if ($p) {
+                    $this->logBuffer($game->bases[$k]->person->lastName);
+                    $this->advance($game, $k, $k+1);
+                    $game->advanceRunner($p, 1, true);
+                    $this->log($this->humanBuffer . ".");
+                }
+            }
+            $this->log("{$game->pitching()->person->lastName} balks.");
+            return;
+        }
+
         while (!$log->empty()) {
             if ($log->consume('.') ?: $log->consume('b')) {
                 $game->balls = min($game->balls + 1, 3);
@@ -252,18 +267,6 @@ class Play extends Model
                 $game->strikes = min($game->strikes + 1, 2);
                 $game->pitching()->evt('Strikes');
                 $game->hitting()->evt('hStrikes');
-            } else if ($log->consume('blk')) {
-                $game->pitching()->evt('BLK');
-                // For each runner, advance one base.
-                foreach (array_reverse($game->bases, true) as $k => $p) {
-                    if ($p) {
-                        $this->logBuffer($game->bases[$k]->person->lastName);
-                        $this->advance($game, $k, $k+1);
-                        $game->advanceRunner($p, 1, true);
-                        $this->log($this->humanBuffer . ".");
-                    }
-                }
-                $this->log("{$game->pitching()->person->lastName} balks.");
             } else if ($log->consume(',')) {
                 // We're into the play section.
                 $actions = preg_split('/,/', $log);
@@ -496,7 +499,7 @@ class Play extends Model
             $game->advanceRunner($runner, 1);
             $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
-            $countStats && $game->fielding(2)->evt('CCS');
+            $countStats && throw_unless($game->fielding(2))->evt('CCS');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $bases = -10000000000;
                 $runner->evt('CS');
@@ -601,24 +604,24 @@ class Play extends Model
             $pos = new StringConsumer($pos);
             if ($type = ($pos->consume('WT') || $pos->consume('E'))) {
                 // Decisive, remove the runner.
-                $countStats && $game->fielding($pos)->evt('E');
+                $countStats && throw_unless($game->fielding($pos))->evt('E');
                 $countStats && $game->fielding($pos)->evt("E.$pos");
                 $this->fieldingBuffer = ($type == 'E' ? 'fielding ' : 'throwing ') . 'error by ' . self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 $hit = false;
                 return true;
             } elseif ($type = ($pos->consume('wt') || $pos->consume('e'))) {
-                $countStats && $game->fielding($pos)->evt('E');
+                $countStats && throw_unless($game->fielding($pos))->evt('E');
                 $countStats && $game->fielding($pos)->evt("E.$pos");
                 $this->fieldingBuffer = ($type == 'e' ? 'fielding ' : 'throwing ') . 'error by ' . self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 $hit = false;
                 return true;
             } elseif ($k < count($handlers) - 1 && !array_key_exists((string)$pos, $handled)) {
-                $countStats && $game->fielding($pos)->evt('A');
+                $countStats && throw_unless($game->fielding($pos))->evt('A');
                 $countStats && $game->fielding($pos)->evt("A.$pos");
                 $this->fieldingBuffer .= self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName . ' to ';
                 $handled[(string)$pos] = true;
             } elseif ($k == count($handlers) - 1) {
-                $countStats && $game->fielding($pos)->evt('PO');
+                $countStats && throw_unless($game->fielding($pos))->evt('PO');
                 $countStats && $game->fielding($pos)->evt("PO.$pos");
                 $game->out();
                 $hit = false;
