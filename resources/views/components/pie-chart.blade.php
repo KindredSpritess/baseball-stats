@@ -1,19 +1,20 @@
-<canvas id="{{ $id }}" class="pie-chart"></canvas>
+<div id="{{ $id }}" class="pie-chart"></div>
 <script>
-    new Chart("{{ $id }}", {
-        type: "pie",
-        data: {
-            labels: {!! $data->keys()->values()->toJson() !!},
-            datasets: [{
-                backgroundColor: {!! $data->pluck('color')->toJson() !!},
-                data: {!! $data->pluck('value')->toJson() !!},
-            }],
-        },
-        options: {
-            title: {
-                display: true,
-                text: "{{ $title }}"
-            }
-        }
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(() => {
+        const data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            @foreach($data as $key => $item)
+            ['{{ $key }}', {{ $item['value'] }}],
+            @endforeach
+        ]);
+
+        const options = {
+            title: '{{ $title }}',
+            colors: {!! $data->pluck('color')->toJson() !!}
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('{{ $id }}'));
+        chart.draw(data, options);
     });
 </script>

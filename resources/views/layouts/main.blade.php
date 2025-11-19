@@ -6,7 +6,7 @@
         <script src="/sorttable.js"></script>
         <script src="/jquery.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     </head>
     <body>

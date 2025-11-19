@@ -45,6 +45,35 @@
     </table>
 
     <x-run-origins-chart :id="'runDistributionChart.' . $home" :walks="$teams[$home]->totals->stat('RA.W')" :hits="$teams[$home]->totals->stat('RA.H')" :errors="$teams[$home]->totals->stat('RA.E')" />
+
+    <div id="onbaseDistributionChart.{{ $home }}" class="pie-chart"></div>
+    <script>
+        google.charts.load('current', {'packages':['sankey']});
+        google.charts.setOnLoadCallback(() => {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', 'How Reached');
+            data.addColumn('string', 'Result');
+            data.addColumn('number');
+            data.addRows([
+                ['Walks / HBP', 'Scored', {{ $teams[$home]->totals->stat('RA.W') }}],
+                ['Walks / HBP', 'Did Not Score', {{ $teams[$home]->totals->stat('BB') + $teams[$home]->totals->stat('HBP') - $teams[$home]->totals->stat('RA.W') }}],
+                ['Hits', 'Scored', {{ $teams[$home]->totals->stat('RA.H') }}],
+                ['Hits', 'Did Not Score', {{ $teams[$home]->totals->stat('HA') - $teams[$home]->totals->stat('RA.H') }}],
+                ['Errors', 'Scored', {{ $teams[$home]->totals->stat('RA.E') }}],
+                ['Errors', 'Did Not Score', {{ $teams[$home]->totals->stat('ABOE') - $teams[$home]->totals->stat('RA.E') }}]
+            ]);
+            const options = {
+                title: 'Runs Allowed Chart',
+                sankey: {
+                    node: {
+                        colors: [ '#2b5797', '#1e7145', '#eeeeee', '#1e7145', '#FFCE56', ],
+                    }
+                }
+            };
+            const chart = new google.visualization.Sankey(document.getElementById('onbaseDistributionChart.{{ $home }}'));
+            chart.draw(data, options);
+        });
+    </script>
 @endfor
 </body>
 @endsection
