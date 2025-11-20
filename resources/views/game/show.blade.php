@@ -326,6 +326,48 @@
         }
     });
 
+    $('#plays').on('keydown', function(event) {
+        // Check if cmd / ctrl + / is pressed
+        // Comment highlighted line(s) with #
+        if (event.key === '/' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            const textarea = this;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+
+            // Find the start of the first line
+            let lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            // Find the end of the last line
+            let lineEnd = value.indexOf('\n', end);
+            if (lineEnd === -1) {
+                lineEnd = value.length;
+            }
+
+            // Get the selected text
+            const selectedText = value.substring(lineStart, lineEnd);
+            const lines = selectedText.split('\n');
+
+            // Comment if the first line is not commented, uncomment if it is
+            const shouldComment = !lines[0].trim().startsWith('#');
+            for (let i = 0; i < lines.length; i++) {
+                if (shouldComment) {
+                    lines[i] = '# ' + lines[i];
+                } else {
+                    lines[i] = lines[i].replace(/^#\s?/, '');
+                }
+            }
+
+            // Replace the selected text with the modified text
+            const modifiedText = lines.join('\n');
+            textarea.value = value.substring(0, lineStart) + modifiedText + value.substring(lineEnd);
+
+            // Restore the selection
+            textarea.selectionStart = lineStart;
+            textarea.selectionEnd = lineStart + modifiedText.length;
+        }
+    });
+
     $('#log').on('submit', (event) => {
         event.preventDefault();
         const parts = [];
