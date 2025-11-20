@@ -495,11 +495,11 @@ class Play extends Model
         $bases = self::getBases($event);
         $stat = null;
         if ($stat = $event->consume('SB')) {
-            $countStats && $game->fielding(2)->evt('CSB');
+            $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CSB');
             $game->advanceRunner($runner, 1);
             $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
-            $countStats && throw_unless($game->fielding(2))->evt('CCS');
+            $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CCS');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $bases = -10000000000;
                 $runner->evt('CS');
