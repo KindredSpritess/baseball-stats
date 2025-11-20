@@ -125,7 +125,7 @@ class GameController extends Controller
                     $game->ended = true;
                 }
                 $play->apply($game);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error("Error with line $k: {$play->play}");
                 return response([
                     'status' => 'error',
