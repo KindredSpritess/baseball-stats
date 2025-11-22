@@ -271,7 +271,7 @@
                     @endif
                 @endforeach
                 @unless ($game->ended)
-                <div @class([ 'plate-appearance' => true ]) data-inning="{{ $game->inning }}" data-inning-half="{{ $game->half }}"><i class="fa-solid fa-chevron-down toggle-icon"></i> {{ $game->hitting()->person->firstName }} {{ $game->hitting()->person->lastName }} at bat</div>
+                <div @class([ 'plate-appearance' => true ]) data-inning="{{ $game->inning }}" data-inning-half="{{ $game->half }}"><i class="fa-solid fa-chevron-down toggle-icon"></i> {{ $game->hitting()?->person?->firstName }} {{ $game->hitting()?->person?->lastName }} at bat</div>
                 @endunless
                 </div>
             </div>
