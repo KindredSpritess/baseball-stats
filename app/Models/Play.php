@@ -553,11 +553,12 @@ class Play extends Model
                 'INT' => 'out on interference when advancing to :base, putout by :fielding',
                 'RRO' => 'advances :base on a runner\'s obstruction',
                 'HBB' => 'hit by a batted ball, putout by :fielding',
+                false => 'out at :base, :fielding',
                 default => 'putout at :base unusually, :fielding',
             };
 
             $this->logBuffer(__($logFormat, [
-                'base' => self::BASES[$b+1],
+                'base' => self::BASES[gmp_strval(gmp_mod($b+$bases, 4))],
                 'fielding' => $this->fieldingBuffer,
             ]));
             $bases = -10000000000;
