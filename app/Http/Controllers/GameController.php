@@ -180,6 +180,9 @@ class GameController extends Controller
         // Force load.
         $state = $game->state;
         $this->ballsInPlay($game);
+        if ($game->locked) {
+            return view('game.view', ['game' => $game]);
+        }
         return view('game.show', ['game' => $game]);
     }
 
@@ -195,7 +198,7 @@ class GameController extends Controller
         $state = $game->state;
         $this->ballsInPlay($game);
         $game->locked = true;
-        return view('game.show', ['game' => $game]);
+        return view('game.view', ['game' => $game]);
     }
 
     /**
@@ -235,12 +238,20 @@ class GameController extends Controller
     public function get(Game $game) {
         $gs = new GameState;
         $state = $game->state;
-        $stats = [];
-        foreach ($game->away_team->players as $player) {
+        $stats = [
+            'home' => new StatsHelper([]),
+            'away' => new StatsHelper([]),
+        ];
+        $game->load('home_team.players.person', 'away_team.players.person');
+        foreach ($game->players as $player) {
             $helper = new StatsHelper($player->stats);
             $helper->derive();
-            $stats[$player->person->lastName] = $helper->toArray();
+            $stats[$player->id] = $helper->toArray();
+            $team = $player->team_id === $game->home ? 'home' : 'away';
+            $stats[$team]->merge($player->stats);
         }
+        $stats['home'] = $stats['home']->derive()->toArray();
+        $stats['away'] = $stats['away']->derive()->toArray();
         return response()->json([
             'game' => $game,
             'state' => json_decode($gs->set($game, '', '', []), true),

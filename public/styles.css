@@ -5,7 +5,7 @@
   border: 1px solid #e1e5e9;
 }
 
-#play-by-play div:not(.plate-appearance-container) {
+#play-by-play div:not(.plate-appearance-container, .game-event-container) {
   padding: 2px 2px 2px 30px;
   text-align: left;
 }

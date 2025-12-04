@@ -3,17 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/jquery.min.js"></script>
     <link rel="stylesheet" href="/styles.css" />
-    @if ($game->locked)
-    <link rel="stylesheet" href="/game.css" />
-    @if (!$game->ended)
-    <!-- meta refresh 30 seconds. -->
-    <meta http-equiv="refresh" content="30">
-    @endif
-    @else
     <link rel="stylesheet" href="/scorers.css" />
     <link rel="stylesheet" href="/css/player-lineup-add.css" />
     <script src="/js/player-lineup-add.js"></script>
-    @endif
     <script src="https://kit.fontawesome.com/cc3e56010d.js" crossorigin="anonymous"></script>
     <!-- define style vars for team colors -->
     <style>
@@ -32,22 +24,12 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
-@if ($game->locked)
-<div class="mobile-menu">
-    <div class="mobile-menu-away"><a href="#away">{{ $game->away_team->short_name }}</a></div>
-    <div class="mobile-menu-play"><a href="#plays-main">Plays</a></div>
-    <div class="mobile-menu-home"><a href="#home">{{ $game->home_team->short_name }}</a></div>
-</div>
-@endif
 <table id='game-view'>
     <tr style="max-height: 100%;">
         <td class='mobile-hide' x-column='away'>
             <x-box-score :game="$game" :home="false" />
         </td>
         <td style='text-align: center; width: 100%;' class='mobile-hide' x-column='plays-main'>
-            @if ($game->locked)
-            <x-line-score :game="$game" />
-            @else
             <h3>{{ implode(' - ', $game->score) }}</h3>
 
             <!-- Button to show player lineup add component -->
@@ -70,7 +52,6 @@
                     <x-player-lineup-add :game="$game" :team="$game->home_team" />
                 </div>
             </div>
-            @endif
             <h3 class="geotemporal">{{ Carbon\Carbon::parse($game->firstPitch)->format('M jS g:i') }} at {{ $game->location }}</h3>
             @if (!$game->ended)
             <p class="current-status">
@@ -211,45 +192,6 @@
                 <input type="submit" />
             </form>
             @endif
-            @if ($game->locked)
-            @if (!$game->ended)
-            <!-- Put Pitcher vs Hitter info here. -->
-                <div class="pitcher-vs-hitter">
-                    @if ($game->hitting() && $game->pitching())
-                    <div>
-                        @php
-                            $stats = new App\Helpers\StatsHelper($game->hitting()->stats);
-                            $stats->derive();
-                        @endphp
-                        {{  $game->atBat[$game->half] + 1 }}.
-                        {{ $game->hitting()->person->firstName }}
-                        {{ $game->hitting()->person->lastName }}
-                        ({{ $stats->H }} for {{ $stats->AB }})<br/>
-                        @stat(2)
-                        @stat(3)
-                        @stat(4)
-                        @stat('RBI')
-                        @stat('BBs')
-                    </div>
-                    <div>
-                        @php
-                            $stats = new App\Helpers\StatsHelper($game->pitching()->stats);
-                            $stats->derive();
-                        @endphp
-                        {{ $game->pitching()->person->firstName }}
-                        {{ $game->pitching()->person->lastName }}<br/>
-                        ({{ $stats->Pitches }} pitches, {{ $stats->K }} Ks)
-                    </div>
-                    @endif
-                </div>
-            @endif
-            <!-- Put a clickable innings selector. -->
-                <div class="innings-selector">
-                    @for ($i = 1; $i <= $game->inning; $i++)
-                    <a href="#play-by-play" class="inning-link" data-inning="{{ $i }}">{{ $i }}</a>
-                    @endfor
-                </div>
-            @endif
             <div id='play-by-play'>
                 <div class='plate-appearance-container'>
                 @foreach ($game->plays as $i => $play)
@@ -281,7 +223,6 @@
         </td>
     </tr>
 </table>
-@if (!$game->locked)
 <script>
     function dsub(spot) {
         $('#pitches').val(`DC #${spot} -> `);
@@ -493,53 +434,4 @@
         $('#inplay').val(`${cx}:${cy}`);
     });
 </script>
-@else
-<script>
-    $(document).ready(() => {
-        if (window.innerWidth <= 768) {
-            const [, column] = (window.location.hash || '#plays-main').split('#');
-            $(`[x-column]`).hide();
-            $(`[x-column=${column}]`).show();
-            $('.plate-appearance-container').last().addClass('selected');
-        }
-        // Click the current inning link to filter plays
-        /* @if ($game->locked) */
-        const currentInning = "{{ $game->inning }}";
-        $(`.inning-link[data-inning="${currentInning}"]`).click();
-        /* @endif */
-    });
-    $('.mobile-menu a').on('click', (e) => {
-        console.log(e);
-        const [, column] = e.target.href.split('#');
-        $('.mobile-hide').hide();
-        $(`[x-column=${column}]`).show();
-    });
-
-    $('.inning-link').on('click', (e) => {
-        e.preventDefault();
-        const inning = $(e.target).data('inning');
-        $(`.inning-link.inning-selected`).removeClass('inning-selected');
-        $(e.target).addClass('inning-selected');
-        $(`#play-by-play div:not([data-inning="${inning}"]):not(.plate-appearance-container)`).hide();
-        $(`#play-by-play [data-inning="${inning}"]`).show();
-        $('#play-by-play').scrollTop(0);
-    });
-
-    $('.plate-appearance-container').on('click', (e) => {
-        const selected = $(e.currentTarget).hasClass('selected');
-        $('.plate-appearance-container.selected').removeClass('selected');
-        if (!selected) {
-            $(e.currentTarget).addClass('selected');
-        }
-    });
-
-    // When touching an svg with a title, show the title as a tooltip
-    $('#Layer_1').on('touchstart', 'circle, polygon', (e) => {
-        const title = e.target.querySelector('title');
-        if (title) {
-            alert(title.textContent);
-        }
-    });
-</script>
-@endif
 </body>
