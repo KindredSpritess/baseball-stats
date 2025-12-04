@@ -257,7 +257,7 @@ const engine = new BABYLON.Engine(canvas, true);
 const scene = new BABYLON.Scene(engine);
 
 // camera
-const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 45, 400), scene);
+const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 35, 390), scene);
 camera.setTarget(new BABYLON.Vector3(224, 0, 240));
 camera.setFocalLength(24);
 camera.fov
@@ -406,7 +406,7 @@ for (let pos = 1; pos <= 9; pos++) {
 
 // status display
 const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 110, height: 22.5}, scene);
-statusPlane.position = new BABYLON.Vector3(224, 55, 280);
+statusPlane.position = new BABYLON.Vector3(224, 65, 280);
 const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 220, height: 45}, scene);
 statusPlane.material = new BABYLON.StandardMaterial("statusMat", scene);
 statusPlane.material.diffuseTexture = statusTexture;
