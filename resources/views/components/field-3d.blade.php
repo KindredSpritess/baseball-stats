@@ -1,0 +1,1 @@
+<canvas id="field-canvas" style="width: 100vw; height: 35vh;"></canvas>

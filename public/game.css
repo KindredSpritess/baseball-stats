@@ -171,7 +171,7 @@ th {
     display: none;
   }
 
-  svg {
+  canvas {
     max-width: 100%;
     height: calc(90vw);
     padding: 0;
@@ -255,6 +255,7 @@ tr.atbat {
   padding: 2px;
   text-align: center;
   border-radius: 4px;
+  border: 2px solid #f8fafc;
 }
 
 .inning-link.inning-selected {
