@@ -97,7 +97,7 @@
                                     </div>
                                 </template>
                                 <div 
-                                    v-if="!game.ended && selectedInning === state.inning && (i === plays.length - 1)"
+                                    v-if="!state.ended && selectedInning === state.inning && (i === plays.length - 1)"
                                     class="plate-appearance"
                                     :data-inning="state.inning" :data-inning-half="state.half"
                                 >
@@ -175,7 +175,7 @@ createApp({
                 this.plays = plays.filter(pa => pa.length > 0);
                 this.selectedPlay ??= this.plays.length - 1;
                 this.$nextTick(() => {
-                    if (window.updateStatus) window.updateStatus(this.state, this.fielders);
+                    if (window.updateStatus) window.updateStatus(this);
                 });
             });
         },
@@ -216,24 +216,10 @@ createApp({
         }
         return bases;
       },
-      statusText() {
-        if (this.game.ended) return [];
-        return [
-          [{text: `${this.state.half ? '⬇️' : '⬆️'} ${this.state.inning}`, color: 'white'}],
-          [
-            {text: 'B', color: 'green'},
-            {text: '○'.repeat(4 - this.state.balls) + '●'.repeat(this.state.balls), color: 'green'},
-            {text: ' S', color: 'red'},
-            {text: '○'.repeat(3 - this.state.strikes) + '●'.repeat(this.state.strikes), color: 'red'},
-            {text: ' O', color: 'red'},
-            {text: '○'.repeat(3 - this.state.outs) + '●'.repeat(this.state.outs), color: 'red'}
-          ]
-        ];
-      },
     },
     mounted() {
         // Fetch updated data from API
-        // if (!this.game.ended) setInterval(() => { this.fetchData() }, 15000);
+        if (!this.game.ended) setInterval(() => { this.fetchData() }, 15000);
         this.fetchData();
     },
 }).mount('#app');
@@ -273,7 +259,7 @@ const scene = new BABYLON.Scene(engine);
 // camera
 const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 45, 400), scene);
 camera.setTarget(new BABYLON.Vector3(224, 0, 240));
-camera.setFocalLength(35);
+camera.setFocalLength(24);
 camera.fov
 
 // light
@@ -306,7 +292,7 @@ baseMaterial.diffuseColor = BABYLON.Color3.White();
 
 const base1 = BABYLON.MeshBuilder.CreateBox('base1', {width: 4, height: 0.1, depth: 4}, scene);
 base1.material = baseMaterial;
-base1.position = new BABYLON.Vector3(224 + 63.63961030678928 - 2.4, 0.05, 280);
+base1.position = new BABYLON.Vector3(224 - 63.63961030678928 + 2.4, 0.05, 280);
 base1.addRotation(0, Math.PI / 4, 0);
 
 const base2 = BABYLON.MeshBuilder.CreateBox('base2', {width: 4, height: 0.1, depth: 4}, scene);
@@ -316,7 +302,7 @@ base2.addRotation(0, Math.PI / 4, 0);
 
 const base3 = BABYLON.MeshBuilder.CreateBox('base3', {width: 4, height: 0.1, depth: 4}, scene);
 base3.material = baseMaterial;
-base3.position = new BABYLON.Vector3(224 - 63.63961030678928 + 2.4, 0.05, 280);
+base3.position = new BABYLON.Vector3(224 + 63.63961030678928 - 2.4, 0.05, 280);
 base3.addRotation(0, Math.PI / 4, 0);
 
 // dirt circles at bases
@@ -334,6 +320,24 @@ const baseDirt3 = BABYLON.MeshBuilder.CreateCylinder('baseDirt3', {diameter: 20,
 baseDirt3.material = dirtMaterial;
 baseDirt3.position = base3.position.clone();
 baseDirt3.position.y = 0.005;
+
+// runner labels
+const runnerPositions = {
+    0: base1.position.clone().add(new BABYLON.Vector3(15, 2, 20)),
+    1: base2.position.clone().add(new BABYLON.Vector3(0, 2, 0)),
+    2: base3.position.clone().add(new BABYLON.Vector3(-15, 2, 20)),
+    home: new BABYLON.Vector3(224, 2, 343)
+};
+
+for (let base in runnerPositions) {
+    const texture = new BABYLON.DynamicTexture('runner' + base, {width: 256, height: 64}, scene);
+    const plane = BABYLON.MeshBuilder.CreatePlane('runner' + base, {width: 40, height: 16}, scene);
+    plane.material = new BABYLON.StandardMaterial('runnerMat' + base, scene);
+    plane.material.diffuseTexture = texture;
+    plane.material.diffuseTexture.hasAlpha = true;
+    plane.position = runnerPositions[base];
+    plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+}
 
 // foul lines
 const foulPoints1 = [
@@ -357,15 +361,15 @@ const fenceShape = [
 ];
 const fencePath = [
     new BABYLON.Vector3(224 - 226.27, 0, 343 - 226.27),
-    new BABYLON.Vector3(-25, 0, 45),
+    new BABYLON.Vector3(-25, 0, 65),
     new BABYLON.Vector3(50, 0, 35),
-    new BABYLON.Vector3(100, 0, 30),
-    new BABYLON.Vector3(150, 0, 28),
-    new BABYLON.Vector3(224, 0, 25),
-    new BABYLON.Vector3(300, 0, 28),
-    new BABYLON.Vector3(350, 0, 30),
+    new BABYLON.Vector3(100, 0, 12),
+    new BABYLON.Vector3(150, 0, -8),
+    new BABYLON.Vector3(224, 0, -38),
+    new BABYLON.Vector3(300, 0, -8),
+    new BABYLON.Vector3(350, 0, 12),
     new BABYLON.Vector3(400, 0, 35),
-    new BABYLON.Vector3(475, 0, 45),
+    new BABYLON.Vector3(475, 0, 65),
     new BABYLON.Vector3(224 + 226.27, 0, 343 - 226.27),
 ];
 const fence = BABYLON.MeshBuilder.ExtrudeShape('fence', {shape: fenceShape, path: fencePath, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
@@ -409,7 +413,13 @@ statusPlane.material.diffuseTexture = statusTexture;
 statusPlane.material.diffuseTexture.hasAlpha = true;
 statusPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
 
-window.updateStatus = function(state, fielders) {
+window.updateStatus = function(status) {
+    const {
+        state,
+        fielders,
+        runners,
+        hitting,
+    } = status;
     statusTexture.clear();
     // Draw the words INN BALL STRIKE OUT
     // Then underneath, draw circles for counts
@@ -491,11 +501,12 @@ window.updateStatus = function(state, fielders) {
         ctx.strokeStyle = 'black';
         ctx.stroke();
     }
+
     statusTexture.update();
 
+    const awayColor = "{{ $game->away_team->primary_color ?? '#1e88eA' }}";
+    const homeColor = "{{ $game->home_team->primary_color ?? '#43a047' }}";
     // Update fielders
-    const awayColor = '{{ $game->away_team->primary_color ?? '#1e88eA' }}';
-    const homeColor = '{{ $game->home_team->primary_color ?? '#43a047' }}';
     const fielderColor = state.half ? awayColor : homeColor;
     for (let pos = 1; pos <= 9; pos++) {
         const texture = scene.getTextureByName('texture' + pos);
@@ -514,12 +525,32 @@ window.updateStatus = function(state, fielders) {
                 true
             );
             texture.update();
-            // const ctx = texture.getContext();
-            // ctx.fillStyle = fielderColor;
-            // ctx.textAlign = 'center';
-            // ctx.font = "bold 16px monospace";
-            // ctx.fillText(text, 0, 0);
-            // texture.update();
+        }
+    }
+
+    // Update runners
+    const runnerColor = state.half ? homeColor : awayColor;
+    for (const base in runners) {
+        const texture = scene.getTextureByName('runner' + base);
+        if (texture) {
+            texture.clear();
+            const runner = runners[base];
+            if (runner) {
+                console.log('Updating runner at base', base, runner.person.lastName);
+                const text = runner.person.lastName + ', ' + runner.person.firstName[0];
+                texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
+            }
+        }
+    }
+
+    // Update hitter
+    const hitterTexture = scene.getTextureByName('runnerhome');;
+    if (hitterTexture) {
+        hitterTexture.clear();
+        if (hitting) {
+            console.log('Updating hitter', hitting.person.lastName);
+            const text = hitting.person.lastName + ', ' + hitting.person.firstName[0];
+            hitterTexture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
         }
     }
 };
