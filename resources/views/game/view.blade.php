@@ -256,6 +256,15 @@ const canvas = document.getElementById('field-canvas');
 const engine = new BABYLON.Engine(canvas, true);
 const scene = new BABYLON.Scene(engine);
 
+// Animation variables for status lights
+let isAnimating = false;
+let animationProgress = 0;
+let previousCounts = null;
+let previousRunners = null;
+let target = {balls: 0, strikes: 0, outs: 0};
+
+// camera
+
 // camera
 const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 35, 390), scene);
 camera.setTarget(new BABYLON.Vector3(224, 0, 240));
@@ -420,92 +429,29 @@ window.updateStatus = function(status) {
         runners,
         hitting,
     } = status;
-    statusTexture.clear();
-    // Draw the words INN BALL STRIKE OUT
-    // Then underneath, draw circles for counts
-    const ctx = statusTexture.getContext();
 
-    // Set border properties
-    ctx.strokeStyle = "white"; // Color of the border
-    ctx.fillStyle = "#1e88ea"; // Background color
-    ctx.fillRect(0, 0, statusTexture.getSize().width, statusTexture.getSize().height);
-    ctx.lineWidth = 4; // Width of the border
+    // Check if counts changed for animation
+    const countsChanged = !previousCounts ||
+        state.balls !== previousCounts.balls ||
+        state.strikes !== previousCounts.strikes ||
+        state.outs !== previousCounts.outs;
+    console.log('countsChanged:', countsChanged, previousCounts);
 
-    // Draw top border
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(statusTexture.getSize().width, 0);
-    ctx.stroke();
-
-    // Draw bottom border
-    ctx.beginPath();
-    ctx.moveTo(0, statusTexture.getSize().height);
-    ctx.lineTo(statusTexture.getSize().width, statusTexture.getSize().height);
-    ctx.stroke();
-
-    // Draw left border
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, statusTexture.getSize().height);
-    ctx.stroke();
-
-    // Draw right border
-    ctx.beginPath();
-    ctx.moveTo(statusTexture.getSize().width, 0);
-    ctx.lineTo(statusTexture.getSize().width, statusTexture.getSize().height);
-    ctx.stroke();
-
-    ctx.lineWidth = 1;
-
-    ctx.font = "bold 16px monospace";
-    ctx.fillStyle = "white";
-    // ctx.textAlign = "center";
-    const lines = [
-        {text: 'INN', x: 4},
-        {text: 'BALLS', x: 4+ctx.measureText('INN ').width},
-        {text: 'STRIKES', x: 4+ctx.measureText('INN BALLS ').width},
-        {text: 'OUTS', x: 4+ctx.measureText('INN BALLS STRIKES ').width},
-    ];
-    for (const line of lines) {
-        ctx.fillText(line.text, line.x, 20);
+    if (countsChanged) {
+        isAnimating = true;
+        animationProgress = 0;
+        target = {
+            balls: state.balls,
+            strikes: state.strikes,
+            outs: state.outs,
+            inning: state.inning,
+            half: state.half,
+        };
     }
-
-    // Innings
-    ctx.fillText(`${state.half ? '⬇' : '⬆'}${state.inning}`, lines[0].x, 38);
-            // {text: `${state.half ? '⬇️' : '⬆️'} ${state.inning}`, x: 50},
-
-    // Balls
-    for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.arc(lines[1].x + 13 + i * 13, 32, 6, 0, 2 * Math.PI);
-        ctx.fillStyle = i < state.balls ? 'green' : 'white';
-        ctx.fill();
-        ctx.strokeStyle = 'black';
-        ctx.stroke();
-    }
-    // Strikes
-    for (let i = 0; i < 2; i++) {
-        ctx.beginPath();
-        ctx.arc(lines[2].x + 25 + i * 13, 32, 6, 0, 2 * Math.PI);
-        ctx.fillStyle = i < state.strikes ? 'red' : 'white';
-        ctx.fill();
-        ctx.strokeStyle = 'black';
-        ctx.stroke();
-    }
-    // Outs
-    for (let i = 0; i < 2; i++) {
-        ctx.beginPath();
-        ctx.arc(lines[3].x + 11 + i * 13, 32, 6, 0, 2 * Math.PI);
-        ctx.fillStyle = i < state.outs ? 'red' : 'white';
-        ctx.fill();
-        ctx.strokeStyle = 'black';
-        ctx.stroke();
-    }
-
-    statusTexture.update();
 
     const awayColor = "{{ $game->away_team->primary_color ?? '#1e88eA' }}";
     const homeColor = "{{ $game->home_team->primary_color ?? '#43a047' }}";
+
     // Update fielders
     const fielderColor = state.half ? awayColor : homeColor;
     for (let pos = 1; pos <= 9; pos++) {
@@ -513,7 +459,6 @@ window.updateStatus = function(status) {
         if (texture && fielders[pos]) {
             const person = fielders[pos].person;
             const text = person.lastName + ', ' + person.firstName[0];
-            console.log('Updating fielder', pos, text);
             texture.clear();
             texture.drawText(
                 text,
@@ -557,6 +502,95 @@ window.updateStatus = function(status) {
 
 // render loop
 engine.runRenderLoop(() => {
+    // Animate status lights
+    if (isAnimating) {
+        console.log('Animating status lights', animationProgress);
+        animationProgress += 0.05;
+        if (animationProgress >= 1) {
+            animationProgress = 1;
+            isAnimating = false;
+            previousCounts = { ...target };
+        }
+
+        statusTexture.clear();
+        const ctx = statusTexture.getContext();
+
+        // Redraw borders
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = "#1e88ea";
+        ctx.fillRect(0, 0, statusTexture.getSize().width, statusTexture.getSize().height);
+        ctx.lineWidth = 4;
+        ctx.strokeRect(0, 0, statusTexture.getSize().width, statusTexture.getSize().height);
+        ctx.lineWidth = 1;
+
+        ctx.font = "bold 16px monospace";
+        ctx.fillStyle = "white";
+        const lines = [
+            {text: 'INN', x: 4},
+            {text: 'BALLS', x: 4+ctx.measureText('INN ').width},
+            {text: 'STRIKES', x: 4+ctx.measureText('INN BALLS ').width},
+            {text: 'OUTS', x: 4+ctx.measureText('INN BALLS STRIKES ').width},
+        ];
+        for (const line of lines) {
+            ctx.fillText(line.text, line.x, 20);
+        }
+
+        // Innings (static)
+        ctx.fillText(`${target.half ? '⬇' : '⬆'}${target.inning}`, lines[0].x, 38);
+
+        // Animated lights
+        const calcAlpha = (type, i) => {
+            const targetState = i < target[type];
+            if (!previousCounts) return targetState ? 1 : 0;
+            const curState = i < previousCounts[type];
+            if (curState === targetState) return targetState ? 1 : 0;
+            const progress = curState ? (1 - animationProgress) : animationProgress;
+            return progress;
+        };
+
+        const LIGHT_Y = 32;
+        const LIGHT_RADIUS = 6;
+        const drawLight = (x, y, color, alpha) => {
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(x, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = color;
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.arc(x, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+        };
+
+        // Balls
+        for (let i = 0; i < 3; i++) {
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(lines[1].x + 13 + i * 14, 32, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = 'green';
+            ctx.globalAlpha = calcAlpha('balls', i);
+            ctx.beginPath();
+            ctx.arc(lines[1].x + 13 + i * 14, 32, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+        }
+        // Strikes
+        for (let i = 0; i < 2; i++) {
+            drawLight(lines[2].x + 25 + i * 14, LIGHT_Y, 'red', calcAlpha('strikes', i));
+        }
+        // Outs
+        for (let i = 0; i < 2; i++) {
+            drawLight(lines[3].x + 11 + i * 14, LIGHT_Y, 'red', calcAlpha('outs', i));
+        }
+        statusTexture.update();
+    }
+
     scene.render();
 });
 </script>
