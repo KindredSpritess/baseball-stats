@@ -22,6 +22,7 @@
     @unless($singleGameStats ?? false)<td>BB/9</td>@endunless
     @unless($singleGameStats ?? false)<td>K/BB</td>@endunless
     @unless($singleGameStats ?? false)<td>FPS %</td>@endunless
+    @unless($singleGameStats ?? false)<td>P/PA</td>@endunless
     @if($singleGameStats ?? false)<td>FPS</td>@endunless
     <td>IR(/S)</td>
   </tr>

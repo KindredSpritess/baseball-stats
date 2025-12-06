@@ -118,6 +118,7 @@ class StatsHelper {
             $this->stats['Pitches'] = $this->Strikes + $this->Balls;
             $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
             $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
+            $this->stats['PPBFP'] = $this->Pitches / $this->BFP;
         }
 
         return $this;
