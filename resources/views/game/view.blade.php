@@ -260,7 +260,7 @@ const scene = new BABYLON.Scene(engine);
 let isAnimating = false;
 let animationProgress = 0;
 let previousCounts = null;
-let previousRunners = null;
+let previousRunners = {};
 let target = {balls: 0, strikes: 0, outs: 0};
 
 // camera
@@ -331,22 +331,23 @@ baseDirt3.position = base3.position.clone();
 baseDirt3.position.y = 0.005;
 
 // runner labels
-const runnerPositions = {
+const basePositions = {
     0: base1.position.clone().add(new BABYLON.Vector3(15, 2, 20)),
     1: base2.position.clone().add(new BABYLON.Vector3(0, 2, 0)),
     2: base3.position.clone().add(new BABYLON.Vector3(-15, 2, 20)),
     home: new BABYLON.Vector3(224, 2, 343)
 };
 
-for (let base in runnerPositions) {
-    const texture = new BABYLON.DynamicTexture('runner' + base, {width: 256, height: 64}, scene);
-    const plane = BABYLON.MeshBuilder.CreatePlane('runner' + base, {width: 40, height: 16}, scene);
-    plane.material = new BABYLON.StandardMaterial('runnerMat' + base, scene);
-    plane.material.diffuseTexture = texture;
-    plane.material.diffuseTexture.hasAlpha = true;
-    plane.position = runnerPositions[base];
-    plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-}
+// for (let i = 0; i < 5; i++) { // 4 runners + hitter
+const runnerTexture = new BABYLON.DynamicTexture('runnerTemplate', {width: 256, height: 64}, scene);
+const runnerPlane = BABYLON.MeshBuilder.CreatePlane('runnerPlaneTemplate', {width: 40, height: 16}, scene);
+runnerPlane.material = new BABYLON.StandardMaterial('runnerMatTemplate', scene);
+runnerPlane.material.diffuseTexture = runnerTexture;
+runnerPlane.material.diffuseTexture.hasAlpha = true;
+runnerPlane.position = new BABYLON.Vector3(0, -10, 0); // off screen initially
+runnerPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+    // runnerPlanes.push(plane);
+// }
 
 // foul lines
 const foulPoints1 = [
@@ -475,36 +476,139 @@ window.updateStatus = function(status) {
 
     // Update runners
     const runnerColor = state.half ? homeColor : awayColor;
+    let planeIndex = 0;
+    console.log('Previous runners:', previousRunners);
+    const nextRunners = {};
+
+    // Handle runners on bases
     for (const base in runners) {
-        const texture = scene.getTextureByName('runner' + base);
-        if (texture) {
-            texture.clear();
-            const runner = runners[base];
-            if (runner) {
-                console.log('Updating runner at base', base, runner.person.lastName);
-                const text = runner.person.lastName + ', ' + runner.person.firstName[0];
-                texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
+        const runner = runners[base];
+        console.log('Updating runner on base', base, runner);
+        let prevBase = null;
+        // Check if runner is already positioned.
+        if (runner.person_id in previousRunners) {
+            prevBase = previousRunners[runner.person_id];
+            delete previousRunners[runner.person_id];
+            if (prevBase === base) {
+                nextRunners[runner.person_id] = base;
+                continue;
+            }
+
+            // Need to move him to the next base.
+            nextRunners[runner.person_id] = base;
+            // Animate movement by move from the appropriate base to the target base, via any other bases along the way.
+            const mesh = scene.getMeshByName(`runner${runner.person_id}`);
+            if (mesh) {
+                const startPosition = basePositions[prevBase];
+                const positions = [];
+                let currentBase = prevBase;
+                while (currentBase != base) {
+                }
+                const targetPosition = basePositions[base];
+                BABYLON.Animation.CreateAndStartAnimation(
+                    'moveRunner' + runner.person_id,
+                    mesh,
+                    'position',
+                    30,
+                    30,
+                    startPosition,
+                    targetPosition,
+                    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+                );
+                continue;
+            }
+        }
+
+        // Add any runners who don't have a mesh yet.
+        const plane = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + runner.person_id);
+        const texture = scene.getTextureByName('runnerTemplate').clone('runner' + runner.person_id);
+        plane.material = new BABYLON.StandardMaterial('runnerMat' + runner.person_id, scene);
+        plane.material.diffuseTexture = texture;
+        plane.material.diffuseTexture.hasAlpha = true;
+        plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+        const targetPosition = basePositions[base];
+        plane.position = targetPosition;
+        const text = runner.person.lastName + ', ' + runner.person.firstName[0];
+        texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
+        nextRunners[runner.person_id] = base;
+    }
+
+    // Check the hitter.
+    if (hitting) {
+        console.log('Updating hitter', hitting);
+        if (hitting.person_id in previousRunners) {
+            const prevBase = previousRunners[hitting.person_id];
+            delete previousRunners[hitting.person_id];
+            if (prevBase === 'home') {
+                // No change
+            } else {
+                // Move to home
+                const mesh = scene.getMeshByName(`runner${hitting.person_id}`);
+                if (mesh) {
+                    const startPosition = basePositions[prevBase];
+                    const targetPosition = basePositions['home'];
+                    BABYLON.Animation.CreateAndStartAnimation(
+                        'moveRunner' + hitting.person_id,
+                        mesh,
+                        'position',
+                        30,
+                        30,
+                        startPosition,
+                        targetPosition,
+                        BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+                    );
+                }
+            }
+            nextRunners[hitting.person_id] = 'home';
+        } else {
+            // New hitter runner
+            const plane = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + hitting.person_id);
+            const texture = scene.getTextureByName('runnerTemplate').clone('runner' + hitting.person_id);
+            plane.material = new BABYLON.StandardMaterial('runnerMat' + hitting.person_id, scene);
+            plane.material.diffuseTexture = texture;
+            plane.material.diffuseTexture.hasAlpha = true;
+            plane.material.useAlphaFromDiffuseTexture = true;
+            plane.material.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
+            plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+            const targetPosition = basePositions['home'];
+            plane.position = targetPosition;
+            const text = hitting.person.lastName + ', ' + hitting.person.firstName[0];
+            const ctx = texture.getContext();
+            ctx.clearRect(0, 0, texture.getSize().width, texture.getSize().height); // full transparency
+            texture.update();
+            texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
+            nextRunners[hitting.person_id] = 'home';
+            // Animate a fade-in
+            if (Object.values(previousRunners).includes('home')) {
+                plane.visibility = 0;
+                BABYLON.Animation.CreateAndStartAnimation(
+                    'fadeInRunner' + hitting.person_id,
+                    plane,
+                    'visibility',
+                    30,
+                    15,
+                    0,
+                    1,
+                    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+                );
             }
         }
     }
 
-    // Update hitter
-    const hitterTexture = scene.getTextureByName('runnerhome');;
-    if (hitterTexture) {
-        hitterTexture.clear();
-        if (hitting) {
-            console.log('Updating hitter', hitting.person.lastName);
-            const text = hitting.person.lastName + ', ' + hitting.person.firstName[0];
-            hitterTexture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent');
+    // Remove previousRunners no longer on base
+    for (const runnerId in previousRunners) {
+        const mesh = scene.getMeshByName(`runner${runnerId}`);
+        if (mesh) {
+            mesh.dispose();
         }
     }
+    previousRunners = nextRunners;
 };
 
 // render loop
 engine.runRenderLoop(() => {
     // Animate status lights
     if (isAnimating) {
-        console.log('Animating status lights', animationProgress);
         animationProgress += 0.05;
         if (animationProgress >= 1) {
             animationProgress = 1;
