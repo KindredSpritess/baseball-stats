@@ -69,6 +69,38 @@ const runners = computed(() => {
     return bases;
 });
 
+const updatePlays = () => {
+    const nextPlays = [];
+    let currentPA = [];
+    // Combine plays into plate appearances.
+    for (const play of game.value.plays) {
+        if (play.inning === null) {
+            continue;
+        }
+        if (play.plate_appearance) {
+            currentPA.push(play);
+            nextPlays.push(currentPA);
+            currentPA = [];
+        } else if (play.game_event) {
+            nextPlays.push(currentPA);
+            nextPlays.push([play]);
+            currentPA = [];
+        } else {
+            currentPA.push(play);
+        }
+    }
+    nextPlays.push(currentPA);
+    if (selectedPlay.value === nextPlays.length - 1) {
+        selectedPlay.value = null;
+    }
+    plays.value = nextPlays.filter(pa => pa.length > 0);
+    selectedPlay.value ??= plays.value.length - 1;
+};
+
+const appendPlays = (playData) => {
+    game.value.plays.push(playData);
+    updatePlays();
+};
 
 const fetchData = () => {
     console.log(`Fetching data for game ${game.value.id}`);
@@ -78,36 +110,8 @@ const fetchData = () => {
             game.value = data.game;
             state.value = data.state;
             stats.value = data.stats;
-            // Combine plays into plate appearances.
-            const nextPlays = [];
-            let currentPA = [];
-            for (const play of data.game.plays) {
-                if (play.inning === null) {
-                    continue;
-                }
-                if (play.plate_appearance) {
-                    currentPA.push(play);
-                    nextPlays.push(currentPA);
-                    currentPA = [];
-                } else if (play.game_event) {
-                    nextPlays.push(currentPA);
-                    nextPlays.push([play]);
-                    currentPA = [];
-                } else {
-                    currentPA.push(play);
-                }
-            }
-            nextPlays.push(currentPA);
-            if (selectedPlay.value === nextPlays.length - 1) {
-                selectedPlay.value = null;
-            }
-            plays.value = nextPlays.filter(pa => pa.length > 0);
-            selectedPlay.value ??= plays.value.length - 1;
+            updatePlays();
             nextTick(() => {
-                if (window.updateStatus) window.updateStatus({
-                    game,
-                    state,
-                });
                 if (field.value) {
                     field.value.updateStatus({
                         state: state.value,
@@ -148,8 +152,21 @@ onMounted(() => {
          selectedView.value = 'plays';
     }
     // Fetch updated data from API
-    if (!game.value.ended) setInterval(() => { fetchData() }, 15000);
+    if (!game.value.ended) setInterval(() => { fetchData() }, 300000);
     fetchData();
+    if (!game.value.ended) {
+        window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', ({gameId, play, state, stats, full}) => {
+            console.log('Received game.updated event', {gameId, play, state, stats, full});
+            if (full) {
+                fetchData();
+                return;
+            }
+            if (play) {
+                appendPlays(play);
+                play.human && alert(play.human);
+            }
+        });
+    }
 });
 
 </script>

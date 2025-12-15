@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Number;
 use NumberFormatter;
+use App\Events\GameUpdated;
+use Illuminate\Support\Facades\Log;
 
 class Play extends Model
 {
@@ -84,6 +86,8 @@ class Play extends Model
 
     private $forceOuts = 0;
     private $forced = [];
+
+    public $updates = [];
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);

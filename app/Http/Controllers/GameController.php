@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Casts\GameState;
+use App\Events\GameUpdated;
 use App\Helpers\StatsHelper;
 use App\Models\BallInPlay;
 use App\Models\Game;
@@ -93,9 +94,12 @@ class GameController extends Controller
                 $player->save();
             }
         }
+
+        $gs = new GameState;
+        $state = json_decode($gs->set($game, '', '', []), true);
+        GameUpdated::dispatch($game->id, $play->toArray(), $state, null);
         if ($json) {
-            $gs = new GameState;
-            return new JsonResponse(['status' => 'success', 'state' => $gs->set($game, '', '', [])]);
+            return new JsonResponse(['status' => 'success', 'state' => $state]);
         } else {
             return redirect()->route('game', ['game' => $game->id]);
         }
@@ -150,6 +154,7 @@ class GameController extends Controller
                 $player->save();
             }
         }
+        GameUpdated::dispatch($game->id, null, null, null, true);
         $gs = new GameState;
         return new JsonResponse(['status' => 'success', 'state' => json_decode($gs->set($game, '', '', []), true)]);
     }

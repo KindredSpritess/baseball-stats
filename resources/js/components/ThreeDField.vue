@@ -524,6 +524,10 @@ const animateStatusLights = () => {
   statusTexture.update()
 }
 
+const toast = (message) => {
+  console.log("Toast called", message);
+};
+
 // Lifecycle hooks
 onMounted(() => {
   initScene();
@@ -546,7 +550,8 @@ onMounted(() => {
 
 // Expose updateStatus method
 defineExpose({
-  updateStatus
+  updateStatus,
+  toast,
 })
 </script>
 
