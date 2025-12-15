@@ -29,6 +29,10 @@ const props = defineProps({
 // Refs
 const canvasRef = ref(null)
 
+// Toast refs
+const toastMessage = ref('')
+const toastVisible = ref(false)
+
 // Babylon.js variables
 let engine = null;
 let scene = null;
@@ -227,10 +231,11 @@ const createStatusDisplay = () => {
 }
 
 // Update status display
-const updateStatus = (status) => {
+const updateStatus = (status, actions) => {
   if (!scene) return
 
   const { state, fielders, runners, hitting } = status
+  console.log("Updating status:", status, actions)
 
   // Check if counts changed for animation
   const countsChanged = !previousCounts ||
@@ -525,7 +530,11 @@ const animateStatusLights = () => {
 }
 
 const toast = (message) => {
-  console.log("Toast called", message);
+  toastMessage.value = message
+  toastVisible.value = true
+  setTimeout(() => {
+    toastVisible.value = false
+  }, 3000) // Hide after 3 seconds
 };
 
 // Lifecycle hooks
@@ -556,5 +565,38 @@ defineExpose({
 </script>
 
 <template>
-  <canvas ref="canvasRef" style="width: 100%; height: 100%;"></canvas>
+  <div style="width:100%; position: relative;">
+    <canvas ref="canvasRef" style="width: 100%; height: 100%;"></canvas>
+    <Transition name="toast">
+      <div v-if="toastVisible" class="toast-notification">
+        {{ toastMessage }}
+      </div>
+    </Transition>
+  </div>
 </template>
+
+<style scoped>
+.toast-notification {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1000;
+  word-wrap: break-word;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+}
+</style>

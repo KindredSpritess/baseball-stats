@@ -155,16 +155,35 @@ onMounted(() => {
     if (!game.value.ended) setInterval(() => { fetchData() }, 300000);
     fetchData();
     if (!game.value.ended) {
-        window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', ({gameId, play, state, stats, full}) => {
-            console.log('Received game.updated event', {gameId, play, state, stats, full});
-            if (full) {
+        window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', (event) => {
+            console.log('Received game.updated event', event);
+            if (event.full) {
                 fetchData();
                 return;
             }
-            if (play) {
-                appendPlays(play);
-                play.human && alert(play.human);
+            if (event.play) {
+                appendPlays(event.play);
+                event.play.human && field.value && field.value.toast(event.play.human);
             }
+            if (event.state) {
+                state.value = event.state;
+            }
+            if (event.stats) {
+                // Merge stats
+                for (const playerId in event.stats) {
+                    stats.value[playerId] = event.stats[playerId];
+                }
+            }
+            nextTick(() => {
+                if (field.value) {
+                    field.value.updateStatus({
+                        state: state.value,
+                        fielders: fielders.value,
+                        runners: runners.value,
+                        hitting: hitting.value
+                    }, event.play.actions);
+                }
+            });
         });
     }
 });
