@@ -29,6 +29,7 @@ class GameState implements CastsAttributes
         $game->expectedOuts = $value['expectedOuts'] ?? 0;
 
         $game->score = $value['score'] ?? [0, 0];
+        $game->linescore = $value['linescore'] ?? [[0], []];
         $game->atBat = $value['atBat'] ?? [0, 0];
         $game->ended = $value['ended'] ?? false;
 
@@ -98,6 +99,7 @@ class GameState implements CastsAttributes
             'expectedOuts' => $game->expectedOuts,
             'outs' => $game->outs,
             'score' => $game->score,
+            'linescore' => $game->linescore,
             'atBat' => $game->atBat,
             'ended' => $game->ended,
             'bases' => array_map(fn($p) => ($p ? $p->id : null), $game->bases),

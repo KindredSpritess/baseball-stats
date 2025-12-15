@@ -167,9 +167,9 @@ onMounted(() => {
                     <box-score :game="game" :home="false" :state="state" :stats="stats" />
                 </td>
                 <td style='text-align: center; width: 100%;' class='mobile-hide' :class="{ 'selected-view': selectedView === 'plays' }">
-                    <line-score :game="game" :stats="stats" />
+                    <!-- <line-score :game="game" :stats="stats" /> -->
                     <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
-                    <threed-field ref="field" :game="game" :state="state" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
+                    <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
                     <!-- Put Pitcher vs Hitter info here. -->
                     <div class="pitcher-vs-hitter" v-if="hitting && pitching && !game.ended">
                         <div v-if="state.half">

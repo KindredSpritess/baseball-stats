@@ -404,7 +404,7 @@ class Play extends Model
                                 if ($tb < 4) {
                                     $b = $this->advance($game, -1, $tb - 1, $format);
                                 } else {
-                                    $game->score[$game->half]++;
+                                    $game->scores();
                                     $this->run_scoring = true;
                                     $game->hitting()->evt('R');
                                     $hit && $game->hitting()->evt('RBI');
@@ -671,7 +671,7 @@ class Play extends Model
             if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => self::BASES[$to]]));
         } else {
             $game->bases[$from]->evt('R');
-            $game->score[$game->half]++;
+            $game->scores();
             $this->run_scoring = true;
             if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => 'home']));
         }

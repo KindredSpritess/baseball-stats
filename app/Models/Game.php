@@ -23,6 +23,8 @@ class Game extends Model
     public array $atBat = [0, 0];
     public array $score = [0, 0];
 
+    public array $linescore = [[0], []];
+
     public array $bases = [null, null, null];
     public array $runners = [];
 
@@ -107,6 +109,7 @@ class Game extends Model
         $this->half = ($this->half + 1) % 2;
         $this->bases = [null, null, null];
         $this->runners = [];
+        $this->linescore[$this->half][] = 0;
     }
 
     public function advanceRunner(Player $player,
@@ -195,6 +198,11 @@ class Game extends Model
         $this->strikes = 0;
         $this->atBat[$this->half] += 1;
         $this->atBat[$this->half] %= count($this->lineup[$this->half]);
+    }
+
+    public function scores(): void {
+        $this->score[$this->half]++;
+        $this->linescore[$this->half][$this->inning - 1]++;
     }
 
     public function pitching() : Player {
