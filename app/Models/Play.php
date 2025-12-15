@@ -425,6 +425,8 @@ class Play extends Model
                                     $this->logBuffer($format);
                                 }
                             } else {
+                                if ($tb > 0) $this->addAction($game->hitting()->id, 0);
+                                $this->addAction($game->hitting()->id, -1);
                                 $game->pitching()->evt($bb == 'G' ? 'GO' : 'AO');
                                 if ($bb == 'G' && $this->forceOuts) {
                                     $bb = $this->forceOuts == 2 ? 'GTP' : 'GDP';

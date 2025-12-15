@@ -54,6 +54,8 @@ const basePositions = {
   0: null, // Will be set after bases are created
   1: null,
   2: null,
+  3: null,
+  plate: null,
   home: null
 }
 
@@ -127,7 +129,9 @@ const createField = () => {
   base3.addRotation(0, Math.PI / 4, 0)
   basePositions[2] = base3.position.clone().add(new BABYLON.Vector3(-15, 2, 20))
 
+  basePositions[3] = new BABYLON.Vector3(224, 2, 343)
   basePositions.home = new BABYLON.Vector3(224, 2, 343)
+  basePositions.plate = new BABYLON.Vector3(224, 2, 343)
 
   // dirt circles at bases
   const baseDirt1 = BABYLON.MeshBuilder.CreateCylinder('baseDirt1', {diameter: 20, height: 0.01}, scene);
@@ -230,12 +234,125 @@ const createStatusDisplay = () => {
   statusPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
 }
 
+// Animate runner through actions
+const animateRunner = (playerId, startBase, actions, color) => {
+  console.log(`Animating runner ${playerId} from ${startBase} through actions:`, actions)
+  let mesh = scene.getMeshByName(`runner${playerId}`)
+  if (!mesh) {
+    mesh = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + playerId)
+    const texture = scene.getTextureByName('runnerTemplate').clone('runner' + playerId)
+    mesh.material = new BABYLON.StandardMaterial('runnerMat' + playerId, scene)
+    mesh.material.diffuseTexture = texture
+    mesh.material.diffuseTexture.hasAlpha = true
+    mesh.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
+    const person = [props.game.home_team.players, props.game.away_team.players]
+      .flat()
+      .find(p => p.id == playerId)
+      ?.person;
+    const text = person.lastName + ', ' + person.firstName[0]
+    texture.drawText(text, null, 30, 'bold 36px monospace', color, 'transparent')
+  }
+
+  let currentPosition = basePositions[startBase]
+  mesh.position = currentPosition.clone()
+
+  const exitPosition = basePositions.home.clone().add(new BABYLON.Vector3(0, 0, -100))
+  const keyFrames = [];
+  let currentBase = startBase === 'plate' ? -1 : startBase;
+  for (let i = 0; i < actions.length; i++) {
+    if (actions[i] == -1) {
+      keyFrames.push(-1);
+    } else {
+      if (i !== 0) {
+        // Add a delay at the current base
+        keyFrames.push(currentBase);
+      }
+      while (currentBase < actions[i]) {
+        currentBase++;
+        keyFrames.push(currentBase);
+      }
+      if (currentBase === 3) {
+        // We'll use color as a key for his team's dugout.
+        keyFrames.push(color);
+      }
+    }
+  }
+
+  let actionIndex = 0
+  const animateNext = () => {
+    console.log(`Runner ${playerId} action index: ${actionIndex}`, keyFrames);
+    if (actionIndex >= keyFrames.length) return
+
+    const action = keyFrames[actionIndex];
+    actionIndex++
+
+    if (action == -1) {
+      console.log(`Runner ${playerId} is out, fading out.`);
+      // Fade out
+      BABYLON.Animation.CreateAndStartAnimation(
+        'fadeRunner' + playerId,
+        mesh,
+        'visibility',
+        30,
+        30,
+        1,
+        0,
+        BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+        null,
+        () => {
+          mesh.dispose()
+        }
+      )
+    } else if (typeof action === 'string') {
+      console.log(`Runner ${playerId} heading to dugout.`);
+      // Move to dugout position based on color
+      const dugoutOffset = action === props.homeColor ? -60 : 60
+      const dugoutPosition = basePositions.home.clone().add(new BABYLON.Vector3(dugoutOffset, 0, -10))
+      BABYLON.Animation.CreateAndStartAnimation(
+        'dugoutRunner' + playerId,
+        mesh,
+        'position',
+        30,
+        30,
+        currentPosition,
+        dugoutPosition,
+        BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+        null,
+        () => {
+          mesh.dispose()
+        }
+      )
+    } else if (action >= 0 && action <= 3) {
+      console.log(`Runner ${playerId} moving to base ${action}.`);
+      const targetPosition = basePositions[action];
+      BABYLON.Animation.CreateAndStartAnimation(
+        'moveRunner' + playerId + actionIndex,
+        mesh,
+        'position',
+        30,
+        // Just a short animation if not moving
+        currentPosition.equals(targetPosition) ? 15 : 30,
+        currentPosition,
+        targetPosition,
+        BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+        null,
+        () => {
+          currentPosition = targetPosition.clone()
+          animateNext()
+        }
+      )
+    }
+  }
+
+  animateNext();
+  return keyFrames.length;
+}
+
 // Update status display
 const updateStatus = (status, actions) => {
   if (!scene) return
 
   const { state, fielders, runners, hitting } = status
-  console.log("Updating status:", status, actions)
 
   // Check if counts changed for animation
   const countsChanged = !previousCounts ||
@@ -254,6 +371,69 @@ const updateStatus = (status, actions) => {
       half: state.half,
     }
   }
+
+  // Update runners using actions
+  const runnerColor = state.half ? props.homeColor : props.awayColor;
+  let delayFrames = 0;
+
+  const nextRunners = {};
+  // Animate runners based on actions
+  for (const playerId in actions) {
+    const playerActions = actions[playerId];
+    const startBase = previousRunners[playerId] ?? null;
+    if (startBase === null) continue; // No previous position, skip
+    delayFrames = Math.max(delayFrames, animateRunner(playerId, startBase, playerActions, runnerColor));
+    const lastPosition = playerActions[playerActions.length - 1];
+    // If the runner is still on base, include in nextRunners.
+    if (lastPosition !== -1 && lastPosition !== 3) {
+      nextRunners[playerId] = lastPosition;
+    }
+    delete previousRunners[playerId];
+  }
+
+  // If we have a set of actions, copy across any runners not in actions.
+  if (actions) {
+    for (const playerId in previousRunners) {
+      if (!(playerId in nextRunners) && !(playerId in actions)) {
+        nextRunners[playerId] = previousRunners[playerId];
+      }
+    }
+  }
+
+  if (delayFrames > 0) {
+    console.log(`Delaying status update by ${1000 * delayFrames} ms to allow runner animations to complete.`);
+    setTimeout(() => updateStatus(status), 1000 * delayFrames);
+    return;
+  }
+
+  // Now go through previousRunners to find any runners that should be deleted.
+  for (const playerId in previousRunners) {
+    if (!(playerId in nextRunners)) {
+      // This runner is no longer active, remove their mesh.
+      const mesh = scene.getMeshByName(`runner${playerId}`);
+      if (mesh) {
+        mesh.dispose();
+      }
+    }
+  }
+
+  // Now add any new runners that weren't in previousRunners.
+  for (const base in runners) {
+    const runner = runners[base];
+    if (!(runner.id in previousRunners)) {
+      // New runner, animate from current base to current base (no movement).
+      animateRunner(runner.id, base, [], runnerColor);
+      nextRunners[runner.id] = parseInt(base);
+    }
+  }
+
+  // And add the hitter.
+  if (hitting && !(hitting.id in previousRunners)) {
+    animateRunner(hitting.id, 'plate', [], runnerColor);
+    nextRunners[hitting.id] = 'plate';
+  }
+
+  previousRunners = nextRunners;
 
   const fielderColor = state.half ? props.awayColor : props.homeColor
 
@@ -276,99 +456,6 @@ const updateStatus = (status, actions) => {
       texture.update()
     }
   }
-
-  // Update runners
-  const runnerColor = state.half ? props.homeColor : props.awayColor;
-  const nextRunners = {}
-
-  // Handle runners on bases
-  for (const base in runners) {
-    const runner = runners[base]
-    if (runner.person_id in previousRunners) {
-      const prevBase = previousRunners[runner.person_id]
-      delete previousRunners[runner.person_id]
-      if (prevBase !== base) {
-        // Move runner
-        const mesh = scene.getMeshByName(`runner${runner.person_id}`)
-        if (mesh) {
-          const startPosition = basePositions[prevBase]
-          const targetPosition = basePositions[base]
-          BABYLON.Animation.CreateAndStartAnimation(
-            'moveRunner' + runner.person_id,
-            mesh,
-            'position',
-            30,
-            30,
-            startPosition,
-            targetPosition,
-            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-          )
-        }
-      }
-      nextRunners[runner.person_id] = base
-    } else {
-      // Add new runner
-      const plane = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + runner.person_id)
-      const texture = scene.getTextureByName('runnerTemplate').clone('runner' + runner.person_id)
-      plane.material = new BABYLON.StandardMaterial('runnerMat' + runner.person_id, scene)
-      plane.material.diffuseTexture = texture
-      plane.material.diffuseTexture.hasAlpha = true
-      plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
-      const targetPosition = basePositions[base]
-      plane.position = targetPosition
-      const text = runner.person.lastName + ', ' + runner.person.firstName[0]
-      texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent')
-      nextRunners[runner.person_id] = base
-    }
-  }
-
-  // Handle hitter
-  if (hitting) {
-    if (hitting.person_id in previousRunners) {
-      const prevBase = previousRunners[hitting.person_id]
-      delete previousRunners[hitting.person_id]
-      if (prevBase !== 'home') {
-        const mesh = scene.getMeshByName(`runner${hitting.person_id}`)
-        if (mesh) {
-          const startPosition = basePositions[prevBase]
-          const targetPosition = basePositions.home
-          BABYLON.Animation.CreateAndStartAnimation(
-            'moveRunner' + hitting.person_id,
-            mesh,
-            'position',
-            30,
-            30,
-            startPosition,
-            targetPosition,
-            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-          )
-        }
-      }
-      nextRunners[hitting.person_id] = 'home'
-    } else {
-      const plane = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + hitting.person_id)
-      const texture = scene.getTextureByName('runnerTemplate').clone('runner' + hitting.person_id)
-      plane.material = new BABYLON.StandardMaterial('runnerMat' + hitting.person_id, scene)
-      plane.material.diffuseTexture = texture
-      plane.material.diffuseTexture.hasAlpha = true
-      plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
-      const targetPosition = basePositions.home
-      plane.position = targetPosition
-      const text = hitting.person.lastName + ', ' + hitting.person.firstName[0]
-      texture.drawText(text, null, 30, 'bold 36px monospace', runnerColor, 'transparent')
-      nextRunners[hitting.person_id] = 'home'
-    }
-  }
-
-  // Remove old runners
-  for (const runnerId in previousRunners) {
-    const mesh = scene.getMeshByName(`runner${runnerId}`)
-    if (mesh) {
-      mesh.dispose()
-    }
-  }
-
-  previousRunners = nextRunners
 }
 
 // Draw linescore below the status lights
