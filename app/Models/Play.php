@@ -87,7 +87,14 @@ class Play extends Model
     private $forceOuts = 0;
     private $forced = [];
 
-    public $updates = [];
+    public $actions = [];
+
+    private function addAction($playerId, $base) {
+        if (!isset($this->actions[$playerId])) {
+            $this->actions[$playerId] = [];
+        }
+        $this->actions[$playerId][] = $base;
+    }
 
     public function apply(Game $game) {
         $log = new StringConsumer($this->play);
@@ -330,11 +337,13 @@ class Play extends Model
                                 $b = $this->advance($game, -1, $tb - 1, "and reaches :base on passed ball");
                                 $game->advanceRunner($game->hitting(), $tb, false, true, 'E');
                             } elseif ($event == 'BTS') {
+                                $this->addAction($game->hitting()->id, -1);
                                 $game->fielding(2)->evt('PO');
                                 $game->fielding(2)->evt('PO.2');
                                 $game->out();
                                 $this->logBuffer("on bunted third strike");
                             } elseif ($event == '2') {
+                                $this->addAction($game->hitting()->id, -1);
                                 $game->fielding(2)->evt('PO');
                                 $game->fielding(2)->evt('PO.2');
                                 $game->out();
@@ -408,6 +417,7 @@ class Play extends Model
                                 if ($tb < 4) {
                                     $b = $this->advance($game, -1, $tb - 1, $format);
                                 } else {
+                                    $this->addAction($game->hitting()->id, 3);
                                     $game->scores();
                                     $this->run_scoring = true;
                                     $game->hitting()->evt('R');
@@ -506,11 +516,13 @@ class Play extends Model
         } elseif ($event->consume('CS')) {
             $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CCS');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
+                $targetBase = $b + 1;
+                $this->addAction($runner->id, $targetBase);
                 $bases = -10000000000;
                 $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("caught stealing :base by :fielding", [
-                    'base' => self::BASES[$b+1],
+                    'base' => self::BASES[$targetBase],
                     'fielding' => $this->fieldingBuffer,
                 ]));
             } else {
@@ -531,11 +543,13 @@ class Play extends Model
         } elseif ($event->consume('PO')) {
             $countStats && $game->pitching()->evt('POs');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
+                $targetBase = $b;
+                $this->addAction($runner->id, $targetBase);
                 $bases = -10000000000;
                 $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("picked off at :base by :fielding", [
-                    'base' => self::BASES[$b],
+                    'base' => self::BASES[$targetBase],
                     'fielding' => $this->fieldingBuffer,
                 ]));
             } else {
@@ -551,6 +565,8 @@ class Play extends Model
                     $event->consume('UA')) ||
                     $bases < 0) {
             $this->handleFielding($game, $event, $hit, $countStats);
+            $targetBase = gmp_strval(gmp_mod($b+$bases, 4));
+            $this->addAction($runner->id, (int)$targetBase);
             $logFormat = match($rule) {
                 'MB' => 'missed :base, putout by :fielding',
                 'PPR' => 'passed runner, putout by :fielding',
@@ -563,7 +579,7 @@ class Play extends Model
             };
 
             $this->logBuffer(__($logFormat, [
-                'base' => self::BASES[gmp_strval(gmp_mod($b+$bases, 4))],
+                'base' => self::BASES[$targetBase],
                 'fielding' => $this->fieldingBuffer,
             ]));
             $bases = -10000000000;
@@ -580,10 +596,12 @@ class Play extends Model
                 }
             } else {
                 $this->forceOuts += $this->forced[$b] ?? 0 ? 1 : 0;
+                $targetBase = $b + 1;
+                $this->addAction($runner->id, $targetBase);
                 $bases = -10000000000;
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("put out at :base by :fielding", [
-                    'base' => self::BASES[$b+1],
+                    'base' => self::BASES[$targetBase],
                     'fielding' => $this->fieldingBuffer,
                 ]));
             }
@@ -666,14 +684,19 @@ class Play extends Model
     public function advance(Game $game, int $from, int $to, ?string $logFormat = null) {
         throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null, "Cannot advance to occupied base");
         throw_unless($from < 0 || $game->bases[$from] !== null, "No runner on base to advance");
+        $player = $from >= 0 ? $game->bases[$from] : $game->hitting();
         if (is_null($logFormat)) {
             $logFormat = "[0,2] to :base|[3,*] scores";
         }
-        if ($to < 0) {}
+        if ($to < 0) {
+            $this->addAction($player->id, -1);
+        }
         elseif ($to < 3) {
+            $this->addAction($player->id, $to);
             $game->bases[$to] = $game->bases[$from] ?? $game->hitting();
             if ($logFormat) $this->logBuffer(trans_choice($logFormat, $to, ["base" => self::BASES[$to]]));
         } else {
+            $this->addAction($player->id, 3);
             $game->bases[$from]->evt('R');
             $game->scores();
             $this->run_scoring = true;

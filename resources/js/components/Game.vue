@@ -156,7 +156,7 @@ onMounted(() => {
     fetchData();
     if (!game.value.ended) {
         window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', (event) => {
-            console.log('Received game.updated event', event);
+            console.log('Received game.updated event', event.play);
             if (event.full) {
                 fetchData();
                 return;
