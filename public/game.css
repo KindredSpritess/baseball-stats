@@ -163,8 +163,8 @@ th {
     overflow-x: auto;
   }
 
-  .mobile-hide {
-    display: none;
+  .mobile-hide:not(.selected-view) {
+    display: none !important;
   }
 
   .geotemporal {

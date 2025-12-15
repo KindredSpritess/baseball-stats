@@ -250,12 +250,12 @@ class GameController extends Controller
             $team = $player->team_id === $game->home ? 'home' : 'away';
             $stats[$team]->merge($player->stats);
         }
+        $game->load('plays');
         $stats['home'] = $stats['home']->derive()->toArray();
         $stats['away'] = $stats['away']->derive()->toArray();
         return response()->json([
             'game' => $game,
             'state' => json_decode($gs->set($game, '', '', []), true),
-            'plays' => $game->plays,
             'stats' => $stats,
         ]);
     }

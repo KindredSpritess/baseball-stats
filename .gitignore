@@ -4,3 +4,5 @@
 .htaccess
 *.sql
 *.sql.gz
+/node_modules
+/public/build/
