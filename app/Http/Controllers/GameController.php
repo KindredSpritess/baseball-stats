@@ -97,6 +97,7 @@ class GameController extends Controller
 
         $gs = new GameState;
         $state = json_decode($gs->set($game, '', '', []), true);
+        $play->load('ballInPlay');
         GameUpdated::dispatch($game->id, [...$play->toArray(), 'actions' => $play->actions], $state, null);
         if ($json) {
             return new JsonResponse(['status' => 'success', 'state' => $state]);
