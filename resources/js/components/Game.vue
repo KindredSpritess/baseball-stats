@@ -37,7 +37,7 @@ const hitting = computed(() => {
     const team = teams.value[state.value.half];
     const lineup = state.value.lineup?.[state.value.half];
     const atBat = state.value.atBat?.[state.value.half];
-    return team?.players?.find(player => player.id === lineup[atBat].at(-1));
+    return team?.players?.find(player => player.id === lineup[atBat]?.at(-1));
 });
 
 const pitching = computed(() => {
