@@ -225,9 +225,9 @@ const createField = () => {
 
 // Create status display
 const createStatusDisplay = () => {
-  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 110, height: 45}, scene)
-  statusPlane.position = new BABYLON.Vector3(224, 60, 280)
-  const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 220, height: 90}, scene)
+  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 220, height: 90}, scene)
+  statusPlane.position = new BABYLON.Vector3(224, 80, -38)
+  const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 440, height: 180}, scene)
   statusPlane.material = new BABYLON.StandardMaterial("statusMat", scene)
   statusPlane.material.diffuseTexture = statusTexture
   statusPlane.material.diffuseTexture.hasAlpha = true
@@ -365,7 +365,7 @@ const animateBattedBall = (battedBall) => {
   ));
 
   const trajectory = {
-    'F': { height: 50, duration: d / 73 * 30, parabolic: true, bounces: 0 },
+    'F': { height: 60, duration: d / 73 * 30, parabolic: true, bounces: 0 },
     'L': { height: 30, duration: d / 102 * 30, parabolic: true, bounces: 0 },
     'G': { height: 5, duration: d / 102 * 30, parabolic: true, bounces: 2 },
     'P': { height: 80, duration: d / 50 * 30, parabolic: true, bounces: 0 },
@@ -544,21 +544,21 @@ const updateStatus = (status, play) => {
 const drawLinescore = (ctx) => {
   if (!props.state.linescore) return
 
-  const linescoreY = 25 // Start below the status lights
-  const lineHeight = 12
-  const colWidth = 16
+  const linescoreY = 50 // Start below the status lights
+  const lineHeight = 24
+  const colWidth = 32
 
   // Team abbreviations
-  ctx.font = "bold 10px monospace"
+  ctx.font = "bold 20px monospace"
   ctx.fillStyle = "white"
 
   // Away team
   const awayShort = props.game.away_team?.short_name || 'AWAY'
-  ctx.fillText(awayShort.substring(0, 3), 4, linescoreY)
+  ctx.fillText(awayShort.substring(0, 3), 8, linescoreY)
 
   // Home team
   const homeShort = props.game.home_team?.short_name || 'HOME'
-  ctx.fillText(homeShort.substring(0, 3), 4, linescoreY + lineHeight)
+  ctx.fillText(homeShort.substring(0, 3), 8, linescoreY + lineHeight)
 
   // Inning scores
   const awayScores = props.state.linescore[0] || []
@@ -566,7 +566,7 @@ const drawLinescore = (ctx) => {
 
   // Draw up to 9 innings
   for (let inning = 1; inning <= 9; inning++) {
-    const x = 35 + (inning - 1) * colWidth
+    const x = 70 + (inning - 1) * colWidth
 
     // Inning number
     ctx.fillText(inning, x, linescoreY - lineHeight);
@@ -584,7 +584,7 @@ const drawLinescore = (ctx) => {
   const awayTotal = awayScores.reduce((sum, score) => sum + score, 0)
   const homeTotal = homeScores.reduce((sum, score) => sum + score, 0)
 
-  const totalX = 35 + 9 * colWidth - 5
+  const totalX = 70 + 9 * colWidth - 10
   ctx.fillText('R', totalX, linescoreY - lineHeight)
   ctx.fillText(props.stats.away.R ?? 0, totalX, linescoreY)
   ctx.fillText(props.stats.home.R ?? 0, totalX, linescoreY + lineHeight)
@@ -622,20 +622,20 @@ const animateStatusLights = () => {
   ctx.lineWidth = 1
 
   // Draw labels
-  ctx.font = "bold 16px monospace"
+  ctx.font = "bold 32px monospace"
   ctx.fillStyle = "white"
   const lines = [
-    {text: 'INN', x: 4},
-    {text: 'BALLS', x: 4 + ctx.measureText('INN ').width},
-    {text: 'STRIKES', x: 4 + ctx.measureText('INN BALLS ').width},
-    {text: 'OUTS', x: 4 + ctx.measureText('INN BALLS STRIKES ').width},
+    {text: 'INN', x: 8},
+    {text: 'BALLS', x: 8 + ctx.measureText('INN ').width},
+    {text: 'STRIKES', x: 8 + ctx.measureText('INN BALLS ').width},
+    {text: 'OUTS', x: 8 + ctx.measureText('INN BALLS STRIKES ').width},
   ]
   for (const line of lines) {
-    ctx.fillText(line.text, line.x, 60);
+    ctx.fillText(line.text, line.x, 120);
   }
 
   // Inning
-  ctx.fillText(`${target.half ? '⬇' : '⬆'}${target.inning}`, lines[0].x, 78);
+  ctx.fillText(`${target.half ? '⬇' : '⬆'}${target.inning}`, lines[0].x, 156);
 
   // Animated lights
   const calcAlpha = (type, i) => {
@@ -647,19 +647,19 @@ const animateStatusLights = () => {
     return progress
   }
 
-  const LIGHT_Y = 72;
-  const LIGHT_RADIUS = 6
+  const LIGHT_Y = 144;
+  const LIGHT_RADIUS = 12
 
   // Balls
   for (let i = 0; i < 3; i++) {
     ctx.fillStyle = 'black'
     ctx.beginPath()
-    ctx.arc(lines[1].x + 13 + i * 14, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
+    ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
     ctx.fill()
     ctx.fillStyle = 'green'
     ctx.globalAlpha = calcAlpha('balls', i)
     ctx.beginPath()
-    ctx.arc(lines[1].x + 13 + i * 14, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
+    ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
     ctx.fill()
     ctx.globalAlpha = 1
     ctx.strokeStyle = 'black'
@@ -684,12 +684,12 @@ const animateStatusLights = () => {
 
   // Strikes
   for (let i = 0; i < 2; i++) {
-    drawLight(lines[2].x + 25 + i * 14, LIGHT_Y, 'red', calcAlpha('strikes', i))
+    drawLight(lines[2].x + 50 + i * 28, LIGHT_Y, 'red', calcAlpha('strikes', i))
   }
 
   // Outs
   for (let i = 0; i < 2; i++) {
-    drawLight(lines[3].x + 11 + i * 14, LIGHT_Y, 'red', calcAlpha('outs', i))
+    drawLight(lines[3].x + 22 + i * 28, LIGHT_Y, 'red', calcAlpha('outs', i))
   }
 
   // Draw linescore below the status lights
