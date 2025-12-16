@@ -85,7 +85,8 @@ return [
                 'allowed_origins' => [
                     'localhost',
                     'baseball.lndo.site',
-                    'baseball-stats.r6staging.com'
+                    'baseball-stats.r6staging.com',
+                    'statskeeper.app',
                 ],
                 'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
                 'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
