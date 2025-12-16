@@ -188,7 +188,8 @@ const createField = () => {
   fence.material = fenceMat;
 
   // Runner template
-  runnerTexture = new BABYLON.DynamicTexture('runnerTemplate', {width: 256, height: 64}, scene);
+  runnerTexture = new BABYLON.DynamicTexture('runnerTemplate', {width: 512, height: 128}, scene);
+  runnerTexture.updateSamplingMode(BABYLON.Texture.TRILINEAR_SAMPLINGMODE);
   runnerPlane = BABYLON.MeshBuilder.CreatePlane('runnerPlaneTemplate', {width: 40, height: 16}, scene);
   runnerPlane.material = new BABYLON.StandardMaterial('runnerMatTemplate', scene);
   runnerPlane.material.diffuseTexture = runnerTexture;
@@ -210,7 +211,8 @@ const createField = () => {
   }
 
   for (let pos = 1; pos <= 9; pos++) {
-    const texture = new BABYLON.DynamicTexture('texture' + pos, {width: 256, height: 64}, scene)
+    const texture = new BABYLON.DynamicTexture('texture' + pos, {width: 512, height: 128}, scene)
+    texture.updateSamplingMode(BABYLON.Texture.TRILINEAR_SAMPLINGMODE);
     const plane = BABYLON.MeshBuilder.CreatePlane('fielder' + pos, {width: 50, height: 20}, scene)
     if (pos === 2) {
       plane.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4)
@@ -225,8 +227,8 @@ const createField = () => {
 
 // Create status display
 const createStatusDisplay = () => {
-  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 220, height: 90}, scene)
-  statusPlane.position = new BABYLON.Vector3(224, 80, -38)
+  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 330, height: 135}, scene)
+  statusPlane.position = new BABYLON.Vector3(224, 80, -55)
   const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 440, height: 180}, scene)
   statusPlane.material = new BABYLON.StandardMaterial("statusMat", scene)
   statusPlane.material.diffuseTexture = statusTexture
@@ -240,6 +242,7 @@ const animateRunner = (playerId, startBase, actions, color) => {
   if (!mesh) {
     mesh = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + playerId)
     const texture = scene.getTextureByName('runnerTemplate').clone('runner' + playerId)
+    texture.updateSamplingMode(BABYLON.Texture.TRILINEAR_SAMPLINGMODE);
     mesh.material = new BABYLON.StandardMaterial('runnerMat' + playerId, scene)
     mesh.material.diffuseTexture = texture
     mesh.material.diffuseTexture.hasAlpha = true
@@ -249,7 +252,16 @@ const animateRunner = (playerId, startBase, actions, color) => {
       .find(p => p.id == playerId)
       ?.person;
     const text = person.lastName + ', ' + person.firstName[0]
-    texture.drawText(text, null, 30, 'bold 36px monospace', color, 'transparent')
+    const ctx = texture.getContext()
+    ctx.font = "64px Helvetica"
+    ctx.textAlign = "center"
+    // ctx.textBaseline = "middle"
+    ctx.strokeStyle = "white"
+    ctx.lineWidth = 4
+    ctx.strokeText(text, 256, 64)
+    ctx.fillStyle = color
+    ctx.fillText(text, 256, 64)
+    texture.update()
   }
 
   let currentPosition = basePositions[startBase]
@@ -526,15 +538,15 @@ const updateStatus = (status, play) => {
       const person = fielders[pos].person
       const text = person.lastName + ', ' + person.firstName[0]
       texture.clear()
-      texture.drawText(
-        text,
-        null,
-        30,
-        "bold 36px monospace",
-        fielderColor,
-        "transparent",
-        true
-      )
+      const ctx = texture.getContext()
+      ctx.font = "bold 64px Helvetica"
+      ctx.textAlign = "center"
+      // ctx.textBaseline = "middle"
+      ctx.strokeStyle = "white"
+      ctx.lineWidth = 4
+      ctx.strokeText(text, 256, 64)
+      ctx.fillStyle = fielderColor
+      ctx.fillText(text, 256, 64)
       texture.update()
     }
   }
@@ -622,7 +634,7 @@ const animateStatusLights = () => {
   ctx.lineWidth = 1
 
   // Draw labels
-  ctx.font = "bold 32px monospace"
+  ctx.font = "bold 32px 'Courier New'"
   ctx.fillStyle = "white"
   const lines = [
     {text: 'INN', x: 8},
