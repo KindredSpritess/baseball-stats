@@ -81,6 +81,7 @@ return [
                     'port' => env('REVERB_PORT', 443),
                     'scheme' => env('REVERB_SCHEME', 'https'),
                     'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
+                    'path' => env('REVERB_PATH', ''),
                 ],
                 'allowed_origins' => [
                     'localhost',
