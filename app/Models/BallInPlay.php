@@ -22,6 +22,7 @@ class BallInPlay extends Model
         'type',
         'result',
         'fielders',
+        'distance',
     ];
 
     protected $casts = [

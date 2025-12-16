@@ -708,10 +708,45 @@ class Play extends Model
         return $to;
     }
 
+    private function calculateBattedBallDistance(array $position): float {
+        $infield_polygon = [
+            [224.00866, 159.639],
+            [345.071, 280.826],
+            [258.727, 367.17],
+            [137.664, 246]
+        ];
+        $infield_polygon = [
+            [43, 318],
+            [224, 143],
+            [405, 318],
+            [224, 446],
+        ];
+        $svg_distance = sqrt((224 - $position[0]) ** 2 + (405 - $position[1]) ** 2);
+        $scale = $this->isPointInPolygon($position, $infield_polygon) ? 0.516 : 0.987;
+        Log::info("SVG Distance: {$svg_distance}, scale: {$scale}");
+        return $svg_distance * $scale;
+    }
+
+    private function isPointInPolygon(array $point, array $polygon): bool {
+        $x = $point[0];
+        $y = $point[1];
+        $n = count($polygon);
+        $inside = false;
+        for ($i = 0, $j = $n - 1; $i < $n; $j = $i++) {
+            if (($polygon[$i][1] > $y) != ($polygon[$j][1] > $y) &&
+                ($x < ($polygon[$j][0] - $polygon[$i][0]) * ($y - $polygon[$i][1]) / ($polygon[$j][1] - $polygon[$i][1]) + $polygon[$i][0])) {
+                $inside = !$inside;
+            }
+        }
+        return $inside;
+    }
+
     private function handleBattedBall(Game $game, string $type, bool $hit, int $bases, ?string $action) {
         if (empty($action)) return;
+        $position = array_map(fn ($p) => round($p, 2), explode(':', $action));
         $battedBall = new BallInPlay([
-            'position' => array_map(fn ($p) => round($p, 2), explode(':', $action)),
+            'position' => $position,
+            'distance' => $this->calculateBattedBallDistance($position),
             'type' => match($type) {
                 'G' => 'G',
                 'FF' => 'F',

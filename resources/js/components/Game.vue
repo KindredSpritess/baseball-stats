@@ -176,12 +176,13 @@ onMounted(() => {
             }
             nextTick(() => {
                 if (field.value) {
+                    console.log('Updating field status with new play', state.value, fielders.value, runners.value, hitting.value);
                     field.value.updateStatus({
                         state: state.value,
                         fielders: fielders.value,
                         runners: runners.value,
                         hitting: hitting.value
-                    }, event.play.actions);
+                    }, event.play);
                 }
             });
         });
