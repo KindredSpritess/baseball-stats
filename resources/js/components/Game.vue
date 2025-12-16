@@ -103,7 +103,6 @@ const appendPlays = (playData) => {
 };
 
 const fetchData = () => {
-    console.log(`Fetching data for game ${game.value.id}`);
     fetch(`/api/game/${game.value.id}`)
         .then(response => response.json())
         .then(data => {
@@ -156,7 +155,6 @@ onMounted(() => {
     fetchData();
     if (!game.value.ended) {
         window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', (event) => {
-            console.log('Received game.updated event', event.play);
             if (event.full) {
                 fetchData();
                 return;
@@ -176,7 +174,6 @@ onMounted(() => {
             }
             nextTick(() => {
                 if (field.value) {
-                    console.log('Updating field status with new play', state.value, fielders.value, runners.value, hitting.value);
                     field.value.updateStatus({
                         state: state.value,
                         fielders: fielders.value,
