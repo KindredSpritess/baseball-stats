@@ -57,7 +57,7 @@ return [
                 'port' => env('REVERB_PORT', 443),
                 'scheme' => env('REVERB_SCHEME', 'https'),
                 'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
-                'base_path' => env('REVERB_PATH', '') . 'apps/' . env('REVERB_APP_ID', ''),
+                'base_path' => env('REVERB_PATH', '/') . 'apps/' . env('REVERB_APP_ID', ''),
             ],
         ],
 
