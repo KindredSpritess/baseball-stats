@@ -15,6 +15,8 @@ class Player extends Model
         'stats' => 'array',
     ];
 
+    protected static $eventStats = [];
+
     public function person() {
         return $this->belongsTo(Person::class);
     }
@@ -38,5 +40,12 @@ class Player extends Model
             $stats['G.' . $stat[-1]] = 1;
         }
         $this->stats = $stats;
+        self::$eventStats[] = ['player_id' => $this->id, 'stat' => $stat, 'value' => $stats[$stat]];
+    }
+
+    public static function getEventStats() {
+        $stats = self::$eventStats;
+        self::$eventStats = [];
+        return $stats;
     }
 }
