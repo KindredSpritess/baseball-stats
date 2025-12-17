@@ -482,7 +482,7 @@ const updateStatus = (status, play) => {
   }
 
   // If we have a set of actions, copy across any runners not in actions.
-  if (actions.length) {
+  if (actions?.length) {
     for (const playerId in previousRunners) {
       if (!(playerId in nextRunners) && !(playerId in actions)) {
         nextRunners[playerId] = previousRunners[playerId];
