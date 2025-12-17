@@ -448,7 +448,9 @@ const updateStatus = (status, play) => {
   const countsChanged = !previousCounts ||
     state.balls !== previousCounts.balls ||
     state.strikes !== previousCounts.strikes ||
-    state.outs !== previousCounts.outs
+    state.outs !== previousCounts.outs ||
+    state.inning !== previousCounts.inning ||
+    state.half !== previousCounts.half;
 
   if (countsChanged) {
     isAnimating = true
@@ -482,7 +484,7 @@ const updateStatus = (status, play) => {
   }
 
   // If we have a set of actions, copy across any runners not in actions.
-  if (actions?.length) {
+  if (actions?.length && state.inning === previousCounts?.inning && state.half === previousCounts?.half) {
     for (const playerId in previousRunners) {
       if (!(playerId in nextRunners) && !(playerId in actions)) {
         nextRunners[playerId] = previousRunners[playerId];
@@ -509,6 +511,7 @@ const updateStatus = (status, play) => {
         mesh.dispose();
       }
     }
+    delete previousRunners[playerId];
   }
 
   // Now add any new runners that weren't in previousRunners.
