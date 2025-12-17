@@ -168,8 +168,8 @@ onMounted(() => {
             }
             if (event.stats) {
                 // Merge stats
-                for (const playerId in event.stats) {
-                    stats.value[playerId] = event.stats[playerId];
+                for (const stat of event.stats) {
+                    stats.value[stat.player_id][stat.stat] = stat.value;
                 }
             }
             nextTick(() => {
