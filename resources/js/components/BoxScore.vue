@@ -57,17 +57,17 @@
         <tr style="font-weight: bold;">
           <td class="scorers" colspan="2" style="text-align:left;">Total</td>
           <td class="viewers" style="text-align:left;">Total</td>
-          <td class="mobile-hide">{{ totals?.PA }}</td>
-          <td>{{ totals?.AB }}</td>
-          <td>{{ totals?.R }}</td>
-          <td>{{ totals?.H }}</td>
-          <td>{{ totals?.RBI }}</td>
-          <td>{{ totals?.SO }}</td>
-          <td>{{ totals?.BBs }}</td>
+          <td class="mobile-hide">{{ totals?.PA ?? 0 }}</td>
+          <td>{{ totals?.AB ?? 0 }}</td>
+          <td>{{ totals?.R ?? 0 }}</td>
+          <td>{{ totals?.H ?? 0}}</td>
+          <td>{{ totals?.RBI ?? 0 }}</td>
+          <td>{{ totals?.SO ?? 0 }}</td>
+          <td>{{ totals?.BBs ?? 0 }}</td>
           <td class="mobile-hide">&nbsp;</td>
-          <td class="mobile-hide">{{ totals?.PO }}</td>
-          <td class="mobile-hide">{{ totals?.A }}</td>
-          <td class="mobile-hide">{{ totals?.E }}</td>
+          <td class="mobile-hide">{{ totals?.PO ?? 0 }}</td>
+          <td class="mobile-hide">{{ totals?.A ?? 0 }}</td>
+          <td class="mobile-hide">{{ totals?.E ?? 0 }}</td>
         </tr>
       </tbody>
     </table>
@@ -256,6 +256,9 @@ export default {
     defending() {
       return this?.home ? !this?.game?.half : this?.game?.half;
     },
+    players() {
+      return new Set(this.team?.players?.map(player => player.id.toString()) || []);
+    },
     teamClasses() {
       const isAway = this?.team?.id === this?.game?.away_team?.id;
       return isAway ? 'away-team-colors box-score-away' : 'home-team-colors box-score-home';
@@ -280,7 +283,14 @@ export default {
       };
     },
     totals() {
-      return (this.home ? this.stats.home : this.stats.away) || {};
+      const teamStats = (Object.entries(this.stats).filter(([key]) => this.players.has(key)).reduce((acc, [_, stats]) => {
+        Object.entries(stats).forEach(([stat, value]) => {
+          acc[stat] = (acc[stat] || 0) + value;
+        });
+        return acc;
+      }, {}));
+      teamStats['H'] = (teamStats['1'] || 0) + (teamStats['2'] || 0) + (teamStats['3'] || 0) + (teamStats['4'] || 0);
+      return teamStats;
     },
     defenders() {
       const defenders = {};
