@@ -482,7 +482,7 @@ const updateStatus = (status, play) => {
   }
 
   // If we have a set of actions, copy across any runners not in actions.
-  if (actions) {
+  if (actions.length) {
     for (const playerId in previousRunners) {
       if (!(playerId in nextRunners) && !(playerId in actions)) {
         nextRunners[playerId] = previousRunners[playerId];
@@ -715,7 +715,7 @@ const toast = (message) => {
   toastVisible.value = true
   setTimeout(() => {
     toastVisible.value = false
-  }, 3000) // Hide after 3 seconds
+  }, 5000) // Hide after 5 seconds
 };
 
 // Lifecycle hooks
