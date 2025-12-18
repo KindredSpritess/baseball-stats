@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
+import { has } from 'lodash'
 
 // Props
 const props = defineProps({
@@ -56,7 +57,8 @@ const basePositions = {
   2: null,
   3: null,
   plate: null,
-  home: null
+  home: null,
+  mound: null,
 }
 
 // Initialize the 3D scene
@@ -101,6 +103,7 @@ const createField = () => {
   const moundDirt = BABYLON.MeshBuilder.CreateCylinder('moundDirt', {diameter: 18, height: 0.1}, scene)
   moundDirt.material = dirtMaterial
   moundDirt.position = new BABYLON.Vector3(224, 0.05, 277)
+  basePositions.mound = moundDirt.position.clone().add(new BABYLON.Vector3(0, 2, 0))
 
   // Home plate dirt
   const plateDirt = BABYLON.MeshBuilder.CreateCylinder('plateDirt', {diameter: 32, height: 0.1}, scene)
@@ -237,7 +240,7 @@ const createStatusDisplay = () => {
 }
 
 // Animate runner through actions
-const animateRunner = (playerId, startBase, actions, color) => {
+const animateRunner = (playerId, startBase, actions, color, waitForPitch) => {
   let mesh = scene.getMeshByName(`runner${playerId}`)
   if (!mesh) {
     mesh = scene.getMeshByName('runnerPlaneTemplate').clone('runner' + playerId)
@@ -351,29 +354,36 @@ const animateRunner = (playerId, startBase, actions, color) => {
     }
   }
 
-  animateNext();
-  return keyFrames.length;
+  if (waitForPitch) {
+    // Wait before starting animation
+    setTimeout(() => {
+      animateNext();
+    }, 500);
+  } else {
+    animateNext();
+  }
+  return keyFrames.length + (waitForPitch ? 0.5 : 0); // Return number of frames for animation
 }
 
-const animateBattedBall = (battedBall) => {
-  if (!battedBall || !scene) return;
+const animateBall = (battedBall) => {
+  if (!scene) return;
 
   const ball = BABYLON.MeshBuilder.CreateSphere('battedBall', {diameter: 4}, scene);
   const ballMaterial = new BABYLON.StandardMaterial('ballMat', scene);
   ballMaterial.diffuseColor = BABYLON.Color3.White();
   ball.material = ballMaterial;
-  ball.position = basePositions.plate.clone().add(new BABYLON.Vector3(0, 4, 0));
-  
-  const baseDistance = Math.sqrt(
+  ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, 4, 0));
+
+  const baseDistance = battedBall ? Math.sqrt(
     Math.pow(battedBall.position[0] - 224, 2) +
     Math.pow(battedBall.position[1] - 405, 2)
-  );
+  ) : 0;
 
-  const d = battedBall.distance;
-  const targetPosition = basePositions.home.clone().add(new BABYLON.Vector3(
-    -(battedBall.position[0] - 224) / baseDistance * d,
-    0,
-    (battedBall.position[1] - 405) / baseDistance * d
+  const d = battedBall?.distance || 0;
+  const targetPosition = basePositions.home.add(new BABYLON.Vector3(
+    battedBall ? -(battedBall.position[0] - 224) / baseDistance * d : 0,
+    battedBall ? 0 : 4,
+    battedBall ? (battedBall.position[1] - 405) / baseDistance * d : 10
   ));
 
   const trajectory = {
@@ -381,7 +391,7 @@ const animateBattedBall = (battedBall) => {
     'L': { height: 30, duration: d / 102 * 30, parabolic: true, bounces: 0 },
     'G': { height: 5, duration: d / 102 * 30, parabolic: true, bounces: 2 },
     'P': { height: 80, duration: d / 50 * 30, parabolic: true, bounces: 0 },
-  }[battedBall.type] ?? { height: 0, duration: 45, parabolic: false, bounces: 0 };
+  }[battedBall?.type] ?? { height: 0, duration: 2, parabolic: true, bounces: 0 };
 
   if (trajectory.parabolic) {
     // Create parabolic path
@@ -393,28 +403,35 @@ const animateBattedBall = (battedBall) => {
       BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
       BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
     );
-    
+
     const keys = [];
+    for (let i = 0; i < 15; i++) {
+      const t = i / 15;
+      const x = ball.position.x + (basePositions.home.x - ball.position.x) * t;
+      const z = ball.position.z + (basePositions.home.z - ball.position.z) * t;
+      const y = ball.position.y; // Ball to home travels flat.
+      keys.push({ frame: i, value: new BABYLON.Vector3(x, y, z) });
+    }
     for (let i = 0; i <= frames; i++) {
       const t = i / frames;
-      const x = ball.position.x + (targetPosition.x - ball.position.x) * t;
-      const z = ball.position.z + (targetPosition.z - ball.position.z) * t;
+      const x = basePositions.home.x + (targetPosition.x - basePositions.home.x) * t;
+      const z = basePositions.home.z + (targetPosition.z - basePositions.home.z) * t;
       let y;
       if (trajectory.bounces > 0) {
         // Bouncing ground ball
         const bounceHeight = trajectory.height * (1 - t);
-        y = ball.position.y + (targetPosition.y - ball.position.y) * t + bounceHeight * Math.abs(Math.sin(t * Math.PI * (trajectory.bounces + 1)));
+        y = basePositions.home.y + (targetPosition.y - basePositions.home.y) * t + bounceHeight * Math.abs(Math.sin(t * Math.PI * (trajectory.bounces + 1)));
       } else {
         // Parabolic arc
-        y = ball.position.y + (targetPosition.y - ball.position.y) * t + trajectory.height * Math.sin(t * Math.PI);
+        y = basePositions.home.y + (targetPosition.y - basePositions.home.y) * t + trajectory.height * Math.sin(t * Math.PI);
       }
-      keys.push({ frame: i, value: new BABYLON.Vector3(x, y, z) });
+      keys.push({ frame: i + 15, value: new BABYLON.Vector3(x, y, z) });
     }
 
     animation.setKeys(keys);
     ball.animations = [animation];
-    scene.beginAnimation(ball, 0, frames, false, 1, () => {
-      setTimeout(() => ball.dispose(), 500);
+    scene.beginAnimation(ball, 0, frames + 15, false, 1, () => {
+      setTimeout(() => ball.dispose(), battedBall ? 500 : 0);
     });
   } else {
     // Straight line animation
@@ -434,7 +451,7 @@ const animateBattedBall = (battedBall) => {
     );
   }
 
-  return trajectory.duration / 30; // Return number of seconds for animation
+  return trajectory.duration / 30 + 0.5; // Return number of seconds for animation
 }
 
 // Update status display
@@ -442,7 +459,7 @@ const updateStatus = (status, play) => {
   if (!scene) return;
 
   const { state, fielders, runners, hitting } = status;
-  const { actions, ball_in_play } = play || {};
+  const { actions, ball_in_play, command, play: playDetails } = play || { play: ''};
   const runsSum = state.score.reduce((a, b) => a + b, 0);
 
   // Check if counts changed for animation
@@ -471,13 +488,15 @@ const updateStatus = (status, play) => {
   const runnerColor = state.half ? props.homeColor : props.awayColor;
   let delayFrames = 0;
 
+  const hasPitch = !command && playDetails.split(',')[0] != '';
+
   const nextRunners = {};
   // Animate runners based on actions
   for (const playerId in actions) {
     const playerActions = actions[playerId];
     const startBase = previousRunners[playerId] ?? null;
     if (startBase === null) continue; // No previous position, skip
-    delayFrames = Math.max(delayFrames, animateRunner(playerId, startBase, playerActions, runnerColor));
+    delayFrames = Math.max(delayFrames, animateRunner(playerId, startBase, playerActions, runnerColor, hasPitch));
     const lastPosition = playerActions[playerActions.length - 1];
     // If the runner is still on base, include in nextRunners.
     if (lastPosition !== -1 && lastPosition !== 3) {
@@ -496,8 +515,8 @@ const updateStatus = (status, play) => {
   }
 
   // If we have a batted ball, animate the batted ball.
-  if (ball_in_play) {
-    delayFrames = Math.max(delayFrames, animateBattedBall(ball_in_play));
+  if (hasPitch) {
+    delayFrames = Math.max(delayFrames, animateBall(ball_in_play));
   }
 
   if (delayFrames > 0) {
