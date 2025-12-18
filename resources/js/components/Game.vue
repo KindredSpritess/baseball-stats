@@ -70,7 +70,7 @@ const runners = computed(() => {
 });
 
 const updatePlays = () => {
-    const nextPlays = [];
+    let nextPlays = [];
     let currentPA = [];
     // Combine plays into plate appearances.
     for (const play of game.value.plays) {
@@ -89,11 +89,12 @@ const updatePlays = () => {
             currentPA.push(play);
         }
     }
+    nextPlays = nextPlays.filter(pa => pa.length > 0);
     nextPlays.push(currentPA);
-    if (selectedPlay.value === nextPlays.length - 1) {
+    if (selectedPlay.value === nextPlays.length - 2) {
         selectedPlay.value = null;
     }
-    plays.value = nextPlays.filter(pa => pa.length > 0);
+    plays.value = plays.value = nextPlays;
     selectedPlay.value ??= plays.value.length - 1;
 };
 
@@ -247,10 +248,10 @@ onMounted(() => {
                     </div>
                     <div id='play-by-play'>
                         <template v-for="(pa, i) in plays" :key="i">
-                            <template :style="{ display: pa[0].inning === selectedInning ? 'block' : 'none' }">
+                            <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
                                 <div :class="{
-                                                'plate-appearance-container': !pa[0].game_event,
-                                                'game-event-container': pa[0].game_event,
+                                                'plate-appearance-container': !pa[0]?.game_event,
+                                                'game-event-container': pa[0]?.game_event,
                                                 'selected': selectedPlay === i,
                                             }" @click="selectedPlay = selectedPlay === i ? null : i">
                                     <template v-for="(play, j) in pa" :key="j">
@@ -264,7 +265,7 @@ onMounted(() => {
                                             <i class="fa-solid fa-chevron-down toggle-icon"></i>
                                             {{ play.human }}
                                         </div>
-                                        <div v-if="play.game_event"
+                                        <div v-if="play?.game_event"
                                             class='game-event'
                                             :class="play.inning_half ? 'game-event-home' : 'game-event-away'"
                                             :data-inning="play.inning"
