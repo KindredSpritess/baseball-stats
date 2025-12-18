@@ -443,6 +443,7 @@ const updateStatus = (status, play) => {
 
   const { state, fielders, runners, hitting } = status;
   const { actions, ball_in_play } = play || {};
+  const runsSum = state.score.reduce((a, b) => a + b, 0);
 
   // Check if counts changed for animation
   const countsChanged = !previousCounts ||
@@ -450,10 +451,11 @@ const updateStatus = (status, play) => {
     state.strikes !== previousCounts.strikes ||
     state.outs !== previousCounts.outs ||
     state.inning !== previousCounts.inning ||
-    state.half !== previousCounts.half;
+    state.half !== previousCounts.half ||
+    runsSum !== (previousCounts.runsSum || 0);
 
+  isAnimating = true;
   if (countsChanged) {
-    isAnimating = true
     animationProgress = 0
     target = {
       balls: state.balls,
@@ -461,6 +463,7 @@ const updateStatus = (status, play) => {
       outs: state.outs,
       inning: state.inning,
       half: state.half,
+      runsSum,
     }
   }
 
@@ -666,20 +669,20 @@ const animateStatusLights = () => {
   const LIGHT_RADIUS = 12
 
   // Balls
-  for (let i = 0; i < 3; i++) {
-    ctx.fillStyle = 'black'
-    ctx.beginPath()
-    ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
-    ctx.fill()
-    ctx.fillStyle = 'green'
-    ctx.globalAlpha = calcAlpha('balls', i)
-    ctx.beginPath()
-    ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
-    ctx.fill()
-    ctx.globalAlpha = 1
-    ctx.strokeStyle = 'black'
-    ctx.stroke()
-  }
+  // for (let i = 0; i < 3; i++) {
+  //   ctx.fillStyle = 'black'
+  //   ctx.beginPath()
+  //   ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
+  //   ctx.fill()
+  //   ctx.fillStyle = 'green'
+  //   ctx.globalAlpha = calcAlpha('balls', i)
+  //   ctx.beginPath()
+  //   ctx.arc(lines[1].x + 26 + i * 28, LIGHT_Y, LIGHT_RADIUS, 0, 2 * Math.PI)
+  //   ctx.fill()
+  //   ctx.globalAlpha = 1
+  //   ctx.strokeStyle = 'black'
+  //   ctx.stroke()
+  // }
 
   // Strikes and Outs
   const drawLight = (x, y, color, alpha) => {
@@ -695,6 +698,10 @@ const animateStatusLights = () => {
     ctx.globalAlpha = 1
     ctx.strokeStyle = 'black'
     ctx.stroke()
+  }
+
+  for (let i = 0; i < 3; i++) {
+    drawLight(lines[1].x + 26 + i * 28, LIGHT_Y, '#00a200', calcAlpha('balls', i))
   }
 
   // Strikes

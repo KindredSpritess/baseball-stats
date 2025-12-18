@@ -171,6 +171,23 @@ onMounted(() => {
                 for (const stat of event.stats) {
                     stats.value[stat.player_id][stat.stat] = stat.value;
                 }
+                // Recalculate team totals
+                const teamTotal = (team) => {
+                    return team.players.map(p => p.id)
+                        .filter((s, i, arr) => arr.indexOf(s) === i)
+                        .map(pid => stats.value[pid])
+                        .filter(s => s)
+                        .reduce((acc, stats) => {
+                            Object.entries(stats).forEach(([stat, value]) => {
+                                acc[stat] = (acc[stat] || 0) + value;
+                            });
+                            return acc;
+                        }, {});
+                };
+                stats.value.home = teamTotal(game.value.home_team);
+                stats.value.home['H'] = (stats.value.home['1'] ?? 0) + (stats.value.home['2'] ?? 0) + (stats.value.home['3'] ?? 0) + (stats.value.home['4'] ?? 0);
+                stats.value.away = teamTotal(game.value.away_team);
+                stats.value.away['H'] = (stats.value.away['1'] ?? 0) + (stats.value.away['2'] ?? 0) + (stats.value.away['3'] ?? 0) + (stats.value.away['4'] ?? 0);
             }
             nextTick(() => {
                 if (field.value) {
@@ -209,7 +226,7 @@ onMounted(() => {
                         <div v-if="state.half">
                             {{ pitching.person.firstName }}
                             {{ pitching.person.lastName }}<br/>
-                            ({{ stats[pitching.id].Pitches }} pitches, {{ stats[pitching.id].K }} Ks)
+                            ({{ stats[pitching.id].Balls + stats[pitching.id].Strikes }} pitches, {{ stats[pitching.id].K }} Ks)
                         </div>
                         <div>
                             {{ state.atBat[state.half] + 1 }}.
@@ -221,7 +238,7 @@ onMounted(() => {
                         <div v-if="!state.half">
                             {{ pitching.person.firstName }}
                             {{ pitching.person.lastName }}<br/>
-                            ({{ stats[pitching.id].Pitches }} pitches, {{ stats[pitching.id].K }} Ks)
+                            ({{ stats[pitching.id].Balls + stats[pitching.id].Strikes }} pitches, {{ stats[pitching.id].K }} Ks)
                         </div>
                     </div>
                     <!-- Put a clickable innings selector. -->
