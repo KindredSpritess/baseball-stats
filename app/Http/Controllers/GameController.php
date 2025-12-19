@@ -260,11 +260,13 @@ class GameController extends Controller
         $game->load('plays');
         $stats['home'] = $stats['home']->derive()->toArray();
         $stats['away'] = $stats['away']->derive()->toArray();
+
+        // Set cache headers to cache for 30 seconds if game is ongoing, otherwise 5 minutes.
         return response()->json([
             'game' => $game,
             'state' => json_decode($gs->set($game, '', '', []), true),
             'stats' => $stats,
-        ]);
+        ])->header('Cache-Control', 'public, max-age=' . ($game->ended ? 300 : 30));
     }
 
     public function boxscore(Game $game) {
