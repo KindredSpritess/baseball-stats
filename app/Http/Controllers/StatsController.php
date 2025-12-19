@@ -55,6 +55,9 @@ class StatsController extends Controller
             'totals' => $totals,
             'people' => Person::whereIn('id', array_keys($players))->get(),
             'ballsInPlay' => [],
+            'minPA' => 0,
+            'minIP' => 0,
+            'minFI' => 0,
         ]);
     }
 }

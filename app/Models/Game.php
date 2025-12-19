@@ -18,7 +18,7 @@ class Game extends Model
     public int $strikes = 0;
     public int $outs = 0;
     public int $expectedOuts = 0;
-    public bool $ended = false;
+    // public bool $ended = false;
 
     public array $atBat = [0, 0];
     public array $score = [0, 0];
@@ -46,6 +46,7 @@ class Game extends Model
     protected $casts = [
         'state' => GameState::class,
         'dimensions' => 'array',
+        'firstPitch' => 'datetime',
     ];
 
     public function home_team() {
