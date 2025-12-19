@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
-import { has } from 'lodash'
 
 // Props
 const props = defineProps({
@@ -76,8 +75,8 @@ const initScene = () => {
   // Light
   light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
 
-  createField()
-  createStatusDisplay()
+  createField();
+  createStatusDisplay();
 
   // Render loop
   engine.runRenderLoop(() => {
@@ -230,8 +229,8 @@ const createField = () => {
 
 // Create status display
 const createStatusDisplay = () => {
-  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 330, height: 135}, scene)
-  statusPlane.position = new BABYLON.Vector3(224, 80, -55)
+  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 440, height: 180}, scene)
+  statusPlane.position = new BABYLON.Vector3(224, 95, -65)
   const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 440, height: 180}, scene)
   statusPlane.material = new BABYLON.StandardMaterial("statusMat", scene)
   statusPlane.material.diffuseTexture = statusTexture
@@ -485,7 +484,7 @@ const updateStatus = (status, play) => {
   }
 
   if (state.ended) {
-    return; // No further updates if game ended
+    // return; // No further updates if game ended
   }
 
   // Update runners using actions
