@@ -223,7 +223,7 @@ onMounted(() => {
                     <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
                     <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
                     <!-- Put Pitcher vs Hitter info here. -->
-                    <div class="pitcher-vs-hitter" v-if="hitting && pitching && !game.ended">
+                    <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
                         <div v-if="state.half">
                             {{ pitching.person.firstName }}
                             {{ pitching.person.lastName }}<br/>
