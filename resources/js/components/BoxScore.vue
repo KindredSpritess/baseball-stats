@@ -11,7 +11,6 @@
     <table style="text-align:center">
       <thead>
         <tr>
-          <th class="scorers" :style="thStyle">#</th>
           <th style="text-align:left;" :style="thStyle">Name</th>
           <th :style="thSecondaryStyle" class="mobile-hide">PA</th>
           <th :style="thSecondaryStyle">AB</th>
@@ -30,7 +29,6 @@
         <template v-for="(spot, i) in lineup" :key="i">
           <template v-for="(player, j) in spot" :key="`${i}-${j}`">
             <tr :class="i === atbat ? 'atbat' : ''">
-              <td class="scorers">{{ j === 0 ? (i + 1) : '' }}</td>
               <td style="text-align:left;">
                 <span v-if="player?.number"><sup>#{{ player?.number }}</sup></span>
                 <a :href="`/person/${player?.person?.id}`">
@@ -293,23 +291,11 @@ export default {
       return teamStats;
     },
     defenders() {
-      const defenders = {};
-      const defense = this?.game?.defense?.[this?.home ? 1 : 0] ?? {};
+      const defense = this.state.defense[this?.home ? 1 : 0] ?? {};
       const defenseMap = Object?.entries(defense || {})
-        .filter(([key]) => key !== 'EH')
-        .reduce((acc, [pos, player]) => {
-          if (player) acc[player?.id] = pos;
-          return acc;
-        }, {});
+        .map(([pos, playerId]) => [playerId, POSITIONS[pos] ?? 'EH'])
 
-      Object?.keys(defenseMap)?.forEach(playerId => {
-        const pos = defenseMap[playerId];
-        if (POSITIONS[pos]) {
-          defenders[playerId] = POSITIONS[pos];
-        }
-      });
-
-      return defenders;
+      return Object.fromEntries(defenseMap);
     }
   },
   methods: {
