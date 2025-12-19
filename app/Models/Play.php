@@ -126,6 +126,41 @@ class Play extends Model
             $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
             $game->locked = true;
             $game->ended = true;
+
+            // Work out pitchers of record.
+            $lead = $game->score[0] - $game->score[1];
+            if ($lead) {
+                // Ensure the starter went 5 innings for a win.
+                $win = $game->pitchersOfRecord['winning'];
+                $loss = $game->pitchersOfRecord['losing'];
+
+                if ($game->pitchers[$lead > 0 ? 0 : 1][0]->is($win) && ($win->stats['TO'] ?? 0) < 15) {
+                    $win = null;
+                    if ($log->consume(' #')) {
+                        $win = $game->pitchers[$lead > 0 ? 0 : 1][$log->upto(' ') - 1];
+                    }
+                }
+
+                $save = $game->pitchersOfRecord['saving'];
+                if (!$save) {
+                    // Check if the last pitcher qualifies for a save.
+                    $lastPitcher = end($game->pitchers[$lead > 0 ? 0 : 1]);
+                    if ($lastPitcher && $lastPitcher->isNot($win) && ($lastPitcher->stats['TO'] ?? 0) >= 9) {
+                        $save = $lastPitcher;
+                    }
+                }
+                $win?->evt('Win');
+                $loss->evt('Loss');
+                $save?->evt('Save');
+                // if ($win) {
+                //     $this->game_event .= "\nWinning pitcher: {$win?->person?->fullName()}";
+                // }
+                // $this->game_event .= " Losing pitcher: {$loss->person->fullName()}";
+                // if ($save) {
+                //     $this->game_event .= " Save: {$save->person->fullName()}";
+                // }
+            }
+
             return;
         }
 
@@ -211,6 +246,10 @@ class Play extends Model
                 $game->pitchers[($game->half+1)%2][] = $player;
                 foreach ($game->bases as $runner) {
                     if ($runner) $game->pitching()->evt('IR');
+                }
+                $lead = $game->score[($game->half+1)%2] - $game->score[$game->half];
+                if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($game->bases)) + 2)) {
+                    $game->pitchersOfRecord['saving'] = $player;
                 }
             }
             return;

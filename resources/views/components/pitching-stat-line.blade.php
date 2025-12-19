@@ -34,4 +34,5 @@
     @unless ($singleGameStats ?? false)<td>{{ number_format($stats->PPBFP, 2) }}</td>@endunless
     @if ($singleGameStats ?? false)<td>{{ $stats->FPS }}</td>@endif
     <td>{{ $stats->stat('IR') }}/{{ $stats->stat('IRS') }}</td>
+    @if ($singleGameStats ?? false)<td>{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>@endif
 </tr>

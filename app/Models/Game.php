@@ -33,6 +33,12 @@ class Game extends Model
 
     public array $pitchers = [[], []];
 
+    public array $pitchersOfRecord = [
+        'winning' => null,
+        'losing' => null,
+        'saving' => null,
+    ];
+
     public Collection $ballsInPlay;
 
     protected $fillable = ['location', 'firstPitch', 'duration', 'dimensions'];
@@ -96,6 +102,11 @@ class Game extends Model
             // Add inherited runners.
             foreach ($this->bases as $runner) {
                 if ($runner) $this->pitching()->evt('IR');
+            }
+            // Check for save situation.
+            $lead = $this->score[$home] - $this->score[($home+1)%2];
+            if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($this->bases)) + 2)) {
+                $this->pitchersOfRecord['saving'] = $player;
             }
         }
     }
@@ -203,6 +214,16 @@ class Game extends Model
     public function scores(): void {
         $this->score[$this->half]++;
         $this->linescore[$this->half][$this->inning - 1]++;
+        // Update winning and losing pitchers.
+        $lead = $this->score[$this->half] - $this->score[($this->half+1)%2];
+        if ($lead === 1) {
+            $this->pitchersOfRecord['losing'] = $this->pitching();
+            $this->pitchersOfRecord['winning'] = $this->defense[$this->half]['1'];
+        } else if ($lead === 0) {
+            $this->pitchersOfRecord['winning'] = null;
+            $this->pitchersOfRecord['losing'] = null;
+            $this->pitchersOfRecord['saving'] = null;
+        }
     }
 
     public function pitching() : Player {

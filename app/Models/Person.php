@@ -20,4 +20,8 @@ class Person extends Model
     public function ballsInPlay(): HasManyThrough {
         return $this->hasManyThrough(BallInPlay::class, Player::class);
     }
+
+    public function fullName(): string {
+        return "{$this->lastName}, {$this->firstName[0]}";
+    }
 }
