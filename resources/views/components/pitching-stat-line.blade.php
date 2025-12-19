@@ -11,6 +11,7 @@
         @endisset
     </td>
     @unless ($singleGameStats ?? false)<td>{{ $stats->GP }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ $stats->Win }}-{{ $stats->Loss }}</td>@endunless
     <td>{{ App\Helpers\StatsHelper::innings_format($stats->IP) }}</td>
     <td>{{ $stats->HA }}</td>
     <td>{{ $stats->K }}</td>

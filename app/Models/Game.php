@@ -6,6 +6,7 @@ use App\Casts\GameState;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Game extends Model
 {
@@ -178,6 +179,11 @@ class Game extends Model
             $runner['pitcher']->evt('RA');
             $runner['pitcher']->evt("RA.{$runner['origin']}");
             $runner['base'] = -100000000000;
+            Log::info($this->score);
+            if ($this->score[0] == $this->score[1]) {
+                // Losing pitcher should be the one who allowed the run on base.
+                $this->pitchersOfRecord['losing'] = $runner['pitcher'];
+            }
             if ($runner['earned'] < 0) {
                 unset($this->runners[$player->id]);
             }
@@ -218,7 +224,7 @@ class Game extends Model
         // Update winning and losing pitchers.
         $lead = $this->score[$this->half] - $this->score[($this->half+1)%2];
         if ($lead === 1) {
-            $this->pitchersOfRecord['losing'] = $this->pitching();
+            // $this->pitchersOfRecord['losing'] = $this->pitching();
             $this->pitchersOfRecord['winning'] = $this->defense[$this->half]['1'];
         } else if ($lead === 0) {
             $this->pitchersOfRecord['winning'] = null;

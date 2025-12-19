@@ -2,6 +2,7 @@
   <tr>
     <td style="text-align:left;">Name</td>
     @unless($singleGameStats ?? false)<td>G</td>@endunless
+    @unless($singleGameStats ?? false)<td>W-L</td>@endunless
     <td>INN</td>
     <td>H</td>
     <td>K</td>

@@ -150,6 +150,7 @@ class Play extends Model
                     }
                 }
                 $win?->evt('Win');
+                throw_unless($loss, 'Losing pitcher not set');
                 $loss->evt('Loss');
                 $save?->evt('Save');
                 // if ($win) {
@@ -290,8 +291,8 @@ class Play extends Model
             foreach (array_reverse($game->bases, true) as $k => $p) {
                 if ($p) {
                     $this->logBuffer($game->bases[$k]->person->lastName);
-                    $this->advance($game, $k, $k+1);
                     $game->advanceRunner($p, 1, true);
+                    $this->advance($game, $k, $k+1);
                     $this->log($this->humanBuffer . ".");
                 }
             }
