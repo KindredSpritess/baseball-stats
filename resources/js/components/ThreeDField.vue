@@ -484,6 +484,10 @@ const updateStatus = (status, play) => {
     }
   }
 
+  if (state.ended) {
+    return; // No further updates if game ended
+  }
+
   // Update runners using actions
   const runnerColor = state.half ? props.homeColor : props.awayColor;
   let delayFrames = 0;
