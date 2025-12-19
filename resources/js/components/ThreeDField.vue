@@ -602,8 +602,27 @@ const drawLinescore = (ctx) => {
   ctx.fillText(homeShort.substring(0, 3), 8, linescoreY + lineHeight)
 
   // Inning scores
-  const awayScores = props.state.linescore[0] || []
-  const homeScores = props.state.linescore[1] || []
+  const awayScores = [...props.state.linescore[0]]
+  const homeScores = [...props.state.linescore[1]]
+
+  if (props.state.ended) {
+    // Potentially there's an extra score entry.
+    if (props.state.half) {
+      // If game ended at bottom of inning, remove last away score (replace with an X)
+      if (awayScores.length > props.state.inning) {
+        awayScores.pop();
+      } else {
+        // Otherwise the game ended while the home team was batting, so append an X
+        homeScores.push(homeScores.pop() + 'X');
+      }
+    } else {
+      // Game ended at top of inning, remove last home score (replace with an X)
+      if (homeScores.length === props.state.inning) {
+        homeScores.pop();
+        homeScores.push('X');
+      }
+    }
+  }
 
   // Draw up to 9 innings
   for (let inning = 1; inning <= 9; inning++) {
