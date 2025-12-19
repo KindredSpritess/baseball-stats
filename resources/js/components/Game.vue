@@ -227,7 +227,7 @@ onMounted(() => {
                         <div v-if="state.half">
                             {{ pitching.person.firstName }}
                             {{ pitching.person.lastName }}<br/>
-                            ({{ stats[pitching.id].Balls + stats[pitching.id].Strikes }} pitches, {{ stats[pitching.id].K }} Ks)
+                            ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
                         </div>
                         <div>
                             {{ state.atBat[state.half] + 1 }}.
@@ -239,7 +239,7 @@ onMounted(() => {
                         <div v-if="!state.half">
                             {{ pitching.person.firstName }}
                             {{ pitching.person.lastName }}<br/>
-                            ({{ stats[pitching.id].Balls + stats[pitching.id].Strikes }} pitches, {{ stats[pitching.id].K }} Ks)
+                            ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
                         </div>
                     </div>
                     <!-- Put a clickable innings selector. -->
