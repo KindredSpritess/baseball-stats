@@ -95,7 +95,7 @@ class ReprocessGames extends Command
 
         foreach ($plays as $k => $play) {
             try {
-                if ($play->play === 'Game Over') {
+                if (str_starts_with($play->play, 'Game Over')) {
                     $game->inning = $plays[$k - 1]->inning ?? $game->inning;
                     $game->half = $plays[$k - 1]->inning_half ?? $game->half;
                     $game->ended = true;
