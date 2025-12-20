@@ -32,9 +32,11 @@ Route::get('/login', function () {
 
 Route::get('/', function () {
     $seasons = Team::select('season')->distinct()->get()->pluck('season');
-    return view('welcome', ['seasons' => $seasons,
-                            'games' => Game::orderBy('firstPitch')->get(),
-                            'teams' => Team::all()]);
+    return view('welcome', [
+        'seasons' => $seasons,
+        'games' => Game::orderBy('firstPitch')->get(),
+        'teams' => Team::all()
+    ]);
 });
 
 Route::controller(GameController::class)->group(function() {
