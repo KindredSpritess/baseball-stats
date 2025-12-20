@@ -34,6 +34,10 @@ class GameState implements CastsAttributes
         $game->ended = $value['ended'] ?? false;
 
         $players = [];
+        $game->load('players');
+        $game->players->each(function ($player) use (&$players) {
+            $players[$player->id] = $player;
+        });
         $decodeArray = function ($team, &$out, $in) use (&$players, &$decodeArray) {
             foreach ($in as $key => $value) {
                 if (is_array($value)) {
@@ -66,9 +70,9 @@ class GameState implements CastsAttributes
         $repairLineups($game->lineup[0]);
         $repairLineups($game->lineup[1]);
         $game->pitchersOfRecord = [
-            'winning' => $game->players()->find($value['pitchersOfRecord']['winning'] ?? null),
-            'losing' => $game->players()->find($value['pitchersOfRecord']['losing'] ?? null),
-            'saving' => $game->players()->find($value['pitchersOfRecord']['saving'] ?? null),
+            'winning' => $players[$value['pitchersOfRecord']['winning'] ?? null] ?? null,
+            'losing' => $players[$value['pitchersOfRecord']['losing'] ?? null] ?? null,
+            'saving' => $players[$value['pitchersOfRecord']['saving'] ?? null] ?? null,
         ];
         $game->runners = array_map(function ($r) use ($game) {
             $team = $game->half ? $game->away_team : $game->home_team;
