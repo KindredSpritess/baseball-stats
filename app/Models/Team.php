@@ -24,4 +24,8 @@ class Team extends Model
     public function games() {
         return $this->hasMany(Game::class, 'home')->orWhere('away', $this->id);
     }
+
+    public function users() {
+        return $this->belongsToMany(User::class);
+    }
 }

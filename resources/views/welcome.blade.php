@@ -30,6 +30,10 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
 }" style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh;">
     <h1 style="text-align: center; font-size: 2.5em; color: #2c3e50; margin-bottom: 30px;">Welcome to Baseball Stats</h1>
 
+    @if(auth()->check())
+    <p style="text-align: center; font-size: 1.2em; color: #34495e; margin-bottom: 20px;">Welcome back, {{ auth()->user()->name }}!</p>
+    @endif
+
     @if($inProgressGames->count() > 0)
     <section style="margin-bottom: 40px;">
         <h2 style="font-size: 1.8em; color: #27ae60; margin-bottom: 20px; border-bottom: 2px solid #27ae60; padding-bottom: 10px;">In Progress Games</h2>
