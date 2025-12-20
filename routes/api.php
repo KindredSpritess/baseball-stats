@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +31,6 @@ Route::controller(GameController::class)->group(function() {
 });
 
 Route::controller(\App\Http\Controllers\PersonController::class)->group(function() {
-    Route::get('/players/search', 'search');
-    Route::get('/players/team/{team}', 'teamPlayers');
+    Route::get('/players/search', 'search')->can('score');
+    Route::get('/players/team/{team}', 'teamPlayers')->can('score');
 });

@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Helpers\StatsHelper;
+use App\Models\Game;
+use App\Models\User;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +28,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Gate::define('score-game', function (User $user, Game $game) {
+            return $user->role === 'superuser' || $user->teams()->whereIn('team_id', [$game->home, $game->away])->exists();
+        });
+        Gate::define('score', function (User $user) {
+            return in_array($user->role, ['scorer', 'superuser']);
+        });
+        Gate::define('create-game', function (User $user) {
+            return $user->role === 'superuser';
+        });
+        Gate::define('create-team', function (User $user) {
+            return $user->role === 'superuser';
+        });
+
         Blade::directive('spaceless', function () {
             return '<?php ob_start(); ?>';
         });

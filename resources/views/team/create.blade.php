@@ -11,7 +11,7 @@
     </div>
     <div>
         <label for="season">Season:</label>
-        <input id="season" name="season" />
+        <input id="season" name="season" value="{{ request()->get('season') }}" />
     </div>
     <div>
         <button>Create Team</button>

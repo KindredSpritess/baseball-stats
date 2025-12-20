@@ -111,9 +111,11 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                 </li>
                                 @endif
                             @endforeach
+                            @can('create-game')
                             <li style="margin-top: 10px;">
                                 <a href="{{ route('game.create', ['season' => $season]) }}" style="color: #27ae60; text-decoration: none; font-weight: bold;">+ New Game</a>
                             </li>
+                            @endcan
                         </ul>
                     </div>
                     <div style="flex: 1 1 45%; min-width: 300px;">
@@ -129,6 +131,11 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                             <li style="margin-bottom: 8px;">
                                 <a href="{{ route('stats.show', ['seasons' => [$season]]) }}" style="color: #e67e22; text-decoration: none;">All Teams</a>
                             </li>
+                            @can('create-team')
+                            <li style="margin-top: 10px;">
+                                <a href="{{ route('team.create', ['season' => $season]) }}" style="color: #27ae60; text-decoration: none; font-weight: bold;">+ New Team</a>
+                            </li>
+                            @endcan
                         </ul>
                     </div>
                 </div>

@@ -38,18 +38,18 @@ Route::get('/', function () {
 });
 
 Route::controller(GameController::class)->group(function() {
-    Route::get('/game/create', 'create')->name('game.create');
-    Route::post('/game/store', 'store')->name('gamestore');
-    Route::get('/game/{game}', 'show')->name('game');
+    Route::get('/game/create', 'create')->name('game.create')->middleware('can:create-game');
+    Route::post('/game/store', 'store')->name('gamestore')->middleware('can:create-game');
+    Route::get('/game/{game}', 'show')->name('game')->middleware('can:score-game,game');
     Route::get('/game/view/{game}', 'view')->name('game.view');
-    Route::put('/game/{game}/log', 'play')->name('gamelog');
-    Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');
+    Route::put('/game/{game}/log', 'play')->name('gamelog')->middleware('can:score-game,game');
+    Route::patch('/game/{game}/log', 'plays')->name('fullgamelog')->middleware('can:score-game,game');
     Route::get('/game/{game}/boxscore', 'boxscore')->name('game.boxscore');
 });
 
 Route::controller(TeamController::class)->group(function () {
-    Route::get('/team/create', 'create');
-    Route::post('/team/create', 'store')->name('teamstore');
+    Route::get('/team/create', 'create')->name('team.create')->middleware('can:create-team');
+    Route::post('/team/create', 'store')->name('teamstore')->middleware('can:create-team');
     Route::get('/team/{team}', 'show')->name('team');
 });
 

@@ -15,11 +15,11 @@
 <table class="sortable stats-table">
     <x-hitting-stat-header />
     @foreach ($games as $game)
-        @if ($game->home == $team->id)
-            <x-hitting-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
-        @else
-            <x-hitting-stat-line header="@ {{ $game->home_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
-        @endif
+        @php
+            $route = Gate::allows('score-game', $game) ? 'game' : 'game.view';
+            $header = $game->home == $team->id ? $game->away_team->name : '@ ' . $game->home_team->name;
+        @endphp
+        <x-hitting-stat-line header="{{ $header }}" :stats="$stats[$game->id]" :link="route($route, $game->id)" sort="{{ $game->firstPitch }}" />
     @endforeach
     <tfoot>
         <x-hitting-stat-line header="Totals" :stats="$totals" />
@@ -33,19 +33,15 @@
 <table class="sortable stats-table">
     <x-fielding-stat-header />
     @foreach ($games as $game)
+        @php
+            $route = Gate::allows('score-game', $game) ? 'game' : 'game.view';
+            $header = $game->home == $team->id ? $game->away_team->name : '@ ' . $game->home_team->name;
+        @endphp
         @foreach ($stats[$game->id]->positional() as $line)
-            @if ($game->home == $team->id)
-                <x-fielding-stat-line header="{{ $game->away_team->name }}" :stats="$line" :link="route('game', $game->id)" />
-            @else
-                <x-fielding-stat-line header="@ {{ $game->home_team->name }}" :stats="$line" :link="route('game', $game->id)" />
-            @endif
+            <x-fielding-stat-line header="{{ $header }}" :stats="$line" :link="route($route, $game->id)" />
         @endforeach
         @continue(count($stats[$game->id]->positional()) < 2)
-        @if ($game->home == $team->id)
-            <x-fielding-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" :hidePosition="true" />
-        @else
-            <x-fielding-stat-line header="@ {{ $game->home_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" :hidePosition="true" />
-        @endif
+        <x-fielding-stat-line header="{{ $header }}" :stats="$stats[$game->id]" :link="route($route, $game->id)" sort="{{ $game->firstPitch }}" :hidePosition="true" />
     @endforeach
     <tfoot>
         @foreach ($totals->positional() as $line)
@@ -61,11 +57,11 @@
     <x-pitching-stat-header />
     @foreach ($games as $game)
         @if ($stats[$game->id]->Pitches)
-            @if ($game->home == $team->id)
-                <x-pitching-stat-line header="{{ $game->away_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
-            @else
-                <x-pitching-stat-line header="@ {{ $game->home_team->name }}" :stats="$stats[$game->id]" :link="route('game', $game->id)" sort="{{ $game->firstPitch }}" />
-            @endif
+        @php
+            $route = Gate::allows('score-game', $game) ? 'game' : 'game.view';
+            $header = $game->home == $team->id ? $game->away_team->name : '@ ' . $game->home_team->name;
+        @endphp
+            <x-pitching-stat-line header="{{ $header }}" :stats="$stats[$game->id]" :link="route($route, $game->id)" sort="{{ $game->firstPitch }}" />
         @endif
     @endforeach
     <tfoot>

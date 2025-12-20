@@ -124,7 +124,7 @@ class Play extends Model
             $game->half = $lastPlay?->inning_half ?? $game->half;
             $this->game_event = 'End of the game. Final score: ';
             $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
-            $game->locked = true;
+            // $game->locked = true;
             $game->ended = true;
 
             // Work out pitchers of record.
