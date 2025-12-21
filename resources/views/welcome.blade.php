@@ -8,7 +8,7 @@ Welcome
 $now = now();
 $threeMonthsAgo = $now->copy()->subMonths(3);
 $inProgressGames = collect($games)->filter(function($game) use ($now) {
-    return !$game->ended && $game->firstPitch < $now;
+    return !$game->ended && $game->firstPitch < $now->subHours(2);
 });
 $games->each(function($game) {
     // Load state.
