@@ -35,7 +35,7 @@ Route::get('/', function () {
     return view('welcome', [
         'seasons' => $seasons,
         'games' => Game::orderBy('firstPitch')->get(),
-        'teams' => Team::all()
+        'teams' => Team::orderBy('name')->get(),
     ]);
 });
 
