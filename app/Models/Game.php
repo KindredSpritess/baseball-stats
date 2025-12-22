@@ -215,7 +215,6 @@ class Game extends Model
             $runner['pitcher']->evt('RA');
             $runner['pitcher']->evt("RA.{$runner['origin']}");
             $runner['base'] = -100000000000;
-            Log::info($this->score);
             if ($this->score[0] == $this->score[1]) {
                 // Losing pitcher should be the one who allowed the run on base.
                 $this->pitchersOfRecord['losing'] = $runner['pitcher'];
