@@ -107,6 +107,8 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                     @else
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}" style="color: #3498db; text-decoration: none;">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</a>
                                         <span style="color: #7f8c8d; font-size: 0.9em;">({{ $game->firstPitch->format('M j, Y g:i A') }})</span>
+                                        <br/>
+                                        <span style="color: #7f8c8d; font-size: 0.8em;">({{ $game->location }})</span>
                                     @endif
                                 </li>
                                 @endif
