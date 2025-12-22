@@ -132,7 +132,9 @@ const pitchDescription = (pitch) => ({
     'x': 'In Play',
     't': 'Foul Tip',
     'r': 'Foul (runner going)',
-    'f': 'Foul'
+    'f': 'Foul',
+    'p': 'Pitchout',
+    'i': 'Intentional Ball',
 }[pitch] || `Unknown Pitch ${pitch}`);
 
 onMounted(() => {

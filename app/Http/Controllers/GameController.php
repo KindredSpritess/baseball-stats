@@ -18,19 +18,9 @@ use Illuminate\Support\Facades\Log;
 class GameController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create(Request $request)
     {
@@ -43,7 +33,7 @@ class GameController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -180,7 +170,7 @@ class GameController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(Game $game)
     {
@@ -197,7 +187,7 @@ class GameController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function view(Game $game)
     {
@@ -209,37 +199,21 @@ class GameController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the touch screen scoring interface.
      *
      * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function edit(Game $game)
+    public function score(Game $game)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Game $game)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Game $game)
-    {
-        //
+        // Force load.
+        $state = $game->state;
+        $this->ballsInPlay($game);
+        if ($game->locked) {
+            return view('game.view', ['game' => $game]);
+        }
+        $game->load('players.person');
+        return view('game.score', ['game' => $game, 'state' => $game->getRawOriginal('state')]);
     }
 
     public function get(Game $game) {

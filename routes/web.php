@@ -1,6 +1,5 @@
 <?php
 
-use App\Casts\GameState;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PersonController;
@@ -10,7 +9,6 @@ use App\Models\Game;
 use App\Models\Redirect;
 use App\Models\Team;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 Route::get('/auth/{provider}', [AuthController::class, 'redirectToProvider'])->name('auth.redirect');
 Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('auth.callback');

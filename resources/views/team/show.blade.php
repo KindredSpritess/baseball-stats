@@ -9,6 +9,9 @@
 <h3>Hitting - Minimum {{ number_format($minPA, 1) }} PAs</h3>
 <table class="sortable stats-table">
     <x-hitting-stat-header />
+    @php
+    /** @var App\Helpers\StatsHelper[] $stats */
+    @endphp
     @foreach ($people->sortByDesc(fn($person) => $stats[$person->id]->OPS) as $person)
         @if ($stats[$person->id]->PA < $minPA)
             @continue
@@ -46,7 +49,7 @@
     </tfoot>
 </table>
 
-<h3>Pitching - Minimum {{ App\Helpers\StatsHelper::innings_format($minIP, 1) }} IPs</h3>
+<h3>Pitching - Minimum {{ App\Helpers\StatsHelper::innings_format($minIP) }} IPs</h3>
 <table class="sortable stats-table">
     <x-pitching-stat-header />
     @foreach ($people->filter(fn($person) => $stats[$person->id]->IP)->sortByDesc(fn($person) => $stats[$person->id]->IP) as $person)

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import * as fs from 'fs';
 
 export default defineConfig({
     plugins: [
@@ -10,4 +11,15 @@ export default defineConfig({
         }),
         vue(),
     ],
+    server: {
+        host: 'baseball.lndo.site',
+        // port: 5173,
+        https: {
+            key: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.key'),
+            cert: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.crt'),
+        },
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+    },
 });
