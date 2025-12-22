@@ -8,6 +8,42 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $firstPitch
+ * @property int $away
+ * @property int $home
+ * @property string $location
+ * @property int|null $duration
+ * @property mixed|null $state
+ * @property int $locked
+ * @property int $ended
+ * @property array<array-key, mixed>|null $dimensions
+ * @property-read \App\Models\Team|null $away_team
+ * @property-read \App\Models\Team|null $home_team
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Player> $players
+ * @property-read int|null $players_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Play> $plays
+ * @property-read int|null $plays_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereAway($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereDimensions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereEnded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereFirstPitch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereHome($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereLocked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Game extends Model
 {
     use HasFactory;

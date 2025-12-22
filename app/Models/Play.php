@@ -10,6 +10,37 @@ use NumberFormatter;
 use App\Events\GameUpdated;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $game_id
+ * @property string $play
+ * @property int|null $command
+ * @property int|null $plate_appearance
+ * @property int|null $inning
+ * @property int|null $inning_half
+ * @property int $run_scoring
+ * @property string|null $human
+ * @property string|null $game_event
+ * @property-read \App\Models\BallInPlay|null $ballInPlay
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereCommand($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereGameEvent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereGameId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereHuman($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereInning($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereInningHalf($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play wherePlateAppearance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play wherePlay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereRunScoring($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Play whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Play extends Model
 {
     use HasFactory;
