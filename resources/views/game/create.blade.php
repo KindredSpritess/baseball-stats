@@ -1,31 +1,45 @@
-<h1>Create New Game</h1>
-<form action="/game/store" method="POST">
-    @csrf
-    <div>
-        <label for="location">Venue:</label>
-        <input id="location" name="location" />
+@extends('layouts.main')
+@section('title')
+Create New Game
+@endsection
+
+@section('content')
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">Create New Game</h1>
     </div>
-    <div>
-        <label for="firstPitch">Game Time:</label>
-        <input type="datetime-local" name="firstPitch" />
+
+    <div class="form-container">
+        <form action="/game/store" method="POST" class="game-create-form">
+            @csrf
+            <div class="form-group">
+                <label for="location" class="form-label">Venue:</label>
+                <input id="location" name="location" class="form-input" required />
+            </div>
+            <div class="form-group">
+                <label for="firstPitch" class="form-label">Game Time:</label>
+                <input type="datetime-local" name="firstPitch" class="form-input" required />
+            </div>
+            <div class="form-group">
+                <label for="away" class="form-label">Away Team:</label>
+                <select id="away" name="away" class="form-select" required>
+                    @foreach ($teams as $team)
+                        <option value="{{ $team->id }}">{{ $team->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="home" class="form-label">Home Team:</label>
+                <select id="home" name="home" class="form-select" required>
+                    @foreach ($teams as $team)
+                        <option value="{{ $team->id }}">{{ $team->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Game</button>
+            </div>
+        </form>
     </div>
-    <div>
-        <label for="away">Away Team:</label>
-        <select id="away" name="away">
-            @foreach ($teams as $team)
-                <option value="{{ $team->id }}">{{ $team->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div>
-        <label for="home">Home Team:</label>
-        <select id="home" name="home">
-            @foreach ($teams as $team)
-                <option value="{{ $team->id }}">{{ $team->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div>
-        <button>Create Game</button>
-    </div>
-</form>
+</div>
+@endsection
