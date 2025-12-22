@@ -332,7 +332,10 @@ class Play extends Model
         }
 
         while (!$log->empty()) {
-            if ($log->consume('.') ?: $log->consume('b')) {
+            if ($log->consume('.') ?:
+                $log->consume('b') ?:
+                $log->consume('i') ?:
+                $log->consume('p')) {  // Ball
                 $game->balls = min($game->balls + 1, 3);
                 $game->pitching()->evt('Balls');
                 $game->hitting()->evt('hBalls');
@@ -428,6 +431,13 @@ class Play extends Model
                             $game->hitting()->evt('BBs');
                             $game->pitching()->evt('BB');
                             $this->logBuffer("walks");
+                            $b = $this->advance($game, -1, 0, false);
+                            $game->advanceRunner($game->hitting(), 1, true, false, 'W');
+                        } elseif ($event->consume('IBB')) {
+                            $game->hitting()->evt('BBs');
+                            $game->hitting()->evt('IBBs');
+                            $game->pitching()->evt('BB');
+                            $this->logBuffer("intentional walked");
                             $b = $this->advance($game, -1, 0, false);
                             $game->advanceRunner($game->hitting(), 1, true, false, 'W');
                         } elseif ($event->consume('HBP')) {
