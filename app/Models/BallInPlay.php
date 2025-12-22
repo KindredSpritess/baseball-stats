@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 /**
  * @property int $id
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BallInPlay extends Model
 {
     use HasFactory;
+    use HasJsonRelationships;
 
     public $timestamps = false;
 
@@ -60,5 +62,9 @@ class BallInPlay extends Model
 
     public function player(): BelongsTo {
         return $this->belongsTo(Player::class);
+    }
+
+    public function pitcher() {
+        return $this->belongsToJson(Player::class, 'fielders->0');
     }
 }

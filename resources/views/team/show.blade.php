@@ -142,5 +142,17 @@
             </div>
         </div>
     </section>
+
+    <section class="section-spacing">
+        <h2 onclick="$('.balls-in-play').toggle()" class="section-title spray spray-toggle">Pitcher Spray Charts</h2>
+        <div class='balls-in-play' style="display:none;">
+            @foreach ($people->filter(fn($person) => $stats[$person->id]->IP)->sortBy(fn($person) => $person->lastName) as $person)
+                <div class='position'>
+                    <h5>{{ strtoupper($person->lastName) }}, {{ $person->firstName }}</h5>
+                    <x-field :ballsInPlay="$pitchingBIP[$person->id] ?? []" />
+                </div>
+            @endforeach
+        </div>
+    </section>
 </div>
 @endsection
