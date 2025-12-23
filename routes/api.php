@@ -19,6 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->put('/user/preferences', [App\Http\Controllers\UserController::class, 'updatePreferences']);
+
 // Route::controller(TeamController::class)->group(function() {
 //     Route::put('/team', 'create');
 // });

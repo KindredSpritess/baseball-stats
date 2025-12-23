@@ -7,12 +7,12 @@
     </div>
 
     <div class="base-runners-container">
-      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" @log-play="logPlay" />
-      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" @log-play="logPlay" />
-      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" @log-play="logPlay" />
+      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
     </div>
 
-    <BatterActions @log-play="logPlay" :state="state" :runner-plays="runnerActions" />
+    <BatterActions @log-play="logPlay" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
 
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       lastResponse: null,
-      currentGame: this.game
+      currentGame: this.game,
+      preferences: {}
     }
   },
   computed: {
@@ -52,7 +53,24 @@ export default {
       ];
     }
   },
+  mounted() {
+    this.loadPreferences();
+  },
   methods: {
+    async loadPreferences() {
+      try {
+        const response = await fetch('/api/user', {
+          headers: {
+            'Authorization': `Bearer ${window.Laravel.apiToken}`,
+            'Accept': 'application/json',
+          },
+        });
+        const user = await response.json();
+        this.preferences = user.preferences || {};
+      } catch (error) {
+        console.error('Failed to load preferences:', error);
+      }
+    },
     async logPlay(playCode) {
       await this.sendPlay(playCode);
     },

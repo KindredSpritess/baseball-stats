@@ -48,9 +48,9 @@
       <h3>Select Ball Trajectory</h3>
       <div class="options-grid">
         <button @click="selectTrajectory('G')" class="option-btn primary">Ground Ball</button>
-        <button @click="selectTrajectory('L')" class="option-btn primary">Line Drive</button>
+        <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('L')" class="option-btn primary">Line Drive</button>
         <button @click="selectTrajectory('F')" class="option-btn primary">Fly Ball</button>
-        <button @click="selectTrajectory('P')" class="option-btn primary">Pop Up</button>
+        <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('P')" class="option-btn primary">Pop Up</button>
       </div>
       <button @click="resumePitching" class="back-btn">← Back to Pitching</button>
     </div>
@@ -69,7 +69,7 @@
       <div class="options-grid">
         <button @click="makeDecision('H')" class="option-btn">Hit</button>
         <button @click="makeDecision('FC')" class="option-btn">Fielder's Choice</button>
-        <button @click="makeDecision('E')" class="option-btn">Error</button>
+        <button v-if="!preferences.removeErrors" @click="makeDecision('E')" class="option-btn">Error</button>
         <button @click="makeDecision('PO')" class="option-btn">Put Out</button>
         <button @click="makeDecision('CI')" class="option-btn">Catcher's Interference</button>
         <button @click="makeDecision('POR')" class="option-btn">Put Out by Rule</button>
@@ -186,6 +186,10 @@ export default {
     runnerPlays: {
       type: Array,
       default: () => []
+    },
+    preferences: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -207,7 +211,7 @@ export default {
       customPlay: '',
       location: null,
       decision: '',
-      pitchOutcomes: {
+      basePitchOutcomes: {
         's': 'Swinging Strike',
         'c': 'Called Strike', 
         '.': 'Ball',
@@ -221,6 +225,16 @@ export default {
     }
   },
   computed: {
+    pitchOutcomes() {
+      const outcomes = { ...this.basePitchOutcomes };
+      if (this.preferences.removeAdvancedPitchTypes) {
+        delete outcomes['r'];
+        delete outcomes['b'];
+        delete outcomes['p'];
+        delete outcomes['i'];
+      }
+      return outcomes;
+    },
     currentBalls() {
       return this.state.balls + this.balls;
     },
@@ -233,7 +247,13 @@ export default {
     outcomes() {
       const lastPitch = this.pitchSequence.at(-1);
       if (strikes.includes(lastPitch)) return { 'K': 'Strikeout', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
-      if (balls.includes(lastPitch)) return { 'BB': 'Walk', 'IBB': 'Intentional Walk', 'HBP': 'Hit by Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
+      if (balls.includes(lastPitch)) {
+        const o = { 'BB': 'Walk', 'IBB': 'Intentional Walk', 'HBP': 'Hit by Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
+        if (this.preferences.removeIntentionalWalks) {
+          delete o['IBB'];
+        }
+        return o;
+      }
       return {};
     },
     hittingPlay() {

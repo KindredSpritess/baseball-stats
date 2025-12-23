@@ -6,9 +6,9 @@
         <span class="runner-name">{{ runner.person.lastName }}, {{ runner.person.firstName[0] }}</span>
       </div>
       <div class="runner-actions">
-        <button @click="logRunnerAction(runner.id, 'SB')" class="action-btn">Steal</button>
-        <button @click="logRunnerAction(runner.id, 'CS')" class="action-btn">CS</button>
-        <button @click="logRunnerAction(runner.id, 'PO')" class="action-btn">PO</button>
+        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'SB')" class="action-btn">Steal</button>
+        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'CS')" class="action-btn">CS</button>
+        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'PO')" class="action-btn">PO</button>
         <button @click="logRunnerAction(runner.id, 'ADV')" class="action-btn">ADV</button>
       </div>
     </template>
@@ -27,6 +27,10 @@ export default {
     base: Number,
     game: Object,
     state: Object,
+    preferences: {
+      type: Object,
+      default: () => ({})
+    }
   },
   computed: {
     runner() {

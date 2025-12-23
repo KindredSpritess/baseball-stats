@@ -53,6 +53,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'preferences',
     ];
 
     /**
@@ -72,6 +73,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'preferences' => 'array',
     ];
 
     public function teams()
