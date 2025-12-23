@@ -655,7 +655,7 @@ class Play extends Model
                 'PPR' => 'passed runner, putout by :fielding',
                 'ROL' => 'out of the baseline when advancing to :base, putout by :fielding',
                 'INT' => 'out on interference when advancing to :base, putout by :fielding',
-                'RRO' => 'advances :base on a runner\'s obstruction',
+                'RRO' => 'out running the bases in reverse order to :base, putout by :fielding',
                 'HBB' => 'hit by a batted ball, putout by :fielding',
                 false => 'out at :base, :fielding',
                 default => 'putout at :base unusually, :fielding',

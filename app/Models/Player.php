@@ -38,6 +38,8 @@ class Player extends Model
 
     protected $fillable = ['number'];
 
+    protected $with = ['person'];
+
     protected $casts = [
         'stats' => 'array',
     ];

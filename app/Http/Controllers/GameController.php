@@ -63,7 +63,8 @@ class GameController extends Controller
             if ($json) {
                 return new JsonResponse([
                     'status' => 'error',
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
+                    'stackTrace' => $e->getTraceAsString(),
                 ], 400);
             } else {
                 return redirect()->route('game', ['game' => $game->id])->with('error', $e->getMessage());
