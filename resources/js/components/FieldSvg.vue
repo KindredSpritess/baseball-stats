@@ -32,6 +32,15 @@
       <g v-if="location">
         <circle :cx="location.x" :cy="location.y" r="10" fill="#ff0000aa" stroke="#000000" stroke-width="2"/>
       </g>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=260 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(1)" v-if="players">{{ players[1] ?? 'Pitcher' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=435 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(2)" v-if="players">{{ players[2] ?? 'Catcher' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=344 y=310 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(3)" v-if="players">{{ players[3] ?? 'First Base' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=284 y=210 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(4)" v-if="players">{{ players[4] ?? 'Second Base' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=104 y=310 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(5)" v-if="players">{{ players[5] ?? 'Third Base' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=164 y=210 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(6)" v-if="players">{{ players[6] ?? 'Shortstop' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=104 y=130 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(7)" v-if="players">{{ players[7] ?? 'Left Field' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=224 y=80  font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(8)" v-if="players">{{ players[8] ?? 'Center Field' }}</text>
+      <text text-anchor="middle" font-size="x-large" font-family="sans-serif" x=344 y=130 font-weight="bold" class="fielder-text" @click="onFielderTouch && onFielderTouch(9)" v-if="players">{{ players[9] ?? 'Right Field' }}</text>
     </g>
   </svg>
 </template>
@@ -44,10 +53,27 @@ export default {
       type: Object,
       default: null
     },
+    players: {
+      type: Object,
+      default: null,
+    },
     onTouch: {
+      type: Function,
+      default: null
+    },
+    onFielderTouch: {
       type: Function,
       default: null
     }
   }
 };
 </script>
+
+<style scoped>
+  .fielder-text {
+    fill: var(--fielding-primary, white);
+    stroke: var(--fielding-secondary, black);
+    stroke-width: 1px;
+    cursor: pointer;
+  }
+</style>

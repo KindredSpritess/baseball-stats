@@ -13,18 +13,29 @@
         <h3>Game Options</h3>
         <button @click="overrideCount" class="option-item">Override Count</button>
         <button @click="sideAway" class="option-item">Side Away</button>
+        <button @click="defensiveChangesShow" class="option-item">Defensive Changes</button>
         <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
         <button @click="endGame" class="option-item">End Game</button>
       </div>
     </div>
 
-    <div class="base-runners-container">
+    <div class="base-runners-container" :style="{ display: showDefensiveChanges ? 'none' : null}">
       <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
       <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
       <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
     </div>
 
-    <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
+    <div :style="{ display: showDefensiveChanges ? 'none' : null}">
+      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
+    </div>
+
+    <DefensiveChanges
+      v-if="showDefensiveChanges"
+      :game="game"
+      :state="state"
+      @defensive-change="handleDefensiveChange"
+      @close="showDefensiveChanges = false"
+    />
 
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
@@ -37,12 +48,14 @@
 <script>
 import BaseRunnerActions from './BaseRunnerActions.vue';
 import BatterActions from './BatterActions.vue';
+import DefensiveChanges from './DefensiveChanges.vue';
 
 export default {
   name: 'TouchScore',
   components: {
     BaseRunnerActions,
-    BatterActions
+    BatterActions,
+    DefensiveChanges
   },
   props: {
     gameId: Number,
@@ -57,6 +70,7 @@ export default {
       preferences: {},
       isMounted: false,
       showOptions: false,
+      showDefensiveChanges: false,
     }
   },
   computed: {
@@ -144,6 +158,13 @@ export default {
         this.sendPlay(`! ${message.trim()}`);
         this.showOptions = false;
       }
+    },
+    defensiveChangesShow() {
+      this.showDefensiveChanges = true;
+      this.showOptions = false;
+    },
+    handleDefensiveChange(command) {
+      this.sendPlay(command);
     },
     endGame() {
       if (confirm('Are you sure you want to end the game?')) {
