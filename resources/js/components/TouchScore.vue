@@ -4,6 +4,18 @@
       <h2>{{ game.away_team.name }} @ {{ game.home_team.name }}</h2>
       <div class="score">{{ state.score.join(' - ') }}</div>
       <div class="inning">{{ state.inning }}{{ state.half ? '▼' : '▲' }}</div>
+      <button @click="showOptions = !showOptions" class="options-btn">⚙️ Options</button>
+    </div>
+
+    <div v-if="showOptions" class="options-menu">
+      <div class="options-overlay" @click="showOptions = false"></div>
+      <div class="options-content">
+        <h3>Game Options</h3>
+        <button @click="overrideCount" class="option-item">Override Count</button>
+        <button @click="sideAway" class="option-item">Side Away</button>
+        <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
+        <button @click="endGame" class="option-item">End Game</button>
+      </div>
     </div>
 
     <div class="base-runners-container">
@@ -44,6 +56,7 @@ export default {
       state: {...this.initialState},
       preferences: {},
       isMounted: false,
+      showOptions: false,
     }
   },
   computed: {
@@ -110,6 +123,33 @@ export default {
       this.state = newState;
       // Force re-render
       this.$forceUpdate();
+    },
+    overrideCount() {
+      const count = prompt('Enter new count (balls-strikes):', `${this.state.balls}-${this.state.strikes}`);
+      if (count && count.match(/^\d-\d$/)) {
+        const [balls, strikes] = count.split('-').map(Number);
+        this.sendPlay(`SC ${balls}-${strikes}`);
+        this.showOptions = false;
+      }
+    },
+    sideAway() {
+      if (confirm('Are you sure you want to call "Side Away"?')) {
+        this.sendPlay('Side Away');
+        this.showOptions = false;
+      }
+    },
+    broadcastMessage() {
+      const message = prompt('Enter broadcast message:');
+      if (message && message.trim()) {
+        this.sendPlay(`! ${message.trim()}`);
+        this.showOptions = false;
+      }
+    },
+    endGame() {
+      if (confirm('Are you sure you want to end the game?')) {
+        this.sendPlay('Game Over');
+        this.showOptions = false;
+      }
     }
   }
 }
@@ -126,6 +166,7 @@ export default {
 .game-header {
   text-align: center;
   margin-bottom: 30px;
+  position: relative;
 }
 
 .game-header h2 {
@@ -139,6 +180,68 @@ export default {
 
 .inning {
   font-size: 18px;
+}
+
+.options-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.options-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.options-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.options-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+}
+
+.options-content h3 {
+  margin: 0 0 15px 0;
+  text-align: center;
+}
+
+.option-item {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.option-item:hover {
+  background: #e9e9e9;
 }
 
 .base-runners-container {
