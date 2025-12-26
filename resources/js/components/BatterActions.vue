@@ -7,6 +7,7 @@
     <div class="at-bat-status">
       <div class="hitter-name">
         <strong>Hitter:</strong> {{ hitter ? hitter : 'N/A' }}
+        <span v-if="base"> ({{ BASES[base] }})</span>
       </div>
       <div class="count-display">
         <span class="balls">{{ currentBalls }}</span> - <span class="strikes">{{ currentStrikes }}</span>
@@ -38,7 +39,6 @@
       </div>
       <div class="pitch-actions">
         <button v-if="pitchSequence" @click="undoLastPitch" class="undo-btn">↶ Undo Last Pitch</button>
-        <button @click="endAtBat" class="end-btn">End At-Bat</button>
       </div>
     </div>
 
@@ -137,7 +137,7 @@
     </div>
 
     <!-- How do they advance? -->
-    <div v-else-if="stage === 'further-advance'" class="step">
+    <div v-else-if="stage === 'further-advance' && base < 4" class="step">
       <h3>Further Advancement?</h3>
       <div class="options-grid">
         <!-- In Play results -->
@@ -150,7 +150,7 @@
     </div>
 
     <!-- Submit Current Play -->
-    <div v-if="stage === 'at-bat-ended' || runnerPlays.some(x => x.length)" class="current-play">
+    <div v-if="stage === 'at-bat-ended' || base > 3 || runnerPlays.some(x => x.length)" class="current-play">
       <strong>Final Play:</strong> {{ finalPlay }}
       <button @click="submitPlay" class="submit-btn">Submit Play</button>
       <button @click="resetAtBat" class="reset-btn">Reset Play</button>
@@ -211,6 +211,7 @@ export default {
       atBatEnded: false,
       trajectory: '',
       bases: 0,
+      base: 0,
       fielding: '',
       error: '',
       fielders: [],
@@ -228,7 +229,14 @@ export default {
         'b': 'Ball in dirt',
         'p': 'Pitchout',
         'i': 'Intentional Ball',
-      }
+      },
+      BASES: {
+        1: '1st',
+        2: '2nd',
+        3: '3rd',
+        4: 'Home',
+        '-1': 'Out',
+      },
     }
   },
   computed: {
@@ -288,7 +296,22 @@ export default {
       return {};
     },
     finalPlay() {
-      const plays = [this.pitchSequence, [...this.plays, this.currentPlay].filter(x => x).join('/'), ...this.runnerPlays, this.location ? `${this.location.x}:${this.location.y}` : ''];
+      // Make sure runners plays don't count stats for the same wild pitches, passed balls, etc.
+      const runnerPlays = [...this.runnerPlays];
+      const hasPlay = {'WP': false, 'PB': false};
+      for (let i = 0; i < runnerPlays.length; i++) {
+        let play = runnerPlays[i];
+        for (let p in hasPlay) {
+          if (play.includes(p)) {
+            if (hasPlay[p]) {
+              runnerPlays[i] = play.replace(p, `(${p})`);
+            }
+            hasPlay[p] = true;
+          }
+        }
+      }
+
+      const plays = [this.pitchSequence, [...this.plays, this.currentPlay].filter(x => x).join('/'), ...runnerPlays, this.location ? `${this.location.x}:${this.location.y}` : ''];
       return plays.reduceRight((acc, play) => {
         if (acc.length || play.length) {
           acc.unshift(play);
@@ -367,17 +390,19 @@ export default {
         this.fielders = ['FC'];
         this.stage = 'total-bases';
       } else if (decision === 'CI') {
-        this.plays[0] = 'CI';
+        this.plays = ['CI'];
+        this.base = 1;
         this.stage = 'at-bat-ended';
       } else {
         this.fielders = [];
         this.error = this.decision === 'E' ? 'E' : '';
-        this.stage = 'fielding-outcome';
+        this.stage = this.decision === 'E' ? 'total-bases' : 'fielding-outcome';
       }
     },
 
     selectBases(bases) {
       this.bases = bases;
+      this.base += this.bases;
       if (['H', 'FC'].includes(this.decision)) {
         return this.stage = 'further-advance?';
       }
@@ -398,11 +423,13 @@ export default {
 
       if (reason === 'FC') {
         this.plays.push('FC');
+        this.base += 1;
         this.stage = 'further-advance?';
         return;
       }
 
-      this.stage = 'fielding-outcome';
+      this.base = reason === 'E' ? this.base : -1;
+      this.stage = reason === 'E' ? 'total-bases' : 'fielding-outcome';
     },
 
     undoLastPitch() {
@@ -422,23 +449,6 @@ export default {
           this.strikes = Math.max(0, this.strikes - 1);
         }
       }
-      
-      // Reset at-bat ended flag if we're undoing
-      this.atBatEnded = false;
-      this.finalPlay = '';
-    },
-    
-    endAtBat() {
-      this.atBatEnded = true;
-    },
-    
-    selectResult(result) {
-      this.finalPlay = this.pitchSequence + '.' + result;
-    },
-    
-    resumePitching() {
-      this.atBatEnded = false;
-      this.finalPlay = '';
     },
     
     submitPlay() {
@@ -450,6 +460,7 @@ export default {
 
     resetAtBat() {
       this.pitchSequence = '';
+      this.base = 0;
       this.balls = 0;
       this.strikes = 0;
       this.stage = 'pitch';

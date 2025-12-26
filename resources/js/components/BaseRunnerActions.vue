@@ -104,15 +104,18 @@ export default {
           break;
         case 'WP':
           this.actions.push('WP');
+          this.nextBase = Math.min(this.nextBase + 1, 3);
           break;
         case 'PB':
           this.actions.push('PB');
+          this.nextBase = Math.min(this.nextBase + 1, 3);
           break;
         case 'ADV':
           this.actions.push('ADV');
           break;
         case 'FC':
           this.actions.push('FC');
+          this.nextBase = Math.min(this.nextBase + 1, 3);
           break;
         case 2:
         case 3:
