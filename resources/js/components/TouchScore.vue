@@ -26,7 +26,7 @@
     </div>
 
     <div :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
+      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" />
     </div>
 
     <DefensiveChanges
@@ -103,6 +103,17 @@ export default {
         this.preferences = user.preferences || {};
       } catch (error) {
         console.error('Failed to load preferences:', error);
+      }
+    },
+    resetPlay() {
+      if (this.$refs.baseRunner0) {
+        this.$refs.baseRunner0.reset();
+      }
+      if (this.$refs.baseRunner1) {
+        this.$refs.baseRunner1.reset();
+      }
+      if (this.$refs.baseRunner2) {
+        this.$refs.baseRunner2.reset();
       }
     },
     async logPlay(playCode) {

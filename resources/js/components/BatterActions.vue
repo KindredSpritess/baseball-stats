@@ -1,5 +1,7 @@
 <template>
   <!-- TODO:
+   // Multiple advancement on one error.
+   // Decisive vs Non-decisive errors.
   -->
   <div class="batter-actions">
     <div class="at-bat-status">
@@ -151,13 +153,7 @@
     <div v-if="stage === 'at-bat-ended' || runnerPlays.some(x => x.length)" class="current-play">
       <strong>Final Play:</strong> {{ finalPlay }}
       <button @click="submitPlay" class="submit-btn">Submit Play</button>
-      <button @click="resetAtBat" class="reset-btn">Reset At-Bat</button>
-    </div>
-
-    <!-- Custom Play Input -->
-    <div class="custom-play">
-      <input v-model="customPlay" placeholder="Or enter custom play code directly" />
-      <button @click="logCustomPlay" class="play-btn">Log Custom</button>
+      <button @click="resetAtBat" class="reset-btn">Reset Play</button>
     </div>
   </div>
 </template>
@@ -451,7 +447,7 @@ export default {
         this.resetAtBat();
       }
     },
-    
+
     resetAtBat() {
       this.pitchSequence = '';
       this.balls = 0;
@@ -465,8 +461,9 @@ export default {
       this.fielders = [];
       this.finalPlay = '';
       this.location = null;
+      this.$emit('reset-play');
     },
-    
+
     logCustomPlay() {
       if (this.customPlay.trim()) {
         this.$emit('log-play', this.customPlay.trim());
