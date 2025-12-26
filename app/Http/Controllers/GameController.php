@@ -92,7 +92,7 @@ class GameController extends Controller
         $stats = Player::getEventStats();
         GameUpdated::dispatch($game->id, [...$play->toArray(), 'actions' => $play->actions], $state, $stats);
         if ($json) {
-            return new JsonResponse(['status' => 'success', 'state' => $state]);
+            return new JsonResponse(['status' => 'success', 'state' => $state, 'playLog' => $play->human]);
         } else {
             return redirect()->route('game', ['game' => $game->id]);
         }

@@ -6,5 +6,5 @@ const el = document.getElementById('app');
 createApp(TouchScore, {
     gameId: Number(el.dataset.gameId),
     game: JSON.parse(el.dataset.game),
-    state: JSON.parse(el.dataset.gameState),
+    initialState: JSON.parse(el.dataset.gameState),
 }).mount('#app');

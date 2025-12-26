@@ -1,23 +1,19 @@
 <template>
-  <!-- TODO: 
-    * Push state of play to plays, when clicking further advance.
-    * Make the fielding outcome step pretty.
-    * When completing play from fielding outcome, go to further advance only if error.
-    * Remove options based on logged in user's scoring preferences.
-      - That is allowed for massive simplification.
-      - Simplify trajectories - to G and F.
-      - Remove errors.
-      - Remove advanced pitch types.
-      - Remove intentional walks.
-      - Remove SB / CS / WP / PB from advancement options, just advance them.
+  <!-- TODO:
   -->
   <div class="batter-actions">
     <div class="at-bat-status">
+      <div class="hitter-name">
+        <strong>Hitter:</strong> {{ hitter ? hitter : 'N/A' }}
+      </div>
       <div class="count-display">
         <span class="balls">{{ currentBalls }}</span> - <span class="strikes">{{ currentStrikes }}</span>
       </div>
       <div class="play-sequence">
         <strong>Play:</strong> {{ finalPlay || 'Start of at-bat' }}
+      </div>
+      <div class="pitcher-name">
+        <strong>Pitcher:</strong> {{ pitcher ? pitcher : 'N/A' }} ({{ pitchCount }} pitches)
       </div>
     </div>
 
@@ -39,7 +35,7 @@
         </button>
       </div>
       <div class="pitch-actions">
-        <button v-if="currentPlay" @click="undoLastPitch" class="undo-btn">↶ Undo Last Pitch</button>
+        <button v-if="pitchSequence" @click="undoLastPitch" class="undo-btn">↶ Undo Last Pitch</button>
         <button @click="endAtBat" class="end-btn">End At-Bat</button>
       </div>
     </div>
@@ -52,7 +48,7 @@
         <button @click="selectTrajectory('F')" class="option-btn primary">Fly Ball</button>
         <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('P')" class="option-btn primary">Pop Up</button>
       </div>
-      <button @click="resumePitching" class="back-btn">← Back to Pitching</button>
+      <button @click="undoLastPitch(); stage = 'pitch'" class="back-btn">← Back to Pitching</button>
     </div>
 
     <div v-else-if="stage === 'location'" class="step">
@@ -104,43 +100,55 @@
         <button @click="error = 'WT'" class="option-btn error" :class="{ 'selected-error': error === 'WT' }">Throwing Error</button>
         <button @click="error = 'E'" class="option-btn error" :class="{ 'selected-error': error === 'E' }">Fielding Error</button>
       </div>
-      <div class="options-grid">
-        <button @click="fielders.push(7)" class="option-btn">LF</button>
-        <button @click="fielders.push(8)" class="option-btn">CF</button>
-        <button @click="fielders.push(9)" class="option-btn">RF</button>
-      </div>
-      <div class="options-grid">
-        <button @click="fielders.push(6)" class="option-btn">SS</button>
-        <button @click="fielders.push(4)" class="option-btn">2B</button>
-      </div>
-      <div class="options-grid">
-        <button @click="fielders.push(5)" class="option-btn">3B</button>
-        <button @click="fielders.push(1)" class="option-btn">P</button>
-        <button @click="fielders.push(3)" class="option-btn">1B</button>
-      </div>
-      <div class="options-grid">
-        <button @click="fielders.push(2)" class="option-btn">C</button>
+      <div class="fielding-grid">
+        <div class="field-row">
+          <button @click="fielders.push(7)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][7]">LF</button>
+          <button @click="fielders.push(8)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][8]">CF</button>
+          <button @click="fielders.push(9)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][9]">RF</button>
+        </div>
+        <div class="field-row">
+          <button @click="fielders.push(6)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][6]">SS</button>
+          <button @click="fielders.push(4)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][4]">2B</button>
+        </div>
+        <div class="field-row">
+          <button @click="fielders.push(5)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][5]">3B</button>
+          <button @click="fielders.push(1)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][1]">P</button>
+          <button @click="fielders.push(3)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][3]">1B</button>
+        </div>
+        <div class="field-row">
+          <button @click="fielders.push(2)" class="option-btn">C</button>
+        </div>
       </div>
       <button @click="this.fielders.pop()" class="undo-btn">↶ Undo Last Fielder</button>
       <button @click="stage = 'total-bases'" class="back-btn">← Back to Total Bases</button>
-      <button @click="stage = decision === 'E' ? 'further-advance' : 'at-bat-ended'" class="submit-btn">Complete</button>
+      <button @click="stage = decision === 'E' ? 'further-advance?' : 'at-bat-ended'" class="submit-btn">Complete</button>
     </div>
 
-    <!-- At-Bat Result Selection (when at-bat ends) -->
+    <!-- Do we need to advance further? -->
+    <div v-else-if="stage === 'further-advance?'" class="step">
+      <h3>Further Advancement?</h3>
+      <div class="options-grid">
+        <!-- In Play results -->
+        <button @click="stage = 'further-advance'" class="option-btn">Advanced Further</button>
+        <button @click="stage = 'at-bat-ended'" class="submit-btn">Done Advancing</button>
+      </div>
+    </div>
+
+    <!-- How do they advance? -->
     <div v-else-if="stage === 'further-advance'" class="step">
       <h3>Further Advancement?</h3>
       <div class="options-grid">
         <!-- In Play results -->
-        <button @click="bases = 1; stage = 'fielding-outcome'" class="option-btn">Advance on Error</button>
-        <button @click="plays.push('FC')" class="option-btn">Advance on Fielder's Choice</button>
-        <button @click="bases = 0; stage = 'fielding-outcome'" class="option-btn">Put Out at Advancing</button>
-        <button @click="bases = -1; stage = 'fielding-outcome'" class="option-btn">Put Out at Retreating</button>
+        <button @click="advance('E')" class="option-btn">Advance on Error</button>
+        <button @click="advance('FC')" class="option-btn">Advance on Fielder's Choice</button>
+        <button @click="advance('POA')" class="option-btn">Put Out at Advancing</button>
+        <button @click="advance('POR')" class="option-btn">Put Out at Retreating</button>
       </div>
       <button @click="stage = 'at-bat-ended'" class="submit-btn">Done Advancing</button>
     </div>
 
     <!-- Submit Current Play -->
-    <div v-else-if="stage === 'at-bat-ended'" class="current-play">
+    <div v-if="stage === 'at-bat-ended' || runnerPlays.some(x => x.length)" class="current-play">
       <strong>Final Play:</strong> {{ finalPlay }}
       <button @click="submitPlay" class="submit-btn">Submit Play</button>
       <button @click="resetAtBat" class="reset-btn">Reset At-Bat</button>
@@ -167,7 +175,9 @@ const STAGES = [
   'scoring-decision',
   'total-bases',
   'fielding-outcome',
+  'further-advance?',
   'further-advance',
+  'at-bat-ended',
 ];
 const BASES = {
   '-1': '`',
@@ -180,8 +190,9 @@ const BASES = {
 
 export default {
   name: 'BatterActions',
-  emits: ['log-play'],
+  // emits: ['log-play'],
   props: {
+    game: Object,
     state: Object,
     runnerPlays: {
       type: Array,
@@ -225,6 +236,24 @@ export default {
     }
   },
   computed: {
+    hitter() {
+      const lineup = this.state.lineup[this.state.half];
+      const hitter = lineup[this.state.atBat[this.state.half]].at(-1);
+      const person = this.game?.players?.find(p => p.id === hitter)?.person;
+      return person ? `${person.lastName}, ${person.firstName[0]}` : null;
+    },
+    pitcher() {
+      const defense = this.state.defense[(this.state.half + 1) % 2];
+      const pitcher = defense[1];
+      const person = this.game?.players?.find(p => p.id === pitcher)?.person;
+      return person ? `${person.lastName}, ${person.firstName[0]}` : null;
+    },
+    pitchCount() {
+      const defense = this.state.defense[(this.state.half + 1) % 2];
+      const pitcher = defense[1];
+      const player = this.game?.players?.find(p => p.id === pitcher);
+      return this.pitchSequence.length + (player?.stats?.Strikes || 0) + (player?.stats?.Balls || 0);
+    },
     pitchOutcomes() {
       const outcomes = { ...this.basePitchOutcomes };
       if (this.preferences.removeAdvancedPitchTypes) {
@@ -232,6 +261,17 @@ export default {
         delete outcomes['b'];
         delete outcomes['p'];
         delete outcomes['i'];
+      }
+      if (!this.state.bases.some(base => base !== null)) {
+        delete outcomes['r']; // No runners to be going.
+        delete outcomes['p']; // No runners to pitch out for.
+      }
+      if (this.currentBalls >= 3) {
+        outcomes['.'] = 'Walk';
+        if (!this.preferences.removeAdvancedPitchTypes) {
+          outcomes['b'] = 'Walk (ball in dirt)';
+          outcomes['i'] = 'Intentional Walk';
+        }
       }
       return outcomes;
     },
@@ -242,28 +282,17 @@ export default {
       return this.state.strikes + this.strikes;
     },
     currentPlay() {
-      return this.pitchSequence;
+      return `${this.trajectory}${BASES[this.bases]}${this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error}$2`)}`;
+      // return this.pitchSequence;
     },
     outcomes() {
       const lastPitch = this.pitchSequence.at(-1);
-      if (strikes.includes(lastPitch)) return { 'K': 'Strikeout', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
-      if (balls.includes(lastPitch)) {
-        const o = { 'BB': 'Walk', 'IBB': 'Intentional Walk', 'HBP': 'Hit by Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
-        if (this.preferences.removeIntentionalWalks) {
-          delete o['IBB'];
-        }
-        return o;
-      }
+      if (strikes.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference' };
+      if (balls.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       return {};
     },
-    hittingPlay() {
-      if (this.plays[0]) {
-        return this.plays;
-      };
-      return [`${this.trajectory}${BASES[this.bases]}${this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error}$2`)}`, ...this.plays.slice(1)];
-    },
     finalPlay() {
-      const plays = [this.pitchSequence, this.hittingPlay.join('/'), ...this.runnerPlays, this.location ? `${this.location.x}:${this.location.y}` : ''];
+      const plays = [this.pitchSequence, [...this.plays, this.currentPlay].filter(x => x).join('/'), ...this.runnerPlays, this.location ? `${this.location.x}:${this.location.y}` : ''];
       return plays.reduceRight((acc, play) => {
         if (acc.length || play.length) {
           acc.unshift(play);
@@ -285,7 +314,7 @@ export default {
         this.strikes++;
       } else if (code === 'f') {
         // Foul ball - only increases strikes if strikes < 2
-        if (this.strikes < 2) {
+        if (this.currentStrikes < 2) {
           this.strikes++;
         }
       } else if (code === 'x') {
@@ -294,15 +323,27 @@ export default {
       }
 
       // Check for automatic at-bat endings
-      if (this.balls >= 4) {
-        this.atBatEnded = true;
-      } else if (this.strikes >= 3) {
-        this.atBatEnded = true;
+      if (this.currentBalls >= 4) {
+        this.addResult(code === 'i' ? 'IBB' : 'BB');
+      } else if (this.currentStrikes >= 3) {
+        this.addResult('K');
       }
     },
 
     addResult(result) {
+      if (result === 'K') {
+        if (this.preferences.allowDropThirdStrikes) {
+          this.trajectory = 'K';
+          this.stage = 'fielding-outcome';
+          return;
+        }
+        result = 'K2';
+      }
+      if (result === 'HPB') {
+        this.pitchSequence += '.';
+      }
       this.plays[0] = result;
+      this.stage = 'at-bat-ended';
     },
 
     selectTrajectory(trajectory) {
@@ -331,7 +372,7 @@ export default {
         this.stage = 'total-bases';
       } else if (decision === 'CI') {
         this.plays[0] = 'CI';
-        this.stage = 'further-advance';
+        this.stage = 'at-bat-ended';
       } else {
         this.fielders = [];
         this.error = this.decision === 'E' ? 'E' : '';
@@ -342,8 +383,29 @@ export default {
     selectBases(bases) {
       this.bases = bases;
       if (['H', 'FC'].includes(this.decision)) {
-        return this.stage = 'further-advance';
+        return this.stage = 'further-advance?';
       }
+      this.stage = 'fielding-outcome';
+    },
+
+    advance(reason) {
+      // First push current play if any.
+      if (this.currentPlay) {
+        this.plays.push(this.currentPlay);
+      }
+
+      this.trajectory = '';
+      this.error = reason === 'E' ? 'E' : '';
+      this.decision = reason === 'E' ? 'E' : '';
+      this.fielders = [];
+      this.bases = reason === 'POR' ? -1 : 0;
+
+      if (reason === 'FC') {
+        this.plays.push('FC');
+        this.stage = 'further-advance?';
+        return;
+      }
+
       this.stage = 'fielding-outcome';
     },
 
@@ -402,6 +464,7 @@ export default {
       this.error = '';
       this.fielders = [];
       this.finalPlay = '';
+      this.location = null;
     },
     
     logCustomPlay() {
@@ -451,6 +514,7 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 50px;
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -708,6 +772,27 @@ export default {
 
 .reset-btn:hover {
   background-color: #f5c6cb;
+}
+
+.fielding-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.field-row {
+  display: flex;
+  /* grid-template-columns: repeat(3, 150px); */
+  justify-items: center;
+  gap: 10px;
+}
+
+.middle-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .custom-play {

@@ -32,6 +32,12 @@
           Remove SB/CS/WP/PB from advancement options, just advance them
         </label>
       </div>
+      <div class="preference-item">
+        <label>
+          <input type="checkbox" v-model="preferences.allowDropThirdStrikes" />
+          Allow drop third strikes
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save Preferences</button>
     </form>
   </div>
@@ -43,6 +49,7 @@ export default {
   data() {
     return {
       preferences: {
+        allowDropThirdStrikes: true,
         simplifyTrajectories: false,
         removeErrors: false,
         removeAdvancedPitchTypes: false,

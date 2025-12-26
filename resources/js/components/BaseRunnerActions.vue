@@ -3,14 +3,33 @@
     <div class="base-label">{{ baseNames[base] }}</div>
     <template v-if="runner">
       <div class="runner-info">
-        <span class="runner-name">{{ runner.person.lastName }}, {{ runner.person.firstName[0] }}</span>
+        <span class="runner-name">{{ runner.person.lastName }}, {{ runner.person.firstName[0] }}<span v-if="nextBase != base"> &rarr; {{ baseNames[nextBase] }}</span></span>
       </div>
-      <div class="runner-actions">
-        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'SB')" class="action-btn">Steal</button>
-        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'CS')" class="action-btn">CS</button>
-        <button v-if="!preferences.removeAdvancementOptions" @click="logRunnerAction(runner.id, 'PO')" class="action-btn">PO</button>
-        <button @click="logRunnerAction(runner.id, 'ADV')" class="action-btn">ADV</button>
+      <div class="runner-actions" v-if="step === 'actions' && nextBase < 3 && nextBase >= 0">
+        <button v-if="!preferences.removeAdvancementOptions && !noSteal.includes(pitch)" @click="logRunnerAction('SB')" class="action-btn">Steal </button>
+        <!-- <button v-if="!preferences.removeAdvancementOptions && !noSteal.includes(pitch)" @click="logRunnerAction('CS')" class="action-btn">Caught</button>
+        <button v-if="!preferences.removeAdvancementOptions && !noSteal.includes(pitch)" @click="logRunnerAction('PO')" class="action-btn">Picked Off</button> -->
+        <button v-if="!preferences.removeAdvancementOptions && !fouls.includes(pitch)" @click="logRunnerAction('WP')" class="action-btn">Wild Pitch</button>
+        <button v-if="!preferences.removeAdvancementOptions && !fouls.includes(pitch)" @click="logRunnerAction('PB')" class="action-btn">Passed Ball</button>
+        <button v-if="(preferences.removeAdvancementOptions || pitch == 'x') && base === 0" @click="logRunnerAction(2)" class="action-btn">Advance to Second</button>
+        <button v-if="(preferences.removeAdvancementOptions || pitch == 'x') && base < 2" @click="logRunnerAction(3)" class="action-btn">Advance to Third</button>
+        <button v-if="(preferences.removeAdvancementOptions || pitch == 'x') && base < 3" @click="logRunnerAction(4)" class="action-btn">Advance to Home</button>
+        <button @click="logRunnerAction('PO')" class="action-btn">Put Out</button>
+        <button v-if="!preferences.removeAdvancementOptions && !['f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn">Advance on Error</button>
+        <button v-if="!preferences.removeAdvancementOptions && !['f', 'r'].includes(pitch)" @click="logRunnerAction('FC')" class="action-btn">Fielder's Choice</button>
       </div>
+      <template v-else-if="step === 'fielders'">
+        {{ fielders.map(f => positions[f]).join(' -> ') }}
+        <div class="runner-actions">
+          <button v-if="error" @click="error = 'E'" class="action-btn error-btn" :class="{ selected: error === 'E' }">Fielding Error</button>
+          <button v-if="error" @click="error = 'WT'" class="action-btn error-btn" :class="{ selected: error === 'WT' }">Throwing Error</button>
+          <button v-for="f in [1,2,3,4,5,6,7,8,9]" :key="f" @click="fielders.push(f)" class="action-btn">{{ positions[f] }}</button>
+        </div>
+        <button @click="completeRunnerAction('')" class="action-btn">{{ error ? 'Advance' : 'Put Out' }}</button>
+        <button @click="completeRunnerAction('PO')" class="action-btn">Picked Off</button>
+        <button @click="completeRunnerAction('CS')" class="action-btn">Caught Stealing</button>
+        <button @click="step = 'actions'; error = false; fielders = []" class="back-btn">← Back to Actions</button>
+      </template>
     </template>
     <template v-else>
       <div class="empty-base">
@@ -21,12 +40,22 @@
 </template>
 
 <script>
+
+const BASES = {
+  '-1': '`', 1: '!', 2: '@', 3: '#'
+};
+
+const POSITIONS = {
+  1: 'P', 2: 'C', 3: '1B', 4: '2B', 5: '3B', 6: 'SS', 7: 'LF', 8: 'CF', 9: 'RF'
+};
+
 export default {
   name: 'BaseRunnerActions',
   props: {
     base: Number,
     game: Object,
     state: Object,
+    pitch: String,
     preferences: {
       type: Object,
       default: () => ({})
@@ -36,27 +65,83 @@ export default {
     runner() {
       const baseIndex = this.base;
       const playerId = this.state.bases[baseIndex];
-      console.log('Game Players:', this.game.players);
       return this.game.players.find(p => p.id === playerId);
     },
     play() {
-      return this.actions.join('/');
+      return this.state.bases[this.base] ? this.actions.join('/') : '';
     }
   },
   data() {
     return {
       baseNames: {
+        '-1': 'Out',
         0: '1st',
         1: '2nd',
-        2: '3rd'
+        2: '3rd',
+        3: 'Home'
       },
+      step: 'actions',
+      error: false,
+      fielders: [],
       actions: [],
+      fouls: ['f', 'r', '', 'x'],
+      noSteal: ['x', 'f', 'r'],
+      positions: POSITIONS,
+      nextBase: this.base,
     }
   },
   methods: {
-    logRunnerAction(playerId, actionCode) {
-      this.$emit('log-play', `${actionCode}(${playerId})`);
-    }
+    logRunnerAction(actionCode) {
+      switch (actionCode) {
+        case 'SB':
+          this.actions.push('SB');
+          this.nextBase = Math.min(this.nextBase + 1, 3);
+          break;
+        case 'E':
+          this.error = 'E';
+        case 'PO':
+          this.step = 'fielders';
+          break;
+        case 'WP':
+          this.actions.push('WP');
+          break;
+        case 'PB':
+          this.actions.push('PB');
+          break;
+        case 'ADV':
+          this.actions.push('ADV');
+          break;
+        case 'FC':
+          this.actions.push('FC');
+          break;
+        case 2:
+        case 3:
+        case 4:
+          this.actions.push(BASES[actionCode - this.base - 1]);
+          this.nextBase = Math.min(actionCode - 1, 3);
+          break;
+      }
+    },
+    completeRunnerAction(outcome) {
+      let action = outcome;
+      let error = this.error ? `${this.error}${this.fielders.pop()}` : '';
+      let fielders = this.fielders.join('-');
+      if (fielders && error) {
+        error = '-' + error;
+      }
+      this.actions.push(`${action}${fielders}${error}`);
+      this.step = 'actions';
+      this.error = false;
+      this.fielders = [];
+      this.nextBase = this.error ? this.base + 1 : -1;
+    },
+    reset() {
+      this.step = 'actions';
+      this.error = false;
+      this.fielders = [];
+      this.actions = [];
+      this.nextBase = this.base;
+    },
   }
 }
 </script>
@@ -118,6 +203,17 @@ export default {
 .action-btn:hover {
   background-color: #218838;
 }
+
+.error-btn {
+  color: #dc3545;
+  background-color: white;
+  border: 1px solid #dc3545;
+}
+.error-btn:hover, .error-btn.selected {
+  background-color: #dc3545;
+  color: white;
+}
+
 
 .empty-base {
   text-align: center;

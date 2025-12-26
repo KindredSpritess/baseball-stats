@@ -7,16 +7,16 @@
     </div>
 
     <div class="base-runners-container">
-      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
-      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
-      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
     </div>
 
-    <BatterActions @log-play="logPlay" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
+    <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" />
 
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
-        {{ lastResponse.status === 'success' ? 'Play logged successfully' : 'Error: ' + lastResponse.message }}
+        {{ lastResponse.status === 'success' ? lastResponse.playLog : 'Error: ' + lastResponse.message }}
       </p>
     </div>
   </div>
@@ -35,33 +35,40 @@ export default {
   props: {
     gameId: Number,
     game: Object,
-    state: Object,
+    initialState: Object,
   },
   data() {
     return {
       lastResponse: null,
       currentGame: this.game,
-      preferences: {}
+      state: {...this.initialState},
+      preferences: {},
+      isMounted: false,
     }
   },
   computed: {
     runnerActions() {
+      if (!this.isMounted) return [];
       return [
         this.$refs.baseRunner0 ? this.$refs.baseRunner0.play : '',
         this.$refs.baseRunner1 ? this.$refs.baseRunner1.play : '',
         this.$refs.baseRunner2 ? this.$refs.baseRunner2.play : '',
       ];
-    }
+    },
+    lastPitch() {
+      if (!this.isMounted) return null;
+      return this.$refs.batterActions ? this.$refs.batterActions.pitchSequence.slice(-1) : null;
+    },
   },
   mounted() {
     this.loadPreferences();
+    this.isMounted = true;
   },
   methods: {
     async loadPreferences() {
       try {
         const response = await fetch('/api/user', {
           headers: {
-            'Authorization': `Bearer ${window.Laravel.apiToken}`,
             'Accept': 'application/json',
           },
         });
@@ -96,10 +103,11 @@ export default {
     },
     updateGameState(newState) {
       // Update the game object with new state
-      this.currentGame.inning = newState.inning;
-      this.currentGame.half = newState.half;
-      this.currentGame.score = newState.score;
-      this.currentGame.ended = newState.ended;
+      this.$refs.batterActions.resetAtBat();
+      this.$refs.baseRunner0.reset();
+      this.$refs.baseRunner1.reset();
+      this.$refs.baseRunner2.reset();
+      this.state = newState;
       // Force re-render
       this.$forceUpdate();
     }
