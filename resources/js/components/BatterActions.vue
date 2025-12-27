@@ -2,6 +2,7 @@
   <!-- TODO:
    // Multiple advancement on one error.
    // Decisive vs Non-decisive errors.
+   // Undo last play.
   -->
   <div class="batter-actions">
     <div class="at-bat-status">
@@ -291,9 +292,9 @@ export default {
     },
     outcomes() {
       const lastPitch = this.pitchSequence.at(-1);
-      if (strikes.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference' };
-      if (balls.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference' };
-      return {};
+      if (strikes.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference', 'HBP': 'Hit By Pitch' };
+      if (balls.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference', 'HBP': 'Hit By Pitch' };
+      return {'HBP': 'Hit By Pitch'};
     },
     finalPlay() {
       // Make sure runners plays don't count stats for the same wild pitches, passed balls, etc.
@@ -344,6 +345,7 @@ export default {
       // Check for automatic at-bat endings
       if (this.currentBalls >= 4) {
         this.addResult(code === 'i' ? 'IBB' : 'BB');
+        this.$emit('force');
       } else if (this.currentStrikes >= 3) {
         this.addResult('K');
       }
@@ -358,7 +360,8 @@ export default {
         }
         result = 'K2';
       }
-      if (result === 'HPB') {
+      if (result === 'HBP') {
+        this.$emit('force');
         this.pitchSequence += '.';
       }
       this.plays[0] = result;
@@ -392,6 +395,7 @@ export default {
       } else if (decision === 'CI') {
         this.plays = ['CI'];
         this.base = 1;
+        this.$emit('force');
         this.stage = 'at-bat-ended';
       } else {
         this.fielders = [];
@@ -470,7 +474,6 @@ export default {
       this.fielding = '';
       this.error = '';
       this.fielders = [];
-      this.finalPlay = '';
       this.location = null;
       this.$emit('reset-play');
     },

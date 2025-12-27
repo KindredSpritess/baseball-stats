@@ -26,7 +26,7 @@
     </div>
 
     <div :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" />
+      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" />
     </div>
 
     <DefensiveChanges
@@ -83,8 +83,12 @@ export default {
       ];
     },
     lastPitch() {
-      if (!this.isMounted) return null;
-      return this.$refs.batterActions ? this.$refs.batterActions.pitchSequence.slice(-1) : null;
+      if (!this.isMounted || !this.$refs.batterActions) return null;
+      let lp = this.$refs.batterActions.pitchSequence.slice(-1);
+      if (['CI', 'HBP'].includes(this.$refs.batterActions.plays[0])) {
+        return 'f'; // these kill the play like a foul.
+      }
+      return lp;
     },
   },
   mounted() {
@@ -192,6 +196,19 @@ export default {
         this.sendPlay('Game Over');
         this.showOptions = false;
       }
+    },
+    // A couple of events force runnners to move, when forced.
+    forceOneBase() {
+      console.log('Forcing runners to advance one base');
+      if (!this.state.bases[0]) {
+        return;
+      }
+      this.$refs.baseRunner0.logRunnerAction(2);
+      if (!this.state.bases[1]) {
+        return;
+      }
+      this.$refs.baseRunner1.logRunnerAction(3);
+      this.state.bases[2] && this.$refs.baseRunner2.logRunnerAction(4);
     }
   }
 }
