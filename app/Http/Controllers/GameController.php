@@ -152,6 +152,53 @@ class GameController extends Controller
         return new JsonResponse(['status' => 'success', 'state' => json_decode($gs->set($game, '', '', []), true)]);
     }
 
+    public function undoLastPlay(Game $game) {
+        if ($game->locked) {
+            throw new Exception('Cannot update locked game.');
+        }
+        $lastPlay = $game->plays()->orderByDesc('id')->first();
+        if (!$lastPlay) {
+            throw new Exception('No plays to undo.');
+        }
+        // Delete the last play
+        $lastPlay->delete();
+
+        // Force loading of state, which should load all the players.
+        $state = $game->state;
+
+        // Reset the game state.
+        $gs = new GameState;
+        $gs->get($game, 'state', '{}', []);
+        $plays = $game->plays()->get();
+
+        foreach ($plays as $play) {
+            $play->apply($game);
+            $playLog = $play->human;
+        }
+        $game->state = 'force encode';
+        $game->push();
+        foreach ($game->lineup as $lineup) {
+            foreach ($lineup as $position) {
+                foreach ($position as $player) {
+                    $player->save();
+                }
+            }
+        }
+        foreach ($game->pitchers as $pitchers) {
+            foreach ($pitchers as $player) {
+                $player->save();
+            }
+        }
+        GameUpdated::dispatch($game->id, null, null, null, true);
+        $gs = new GameState;
+        return new JsonResponse([
+            'status' => 'success',
+            'state' => json_decode($gs->set($game, '', '', []), true),
+            'playLog' => $playLog,
+            'stats' => Player::getEventStats(),
+        ]);
+    }
+
     private function ballsInPlay(Game $game) {
         $game->ballsInPlay = collect();
         // TODO: Fix this, it breaks for unitizialized games.

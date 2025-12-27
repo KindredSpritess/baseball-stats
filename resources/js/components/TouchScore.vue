@@ -40,6 +40,7 @@
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
         {{ lastResponse.status === 'success' ? lastResponse.playLog : 'Error: ' + lastResponse.message }}
+        <button v-if="lastResponse.status === 'success'" @click="undoLastPlay">Undo</button>
       </p>
     </div>
   </div>
@@ -149,6 +150,29 @@ export default {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           },
           body: JSON.stringify({ play })
+        });
+        const result = await response.json();
+        this.lastResponse = result;
+        if (result.status === 'success') {
+          // Update game state
+          this.updateGameState(result.state);
+          this.updateStats(result.stats);
+        }
+      } catch (error) {
+        this.lastResponse = { status: 'error', message: error.message };
+      }
+    },
+    async undoLastPlay() {
+      if (!confirm('Are you sure you want to undo the last play?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`/game/${this.gameId}/undo`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
         });
         const result = await response.json();
         this.lastResponse = result;

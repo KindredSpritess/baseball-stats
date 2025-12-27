@@ -201,15 +201,21 @@ class Play extends Model
             $matches = [];
             preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
             $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
-            $player = new Player();
-            $player->team()->associate($team);
-            $player->game()->associate($game);
             $person = Person::where('firstName', $matches[3])->where('lastName', $matches[2])->first();
             if (!$person) {
                 $person = new Person(['firstName' => $matches[3], 'lastName' => $matches[2]]);
                 $person->save();
             }
-            $player->person()->associate($person);
+            $player = $game->players->first(fn($p) => $p->person_id === $person->id && $p->team_id === $team->id);
+            if (!$player) {
+                $player = new Player();
+                $player->person()->associate($person);
+                $player->team()->associate($team);
+                $player->game()->associate($game);
+            } else {
+                // Reset stats for re-entry.
+                $player->stats = [];
+            }
             $player->evt('G');
             $player->evt('GS');
             if (isset($matches[4])) {
@@ -743,16 +749,22 @@ class Play extends Model
         $matches = [];
         preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
         $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
-        $player = new Player();
-        $player->team()->associate($team);
-        $player->game()->associate($game);
         $person = Person::where('firstName', $matches[3])->where('lastName', $matches[2])->first();
         if (!$person) {
             $person = new Person(['firstName' => $matches[3], 'lastName' => $matches[2]]);
             $person->save();
         }
-        $player->person()->associate($person);
-        $player->evt('G');
+        $player = $game->players->first(fn($p) => $p->person->is($person) && $p->team->is($team));
+        if (!$player) {
+            $player = new Player();
+            $player->team()->associate($team);
+            $player->game()->associate($game);
+            $player->person()->associate($person);
+            $player->push();
+            $game->players->push($player);
+        }
+        // throw_unless(is_array($player->stats), "Player stats must be an array, got " . gettype($player->stats));
+        $player->stats = [...($player->stats ?? []), 'G' => 1];
         if (isset($matches[4])) {
             $player->number = $matches[4];
         }

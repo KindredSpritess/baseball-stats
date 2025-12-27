@@ -33,6 +33,17 @@ class GameState implements CastsAttributes
         $game->atBat = $value['atBat'] ?? [0, 0];
         $game->ended = $value['ended'] ?? false;
 
+        $game->bases = [null, null, null];
+        $game->runners = [];
+        $game->defense = [[], []];
+        $game->lineup = [[], []];
+        $game->pitchers = [[], []];
+        $game->pitchersOfRecord = [
+            'winning' => null,
+            'losing' => null,
+            'saving' => null,
+        ];
+
         $players = [];
         $game->load('players');
         $game->players->each(function ($player) use (&$players) {
