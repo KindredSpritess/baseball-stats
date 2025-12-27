@@ -1,5 +1,5 @@
 <template>
-  <div class="base-runner-card" :class="{ 'empty': !runner }">
+  <div class="base-runner-card" :class="{ 'empty': !runner, 'forced': forced }">
     <div class="base-label">{{ baseNames[base] }}</div>
     <template v-if="runner">
       <div class="runner-info">
@@ -56,6 +56,7 @@ export default {
     game: Object,
     state: Object,
     pitch: String,
+    forced: Boolean,
     preferences: {
       type: Object,
       default: () => ({})
@@ -166,6 +167,11 @@ export default {
   background-color: #f0f0f0;
   border-color: #ccc;
   opacity: 0.7;
+}
+
+.base-runner-card.forced:not(.empty) {
+  border-color: #007bff;
+  box-shadow: 0 0 10px #007bff;
 }
 
 .base-label {

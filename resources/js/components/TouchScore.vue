@@ -20,9 +20,9 @@
     </div>
 
     <div class="base-runners-container" :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
-      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
-      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" />
+      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[0]" />
+      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[1]" />
+      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[2]" />
     </div>
 
     <div :style="{ display: showDefensiveChanges ? 'none' : null}">
@@ -90,6 +90,23 @@ export default {
       }
       return lp;
     },
+    forced() {
+      if (!this.isMounted) return {};
+      const occupied = [];
+      const forced = {};
+      // Include the batters base if he's not at home and he's not out.
+      let bb = this.$refs.batterActions?.base ?? 0;
+      if (bb > 0) occupied.push(bb - 1);
+      for (let i = 0; i < 3; i++) {
+        const rb = this.$refs[`baseRunner${i}`]?.nextBase;
+        if (rb >= 0) {
+          forced[i] = occupied.includes(rb);
+          occupied.push(rb);
+        }
+      }
+
+      return forced;
+    }
   },
   mounted() {
     this.loadPreferences();
