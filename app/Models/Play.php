@@ -299,6 +299,7 @@ class Play extends Model
             throw_unless($log->consume(' -> '), 'Expected " -> "');
             $base = (string)$log;
             $game->bases[$base - 1] = $player;
+            $game->advanceRunner($player, $base, false);
             $this->log("Extra runner {$player->person->lastName} placed at " . Number::ordinal($base) . ".");
             $this->logA(" {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.");
             return;
