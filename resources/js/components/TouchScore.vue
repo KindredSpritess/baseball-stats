@@ -134,6 +134,7 @@ export default {
         if (result.status === 'success') {
           // Update game state
           this.updateGameState(result.state);
+          this.updateStats(result.stats);
         }
       } catch (error) {
         this.lastResponse = { status: 'error', message: error.message };
@@ -148,6 +149,15 @@ export default {
       this.state = newState;
       // Force re-render
       this.$forceUpdate();
+    },
+    updateStats(newStats) {
+      // Update player stats in the game object
+      for (const {player_id, stat, value} of newStats) {
+        const player = this.game.players.find(p => p.id == player_id);
+        if (player) {
+          player.stats[stat] = value;
+        }
+      }
     },
     overrideCount() {
       const count = prompt('Enter new count (balls-strikes):', `${this.state.balls}-${this.state.strikes}`);
