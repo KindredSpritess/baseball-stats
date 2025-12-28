@@ -27,13 +27,13 @@
         <button v-for="(description, code) in pitchOutcomes" 
                 :key="code" 
                 @click="addPitch(code)" 
-                class="option-btn">
+                :class="['option-btn', basePitchClasses[code]]">
           {{ description }}
         </button>
         <button v-for="(description, code) in outcomes"
                 :key="code" 
                 @click="addResult(code)" 
-                class="option-btn">
+                :class="['option-btn', basePitchClasses[code]]">
           {{ description }}
         </button>
       </div>
@@ -66,12 +66,11 @@
     <div v-else-if="stage === 'scoring-decision'" class="step">
       <h3>Select Scoring Decision</h3>
       <div class="options-grid">
-        <button @click="makeDecision('H')" class="option-btn">Hit</button>
-        <button @click="makeDecision('FC')" class="option-btn">Fielder's Choice</button>
-        <button v-if="!preferences.removeErrors" @click="makeDecision('E')" class="option-btn">Error</button>
-        <button @click="makeDecision('PO')" class="option-btn">Put Out</button>
-        <button @click="makeDecision('CI')" class="option-btn">Catcher's Interference</button>
-        <button @click="makeDecision('POR')" class="option-btn">Put Out by Rule</button>
+        <button @click="makeDecision('H')" class="option-btn advance">Hit</button>
+        <button @click="makeDecision('FC')" class="option-btn advance">Fielder's Choice</button>
+        <button v-if="!preferences.removeErrors" @click="makeDecision('E')" class="option-btn advance">Error</button>
+        <button @click="makeDecision('CI')" class="option-btn advance">Catcher's Interference</button>
+        <button @click="makeDecision('PO')" class="option-btn out">Put Out</button>
       </div>
       <button @click="stage = 'location'" class="back-btn">← Back to Location</button>
     </div>
@@ -89,10 +88,10 @@
     <div v-else-if="stage === 'total-bases'" class="step">
       <h3>Select Total Bases Gained</h3>
       <div class="options-grid">
-        <button @click="selectBases(1)" class="option-btn">One</button>
-        <button @click="selectBases(2)" class="option-btn">Two</button>
-        <button @click="selectBases(3)" class="option-btn">Three</button>
-        <button @click="selectBases(4)" class="option-btn">Four</button>
+        <button @click="selectBases(1)" class="option-btn advance">One</button>
+        <button @click="selectBases(2)" class="option-btn advance">Two</button>
+        <button @click="selectBases(3)" class="option-btn advance">Three</button>
+        <button @click="selectBases(4)" class="option-btn advance">Four</button>
       </div>
       <button @click="stage = 'scoring-decision'" class="back-btn">← Back to Scoring Decision</button>
     </div>
@@ -100,8 +99,8 @@
     <div v-else-if="stage === 'fielding-outcome'" class="step">
       <h3>Select Fielding Outcome</h3>
       <div class="options-grid" v-if="this.decision === 'E'">
-        <button @click="error = 'WT'" class="option-btn error" :class="{ 'selected-error': error === 'WT' }">Throwing Error</button>
-        <button @click="error = 'E'" class="option-btn error" :class="{ 'selected-error': error === 'E' }">Fielding Error</button>
+        <button @click="error = 'WT'" class="option-btn advance" :class="{ 'selected-error': error === 'WT' }">Throwing Error</button>
+        <button @click="error = 'E'" class="option-btn advance" :class="{ 'selected-error': error === 'E' }">Fielding Error</button>
       </div>
       <div class="fielding-grid">
         <div class="field-row">
@@ -132,7 +131,7 @@
       <h3>Further Advancement?</h3>
       <div class="options-grid">
         <!-- In Play results -->
-        <button @click="stage = 'further-advance'" class="option-btn">Advanced Further</button>
+        <button @click="stage = 'further-advance'" class="option-btn advance">Advanced Further</button>
         <button @click="stage = 'at-bat-ended'" class="submit-btn">Done Advancing</button>
       </div>
     </div>
@@ -142,10 +141,10 @@
       <h3>Further Advancement?</h3>
       <div class="options-grid">
         <!-- In Play results -->
-        <button @click="advance('E')" class="option-btn">Advance on Error</button>
+        <button @click="advance('E')" class="option-btn advance">Advance on Error</button>
         <button @click="advance('FC')" class="option-btn">Advance on Fielder's Choice</button>
-        <button @click="advance('POA')" class="option-btn">Put Out at Advancing</button>
-        <button @click="advance('POR')" class="option-btn">Put Out at Retreating</button>
+        <button @click="advance('POA')" class="option-btn out">Put Out at Advancing</button>
+        <button @click="advance('POR')" class="option-btn out">Put Out at Retreating</button>
       </div>
       <button @click="stage = 'at-bat-ended'" class="submit-btn">Done Advancing</button>
     </div>
@@ -153,9 +152,9 @@
     <div v-else-if="stage === 'error-selection'" class="step">
       <h3>Select Error Type</h3>
       <div class="options-grid">
-        <button @click="decisive = true; stage = 'fielding-outcome'" class="option-btn">Safe on Error</button>
-        <button @click="decisive = false; stage = 'fielding-outcome'" class="option-btn">Advance on Error</button>
-        <button v-for="e in errors" @click="reuseError(e)">Reuse {{ e }}</button>
+        <button @click="decisive = true; stage = 'fielding-outcome'" class="option-btn advance">Safe on Error</button>
+        <button @click="decisive = false; stage = 'fielding-outcome'" class="option-btn advance">Advance on Error</button>
+        <button v-for="e in errors" @click="reuseError(e)" class="option-btn advance">Reuse {{ e }}</button>
       </div>
     </div>
 
@@ -235,15 +234,29 @@ export default {
       location: null,
       decision: '',
       basePitchOutcomes: {
+        '.': 'Ball',
         's': 'Swinging Strike',
         'c': 'Called Strike', 
-        '.': 'Ball',
         'f': 'Foul Ball',
         'x': 'Ball In Play',
         'r': 'Foul (runner going)',
         'b': 'Ball in dirt',
         'p': 'Pitchout',
         'i': 'Intentional Ball',
+      },
+      basePitchClasses: {
+        '.': 'advance',
+        's': 'out',
+        'c': 'out', 
+        'f': 'out',
+        'x': 'in-play',
+        'r': 'out',
+        'b': 'advance',
+        'p': 'advance',
+        'i': 'advance',
+        'CI': 'advance',
+        'HBP': 'advance',
+        'INT2': 'out',
       },
       BASES: {
         1: '1st',
@@ -307,8 +320,8 @@ export default {
     },
     outcomes() {
       const lastPitch = this.pitchSequence.at(-1);
-      if (strikes.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference', 'HBP': 'Hit By Pitch' };
-      if (balls.includes(lastPitch)) return { 'CI': "Catcher's Interference", 'INT2': 'Interference', 'HBP': 'Hit By Pitch' };
+      if (strikes.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
+      if (balls.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       return {'HBP': 'Hit By Pitch'};
     },
     finalPlay() {
@@ -408,6 +421,7 @@ export default {
         this.fielders = ['FC'];
         this.stage = 'total-bases';
       } else if (decision === 'CI') {
+        this.trajectory = '';
         this.plays = ['CI'];
         this.base = 1;
         this.$emit('force');
@@ -600,6 +614,28 @@ export default {
 .option-btn.primary:hover {
   background-color: #0056b3;
   border-color: #0056b3;
+}
+
+.option-btn.advance {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.option-btn.advance:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.option-btn.out {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.option-btn.out:hover {
+  background-color: #c82333;
+  border-color: #c82333;
 }
 
 .back-btn {

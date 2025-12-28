@@ -6,37 +6,37 @@
         <span class="runner-name">{{ runner.person.lastName }}, {{ runner.person.firstName[0] }}<span v-if="nextBase != base"> &rarr; {{ baseNames[nextBase] }}</span></span>
       </div>
       <div class="runner-actions" v-if="step === 'actions' && nextBase < 3 && nextBase >= 0">
-        <button v-if="pitch != 'f' && base === 0" @click="logRunnerAction(2)" class="action-btn">Advance to Second</button>
-        <button v-if="pitch != 'f' && base < 2" @click="logRunnerAction(3)" class="action-btn">Advance to Third</button>
-        <button v-if="pitch != 'f' && base < 3" @click="logRunnerAction(4)" class="action-btn">Advance to Home</button>
-        <button @click="logRunnerAction('PO')" class="action-btn">Put Out</button>
+        <button v-if="pitch != 'f' && nextBase === 0" @click="logRunnerAction(2)" class="action-btn advance">&rarr; Second</button>
+        <button v-if="pitch != 'f' && nextBase < 2" @click="logRunnerAction(3)" class="action-btn advance">&rarr; Third</button>
+        <button v-if="pitch != 'f' && nextBase < 3" @click="logRunnerAction(4)" class="action-btn advance">&rarr; Home</button>
+        <button @click="logRunnerAction('PO')" class="action-btn out">Put Out</button>
       </div>
       <div class="runner-actions"  v-else-if="step === 'decision'">
-        <button v-if="pitch === 'x'" @click="logRunnerAction('')" class="action-btn">On Hit</button>
-        <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('SB')" class="action-btn">Steal</button>
-        <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('CS')" class="action-btn">Caught</button>
-        <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('PO')" class="action-btn">Picked Off</button>
-        <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('WP')" class="action-btn">Wild Pitch</button>
-        <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('PB')" class="action-btn">Passed Ball</button>
-        <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn">Advance on Error</button>
+        <button v-if="pitch === 'x'" @click="logRunnerAction('')" class="action-btn advance">On Hit</button>
+        <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('SB')" class="action-btn advance">Steal</button>
+        <!-- <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('CS')" class="action-btn out">Caught</button>
+        <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('PO')" class="action-btn out">Picked Off</button> -->
+        <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('WP')" class="action-btn advance">Wild Pitch</button>
+        <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('PB')" class="action-btn advance">Passed Ball</button>
+        <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn advance">Advance on Error</button>
         <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('FC')" class="action-btn">Fielder's Choice</button>
         <button @click="step = 'actions'" class="back-btn">Back to Actions</button>
       </div>
       <div class="runner-actions"  v-else-if="step === 'errors'">
-        <button @click="decisive = true; step = 'fielders'" class="action-btn">Safe on Error</button>
-        <button @click="decisive = false; step = 'fielders'" class="action-btn">Advance on Error</button>
-        <button v-for="e in errors" @click="reuseError(e)">Reuse {{ e }}</button>
+        <button @click="decisive = true; step = 'fielders'" class="action-btn advance">Safe on Error</button>
+        <button @click="decisive = false; step = 'fielders'" class="action-btn advance">Advance on Error</button>
+        <button v-for="e in errors" @click="reuseError(e)" class="action-btn advance">Reuse {{ e }}</button>
       </div>
       <template v-else-if="step === 'fielders'">
         {{ fielders.map(f => positions[f]).join('-') }}
         <div class="runner-actions">
-          <button v-if="error" @click="error = 'E'" class="action-btn error-btn" :class="{ selected: error === 'E' }">Fielding Error</button>
-          <button v-if="error" @click="error = 'WT'" class="action-btn error-btn" :class="{ selected: error === 'WT' }">Throwing Error</button>
+          <button v-if="error" @click="error = 'E'" class="action-btn advance" :class="{ selected: error === 'E' }">Fielding Error</button>
+          <button v-if="error" @click="error = 'WT'" class="action-btn advance" :class="{ selected: error === 'WT' }">Throwing Error</button>
           <button v-for="f in [1,2,3,4,5,6,7,8,9]" :key="f" @click="fielders.push(f)" class="action-btn">{{ positions[f] }}</button>
         </div>
-        <button @click="completeRunnerAction('')" class="action-btn" :disabled="fielders.length === 0">{{ error ? 'Advance' : 'Put Out' }}</button>
-        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('PO')" class="action-btn" :disabled="fielders.length === 0">Picked Off</button>
-        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('CS')" class="action-btn" :disabled="fielders.length === 0">Caught Stealing</button>
+        <button @click="completeRunnerAction('')" class="action-btn" :class="error ? 'advance' : 'out'" :disabled="fielders.length === 0">{{ error ? 'Advance' : 'Put Out' }}</button>
+        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('PO')" class="action-btn out" :disabled="fielders.length === 0">Picked Off</button>
+        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('CS')" class="action-btn out" :disabled="fielders.length === 0">Caught Stealing</button>
         <button @click="step = 'actions'; error = false; fielders = []" class="back-btn">← Back to Actions</button>
       </template>
     </template>
@@ -226,28 +226,58 @@ export default {
 }
 
 .action-btn {
-  padding: 6px 8px;
-  border: none;
-  border-radius: 4px;
-  background-color: #28a745;
-  color: white;
-  font-size: 12px;
+  padding: 12px 8px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #007bff;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .action-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.action-btn.advance {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.action-btn.advance:hover {
   background-color: #218838;
+  border-color: #218838;
+}
+
+.action-btn.out {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.action-btn.out:hover {
+  background-color: #c82333;
+  border-color: #c82333;
 }
 
 .error-btn {
-  color: #dc3545;
-  background-color: white;
-  border: 1px solid #dc3545;
-}
-.error-btn:hover, .error-btn.selected {
   background-color: #dc3545;
   color: white;
+  border-color: #dc3545;
+}
+
+.error-btn:hover, .error-btn.selected {
+  background-color: #c82333;
+  border-color: #c82333;
 }
 
 

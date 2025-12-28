@@ -3,7 +3,7 @@
     <div class="game-header">
       <h2>{{ game.away_team.name }} @ {{ game.home_team.name }}</h2>
       <div class="score">{{ state.score.join(' - ') }}</div>
-      <div class="inning">{{ state.inning }}{{ state.half ? '▼' : '▲' }}</div>
+      <div class="inning">{{ state.inning }}{{ state.half ? '▼' : '▲' }} ({{ state.outs }} {{ state.outs == 1 ? 'out' : 'outs' }})</div>
       <button @click="showOptions = !showOptions" class="options-btn">⚙️ Options</button>
     </div>
 
@@ -19,14 +19,14 @@
       </div>
     </div>
 
+    <div :style="{ display: showDefensiveChanges ? 'none' : null}">
+      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" :errors="errors" @error="onError" />
+    </div>
+
     <div class="base-runners-container" :style="{ display: showDefensiveChanges ? 'none' : null}">
       <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[0]" :errors="errors" @error="onError" />
       <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[1]" :errors="errors" @error="onError" />
       <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[2]" :errors="errors" @error="onError" />
-    </div>
-
-    <div :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" :errors="errors" @error="onError" />
     </div>
 
     <DefensiveChanges
