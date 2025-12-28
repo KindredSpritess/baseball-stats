@@ -53,13 +53,10 @@
       <button @click="undoLastPitch(); stage = 'pitch'" class="back-btn">← Back to Pitching</button>
     </div>
 
-    <div v-else-if="stage === 'location'" class="step">
+    <div v-else-if="stage === 'location'" class="step location-full">
       <h3 v-if="trajectory === 'G'">Touch where ball was fielded</h3>
       <h3 v-else>Touch where ball landed</h3>
-      <div class="options-grid">
-        <!-- SVG Field -->
-        <FieldSvg :location="location" :onTouch="selectLocation"/>
-      </div>
+      <FieldSvg :location="location" :onTouch="selectLocation"/>
     </div>
 
     <!-- Scoring Descision -->
@@ -910,5 +907,19 @@ export default {
 
 .custom-play button:hover {
   background-color: #218838;
+}
+
+.location-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
