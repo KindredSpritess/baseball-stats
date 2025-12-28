@@ -54,7 +54,8 @@
     </div>
 
     <div v-else-if="stage === 'location'" class="step">
-      <h3>Select Hit Location</h3>
+      <h3 v-if="trajectory === 'G'">Touch where ball was fielded</h3>
+      <h3 v-else>Touch where ball landed</h3>
       <div class="options-grid">
         <!-- SVG Field -->
         <FieldSvg :location="location" :onTouch="selectLocation"/>
