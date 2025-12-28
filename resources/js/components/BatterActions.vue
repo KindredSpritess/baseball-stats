@@ -1,8 +1,4 @@
 <template>
-  <!-- TODO:
-   // Multiple advancement on one error.
-   // Decisive vs Non-decisive errors.
-  -->
   <div class="batter-actions">
     <div class="at-bat-status">
       <div class="hitter-name">
@@ -13,7 +9,7 @@
         <span class="balls">{{ currentBalls }}</span> - <span class="strikes">{{ currentStrikes }}</span>
       </div>
       <div class="play-sequence">
-        <strong>Play:</strong> {{ finalPlay || 'Start of at-bat' }}
+        <strong>Play:</strong> {{ finalPlay || (currentBalls + currentStrikes === 0 ? 'Start of at-bat' : 'In progress at-bat') }}
       </div>
       <div class="pitcher-name">
         <strong>Pitcher:</strong> {{ pitcher ? pitcher : 'N/A' }} ({{ pitchCount }} pitches)

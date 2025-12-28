@@ -20,7 +20,6 @@
         <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('PB')" class="action-btn advance">Passed Ball</button>
         <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn advance">Advance on Error</button>
         <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('FC')" class="action-btn">Fielder's Choice</button>
-        <button @click="step = 'actions'" class="back-btn">Back to Actions</button>
       </div>
       <div class="runner-actions"  v-else-if="step === 'errors'">
         <button @click="decisive = true; step = 'fielders'" class="action-btn advance">Safe on Error</button>
