@@ -2,7 +2,6 @@
   <!-- TODO:
    // Multiple advancement on one error.
    // Decisive vs Non-decisive errors.
-   // Undo last play.
   -->
   <div class="batter-actions">
     <div class="at-bat-status">
@@ -22,7 +21,7 @@
     </div>
 
     <!-- Pitch Selection (main interface) -->
-    <div v-if="stage === 'pitch'" class="step">
+    <div v-if="stage === 'pitch' && !runnerPlays.some(x => x.length)" class="step">
       <h3>Select Pitch Outcome</h3>
       <div class="options-grid">
         <button v-for="(description, code) in pitchOutcomes" 
@@ -124,7 +123,7 @@
       </div>
       <button @click="this.fielders.pop()" class="undo-btn">↶ Undo Last Fielder</button>
       <button @click="stage = 'total-bases'" class="back-btn">← Back to Total Bases</button>
-      <button @click="stage = decision === 'E' ? 'further-advance?' : 'at-bat-ended'" class="submit-btn">Complete</button>
+      <button @click="completeFielding()" class="submit-btn">Complete</button>
     </div>
 
     <!-- Do we need to advance further? -->
@@ -148,6 +147,15 @@
         <button @click="advance('POR')" class="option-btn">Put Out at Retreating</button>
       </div>
       <button @click="stage = 'at-bat-ended'" class="submit-btn">Done Advancing</button>
+    </div>
+
+    <div v-else-if="stage === 'error-selection'" class="step">
+      <h3>Select Error Type</h3>
+      <div class="options-grid">
+        <button @click="decisive = true; stage = 'fielding-outcome'" class="option-btn">Safe on Error</button>
+        <button @click="decisive = false; stage = 'fielding-outcome'" class="option-btn">Advance on Error</button>
+        <button v-for="e in errors" @click="reuseError(e)">Reuse {{ e }}</button>
+      </div>
     </div>
 
     <!-- Submit Current Play -->
@@ -198,6 +206,10 @@ export default {
     preferences: {
       type: Object,
       default: () => ({})
+    },
+    errors: {
+      type: Array,
+      default: () => []
     }
   },
   components: {
@@ -215,6 +227,7 @@ export default {
       base: 0,
       fielding: '',
       error: '',
+      decisive: false,
       fielders: [],
       plays: [''],
       customPlay: '',
@@ -287,7 +300,8 @@ export default {
       return this.state.strikes + this.strikes;
     },
     currentPlay() {
-      return `${this.trajectory}${BASES[this.bases]}${this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error}$2`)}`;
+      let error = this.decisive ? this.error.toUpperCase() : this.error.toLowerCase();
+      return `${this.trajectory}${BASES[this.bases]}${this.fielders.join('-').replace(/(-?)(\d)$/, `$1${error}$2`)}`;
       // return this.pitchSequence;
     },
     outcomes() {
@@ -410,7 +424,31 @@ export default {
       if (['H', 'FC'].includes(this.decision)) {
         return this.stage = 'further-advance?';
       }
-      this.stage = 'fielding-outcome';
+      if (this.trajectory || this.decision !== 'E') {
+        this.stage = 'fielding-outcome';
+      } else {
+        this.stage = 'error-selection';
+      }
+    },
+
+    reuseError(e) {
+      this.plays.push(`(${BASES[this.bases]}${e})`);
+      this.decisive = false;
+      this.error = '';
+      this.bases = 0;
+      this.stage = 'further-advance?';
+    },
+
+    completeFielding() {
+      switch (this.decision) {
+        case 'E':
+          this.stage = 'further-advance?';
+          this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+          break;
+        default:
+          this.stage = 'at-bat-ended';
+          break;
+      }
     },
 
     advance(reason) {
@@ -420,6 +458,8 @@ export default {
       }
 
       this.trajectory = '';
+      this.decisive = reason === 'E' ? true : false;
+      reason = reason.toUpperCase();
       this.error = reason === 'E' ? 'E' : '';
       this.decision = reason === 'E' ? 'E' : '';
       this.fielders = [];

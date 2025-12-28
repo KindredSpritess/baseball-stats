@@ -20,13 +20,13 @@
     </div>
 
     <div class="base-runners-container" :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[0]" />
-      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[1]" />
-      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[2]" />
+      <BaseRunnerActions ref="baseRunner0" :base="0" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[0]" :errors="errors" @error="onError" />
+      <BaseRunnerActions ref="baseRunner1" :base="1" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[1]" :errors="errors" @error="onError" />
+      <BaseRunnerActions ref="baseRunner2" :base="2" :game="game" :state="state" :pitch="lastPitch" @log-play="logPlay" :preferences="preferences" :forced="isMounted && forced[2]" :errors="errors" @error="onError" />
     </div>
 
     <div :style="{ display: showDefensiveChanges ? 'none' : null}">
-      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" />
+      <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" :errors="errors" @error="onError" />
     </div>
 
     <DefensiveChanges
@@ -72,6 +72,7 @@ export default {
       isMounted: false,
       showOptions: false,
       showDefensiveChanges: false,
+      errors: [],
     }
   },
   computed: {
@@ -107,7 +108,7 @@ export default {
       }
 
       return forced;
-    }
+    },
   },
   mounted() {
     this.loadPreferences();
@@ -137,6 +138,7 @@ export default {
       if (this.$refs.baseRunner2) {
         this.$refs.baseRunner2.reset();
       }
+      this.errors = [];
     },
     async logPlay(playCode) {
       await this.sendPlay(playCode);
@@ -187,6 +189,7 @@ export default {
     },
     updateGameState(newState) {
       // Update the game object with new state
+      this.errors = [];
       this.$refs.batterActions.resetAtBat();
       this.$refs.baseRunner0.reset();
       this.$refs.baseRunner1.reset();
@@ -244,13 +247,16 @@ export default {
       if (!this.state.bases[0]) {
         return;
       }
-      this.$refs.baseRunner0.logRunnerAction(2);
+      this.$refs.baseRunner0.logRunnerAction(2, '');
       if (!this.state.bases[1]) {
         return;
       }
-      this.$refs.baseRunner1.logRunnerAction(3);
-      this.state.bases[2] && this.$refs.baseRunner2.logRunnerAction(4);
-    }
+      this.$refs.baseRunner1.logRunnerAction(3, '');
+      this.state.bases[2] && this.$refs.baseRunner2.logRunnerAction(4, '');
+    },
+    onError(error) {
+      this.errors.push(error);
+    },
   }
 }
 </script>
