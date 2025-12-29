@@ -39,7 +39,7 @@ class TeamController extends Controller
             $player->derive();
         }
         $totals->derive();
-        $people = Player::where('team_id', $team->id)->select('person_id')->distinct()->get();
+        $people = Player::where('team_id', $team->id)->select('person_id')->distinct()->get()->pluck('person_id');
         $qualified = $totals->GS && $request->query('qualified') !== 'all';
 
         $player_ids = implode(',', $player_ids);
@@ -56,5 +56,21 @@ class TeamController extends Controller
             'minIP' => $qualified ? $team->games()->count() / 3 : 0,
             'minFI' => $qualified ? $totals->FI / 9 / 2 : 0,
         ]);
+    }
+
+    public function edit(Team $team) {
+        return view('team.edit', [
+            'team' => $team,
+        ]);
+    }
+
+    public function update(Request $request, Team $team) {
+        $team->fill($request->validate([
+            'name' => 'required|string|max:100',
+            'primary_color' => 'nullable|hex_color',
+            'secondary_color' => 'nullable|hex_color',
+        ]));
+        $team->save();
+        return redirect()->route('team', ['team' => $team->id]);
     }
 }

@@ -53,6 +53,8 @@ Route::controller(TeamController::class)->group(function () {
     Route::get('/team/create', 'create')->name('team.create')->middleware('can:create-team');
     Route::post('/team/create', 'store')->name('teamstore')->middleware('can:create-team');
     Route::get('/team/{team}', 'show')->name('team');
+    Route::get('/team/{team}/edit', 'edit')->name('team.edit')->middleware('can:edit-team,team');
+    Route::post('/team/{team}/edit', 'update')->name('team.update')->middleware('can:edit-team,team');
 });
 
 Route::controller(PersonController::class)->group(function () {
