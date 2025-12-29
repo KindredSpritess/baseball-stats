@@ -4,10 +4,7 @@ namespace App\Casts;
 
 use App\Models\Game;
 use App\Models\Player;
-use App\Models\Team;
-use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Support\Facades\Log;
 
 class GameState implements CastsAttributes
 {
@@ -32,9 +29,26 @@ class GameState implements CastsAttributes
         $game->expectedOuts = $value['expectedOuts'] ?? 0;
 
         $game->score = $value['score'] ?? [0, 0];
+        $game->linescore = $value['linescore'] ?? [[0], []];
         $game->atBat = $value['atBat'] ?? [0, 0];
+        $game->ended = $value['ended'] ?? false;
+
+        $game->bases = [null, null, null];
+        $game->runners = [];
+        $game->defense = [[], []];
+        $game->lineup = [[], []];
+        $game->pitchers = [[], []];
+        $game->pitchersOfRecord = [
+            'winning' => null,
+            'losing' => null,
+            'saving' => null,
+        ];
 
         $players = [];
+        $game->load('players');
+        $game->players->each(function ($player) use (&$players) {
+            $players[$player->id] = $player;
+        });
         $decodeArray = function ($team, &$out, $in) use (&$players, &$decodeArray) {
             foreach ($in as $key => $value) {
                 if (is_array($value)) {
@@ -62,15 +76,23 @@ class GameState implements CastsAttributes
         $decodeArray($game->home_team, $game->defense[1], $value['defense'][1] ?? []);
         $decodeArray($game->away_team, $game->lineup[0], $value['lineup'][0] ?? []);
         $decodeArray($game->home_team, $game->lineup[1], $value['lineup'][1] ?? []);
+        $decodeArray($game->away_team, $game->pitchers[0], $value['pitchers'][0] ?? []);
+        $decodeArray($game->home_team, $game->pitchers[1], $value['pitchers'][1] ?? []);
         $repairLineups($game->lineup[0]);
         $repairLineups($game->lineup[1]);
+        $game->pitchersOfRecord = [
+            'winning' => $players[$value['pitchersOfRecord']['winning'] ?? null] ?? null,
+            'losing' => $players[$value['pitchersOfRecord']['losing'] ?? null] ?? null,
+            'saving' => $players[$value['pitchersOfRecord']['saving'] ?? null] ?? null,
+        ];
         $game->runners = array_map(function ($r) use ($game) {
             $team = $game->half ? $game->away_team : $game->home_team;
             return [
                 'pitcher' => $team->players()->find($r['pitcher']),
                 'base' => $r['base'],
                 'earned' => $r['earned'],
-                'expectedOuts' => $r['expectedOuts']
+                'expectedOuts' => $r['expectedOuts'],
+                'origin' => $r['origin'] ?? null,
             ];
         }, $value['runners'] ?? []);
     
@@ -97,14 +119,17 @@ class GameState implements CastsAttributes
             'expectedOuts' => $game->expectedOuts,
             'outs' => $game->outs,
             'score' => $game->score,
+            'linescore' => $game->linescore,
             'atBat' => $game->atBat,
+            'ended' => $game->ended,
             'bases' => array_map(fn($p) => ($p ? $p->id : null), $game->bases),
             'runners' => array_map(function ($r) use ($getId) {
                 return [
                     'pitcher' => $getId($r['pitcher']),
                     'base' => $r['base'],
                     'earned' => $r['earned'],
-                    'expectedOuts' => $r['expectedOuts']
+                    'expectedOuts' => $r['expectedOuts'],
+                    'origin' => $r['origin'] ?? null,
                 ];
             }, $game->runners),
             'defense' => array_map(function ($d) use ($getId) { return array_map($getId, $d); }, $game->defense),
@@ -112,8 +137,13 @@ class GameState implements CastsAttributes
                 fn ($l) => array_map(fn ($s) => array_map($getId, $s), $l),
                 $game->lineup
             ),
+            'pitchers' => array_map(function ($p) use ($getId) { return array_map($getId, $p); }, $game->pitchers),
+            'pitchersOfRecord' => [
+                'winning' => $game->pitchersOfRecord['winning'] ? $game->pitchersOfRecord['winning']->id : null,
+                'losing' => $game->pitchersOfRecord['losing'] ? $game->pitchersOfRecord['losing']->id : null,
+                'saving' => $game->pitchersOfRecord['saving'] ? $game->pitchersOfRecord['saving']->id : null,
+            ],
         ];
-        Log::info($out);
         return json_encode($out);
     }
 }

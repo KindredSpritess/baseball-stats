@@ -7,6 +7,8 @@ use App\Models\BallInPlay;
 use App\Models\Person;
 use App\Models\Player;
 use App\Models\Team;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class PersonController extends Controller
 {
@@ -68,5 +70,69 @@ class PersonController extends Controller
         return response(view('components.field', [
             'ballsInPlay' => $balls,
         ]))->header('Content-Type', 'image/svg+xml');
+    }
+
+    /**
+     * Search for players by name, prioritizing those who have played on the specified team
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->input('query');
+        $teamId = $request->input('team_id');
+
+        if (empty($query) || strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        // Get all persons matching the query
+        $persons = Person::where('firstName', 'like', "%{$query}%")
+            ->orWhere('lastName', 'like', "%{$query}%")
+            ->get();
+
+        // If a team ID is provided, mark persons who have played for this team
+        if ($teamId) {
+            $teamPlayerIds = Player::where('team_id', $teamId)
+                ->pluck('person_id')
+                ->toArray();
+
+            $persons = $persons->map(function ($person) use ($teamPlayerIds) {
+                $person->played_for_team = in_array($person->id, $teamPlayerIds);
+                return $person;
+            });
+
+            // Sort by whether they've played for the team before (prioritizing those who have)
+            $persons = $persons->sortByDesc('played_for_team')->values();
+        }
+
+        return response()->json($persons);
+    }
+
+    public function teamPlayers(Team $team): JsonResponse
+    {
+        // Extract game id from the referrer.
+        $referrer = request()->headers->get('referer');
+        $matches = [];
+        preg_match('/\/game\/(\d+)/', $referrer, $matches);
+        $players = Player::where('team_id', $team->id)
+            // Exclude players already in the lineup for the game
+            ->when(isset($matches[1]), function ($query) use ($matches) {
+                $query->whereNotIn('person_id', function ($subquery) use ($matches) {
+                    $subquery->select('person_id')
+                        ->from('players')
+                        ->where('game_id', $matches[1]);
+                });
+            })
+            ->with('person')
+            ->get()
+            ->groupBy(fn ($player) => "{$player->person->lastName}, {$player->person->firstName}")
+            ->map(fn ($group) => [
+                'number' => $group->filter(fn ($player) => $player->number)->mode('number'),
+                'person' => $group->first()->person
+            ]);
+
+        return response()->json($players);
     }
 }

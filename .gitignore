@@ -3,3 +3,8 @@
 .idea
 .htaccess
 *.sql
+*.sql.gz
+/node_modules
+/public/build/
+/public/hot
+/public/schedules/*.ics

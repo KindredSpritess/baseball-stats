@@ -6,7 +6,44 @@ use App\Casts\GameState;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $firstPitch
+ * @property int $away
+ * @property int $home
+ * @property string $location
+ * @property int|null $duration
+ * @property mixed|null $state
+ * @property int $locked
+ * @property int $ended
+ * @property array<array-key, mixed>|null $dimensions
+ * @property-read \App\Models\Team|null $away_team
+ * @property-read \App\Models\Team|null $home_team
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Player> $players
+ * @property-read int|null $players_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Play> $plays
+ * @property-read int|null $plays_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereAway($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereDimensions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereEnded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereFirstPitch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereHome($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereLocked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Game extends Model
 {
     use HasFactory;
@@ -18,15 +55,26 @@ class Game extends Model
     public int $strikes = 0;
     public int $outs = 0;
     public int $expectedOuts = 0;
+    // public bool $ended = false;
 
     public array $atBat = [0, 0];
     public array $score = [0, 0];
+
+    public array $linescore = [[0], []];
 
     public array $bases = [null, null, null];
     public array $runners = [];
 
     public array $defense = [[], []];
     public array $lineup = [[], []];
+
+    public array $pitchers = [[], []];
+
+    public array $pitchersOfRecord = [
+        'winning' => null,
+        'losing' => null,
+        'saving' => null,
+    ];
 
     public Collection $ballsInPlay;
 
@@ -35,6 +83,7 @@ class Game extends Model
     protected $casts = [
         'state' => GameState::class,
         'dimensions' => 'array',
+        'firstPitch' => 'datetime',
     ];
 
     public function home_team() {
@@ -76,10 +125,27 @@ class Game extends Model
             return;
         }
 
+        // Remove player from previous position.
+        foreach ($this->defense[$home] as $pos => $p) {
+            if ($p->is($player)) {
+                unset($this->defense[$home][$pos]);
+                break;
+            }
+        }
         $this->defense[$home][$fieldPos] = $player;
         if ($fieldPos === '1') {
             $player->evt('GP');
             $this->expectedOuts = $this->outs;
+            $this->pitchers[$home][] = $player;
+            // Add inherited runners.
+            foreach ($this->bases as $runner) {
+                if ($runner) $this->pitching()->evt('IR');
+            }
+            // Check for save situation.
+            $lead = $this->score[$home] - $this->score[($home+1)%2];
+            if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($this->bases)) + 2)) {
+                $this->pitchersOfRecord['saving'] = $player;
+            }
         }
     }
 
@@ -92,12 +158,14 @@ class Game extends Model
         $this->half = ($this->half + 1) % 2;
         $this->bases = [null, null, null];
         $this->runners = [];
+        $this->linescore[$this->half][] = 0;
     }
 
     public function advanceRunner(Player $player,
                                   float $bases,
                                   bool $earned = true,
                                   bool $decisiveError = false,
+                                  ?string $origin = null,
                                   bool $replaces = false) {
         if (!isset($this->runners[$player->id])) {
             $this->runners[$player->id] = [
@@ -105,6 +173,7 @@ class Game extends Model
                 'base' => 0,
                 'earned' => ($decisiveError || $this->expectedOuts > 2) ? -100000000000 : 0,
                 'expectedOuts' => (int)$this->expectedOuts,
+                'origin' => $origin ?? null,
             ];
         }
 
@@ -142,10 +211,20 @@ class Game extends Model
             unset($this->runners[$player->id]);
         }
         if ($runner['base'] >= 4) {
+            $player->evt("R.{$runner['origin']}");
             $runner['pitcher']->evt('RA');
+            $runner['pitcher']->evt("RA.{$runner['origin']}");
             $runner['base'] = -100000000000;
+            if ($this->score[0] == $this->score[1]) {
+                // Losing pitcher should be the one who allowed the run on base.
+                $this->pitchersOfRecord['losing'] = $runner['pitcher'];
+            }
             if ($runner['earned'] < 0) {
                 unset($this->runners[$player->id]);
+            }
+            if ($this->pitching()->isNot($runner['pitcher'])) {
+                // Inherited runner scored.
+                $this->pitching()->evt('IRS');
             }
         }
     }
@@ -172,6 +251,21 @@ class Game extends Model
         $this->strikes = 0;
         $this->atBat[$this->half] += 1;
         $this->atBat[$this->half] %= count($this->lineup[$this->half]);
+    }
+
+    public function scores(): void {
+        $this->score[$this->half]++;
+        $this->linescore[$this->half][$this->inning - 1]++;
+        // Update winning and losing pitchers.
+        $lead = $this->score[$this->half] - $this->score[($this->half+1)%2];
+        if ($lead === 1) {
+            // $this->pitchersOfRecord['losing'] = $this->pitching();
+            $this->pitchersOfRecord['winning'] = $this->defense[$this->half]['1'];
+        } else if ($lead === 0) {
+            $this->pitchersOfRecord['winning'] = null;
+            $this->pitchersOfRecord['losing'] = null;
+            $this->pitchersOfRecord['saving'] = null;
+        }
     }
 
     public function pitching() : Player {

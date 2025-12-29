@@ -1,0 +1,185 @@
+.player-lineup-add {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.player-lineup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.player-lineup-header h4 {
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.close-btn:hover {
+    color: #343a40;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.suggestions-container {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f1f1f1;
+}
+
+.suggestion-item.team-player {
+    background-color: #e6f7ff;
+}
+
+.btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0069d9;
+}
+
+/* Position buttons styling */
+.position-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.position-btn {
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    min-width: 60px;
+    text-align: center;
+}
+
+.position-btn:hover {
+    background-color: #e9ecef;
+}
+
+.position-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.selected-position {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.lineup-add-container {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.team-selector {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.team-btn {
+    flex: 1;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.team-btn:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.team-btn:last-child {
+    border-radius: 0 4px 4px 0;
+}
+
+.team-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Two-column layout for form and previous players */
+.form-and-players-container {
+    display: flex;
+    gap: 20px;
+}
+
+.form-column {
+    flex: 1;
+}
+
+.previous-players-column {
+    flex: 1;
+}
+
+/* Previous players list styling */
+.previous-player-item {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s;
+}
+
+.previous-player-item:hover {
+    background-color: #e9e9e9;
+}
+
+.previous-players-list {
+    max-height: 300px;
+    overflow-y: auto;
+}

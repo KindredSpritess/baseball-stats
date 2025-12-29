@@ -1,79 +1,153 @@
-<div style="padding:10px;">
-    <h3 id="{{ $team->short_name }}">{{ $team->name }}</h3>
+<div style="padding:10px 0 0 0;" class="{{ $team->id === $game->away_team->id ? 'away-team-colors box-score-away' : 'home-team-colors box-score-home' }}">
+    <h3 id="{{ $team->short_name }}" style="color: var(--team-primary); border-bottom: 2px solid var(--team-secondary); padding-bottom: 5px;">{{ $team->name }}</h3>
     <table style="text-align:center">
         <tr>
-            <th>#</th>
-            <th style="text-align:left;">Name</th>
-            <th>PA</th>
-            <th>AB</th>
-            <th>R</th>
-            <th>H</th>
-            <th>RBI</th>
-            <th>SO</th>
-            <th>BB</th>
-            <th>&nbsp;</th>
-            <th>PO</th>
-            <th>A</th>
-            <th>E</th>
+            <th class="scorers" style="background-color: var(--team-primary); color: white;">#</th>
+            <th style="text-align:left; background-color: var(--team-primary); color: white;">Name</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">PA</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">AB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">R</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">H</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">RBI</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">SO</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">BB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">&nbsp;</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">PO</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">A</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">E</th>
         </tr>
         @foreach ($lineup as $i => $spot)
         @foreach ($spot as $player)
+        @php
+            $playerStats = $stats[$player->id];
+        @endphp
         <tr class="{{ $i == $atbat ? 'atbat' : '' }}">
-            <td>{{ $loop->index === 0 ? ($i+1) : '' }}</td>
+            <td class="scorers">{{ $loop->index === 0 ? ($i+1) : '' }}</td>
             <td style="text-align:left;">
+                @spaceless
+                @if ($player->number)
+                    <sup>#{{ $player->number }}</sup>
+                @endif
                 <a href="{{ route('person.show', ['person' => $player->person->id]) }}">
-                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</a><sup>#{{ $player->number }}</sup>
+                    <span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}
+                </a>
+                @if ($loop->last)
+                <sup>{{ $defenders[$player->id] ?? 'EH'}}</sup>
+                @endif
+                @if ($defending)
+                <i class="fa-solid fa-up-down-left-right scorers" onclick="dsub('{{ $i + 1 }}')"></i>
+                @endif
+                @endspaceless
             </td>
-            <td>{{ $player->stats['PA'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['PA'] ?? 0 }}</td>
             <td>{{ $player->stats['AB'] ?? 0 }}</td>
             <td>{{ $player->stats['R'] ?? 0 }}</td>
             <td>{{ ($player->stats['1'] ?? 0) + ($player->stats['2'] ?? 0) + ($player->stats['3'] ?? 0) + ($player->stats['4'] ?? 0) }}</td>
             <td>{{ $player->stats['RBI'] ?? 0 }}</td>
             <td>{{ $player->stats['SO'] ?? $player->stats['Ks'] ?? 0 }}</td>
             <td>{{ $player->stats['BBs'] ?? 0 }}</td>
-            <td>&nbsp;</td>
-            <td>{{ $player->stats['PO'] ?? 0 }}</td>
-            <td>{{ $player->stats['A'] ?? 0 }}</td>
-            <td>{{ $player->stats['E'] ?? 0 }}</td>
+            <td class="mobile-hide">&nbsp;</td>
+            <td class="mobile-hide">{{ $player->stats['PO'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['A'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['E'] ?? 0 }}</td>
         </tr>
         @endforeach
         @endforeach
         <tr style="font-weight: bold;">
-            <td colspan="2" style="text-align:left;">Total</td>
-            <td>{{ $totals->PA }}</td>
+            <td class="scorers" colspan="2" style="text-align:left;">Total</td>
+            <td class="viewers" style="text-align:left;">Total</td>
+            <td class="mobile-hide">{{ $totals->PA }}</td>
             <td>{{ $totals->AB }}</td>
             <td>{{ $totals->R }}</td>
             <td>{{ $totals->H }}</td>
             <td>{{ $totals->RBI }}</td>
             <td>{{ $totals->SO }}</td>
             <td>{{ $totals->BBs }}</td>
-            <td>&nbsp;</td>
-            <td>{{ $totals->PO }}</td>
-            <td>{{ $totals->A }}</td>
-            <td>{{ $totals->E }}</td>
+            <td class="mobile-hide">&nbsp;</td>
+            <td class="mobile-hide">{{ $totals->PO }}</td>
+            <td class="mobile-hide">{{ $totals->A }}</td>
+            <td class="mobile-hide">{{ $totals->E }}</td>
         </tr>
     </table>
-    <h4>Pitching</h4>
+
+    @if ($totals->stat('2') ?? 0)
+    <div class="viewers extra-stats">
+        <b>2B:</b>
+        @playersStat('2').
+    </div>
+    @endif
+    @if ($totals->stat('3') ?? 0)
+    <div class="viewers extra-stats">
+        <b>3B:</b>
+        @playersStat('3').
+    </div>
+    @endif
+    @if ($totals->stat('4') ?? 0)
+    <div class="viewers extra-stats">
+        <b>HR:</b>
+        @playersStat('4').
+    </div>
+    @endif
+    @if ($totals->HPB ?? 0)
+    <div class="viewers extra-stats">
+        <b>HBP:</b>
+        @playersStat('HPB').
+    </div>
+    @endif
+    @if ($totals->TB ?? 0)
+    <div class="viewers extra-stats">
+        <b>Total Bases:</b>
+        @playersStat('TB').
+    </div>
+    @endif
+    @if ($totals->SB)
+    <div class="viewers extra-stats">
+        <b>Stolen Bases:</b>
+        @playersStat('SB').
+    </div>
+    @endif
+    @if ($totals->CS)
+    <div class="viewers extra-stats">
+        <b>Caught Stealing:</b>
+        @playersStat('CS').
+    </div>
+    @endif
+
+    <!-- Fielding extra stats -->
+    @if ($totals->PB)
+    <div class="viewers extra-stats">
+        <b>Passed Balls:</b>
+        @playersStat('PB').
+    </div>
+    @endif
+    @if ($totals->E)
+    <div class="viewers extra-stats">
+        <b>Errors:</b>
+        @playersStat('E').
+    </div>
+    @endif
+
+    <!-- Pitching Stats -->
+    <h4 style="color: var(--team-primary); border-bottom: 1px solid var(--team-secondary);">Pitching</h4>
     <table style="text-align:center">
         <tr>
-            <th>#</th>
-            <th style="text-align:left;">Name</th>
-            <th>INN</th>
-            <th>ER</th>
-            <th>R</th>
-            <th>H</th>
-            <th>K</th>
-            <th>BB</th>
-            <th>TBF</th>
-            <th>B</th>
-            <th>S</th>
-            <th>Pit</th>
+            <th class="scorers" style="background-color: var(--team-primary); color: white;">#</th>
+            <th style="text-align:left; background-color: var(--team-primary); color: white;">Name</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">INN</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">ER</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">R</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">H</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">K</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">BB</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">TBF</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">B</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);" class="mobile-hide">S</th>
+            <th style="background-color: var(--team-secondary); color: var(--team-primary);">Pit</th>
         </tr>
-        @foreach ($lineup as $spot)
-        @foreach ($spot as $player)
+        @foreach ($pitchers as $player)
         @if ($player->stats['Balls'] ?? $player->stats['Strikes'] ?? 0)
         <tr>
-            <td>{{ $player->number }}</td>
+            <td class="scorers">{{ $player->number }}</td>
             <td style="text-align:left;"><span style="text-transform:uppercase;font-weight:520">{{ $player->person->lastName }}</span>,&nbsp;{{ $player->person->firstName }}</td>
             <td>{{ App\Helpers\StatsHelper::innings_format(($player->stats['TO'] ?? 0) / 3) }}</td>
             <td>{{ $player->stats['ER'] ?? 0 }}</td>
@@ -81,26 +155,63 @@
             <td>{{ $player->stats['HA'] ?? 0 }}</td>
             <td>{{ $player->stats['K'] ?? 0 }}</td>
             <td>{{ $player->stats['BB'] ?? 0 }}</td>
-            <td>{{ $player->stats['BFP'] ?? 0 }}</td>
-            <td>{{ $player->stats['Balls'] ?? 0 }}</td>
-            <td>{{ $player->stats['Strikes'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['BFP'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['Balls'] ?? 0 }}</td>
+            <td class="mobile-hide">{{ $player->stats['Strikes'] ?? 0 }}</td>
             <td>{{ ($player->stats['Balls'] ?? 0) + ($player->stats['Strikes'] ?? 0) }}</td>
         </tr>
         @endif
         @endforeach
-        @endforeach
         <tr style="font-weight: bold;">
-            <td colspan="2" style="text-align:left;">Total</td>
+            <td class="scorers" colspan="2" style="text-align:left;">Total</td>
+            <td class="viewers" style="text-align:left;">Total</td>
             <td>{{ App\Helpers\StatsHelper::innings_format($totals->IP) }}</td>
             <td>{{ $totals->ER }}</td>
             <td>{{ $totals->RA }}</td>
             <td>{{ $totals->HA }}</td>
             <td>{{ $totals->K }}</td>
             <td>{{ $totals->BB }}</td>
-            <td>{{ $totals->BFP }}</td>
-            <td>{{ $totals->Balls }}</td>
-            <td>{{ $totals->Strikes }}</td>
+            <td class="mobile-hide">{{ $totals->BFP }}</td>
+            <td class="mobile-hide">{{ $totals->Balls }}</td>
+            <td class="mobile-hide">{{ $totals->Strikes }}</td>
             <td>{{ $totals->Pitches }}</td>
         </tr>
     </table>
+    @if ($totals->HBP)
+    <div class="viewers extra-stats">
+        <b>HBP:</b>
+        @playersStat('HBP').
+    </div>
+    @endif
+    @if ($totals->WP)
+    <div class="viewers extra-stats">
+        <b>Wild Pitches:</b>
+        @playersStat('WP').
+    </div>
+    @endif
+    <div class="viewers extra-stats">
+        <b>Strikes-balls:</b>
+        @foreach ($pitchers as $player)
+            {{ $player->person->lastName }} {{ $player->stats['Strikes'] ?? 0 }}-{{ $player->stats['Balls'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
+        @endforeach
+    </div>
+    <div class="viewers extra-stats">
+        <b>Groundouts-Flyouts:</b>
+        @foreach ($pitchers as $player)
+            {{ $player->person->lastName }} {{ $player->stats['GO'] ?? 0 }}-{{ $player->stats['AO'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
+        @endforeach
+    </div>
+    <div class="viewers extra-stats">
+        <b>Batters faced:</b>
+        @playersStat('BFP').
+    </div>
+    @if ($totals->IR)
+    <div class="viewers extra-stats">
+        <b>Inherited Runners-Scored:</b>
+        @foreach ($pitchers as $player)
+            @if ($player->stats['IR'] ?? 0)
+            {{ $player->person->lastName }} {{ $player->stats['IR'] ?? 0 }}-{{ $player->stats['IRS'] ?? 0 }}{{ $loop->last ? '.' : ';' }}
+            @endif
+        @endforeach
+    @endif
 </div>

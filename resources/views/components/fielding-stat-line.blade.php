@@ -18,14 +18,14 @@
         {{ App\Helpers\StatsHelper::positions($stats->Positions) }}
       @endif
     </td>
-    <td>{{ $stats->G }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ $stats->G }}</td>@endunless
     <td>{{ App\Helpers\StatsHelper::innings_format($stats->FI) }}</td>
-    <td>{{ $stats->TC }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ $stats->TC }}</td>@endunless
     <td>{{ $stats->PO }}</td>
     <td>{{ $stats->A }}</td>
     <td>{{ $stats->E }}</td>
-    <td>{{ number_format($stats->FPCT, 3) }}</td>
-    <td>{{ number_format($stats->RF, 2) }}</td>
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->FPCT, 3) }}</td>@endunless
+    @unless ($singleGameStats ?? false)<td>{{ number_format($stats->RF, 2) }}</td>@endunless
     <td>{{ $stats->PB }}</td>
     <td>{{ $stats->CCS }}</td>
     <td>{{ $stats->CSB }}</td>

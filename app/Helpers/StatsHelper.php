@@ -36,6 +36,10 @@ class StatsHelper {
         return $this->stat($stat);
     }
 
+    public function toArray(): array {
+        return $this->stats;
+    }
+
     /**
      * @return StatsHelper[]
      */
@@ -57,6 +61,10 @@ class StatsHelper {
         if ($this->AB) {
             $this->stats['AVG'] = $this->H / $this->AB;
         }
+        $this->stats['BIP'] = $this->AB - $this->SO - $this->stat('4');
+        if ($this->BIP) {
+            $this->stats['BABIP'] = ($this->H - $this->stat('4')) / $this->BIP;
+        }
 
         // OBP
         if ($this->PA - $this->SAB) {
@@ -65,7 +73,8 @@ class StatsHelper {
 
         // SLG
         if ($this->AB) {
-            $this->stats['SLG'] = ($this->stat('1') + 2*$this->stat('2') + 3*$this->stat('3') + 4*$this->stat('4')) / ($this->AB);
+            $this->stats['TB'] = $this->stat('1') + 2*$this->stat('2') + 3*$this->stat('3') + 4*$this->stat('4');
+            $this->stats['SLG'] = $this->TB / ($this->AB);
         }
 
         $this->stats['OPS'] = $this->OBP + $this->SLG;
@@ -105,11 +114,12 @@ class StatsHelper {
             $this->stats['WHIP'] = ($this->BB + $this->HA) / $this->IP;
         }
 
-    if ($this->BFP) {
-        $this->stats['Pitches'] = $this->Strikes + $this->Balls;
-        $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
-        $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
-    }
+        if ($this->BFP) {
+            $this->stats['Pitches'] = $this->Strikes + $this->Balls;
+            $this->stats['StrkPct'] = $this->Strikes / $this->Pitches;
+            $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
+            $this->stats['PPBFP'] = $this->Pitches / $this->BFP;
+        }
 
         return $this;
     }
@@ -124,6 +134,19 @@ class StatsHelper {
         } else {
             return "{$w}⅔";
         }
+    }
+
+    public function humanStat(string $stat): string {
+        $val = $this->stat($stat);
+        $stat = match ($stat) {
+            'BBs' => 'BB',
+            '1', '2', '3', '4' => $stat . 'B',
+            default => $stat,
+        };
+        if ($val) {
+            return trans_choice(":stat|:value:stat", $val, ['value' => $val, 'stat' => $stat]);
+        }
+        return '';
     }
 
     public static function position(int $n): string {
