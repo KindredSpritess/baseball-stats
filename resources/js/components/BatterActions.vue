@@ -90,33 +90,7 @@
     </div>
 
     <div v-else-if="stage === 'fielding-outcome'" class="step">
-      <h3>Select Fielding Outcome</h3>
-      <div class="options-grid" v-if="this.decision === 'E'">
-        <button @click="error = 'WT'" class="option-btn advance" :class="{ 'selected-error': error === 'WT' }">Throwing Error</button>
-        <button @click="error = 'E'" class="option-btn advance" :class="{ 'selected-error': error === 'E' }">Fielding Error</button>
-      </div>
-      <div class="fielding-grid">
-        <div class="field-row">
-          <button @click="fielders.push(7)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][7]">LF</button>
-          <button @click="fielders.push(8)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][8]">CF</button>
-          <button @click="fielders.push(9)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][9]">RF</button>
-        </div>
-        <div class="field-row">
-          <button @click="fielders.push(6)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][6]">SS</button>
-          <button @click="fielders.push(4)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][4]">2B</button>
-        </div>
-        <div class="field-row">
-          <button @click="fielders.push(5)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][5]">3B</button>
-          <button @click="fielders.push(1)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][1]">P</button>
-          <button @click="fielders.push(3)" class="option-btn" :disabled="!state.defense[(state.half+1)%2][3]">1B</button>
-        </div>
-        <div class="field-row">
-          <button @click="fielders.push(2)" class="option-btn">C</button>
-        </div>
-      </div>
-      <button @click="this.fielders.pop()" class="undo-btn">↶ Undo Last Fielder</button>
-      <button @click="stage = 'total-bases'" class="back-btn">← Back to Total Bases</button>
-      <button @click="completeFielding()" class="submit-btn">Complete</button>
+      <FielderSelection :defense="state.defense[(state.half+1)%2]" :players="game.players" :actions="this.decision === 'E' ? { 'E': 'Fielding Error', 'WT': 'Throwing Error' } : { '': 'Put Out' }" @action-selected="handleFieldingAction" />
     </div>
 
     <!-- Do we need to advance further? -->
@@ -163,6 +137,7 @@
 <script>
 
 import FieldSvg from './FieldSvg.vue';
+import FielderSelection from './FielderSelection.vue';
 
 const balls = ['.', 'b', 'i', 'p'];
 const strikes = ['s', 'c', 'r', 'f', 't'];
@@ -207,6 +182,7 @@ export default {
   },
   components: {
     FieldSvg,
+    FielderSelection,
   },
   data() {
     return {
@@ -422,6 +398,7 @@ export default {
       } else {
         this.fielders = [];
         this.error = this.decision === 'E' ? 'E' : '';
+        this.decisive = this.decision === 'E' ? true : false;
         this.stage = this.decision === 'E' ? 'total-bases' : 'fielding-outcome';
       }
     },
@@ -531,6 +508,17 @@ export default {
         this.$emit('log-play', this.customPlay.trim());
         this.customPlay = '';
         this.resetAtBat();
+      }
+    },
+
+    handleFieldingAction(event) {
+      this.fielders = event.fielders;
+      if (this.decision === 'E') {
+        this.error = event.action;
+        this.stage = 'further-advance?';
+        this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+      } else {
+        this.stage = 'at-bat-ended';
       }
     }
   }
