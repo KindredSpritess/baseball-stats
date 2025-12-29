@@ -43,6 +43,7 @@ Route::controller(GameController::class)->group(function() {
     Route::get('/game/{game}', 'show')->name('game')->middleware('can:score-game,game');
     Route::get('/game/{game}/score', 'score')->name('game.score')->middleware('can:score-game,game');
     Route::get('/game/view/{game}', 'view')->name('game.view');
+    Route::get('/game/receiver/{game}', 'receiver')->name('game.receiver');
     Route::put('/game/{game}/log', 'play')->name('gamelog')->middleware('can:score-game,game');
     Route::post('/game/{game}/undo', 'undoLastPlay')->name('game.undoLastPlay')->middleware('can:score-game,game');
     Route::patch('/game/{game}/log', 'plays')->name('fullgamelog')->middleware('can:score-game,game');

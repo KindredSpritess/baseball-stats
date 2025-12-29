@@ -30,6 +30,10 @@ const selectedPlay = ref(null);
 const selectedView = ref('plays'); // 'away', 'play', 'home'
 const plays = ref([]);
 const field = ref(null);
+const castContext = ref(null);
+const castSession = ref(null);
+const isCasting = ref(false);
+const isReceiver = ref(!!document.querySelector('#app').dataset.receiver);
 
 const teams = computed(() => [game.value.away_team, game.value.home_team]);
 
@@ -101,6 +105,17 @@ const updatePlays = () => {
 const appendPlays = (playData) => {
     game.value.plays.push(playData);
     updatePlays();
+};
+
+const toggleCast = () => {
+    if (!castContext.value) return;
+    if (isCasting.value) {
+        castContext.value.endCurrentSession(true);
+    } else {
+        castContext.value.requestSession().then(() => {
+            castSession.value = castContext.value.getCurrentSession();
+        }).catch(console.error);
+    }
 };
 
 const fetchData = () => {
@@ -204,6 +219,77 @@ onMounted(() => {
             });
         });
     }
+
+    // Cast initialization
+    if (!isReceiver.value) {
+        // Sender mode
+        if (window.cast && window.cast.framework) {
+            window.cast.framework.CastContext.getInstance().setOptions({
+                receiverApplicationId: import.meta.env.VITE_GOOGLE_CAST_APPLICATION,
+                autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+            });
+            castContext.value = window.cast.framework.CastContext.getInstance();
+            castContext.value.addEventListener(
+                window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+                (event) => {
+                    console.log('Cast state changed', event.castState);
+                    if (event.castState === 'CONNECTED') {
+                        isCasting.value = true;
+                    } else {
+                        isCasting.value = false;
+                    }
+                }
+            );
+        }
+    } else {
+        // Receiver mode - connect to WebSocket for updates
+        window.Echo.channel(`game.${props.gameId}`).listen('.game.updated', (event) => {
+            if (event.full) {
+                fetchData();
+                return;
+            }
+            if (event.play) {
+                appendPlays(event.play);
+                event.play.human && field.value && field.value.toast(event.play.human);
+            }
+            if (event.state) {
+                state.value = event.state;
+            }
+            if (event.stats) {
+                // Merge stats
+                for (const stat of event.stats) {
+                    stats.value[stat.player_id][stat.stat] = stat.value;
+                }
+                // Recalculate team totals
+                const teamTotal = (team) => {
+                    return team.players.map(p => p.id)
+                        .filter((s, i, arr) => arr.indexOf(s) === i)
+                        .map(pid => stats.value[pid])
+                        .filter(s => s)
+                        .reduce((acc, stats) => {
+                            Object.entries(stats).forEach(([stat, value]) => {
+                                acc[stat] = (acc[stat] || 0) + value;
+                            });
+                            return acc;
+                        }, {});
+                };
+                stats.value.home = teamTotal(game.value.home_team);
+                stats.value.home['H'] = (stats.value.home['1'] ?? 0) + (stats.value.home['2'] ?? 0) + (stats.value.home['3'] ?? 0) + (stats.value.home['4'] ?? 0);
+                stats.value.away = teamTotal(game.value.away_team);
+                stats.value.away['H'] = (stats.value.away['1'] ?? 0) + (stats.value.away['2'] ?? 0) + (stats.value.away['3'] ?? 0) + (stats.value.away['4'] ?? 0);
+            }
+            nextTick(() => {
+                if (field.value) {
+                    field.value.updateStatus({
+                        state: state.value,
+                        fielders: fielders.value,
+                        runners: runners.value,
+                        hitting: hitting.value
+                    }, event.play);
+                }
+            });
+        });
+    }
 });
 
 </script>
@@ -243,6 +329,10 @@ onMounted(() => {
                             {{ pitching.person.lastName }}<br/>
                             ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
                         </div>
+                    </div>
+                    <!-- Cast button -->
+                    <div class="cast-button">
+                        <button id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
                     </div>
                     <!-- Put a clickable innings selector. -->
                     <div class="innings-selector">
