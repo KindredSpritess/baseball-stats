@@ -43,7 +43,11 @@ class TeamController extends Controller
         $qualified = $totals->GS && $request->query('qualified') !== 'all';
 
         $player_ids = implode(',', $player_ids);
-        $pitcherBalls = BallInPlay::whereRaw("JSON_EXTRACT(fielders, '$[0]') IN ($player_ids)")->get()->groupBy(fn($ball) => $ball->pitcher[0]->person_id);
+        if ($player_ids) {
+            $pitcherBalls = BallInPlay::whereRaw("JSON_EXTRACT(fielders, '$[0]') IN ($player_ids)")->get()->groupBy(fn($ball) => $ball->pitcher[0]->person_id);
+        } else {
+            $pitcherBalls = collect();
+        }
 
         return view('team.show', [
             'team' => $team,
