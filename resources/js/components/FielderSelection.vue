@@ -9,7 +9,7 @@
       <button @click="undoFielder" class="undo-btn">↶ Undo Last Fielder</button>
     </div>
     <div class="actions">
-      <button v-for="(name, action) in actions" :key="action" @click="selectAction(action)" class="action-btn">{{ name }}</button>
+      <button v-for="(name, action) in actions" :key="action" @click="selectAction(action)" :disabled="selectedFielders.length === 0" class="action-btn">{{ name }}</button>
     </div>
   </div>
 </template>

@@ -27,16 +27,7 @@
         <button v-for="e in errors" @click="reuseError(e)" class="action-btn advance">Reuse {{ e }}</button>
       </div>
       <template v-else-if="step === 'fielders'">
-        {{ fielders.map(f => positions[f]).join('-') }}
-        <div class="runner-actions">
-          <button v-if="error" @click="error = 'E'" class="action-btn advance" :class="{ selected: error === 'E' }">Fielding Error</button>
-          <button v-if="error" @click="error = 'WT'" class="action-btn advance" :class="{ selected: error === 'WT' }">Throwing Error</button>
-          <button v-for="f in [1,2,3,4,5,6,7,8,9]" :key="f" @click="fielders.push(f)" class="action-btn">{{ positions[f] }}</button>
-        </div>
-        <button @click="completeRunnerAction('')" class="action-btn" :class="error ? 'advance' : 'out'" :disabled="fielders.length === 0">{{ error ? 'Advance' : 'Put Out' }}</button>
-        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('PO')" class="action-btn out" :disabled="fielders.length === 0">Picked Off</button>
-        <button v-if="!['f', 'r', 'x'].includes(pitch)" @click="completeRunnerAction('CS')" class="action-btn out" :disabled="fielders.length === 0">Caught Stealing</button>
-        <button @click="step = 'actions'; error = false; fielders = []" class="back-btn">← Back to Actions</button>
+        <FielderSelection :defense="state.defense[(state.half+1)%2]" :players="game.players" :actions="fieldingActions" @action-selected="handleFieldingAction" />
       </template>
     </template>
     <template v-else>
@@ -48,6 +39,7 @@
 </template>
 
 <script>
+import FielderSelection from './FielderSelection.vue';
 
 const BASES = {
   '-1': '`', 1: '!', 2: '@', 3: '#'
@@ -59,6 +51,7 @@ const POSITIONS = {
 
 export default {
   name: 'BaseRunnerActions',
+  components: { FielderSelection },
   props: {
     base: Number,
     game: Object,
@@ -79,7 +72,26 @@ export default {
     },
     play() {
       return this.state.bases[this.base] ? this.actions.join('/') : '';
-    }
+    },
+    fieldingActions() {
+      const actions = {};
+      if (!this.error) {
+        actions[''] = 'Put Out';
+        if (!['f', 'r', 'x'].includes(this.pitch)) {
+          actions['PO'] = 'Picked Off';
+          actions['CS'] = 'Caught Stealing';
+        }
+      } else {
+        actions['WT'] = 'Throwing Error';
+        if (!['f', 'r', 'x'].includes(this.pitch) && this.decisive) {
+          actions['PO'] = 'Picked Off (w/Error)';
+          actions['CS'] = 'Caught Stealing (w/Error)';
+        } else {
+          actions['E'] = 'Fielding Error';
+        }
+      }
+      return actions;
+    },
   },
   data() {
     return {
@@ -148,6 +160,16 @@ export default {
       this.decisive = false;
       this.error = false;
       this.step = 'actions';
+    },
+    handleFieldingAction(event) {
+      this.fielders = event.fielders;
+      let { action } = event;
+      if (action === 'E' || action === 'WT') {
+        this.error = action;
+        this.step = 'errors';
+        action = '';
+      }
+      this.completeRunnerAction(action);
     },
     completeRunnerAction(outcome) {
       let action = outcome;
