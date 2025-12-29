@@ -27,7 +27,7 @@ class PersonController extends Controller
             $player->derive();
         }
         $totals->derive();
-        $teams = Player::where('person_id', $person->id)->select('team_id')->distinct()->get();
+        $teams = Player::where('person_id', $person->id)->select('team_id')->distinct()->get()->pluck('team_id');
         return view('person.show', [
             'person' => $person,
             'stats' => $players,
