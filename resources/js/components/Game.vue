@@ -1,6 +1,5 @@
 <script setup>
 import BoxScore from './BoxScore.vue';
-import LineScore from './LineScore.vue';
 import ThreedField from './ThreeDField.vue';
 import { computed, onMounted, ref, nextTick } from 'vue';
 
@@ -295,70 +294,3 @@ onMounted(() => {
         </tbody>
     </table>
 </template>
-
-<script>
-
-// export default {
-//     components: {
-//         'box-score': BoxScore,
-//         'line-score': LineScore,
-//     },
-//     props: {
-//       gameId: Number,
-//     },
-//     data() {
-//       return {
-//         game: {
-//             id: this.gameId,
-//         },
-//         stats: {},
-//         state: {},
-//         selectedInning: window.initGame.inning || null,
-//         selectedPlay: null,
-//         plays: [],
-//       }
-//     },
-//     methods: {
-//       
-//     },
-//     computed: {
-//       teams() {
-//         return [this.game.away_team, this.game.home_team];
-//       },
-//       hitting() {
-//         const team = this.teams[this.state.half];
-//         const lineup = this.state.lineup?.[this.state.half];
-//         const atBat = this.state.atBat?.[this.state.half];
-//         return team?.players?.find(player => player.id === lineup[atBat].at(-1));
-//       },
-//       pitching() {
-//         const team = this.teams[1 - this.state.half];
-//         const lineup = this.state.lineup?.[1 - this.state.half];
-//         const defense = this.state.defense?.[1 - this.state.half];
-//         return team?.players?.find(player => player.id === defense?.['1']);
-//       },
-//       fielders() {
-//         const team = this.teams[1 - this.state.half];
-//         const defense = this.state.defense?.[1 - this.state.half];
-//         const fielders = {};
-//         for (const pos in defense) {
-//           fielders[pos] = team?.players?.find(player => player.id === defense[pos]);
-//         }
-//         return fielders;
-//       },
-//       runners() {
-//         const team = this.teams[this.state.half];
-//         const bases = {};
-//         for (const base in this.state.bases) {
-//           const runnerId = this.state.bases[base];
-//           if (runnerId) {
-//             bases[base] = team?.players?.find(player => player.id === runnerId);
-//           }
-//         }
-//         return bases;
-//       },
-//     },
-// }
-
-
-</script>
