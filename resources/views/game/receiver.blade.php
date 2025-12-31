@@ -22,6 +22,14 @@
             document.body.appendChild(errorMessage);
         });
     </script>
+    <style>
+        :root {
+            --away-primary: #1e88eA;
+            --away-secondary: #ffffff;
+            --home-primary: #43a047;
+            --home-secondary: #fdd835;
+        }
+    </style>
     <title>Baseball Game Receiver</title>
 </head>
 <body>

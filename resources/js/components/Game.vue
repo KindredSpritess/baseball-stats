@@ -138,6 +138,11 @@ const fetchData = () => {
                 selectedInning.value = state.value.inning;
             }
             updatePlays();
+            // Set CSS variables for team colors
+            document.documentElement.style.setProperty('--away-primary', game.value.away_team?.primary_color || '#1e88eA');
+            document.documentElement.style.setProperty('--away-secondary', game.value.away_team?.secondary_color || '#ffffff');
+            document.documentElement.style.setProperty('--home-primary', game.value.home_team?.primary_color || '#43a047');
+            document.documentElement.style.setProperty('--home-secondary', game.value.home_team?.secondary_color || '#fdd835');
             nextTick(() => {
                 if (field.value) {
                     field.value.updateStatus({
@@ -195,6 +200,15 @@ onMounted(() => {
             }
             if (event.state) {
                 state.value = event.state;
+                // Update fielding and batting colors
+                const fieldingPrimary = state.value.half ? 'var(--away-primary)' : 'var(--home-primary)';
+                const fieldingSecondary = state.value.half ? 'var(--away-secondary)' : 'var(--home-secondary)';
+                const battingPrimary = state.value.half ? 'var(--home-primary)' : 'var(--away-primary)';
+                const battingSecondary = state.value.half ? 'var(--home-secondary)' : 'var(--away-secondary)';
+                document.documentElement.style.setProperty('--fielding-primary', fieldingPrimary);
+                document.documentElement.style.setProperty('--fielding-secondary', fieldingSecondary);
+                document.documentElement.style.setProperty('--batting-primary', battingPrimary);
+                document.documentElement.style.setProperty('--batting-secondary', battingSecondary);
             }
             if (event.stats) {
                 // Merge stats

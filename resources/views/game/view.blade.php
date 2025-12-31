@@ -16,10 +16,6 @@
             --away-secondary: {{ $game->away_team->secondary_color ?? '#ffffff' }};
             --home-primary: {{ $game->home_team->primary_color ?? '#43a047' }};
             --home-secondary: {{ $game->home_team->secondary_color ?? '#fdd835' }};
-            --fielding-primary: {{ $game->half ? 'var(--away-primary)' : 'var(--home-primary)' }};
-            --fielding-secondary: {{ $game->half ? 'var(--away-secondary)' : 'var(--home-secondary)' }};
-            --batting-primary: {{ $game->half ? 'var(--home-primary)' : 'var(--away-primary)' }};
-            --batting-secondary: {{ $game->half ? 'var(--home-secondary)' : 'var(--away-secondary)' }};
         }
     </style>
     <title>{{ $game->away_team->name }} @ {{ $game->home_team->name }}</title>
