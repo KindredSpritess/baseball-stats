@@ -10,6 +10,7 @@ use App\Models\Game;
 use App\Models\Play;
 use App\Models\Player;
 use App\Models\Team;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ class GameController extends Controller
         $game->home_team()->associate(Team::find($request->input('home')));
         $game->away_team()->associate(Team::find($request->input('away')));
         $game->fill($request->input());
+        $game->firstPitch = Carbon::createFromFormat('Y-m-d\TH:i', $request->input('firstPitch'), $request->input('timezone'))->setTimezone('UTC');
         $game->save();
         return new JsonResponse(['status' => 'success', 'created' => $game->id]);
     }
