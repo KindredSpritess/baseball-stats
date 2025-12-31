@@ -247,20 +247,6 @@ class GameController extends Controller
     }
 
     /**
-     * Display the receiver for Chromecast.
-     *
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function receiver(Game $game)
-    {
-        // Force load.
-        $state = $game->state;
-        $this->ballsInPlay($game);
-        return view('game.receiver', ['game' => $game]);
-    }
-
-    /**
      * Display the touch screen scoring interface.
      *
      * @param  \App\Models\Game  $game
