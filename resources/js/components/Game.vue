@@ -113,23 +113,15 @@ const appendPlays = (playData) => {
 
 const toggleCast = () => {
     if (!castContext.value) {
-        field.value.toast('Casting not available');
         return;
     }
     if (isCasting.value) {
-        field.value.toast('Stopping cast session');
         castContext.value.endCurrentSession(true);
     } else {
-        field.value.toast('Casting started');
         castContext.value.requestSession().then(() => {
             castSession.value = castContext.value.getCurrentSession();
-            field.value.toast('Casting started');
             castSession.value.sendMessage('urn:x-cast:app.statskeeper.game', {
                 gameId: game.value.id,
-            }).then(() => {
-                field.value.toast('Game sent to receiver');
-            }).catch((error) => {
-                field.value.toast('Error sending game to receiver: ' + error);
             });
         }).catch(field.value.toast);
     }
@@ -142,6 +134,9 @@ const fetchData = () => {
             game.value = data.game;
             state.value = data.state;
             stats.value = data.stats;
+            if (selectedInning.value === null) {
+                selectedInning.value = state.value.inning;
+            }
             updatePlays();
             nextTick(() => {
                 if (field.value) {
@@ -239,35 +234,31 @@ onMounted(() => {
 
     // Cast initialization
     if (!props.isReceiver) {
-        // Sender mode
-        if (window.cast && window.cast.framework) {
-            field.value.toast('Initializing Google Cast: ' + import.meta.env.VITE_GOOGLE_CAST_APPLICATION);
-            window.cast.framework.CastContext.getInstance().setOptions({
-                receiverApplicationId: import.meta.env.VITE_GOOGLE_CAST_APPLICATION,
-                autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-            });
-            castContext.value = window.cast.framework.CastContext.getInstance();
-            castContext.value.addEventListener(
-                window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
-                (event) => {
-                    field.value.toast('Cast state changed: ' + event.castState);
-                    if (event.castState === 'CONNECTED') {
-                        isCasting.value = true;
-                    } else {
-                        isCasting.value = false;
-                    }
-                }
-            );
-            // Wait for custom errors and toast them.
-            castContext.value.addEventListener(
-                window.cast.framework.CastContextEventType.CUSTOM_MESSAGE_RECEIVED,
-                (event) => {
-                    field.value.toast('Receiver message: ' + JSON.stringify(event.data));
-                }
-            );
-        }
+        initialiseCast();
     }
 });
+
+const initialiseCast = () => {
+    if (window.cast && window.cast.framework) {
+        window.cast.framework.CastContext.getInstance().setOptions({
+            receiverApplicationId: import.meta.env.VITE_GOOGLE_CAST_APPLICATION,
+            autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+        });
+        castContext.value = window.cast.framework.CastContext.getInstance();
+        castContext.value.addEventListener(
+            window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+            (event) => {
+                if (event.castState === 'CONNECTED') {
+                    isCasting.value = true;
+                } else {
+                    isCasting.value = false;
+                }
+            }
+        );
+    } else {
+        setTimeout(initialiseCast, 1000);
+    }
+};
 
 </script>
 
@@ -289,7 +280,7 @@ onMounted(() => {
                         <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
                         <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
                         <!-- Put Pitcher vs Hitter info here. -->
-                        <button id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
+                        <button v-if="castContext" id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
                         <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
                             <div v-if="state.half">
                                 {{ pitching.person.firstName }}
@@ -367,7 +358,7 @@ onMounted(() => {
                     <h2 class="section-title">
                         {{ game?.away_team?.name }} at {{ game?.home_team?.name }}
                         <!-- Cast button -->
-                        <button id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
+                        <button v-if="castContext" id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
                     </h2>
                     <h4>{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h4>
                 </div>

@@ -9,4 +9,7 @@ if (el) {
         ended: el.dataset.ended === 'true',
         inning: parseInt(el.dataset.inning),
     }).mount('#app');
+} else {
+    window.Game = Game;
+    window.createApp = createApp;
 }

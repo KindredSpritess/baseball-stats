@@ -19,6 +19,7 @@ Create New Game
             <div class="form-group">
                 <label for="firstPitch" class="form-label">Game Time:</label>
                 <input type="datetime-local" name="firstPitch" class="form-input" required />
+                <input type="hidden" name="timezone" value="" />
             </div>
             <div class="form-group">
                 <label for="away" class="form-label">Away Team:</label>
@@ -42,4 +43,9 @@ Create New Game
         </form>
     </div>
 </div>
+
+<script>
+    const timezoneInput = document.querySelector('input[name="timezone"]');
+    timezoneInput.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+</script>
 @endsection
