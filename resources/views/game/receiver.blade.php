@@ -44,9 +44,9 @@
     context.addEventListener(cast.framework.system.EventType.READY, () => {
         if (!castDebugLogger.debugOverlayElement_) {
             // Enable debug logger and show a 'DEBUG MODE' overlay at top left corner.
-            // castDebugLogger.setEnabled(true);
+            castDebugLogger.setEnabled(true);
             // Show debug overlay
-            // castDebugLogger.showDebugLogs(true);
+            castDebugLogger.showDebugLogs(true);
             // Clear log messages on debug overlay
             castDebugLogger.clearDebugLogs();
         }
@@ -86,6 +86,29 @@
         }
     });
     context.start();
+
+    // Add debug logging for remote button presses
+    const playerManager = context.getPlayerManager();
+    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_PLAY, () => {
+        castDebugLogger.info('Remote PLAY button pressed');
+    });
+    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_PAUSE, () => {
+        castDebugLogger.info('Remote PAUSE button pressed');
+    });
+    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_STOP, () => {
+        castDebugLogger.info('Remote STOP button pressed');
+    });
+    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_SEEK, (event) => {
+        castDebugLogger.info('Remote SEEK button pressed', event);
+    });
+    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_LOAD, (event) => {
+        castDebugLogger.info('Remote LOAD request', event);
+    });
+    // Also listen for system events
+    context.addEventListener(cast.framework.system.EventType.VISIBILITY_CHANGED, (event) => {
+        castDebugLogger.info('Visibility changed', event);
+    });
 </script>
+
 </body>
 </html>
