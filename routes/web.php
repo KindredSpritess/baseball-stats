@@ -37,6 +37,12 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/cast', function() {
+    return view('game.receiver', [
+        'applicationId' => env('GOOGLE_CAST_APPLICATION'),
+    ]);
+})->name('cast');
+
 Route::controller(GameController::class)->group(function() {
     Route::get('/game/create', 'create')->name('game.create')->middleware('can:create-game');
     Route::post('/game/store', 'store')->name('gamestore')->middleware('can:create-game');

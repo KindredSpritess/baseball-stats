@@ -12,12 +12,12 @@ export default defineConfig({
         vue(),
     ],
     server: {
-        host: 'baseball.lndo.site',
+        host: '192.168.1.56',
         // port: 5173,
-        https: {
-            key: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.key'),
-            cert: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.crt'),
-        },
+        // https: {
+        //     key: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.key'),
+        //     cert: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.crt'),
+        // },
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
