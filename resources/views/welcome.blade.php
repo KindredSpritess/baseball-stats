@@ -48,7 +48,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                     <span class="game-team home">{{ $game->home_team->name }}</span>
                     <span class="game-score">{{ $game->score[1] }}</span>
                 </div>
-                <p class="game-details">{{ $game->firstPitch->format('M j, Y g:i A') }} - {{ $game->half ? 'Bottom' : 'Top' }} {{ $game->inning }}</p>
+                <p class="game-details"><span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}">{{ $game->firstPitch->format('M j, Y g:i A') }}</span> - {{ $game->half ? 'Bottom' : 'Top' }} {{ $game->inning }}</p>
                 <a href="{{ route('game.view', ['game' => $game->id]) }}" class="game-link">View Game →</a>
             </div>
             @endforeach
@@ -103,10 +103,10 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                                 {{ $game->away_team->name }} {{ $awayScore }} @ {{ $game->home_team->name }} {{ $homeScore }}
                                             @endif
                                         </a>
-                                        <span class="game-location">({{ $game->firstPitch->format('M j, Y') }})</span>
+                                        <span class="game-location">(<span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}" data-format='{"month": "short", "day": "numeric", "year": "numeric"}'>{{ $game->firstPitch->format('M j, Y') }}</span>)</span>
                                     @else
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</a>
-                                        <span class="game-location">({{ $game->firstPitch->format('M j, Y g:i A') }})</span>
+                                        <span class="game-location">(<span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}">{{ $game->firstPitch->format('M j, Y g:i A') }}</span>)</span>
                                         <br/>
                                         <span class="game-location">{{ $game->location }}</span>
                                     @endif
@@ -146,4 +146,12 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
         </div>
     </section>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.local-time').forEach(function(el) {
+        const utc = new Date(el.dataset.utc);
+        el.textContent = utc.toLocaleString('en-US', JSON.parse(el.dataset.format || 'null') || { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    });
+});
+</script>
 @endsection
