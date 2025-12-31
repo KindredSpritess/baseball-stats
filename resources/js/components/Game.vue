@@ -29,6 +29,7 @@ const selectedPlay = ref(null);
 const selectedView = ref('plays'); // 'away', 'play', 'home'
 const plays = ref([]);
 const field = ref(null);
+const isMobile = ref(window.innerWidth <= 768);
 
 const teams = computed(() => [game.value.away_team, game.value.home_team]);
 
@@ -208,46 +209,132 @@ onMounted(() => {
 </script>
 
 <template v-if="game.state !== 'loading'">
-    <div class="mobile-menu">
-        <div class="mobile-menu-away"><a href="#away" @click="selectedView = 'away'">{{ game?.away_team?.short_name }}</a></div>
-        <div class="mobile-menu-play"><a href="#plays-main" @click="selectedView = 'plays'">Plays</a></div>
-        <div class="mobile-menu-home"><a href="#home" @click="selectedView = 'home'">{{ game?.home_team?.short_name }}</a></div>
-    </div>
-    <table id='game-view'>
-        <tbody>
-            <tr style="max-height: 100%;">
-                <td class='mobile-hide' :class="{ 'selected-view': selectedView === 'away' }">
-                    <box-score :game="game" :home="false" :state="state" :stats="stats" />
-                </td>
-                <td style='text-align: center; width: 100%;' class='mobile-hide' :class="{ 'selected-view': selectedView === 'plays' }">
-                    <!-- <line-score :game="game" :stats="stats" /> -->
-                    <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
-                    <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
-                    <!-- Put Pitcher vs Hitter info here. -->
-                    <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
-                        <div v-if="state.half">
-                            {{ pitching.person.firstName }}
-                            {{ pitching.person.lastName }}<br/>
-                            ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
+    <template v-if="isMobile">
+        <div class="mobile-menu">
+            <div class="mobile-menu-away"><a href="#away" @click="selectedView = 'away'">{{ game?.away_team?.short_name }}</a></div>
+            <div class="mobile-menu-play"><a href="#plays-main" @click="selectedView = 'plays'">Plays</a></div>
+            <div class="mobile-menu-home"><a href="#home" @click="selectedView = 'home'">{{ game?.home_team?.short_name }}</a></div>
+        </div>
+        <table id='game-view'>
+            <tbody>
+                <tr style="max-height: 100%;">
+                    <td class='mobile-hide' :class="{ 'selected-view': selectedView === 'away' }">
+                        <box-score :game="game" :home="false" :state="state" :stats="stats" />
+                    </td>
+                    <td style='text-align: center; width: 100%;' class='mobile-hide' :class="{ 'selected-view': selectedView === 'plays' }">
+                        <!-- <line-score :game="game" :stats="stats" /> -->
+                        <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
+                        <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
+                        <!-- Put Pitcher vs Hitter info here. -->
+                        <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
+                            <div v-if="state.half">
+                                {{ pitching.person.firstName }}
+                                {{ pitching.person.lastName }}<br/>
+                                ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
+                            </div>
+                            <div>
+                                {{ state.atBat[state.half] + 1 }}.
+                                {{ hitting.person.firstName }}
+                                {{ hitting.person.lastName }}<br/>
+                                ({{ stats[hitting.id].H }} for {{ stats[hitting.id].AB ?? 0 }})<br/>
+                                <!-- Stats -->
+                            </div>
+                            <div v-if="!state.half">
+                                {{ pitching.person.firstName }}
+                                {{ pitching.person.lastName }}<br/>
+                                ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
+                            </div>
                         </div>
-                        <div>
-                            {{ state.atBat[state.half] + 1 }}.
-                            {{ hitting.person.firstName }}
-                            {{ hitting.person.lastName }}<br/>
-                            ({{ stats[hitting.id].H }} for {{ stats[hitting.id].AB ?? 0 }})<br/>
-                            <!-- Stats -->
+                        <!-- Put a clickable innings selector. -->
+                        <div class="innings-selector">
+                        <a v-for="i in state.inning" :key="i" href="#plays-main" class="inning-link" :data-inning="i" :class="{'inning-selected': selectedInning === i}" @click="selectedInning=i">{{ i }}</a>
                         </div>
-                        <div v-if="!state.half">
-                            {{ pitching.person.firstName }}
-                            {{ pitching.person.lastName }}<br/>
-                            ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
+                        <div id='play-by-play'>
+                            <template v-for="(pa, i) in plays" :key="i">
+                                <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
+                                    <div :class="{
+                                                    'plate-appearance-container': !pa[0]?.game_event,
+                                                    'game-event-container': pa[0]?.game_event,
+                                                    'selected': selectedPlay === i,
+                                                }" @click="selectedPlay = selectedPlay === i ? null : i">
+                                        <template v-for="(play, j) in pa" :key="j">
+                                            <div v-if="!play.command" v-for="pitch in play.play.split(',')[0].split('')" :key="`${i}-${pitch}`" class='pitch' :class="pitch" :data-play-id="i" :data-inning="play.inning" :data-inning-half="play.inning_half">{{ pitchDescription(pitch) }}</div>
+                                            <div v-if="play.human"
+                                                :class="{'run-scoring': play.run_scoring, 'plate-appearance': play.plate_appearance}"
+                                                :data-play-id="i"
+                                                :data-inning="play.inning"
+                                                :data-inning-half="play.inning_half"
+                                            >
+                                                <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                                                {{ play.human }}
+                                            </div>
+                                            <div v-if="play?.game_event"
+                                                class='game-event'
+                                                :class="play.inning_half ? 'game-event-home' : 'game-event-away'"
+                                                :data-inning="play.inning"
+                                                :data-inning-half="play.inning_half"
+                                            >
+                                                {{ play.game_event }}
+                                            </div>
+                                        </template>
+                                        <div 
+                                            v-if="!state.ended && selectedInning === state.inning && (i === plays.length - 1)"
+                                            class="plate-appearance"
+                                            :data-inning="state.inning" :data-inning-half="state.half"
+                                        >
+                                            <i class="fa-solid fa-chevron-down toggle-icon"></i> {{ hitting?.person.firstName }} {{ hitting?.person?.lastName }} at bat
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
                         </div>
+                    </td>
+                    <td class='mobile-hide' :class="{ 'selected-view': selectedView === 'home' }">
+                        <box-score :game="game" :home="true" :state="state" :stats="stats" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+    <template v-else>
+        <div class="desktop-layout">
+            <div class="field-section">
+                <div class="geotemporal">
+                    <h2 class="section-title">{{ game?.away_team?.name }} at {{ game?.home_team?.name }}</h2>
+                    <h4>{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h4>
+                </div>
+                <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
+                <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
+                    <div v-if="state.half">
+                        {{ pitching.person.firstName }}
+                        {{ pitching.person.lastName }}<br/>
+                        ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
                     </div>
-                    <!-- Put a clickable innings selector. -->
-                    <div class="innings-selector">
-                    <a v-for="i in state.inning" :key="i" href="#plays-main" class="inning-link" :data-inning="i" :class="{'inning-selected': selectedInning === i}" @click="selectedInning=i">{{ i }}</a>
+                    <div>
+                        {{ state.atBat[state.half] + 1 }}.
+                        {{ hitting.person.firstName }}
+                        {{ hitting.person.lastName }}<br/>
+                        ({{ stats[hitting.id].H }} for {{ stats[hitting.id].AB ?? 0 }})<br/>
+                        <!-- Stats -->
                     </div>
-                    <div id='play-by-play'>
+                    <div v-if="!state.half">
+                        {{ pitching.person.firstName }}
+                        {{ pitching.person.lastName }}<br/>
+                        ({{ (stats[pitching.id].Balls ?? 0) + (stats[pitching.id].Strikes ?? 0) }} pitches, {{ stats[pitching.id].K ?? 0 }} Ks)
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="sidebar-menu">
+                    <button @click="selectedView = 'plays'" :class="{active: selectedView === 'plays'}">Play by Play</button>
+                    <button @click="selectedView = 'away'" :class="{active: selectedView === 'away', 'away-team-color': selectedView === 'away'}">{{ game?.away_team?.name }}</button>
+                    <button @click="selectedView = 'home'" :class="{active: selectedView === 'home', 'home-team-color': selectedView === 'home'}">{{ game?.home_team?.name }}</button>
+                </div>
+                <div class="sidebar-content">
+                    <div v-if="selectedView === 'plays'" id='play-by-play'>
+                        <div class="innings-selector">
+                            <a v-for="i in state.inning" :key="i" href="#plays-main" class="inning-link" :data-inning="i" :class="{'inning-selected': selectedInning === i}" @click="selectedInning=i">{{ i }}</a>
+                        </div>
                         <template v-for="(pa, i) in plays" :key="i">
                             <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
                                 <div :class="{
@@ -286,11 +373,10 @@ onMounted(() => {
                             </template>
                         </template>
                     </div>
-                </td>
-                <td class='mobile-hide' :class="{ 'selected-view': selectedView === 'home' }">
-                    <box-score :game="game" :home="true" :state="state" :stats="stats" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    <box-score v-if="selectedView === 'away'" :game="game" :home="false" :state="state" :stats="stats" />
+                    <box-score v-if="selectedView === 'home'" :game="game" :home="true" :state="state" :stats="stats" />
+                </div>
+            </div>
+        </div>
+    </template>
 </template>

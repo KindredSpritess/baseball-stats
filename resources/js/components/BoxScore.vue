@@ -1,6 +1,6 @@
 <template>
   <div :class="teamClasses" style="padding:10px 0 0 0;">
-    <h3 :id="team?.short_name" :style="headerStyle">
+    <h3 :id="team?.short_name" :style="headerStyle" class="box-score-header">
       {{ team?.name || 'Loading?..?.' }}
     </h3>
     <div v-if="!game" style="color: red;">No game data</div>
@@ -53,7 +53,6 @@
           </template>
         </template>
         <tr style="font-weight: bold;">
-          <td class="scorers" colspan="2" style="text-align:left;">Total</td>
           <td class="viewers" style="text-align:left;">Total</td>
           <td class="mobile-hide">{{ totals?.PA ?? 0 }}</td>
           <td>{{ totals?.AB ?? 0 }}</td>
@@ -115,7 +114,6 @@
     <table style="text-align:center">
       <thead>
         <tr>
-          <th class="scorers" :style="thStyle">#</th>
           <th style="text-align:left;" :style="thStyle">Name</th>
           <th :style="thSecondaryStyle">INN</th>
           <th :style="thSecondaryStyle">ER</th>
@@ -131,7 +129,6 @@
       </thead>
       <tbody>
         <tr v-for="player in pitchers" :key="player?.id">
-          <td class="scorers">{{ player?.number }}</td>
           <td style="text-align:left;">
             <span style="text-transform:uppercase;font-weight:520">{{ player?.person?.lastName }}</span>,&nbsp;{{ player?.person?.firstName }}
           </td>
@@ -172,15 +169,15 @@
       <b>Wild Pitches:</b>
       {{ pitchersStat('WP') }}.
     </div>
-    <div class="viewers extra-stats">
+    <div v-if="totals?.Strikes || totals?.Balls" class="viewers extra-stats">
       <b>Strikes-balls:</b>
       {{ pitchersStat('Strikes', 'Balls') }}.
     </div>
-    <div class="viewers extra-stats">
+    <div v-if="totals?.GO || totals?.AO" class="viewers extra-stats">
       <b>Groundouts-Flyouts:</b>
       {{ pitchersStat('GO', 'AO') }}.
     </div>
-    <div class="viewers extra-stats">
+    <div v-if="totals?.BFP" class="viewers extra-stats">
       <b>Batters faced:</b>
       {{ pitchersStat('BFP') }}.
     </div>
@@ -265,7 +262,8 @@ export default {
       return {
         color: 'var(--team-primary)',
         'border-bottom': '2px solid var(--team-secondary)',
-        'padding-bottom': '5px'
+        'padding-bottom': '5px',
+        'padding-left': '5px',
       };
     },
     thStyle() {

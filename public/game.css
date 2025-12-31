@@ -19,12 +19,12 @@ body {
 }
 
 /* Mobile menu team colors */
-.mobile-menu-away {
-  background: var(--away-primary);
+.mobile-menu-away, .away-team-color {
+  background: var(--away-primary) !important;
 }
 
-.mobile-menu-home {
-  background: var(--home-primary);
+.mobile-menu-home, .home-team-color {
+  background: var(--home-primary) !important;
 }
 
 /* Innings selector */
@@ -64,7 +64,7 @@ body {
   .innings-selector {
     padding: 8px;
     gap: 6px;
-    width: calc(100% - 16px);
+    width: 100%;
   }
 
   .inning-link {
@@ -153,8 +153,32 @@ th {
   color: #fff;
 }
 
+.geotemporal {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.geotemporal h2 {
+  color: var(--primary);
+  margin: 0;
+  padding: 0;
+}
+
+.geotemporal h4 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  color: var(--text-secondary);
+}
+
 .box-score-away h3, .box-score-home h3 {
   margin: 0;
+}
+
+.extra-stats {
+  text-align: left;
+  padding: 5px 5px 0px 5px;
+  font-size: 12px;
 }
 
 /* Responsive tables */
@@ -176,12 +200,6 @@ th {
     max-width: 100%;
     aspect-ratio: 1;
     padding: 0;
-  }
-
-  .extra-stats {
-    text-align: left;
-    padding: 5px 5px 0px 5px;
-    font-size: 12px;
   }
 
   .box-score-away, .box-score-home {
@@ -212,6 +230,10 @@ th {
     display: none;
   }
 
+  .mobile-hide:not(.selected-view) {
+    display: none !important;
+  }
+
   svg {
     height: auto;
     width: 447.94775;
@@ -229,8 +251,89 @@ th {
     background: linear-gradient(135deg, rgba(67, 160, 71, 0.05) 0%, rgba(253, 216, 53, 0.05) 100%);
   }
 
-  .extra-stats {
+  .box-score-header {
     display: none;
+  }
+
+  .desktop-layout {
+    display: flex;
+    height: 100vh;
+  }
+
+  .field-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #ddd;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .sidebar-menu button {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+
+  .sidebar-menu button.active {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    /* padding: 5px; */
+  }
+
+  .sidebar-content #play-by-play, .sidebar-content .box-score-away, .sidebar-content .box-score-home {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .sidebar-content table {
+    min-width: 100%;
+  }
+
+  .sidebar-content table th:nth-child(n+2), .sidebar-content table td:nth-child(n+2) {
+    width: 40px;
+    text-align: center;
+  }
+
+  .sidebar-content td, .sidebar-content th {
+    padding: 2px 4px;
+  }
+
+  .sidebar-content table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .sidebar-content td, .sidebar-content th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px 4px;
+  }
+
+  .field-section canvas {
+    width: 100% !important;
+    max-width: 100%;
   }
 }
 
@@ -277,8 +380,8 @@ tr.atbat {
 }
 
 .pitcher-vs-hitter {
+  text-align: center;
   border-radius: 8px;
-  margin-top: 10px;
   display: flex;
   flex-direction: row;
   margin-bottom: -5px;
