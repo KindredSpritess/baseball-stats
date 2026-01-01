@@ -88,26 +88,13 @@
     context.start();
 
     // Add debug logging for remote button presses
-    const playerManager = context.getPlayerManager();
-    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_PLAY, () => {
-        castDebugLogger.info('Remote PLAY button pressed');
-    });
-    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_PAUSE, () => {
-        castDebugLogger.info('Remote PAUSE button pressed');
-    });
-    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_STOP, () => {
-        castDebugLogger.info('Remote STOP button pressed');
-    });
-    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_SEEK, (event) => {
-        castDebugLogger.info('Remote SEEK button pressed', event);
-    });
-    playerManager.addEventListener(cast.framework.events.EventType.REQUEST_LOAD, (event) => {
-        castDebugLogger.info('Remote LOAD request', event);
-    });
-    // Also listen for system events
-    context.addEventListener(cast.framework.system.EventType.VISIBILITY_CHANGED, (event) => {
-        castDebugLogger.info('Visibility changed', event);
-    });
+    window.onkeydown = function(event) {
+        castDebugLogger.info('REMOTE KEYDOWN:', {
+            key: event.key,
+            code: event.code,
+            keyCode: event.keyCode
+        });
+    };
 </script>
 
 </body>
