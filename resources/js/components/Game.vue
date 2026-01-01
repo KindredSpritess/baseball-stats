@@ -39,6 +39,7 @@ const isMobile = ref(window.innerWidth <= 768);
 const castContext = ref(null);
 const castSession = ref(null);
 const isCasting = ref(false);
+const isCastable = ref(false);
 
 const teams = computed(() => [game.value.away_team, game.value.home_team]);
 
@@ -262,11 +263,8 @@ const initialiseCast = () => {
         castContext.value.addEventListener(
             window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
             (event) => {
-                if (event.castState === 'CONNECTED') {
-                    isCasting.value = true;
-                } else {
-                    isCasting.value = false;
-                }
+                isCastable.value = (event.castState !== 'NO_DEVICES_AVAILABLE');
+                isCasting.value = (event.castState === 'CONNECTED');
             }
         );
     } else {
@@ -294,7 +292,9 @@ const initialiseCast = () => {
                         <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
                         <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
                         <!-- Put Pitcher vs Hitter info here. -->
-                        <button v-if="castContext" id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" v-if="castContext && isCastable" id="cast-button" @click="toggleCast" :class="{casting: isCasting}">
+                            <path d="M448 64L64.2 64c-23.6 0-42.7 19.1-42.7 42.7l0 63.9 42.7 0 0-63.9 383.8 0 0 298.6-149.2 0 0 42.7 149.4 0c23.6 0 42.7-19.1 42.7-42.7l0-298.6C490.9 83.1 471.6 64 448 64zM21.5 383.6l0 63.9 63.9 0c0-35.3-28.6-63.9-63.9-63.9zm0-85l0 42.4c58.9 0 106.6 48.1 106.6 107l42.7 0c.1-82.4-66.9-149.3-149.3-149.4zM213.6 448l42.7 0C255.8 318.5 151 213.7 21.5 213.4l0 42.4c106-.2 192 86.2 192.1 192.2z"/>
+                        </svg>
                         <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
                             <div v-if="state.half">
                                 {{ pitching.person.firstName }}
@@ -371,8 +371,9 @@ const initialiseCast = () => {
                 <div class="geotemporal">
                     <h2 class="section-title">
                         {{ game?.away_team?.name }} at {{ game?.home_team?.name }}
-                        <!-- Cast button -->
-                        <button v-if="castContext" id="cast-button" @click="toggleCast">{{ isCasting ? 'Stop Casting' : 'Cast to TV' }}</button>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" v-if="castContext && isCastable" id="cast-button" @click="toggleCast" :class="{casting: isCasting}">
+                            <path d="M448 64L64.2 64c-23.6 0-42.7 19.1-42.7 42.7l0 63.9 42.7 0 0-63.9 383.8 0 0 298.6-149.2 0 0 42.7 149.4 0c23.6 0 42.7-19.1 42.7-42.7l0-298.6C490.9 83.1 471.6 64 448 64zM21.5 383.6l0 63.9 63.9 0c0-35.3-28.6-63.9-63.9-63.9zm0-85l0 42.4c58.9 0 106.6 48.1 106.6 107l42.7 0c.1-82.4-66.9-149.3-149.3-149.4zM213.6 448l42.7 0C255.8 318.5 151 213.7 21.5 213.4l0 42.4c106-.2 192 86.2 192.1 192.2z"/>
+                        </svg>
                     </h2>
                     <h4>{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h4>
                 </div>
