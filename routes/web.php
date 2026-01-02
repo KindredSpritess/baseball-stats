@@ -37,12 +37,19 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/cast', function() {
+    return view('game.receiver', [
+        'applicationId' => env('GOOGLE_CAST_APPLICATION'),
+    ]);
+})->name('cast');
+
 Route::controller(GameController::class)->group(function() {
     Route::get('/game/create', 'create')->name('game.create')->middleware('can:create-game');
     Route::post('/game/store', 'store')->name('gamestore')->middleware('can:create-game');
     Route::get('/game/{game}', 'show')->name('game')->middleware('can:score-game,game');
     Route::get('/game/{game}/score', 'score')->name('game.score')->middleware('can:score-game,game');
     Route::get('/game/view/{game}', 'view')->name('game.view');
+    Route::get('/game/receiver/{game}', 'receiver')->name('game.receiver');
     Route::put('/game/{game}/log', 'play')->name('gamelog')->middleware('can:score-game,game');
     Route::post('/game/{game}/undo', 'undoLastPlay')->name('game.undoLastPlay')->middleware('can:score-game,game');
     Route::patch('/game/{game}/log', 'plays')->name('fullgamelog')->middleware('can:score-game,game');

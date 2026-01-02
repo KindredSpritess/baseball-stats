@@ -3,8 +3,13 @@ import { createApp } from 'vue';
 import Game from './components/Game.vue';
 
 const el = document.getElementById('app');
-createApp(Game, {
-    gameId: Number(el.dataset.gameId),
-    ended: el.dataset.ended === 'true',
-    inning: parseInt(el.dataset.inning),
-}).mount('#app');
+if (el) {
+    createApp(Game, {
+        gameId: Number(el.dataset.gameId),
+        ended: el.dataset.ended === 'true',
+        inning: parseInt(el.dataset.inning),
+    }).mount('#app');
+} else {
+    window.Game = Game;
+    window.createApp = createApp;
+}

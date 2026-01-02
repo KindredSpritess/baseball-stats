@@ -15,6 +15,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  isReceiver: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const game = ref({
@@ -31,6 +36,16 @@ const plays = ref([]);
 const field = ref(null);
 const isMobile = ref(window.innerWidth <= 768);
 
+const castContext = ref(null);
+const castSession = ref(null);
+const isCasting = ref(false);
+const isCastable = ref(false);
+
+const MENU_ROW = ['menu-plays', 'menu-away', 'menu-home'];
+
+// Component map when utilizing arrow keys to move around.
+const selectedComponent = ref('');
+
 const teams = computed(() => [game.value.away_team, game.value.home_team]);
 
 const hitting = computed(() => {
@@ -42,7 +57,6 @@ const hitting = computed(() => {
 
 const pitching = computed(() => {
     const team = teams.value[1 - state.value.half];
-    const lineup = state.value.lineup?.[1 - state.value.half];
     const defense = state.value.defense?.[1 - state.value.half];
     return team?.players?.find(player => player.id === defense?.['1']);
 });
@@ -103,6 +117,22 @@ const appendPlays = (playData) => {
     updatePlays();
 };
 
+const toggleCast = () => {
+    if (!castContext.value) {
+        return;
+    }
+    if (isCasting.value) {
+        castContext.value.endCurrentSession(true);
+    } else {
+        castContext.value.requestSession().then(() => {
+            castSession.value = castContext.value.getCurrentSession();
+            castSession.value.sendMessage('urn:x-cast:app.statskeeper.game', {
+                gameId: game.value.id,
+            });
+        }).catch(field.value.toast);
+    }
+};
+
 const fetchData = () => {
     fetch(`/api/game/${game.value.id}`)
         .then(response => response.json())
@@ -110,7 +140,15 @@ const fetchData = () => {
             game.value = data.game;
             state.value = data.state;
             stats.value = data.stats;
+            if (selectedInning.value === null) {
+                selectedInning.value = state.value.inning;
+            }
             updatePlays();
+            // Set CSS variables for team colors
+            document.documentElement.style.setProperty('--away-primary', game.value.away_team?.primary_color || '#1e88eA');
+            document.documentElement.style.setProperty('--away-secondary', game.value.away_team?.secondary_color || '#ffffff');
+            document.documentElement.style.setProperty('--home-primary', game.value.home_team?.primary_color || '#43a047');
+            document.documentElement.style.setProperty('--home-secondary', game.value.home_team?.secondary_color || '#fdd835');
             nextTick(() => {
                 if (field.value) {
                     field.value.updateStatus({
@@ -168,6 +206,15 @@ onMounted(() => {
             }
             if (event.state) {
                 state.value = event.state;
+                // Update fielding and batting colors
+                const fieldingPrimary = state.value.half ? 'var(--away-primary)' : 'var(--home-primary)';
+                const fieldingSecondary = state.value.half ? 'var(--away-secondary)' : 'var(--home-secondary)';
+                const battingPrimary = state.value.half ? 'var(--home-primary)' : 'var(--away-primary)';
+                const battingSecondary = state.value.half ? 'var(--home-secondary)' : 'var(--away-secondary)';
+                document.documentElement.style.setProperty('--fielding-primary', fieldingPrimary);
+                document.documentElement.style.setProperty('--fielding-secondary', fieldingSecondary);
+                document.documentElement.style.setProperty('--batting-primary', battingPrimary);
+                document.documentElement.style.setProperty('--batting-secondary', battingSecondary);
             }
             if (event.stats) {
                 // Merge stats
@@ -204,7 +251,113 @@ onMounted(() => {
             });
         });
     }
+
+    // Cast initialization
+    if (!props.isReceiver) {
+        initialiseCast();
+    } else {
+        selectedComponent.value = 'menu-plays';
+        window.addEventListener('keydown', keyDownHandler);
+    }
 });
+
+const keyDownHandler = (event) => {
+    // Build the component map based on selected view
+    const componentMap = {};
+    if (MENU_ROW.includes(selectedComponent.value)) {
+        componentMap.down = selectedView.value === 'away' ? 'away-boxscore' :
+                            selectedView.value === 'home' ? 'home-boxscore' :
+                            'inning-selector-1';
+        let pos = MENU_ROW.indexOf(selectedComponent.value);
+        componentMap.left = MENU_ROW[(pos + MENU_ROW.length - 1) % MENU_ROW.length];
+        componentMap.right = MENU_ROW[(pos + 1) % MENU_ROW.length];
+    } else if (selectedComponent.value.match(/^inning-selector-\d+$/)) {
+        const highlightedInning = parseInt(selectedComponent.value.split('-').pop());
+        componentMap.up = 'menu-plays';
+        // First component of selected inning
+        componentMap.down = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
+        componentMap.left = `inning-selector-${((highlightedInning - 2) + state.value.inning) % state.value.inning + 1}`;
+        componentMap.right = `inning-selector-${highlightedInning % state.value.inning + 1}`;
+    } else if (selectedComponent.value.match(/^play-\d+$/)) {
+        let playIndex = parseInt(selectedComponent.value.split('-').pop());
+        let topPlay = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
+        componentMap.up = topPlay === selectedComponent.value ? `inning-selector-${selectedInning.value}` : `play-${playIndex - 1}`;
+        componentMap.down = playIndex < plays.value.length - 1 ? `play-${playIndex + 1}` : null;
+    } else if (selectedComponent.value.match(/^(away|home)-boxscore$/)) {
+        // Check if we're at the top of the box score
+        const component = document.querySelector('.receiver-hover-element');
+        if (component && component.scrollTop === 0) {
+            componentMap.up = 'menu-' + (selectedComponent.value.startsWith('away') ? 'away' : 'home');
+        } else {
+            componentMap.up = 'scroll-5';
+            componentMap.down = 'scroll+5';
+        }
+    }
+
+    let direction = null;
+    switch (event.key) {
+        case 'ArrowUp':
+            direction = 'up';
+            break;
+        case 'ArrowDown':
+            direction = 'down';
+            break;
+        case 'ArrowLeft':
+            direction = 'left';
+            break;
+        case 'ArrowRight':
+            direction = 'right';
+            break;
+        case 'Enter':
+            // Simulate click on selected component
+            const element = document.querySelector('.receiver-hover-element');
+            if (element) {
+                element.click();
+                event.preventDefault();
+            }
+            return;
+        default:
+            return;
+    }
+    const nextComponent = componentMap[direction];
+    console.log(`Moving ${direction} from ${selectedComponent.value} to ${nextComponent}`);
+    if (!nextComponent) {
+        return;
+    }
+    if (nextComponent.match(/^scroll[+-]\d+$/)) {
+        // Scroll the selected component
+        const component = document.querySelector('.receiver-hover-element');
+        if (component) {
+            const amount = parseInt(nextComponent.slice(6));
+            component.scrollBy({ top: amount, behavior: 'smooth' });
+        }
+        return;
+    }
+
+    if (nextComponent) {
+        selectedComponent.value = nextComponent;
+        event.preventDefault();
+    }
+};
+
+const initialiseCast = () => {
+    if (window.cast && window.cast.framework) {
+        window.cast.framework.CastContext.getInstance().setOptions({
+            receiverApplicationId: import.meta.env.VITE_GOOGLE_CAST_APPLICATION,
+            autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+        });
+        castContext.value = window.cast.framework.CastContext.getInstance();
+        castContext.value.addEventListener(
+            window.cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+            (event) => {
+                isCastable.value = (event.castState !== 'NO_DEVICES_AVAILABLE');
+                isCasting.value = (event.castState === 'CONNECTED');
+            }
+        );
+    } else {
+        setTimeout(initialiseCast, 1000);
+    }
+};
 
 </script>
 
@@ -226,6 +379,9 @@ onMounted(() => {
                         <h3 class="geotemporal">{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h3>
                         <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
                         <!-- Put Pitcher vs Hitter info here. -->
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" v-if="castContext && isCastable" id="cast-button" @click="toggleCast" :class="{casting: isCasting}">
+                            <path d="M448 64L64.2 64c-23.6 0-42.7 19.1-42.7 42.7l0 63.9 42.7 0 0-63.9 383.8 0 0 298.6-149.2 0 0 42.7 149.4 0c23.6 0 42.7-19.1 42.7-42.7l0-298.6C490.9 83.1 471.6 64 448 64zM21.5 383.6l0 63.9 63.9 0c0-35.3-28.6-63.9-63.9-63.9zm0-85l0 42.4c58.9 0 106.6 48.1 106.6 107l42.7 0c.1-82.4-66.9-149.3-149.3-149.4zM213.6 448l42.7 0C255.8 318.5 151 213.7 21.5 213.4l0 42.4c106-.2 192 86.2 192.1 192.2z"/>
+                        </svg>
                         <div class="pitcher-vs-hitter" v-if="hitting && pitching && !state.ended">
                             <div v-if="state.half">
                                 {{ pitching.person.firstName }}
@@ -300,7 +456,12 @@ onMounted(() => {
         <div class="desktop-layout">
             <div class="field-section">
                 <div class="geotemporal">
-                    <h2 class="section-title">{{ game?.away_team?.name }} at {{ game?.home_team?.name }}</h2>
+                    <h2 class="section-title">
+                        {{ game?.away_team?.name }} at {{ game?.home_team?.name }}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" v-if="castContext && isCastable" id="cast-button" @click="toggleCast" :class="{casting: isCasting}">
+                            <path d="M448 64L64.2 64c-23.6 0-42.7 19.1-42.7 42.7l0 63.9 42.7 0 0-63.9 383.8 0 0 298.6-149.2 0 0 42.7 149.4 0c23.6 0 42.7-19.1 42.7-42.7l0-298.6C490.9 83.1 471.6 64 448 64zM21.5 383.6l0 63.9 63.9 0c0-35.3-28.6-63.9-63.9-63.9zm0-85l0 42.4c58.9 0 106.6 48.1 106.6 107l42.7 0c.1-82.4-66.9-149.3-149.3-149.4zM213.6 448l42.7 0C255.8 318.5 151 213.7 21.5 213.4l0 42.4c106-.2 192 86.2 192.1 192.2z"/>
+                        </svg>
+                    </h2>
                     <h4>{{ new Date(game.firstPitch).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) }} at {{ game.location }}</h4>
                 </div>
                 <threed-field ref="field" :game="game" :state="state" :stats="stats" :home-color="game.home_team?.primary_color" :away-color="game.away_team?.primary_color" />
@@ -326,55 +487,58 @@ onMounted(() => {
             </div>
             <div class="sidebar">
                 <div class="sidebar-menu">
-                    <button @click="selectedView = 'plays'" :class="{active: selectedView === 'plays'}">Play by Play</button>
-                    <button @click="selectedView = 'away'" :class="{active: selectedView === 'away', 'away-team-color': selectedView === 'away'}">{{ game?.away_team?.name }}</button>
-                    <button @click="selectedView = 'home'" :class="{active: selectedView === 'home', 'home-team-color': selectedView === 'home'}">{{ game?.home_team?.name }}</button>
+                    <button @click="selectedView = 'plays'" :class="{active: selectedView === 'plays', 'receiver-hover-element': selectedComponent === 'menu-plays'}">Play by Play</button>
+                    <button @click="selectedView = 'away'" :class="{active: selectedView === 'away', 'away-team-color': selectedView === 'away', 'receiver-hover-element': selectedComponent === 'menu-away'}">{{ game?.away_team?.name }}</button>
+                    <button @click="selectedView = 'home'" :class="{active: selectedView === 'home', 'home-team-color': selectedView === 'home', 'receiver-hover-element': selectedComponent === 'menu-home'}">{{ game?.home_team?.name }}</button>
                 </div>
                 <div class="sidebar-content">
-                    <div v-if="selectedView === 'plays'" id='play-by-play'>
+                    <template v-if="selectedView === 'plays'">
                         <div class="innings-selector">
-                            <a v-for="i in state.inning" :key="i" href="#plays-main" class="inning-link" :data-inning="i" :class="{'inning-selected': selectedInning === i}" @click="selectedInning=i">{{ i }}</a>
+                            <a v-for="i in state.inning" :key="i" href="#plays-main" class="inning-link" :data-inning="i" :class="{'inning-selected': selectedInning === i, 'receiver-hover-element': selectedComponent === `inning-selector-${i}`} " @click="selectedInning=i">{{ i }}</a>
                         </div>
-                        <template v-for="(pa, i) in plays" :key="i">
-                            <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
-                                <div :class="{
-                                                'plate-appearance-container': !pa[0]?.game_event,
-                                                'game-event-container': pa[0]?.game_event,
-                                                'selected': selectedPlay === i,
-                                            }" @click="selectedPlay = selectedPlay === i ? null : i">
-                                    <template v-for="(play, j) in pa" :key="j">
-                                        <div v-if="!play.command" v-for="pitch in play.play.split(',')[0].split('')" :key="`${i}-${pitch}`" class='pitch' :class="pitch" :data-play-id="i" :data-inning="play.inning" :data-inning-half="play.inning_half">{{ pitchDescription(pitch) }}</div>
-                                        <div v-if="play.human"
-                                            :class="{'run-scoring': play.run_scoring, 'plate-appearance': play.plate_appearance}"
-                                            :data-play-id="i"
-                                            :data-inning="play.inning"
-                                            :data-inning-half="play.inning_half"
+                        <div v-if="selectedView === 'plays'" id='play-by-play'>
+                            <template v-for="(pa, i) in plays" :key="i">
+                                <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
+                                    <div :class="{
+                                                    'plate-appearance-container': !pa[0]?.game_event,
+                                                    'game-event-container': pa[0]?.game_event,
+                                                    'selected': selectedPlay === i,
+                                                    'receiver-hover-element': selectedComponent === `play-${i}`,
+                                                }" @click="selectedPlay = selectedPlay === i ? null : i">
+                                        <template v-for="(play, j) in pa" :key="j">
+                                            <div v-if="!play.command" v-for="pitch in play.play.split(',')[0].split('')" :key="`${i}-${pitch}`" class='pitch' :class="pitch" :data-play-id="i" :data-inning="play.inning" :data-inning-half="play.inning_half">{{ pitchDescription(pitch) }}</div>
+                                            <div v-if="play.human"
+                                                :class="{'run-scoring': play.run_scoring, 'plate-appearance': play.plate_appearance}"
+                                                :data-play-id="i"
+                                                :data-inning="play.inning"
+                                                :data-inning-half="play.inning_half"
+                                            >
+                                                <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                                                {{ play.human }}
+                                            </div>
+                                            <div v-if="play?.game_event"
+                                                class='game-event'
+                                                :class="play.inning_half ? 'game-event-home' : 'game-event-away'"
+                                                :data-inning="play.inning"
+                                                :data-inning-half="play.inning_half"
+                                            >
+                                                {{ play.game_event }}
+                                            </div>
+                                        </template>
+                                        <div 
+                                            v-if="!state.ended && selectedInning === state.inning && (i === plays.length - 1)"
+                                            class="plate-appearance"
+                                            :data-inning="state.inning" :data-inning-half="state.half"
                                         >
-                                            <i class="fa-solid fa-chevron-down toggle-icon"></i>
-                                            {{ play.human }}
+                                            <i class="fa-solid fa-chevron-down toggle-icon"></i> {{ hitting?.person.firstName }} {{ hitting?.person?.lastName }} at bat
                                         </div>
-                                        <div v-if="play?.game_event"
-                                            class='game-event'
-                                            :class="play.inning_half ? 'game-event-home' : 'game-event-away'"
-                                            :data-inning="play.inning"
-                                            :data-inning-half="play.inning_half"
-                                        >
-                                            {{ play.game_event }}
-                                        </div>
-                                    </template>
-                                    <div 
-                                        v-if="!state.ended && selectedInning === state.inning && (i === plays.length - 1)"
-                                        class="plate-appearance"
-                                        :data-inning="state.inning" :data-inning-half="state.half"
-                                    >
-                                        <i class="fa-solid fa-chevron-down toggle-icon"></i> {{ hitting?.person.firstName }} {{ hitting?.person?.lastName }} at bat
                                     </div>
-                                </div>
+                                </template>
                             </template>
-                        </template>
-                    </div>
-                    <box-score v-if="selectedView === 'away'" :game="game" :home="false" :state="state" :stats="stats" />
-                    <box-score v-if="selectedView === 'home'" :game="game" :home="true" :state="state" :stats="stats" />
+                        </div>
+                    </template>
+                    <box-score v-if="selectedView === 'away'" :game="game" :home="false" :state="state" :stats="stats" :class="{'receiver-hover-element': selectedComponent === 'away-boxscore'}" />
+                    <box-score v-if="selectedView === 'home'" :game="game" :home="true" :state="state" :stats="stats" :class="{'receiver-hover-element': selectedComponent === 'home-boxscore'}" />
                 </div>
             </div>
         </div>

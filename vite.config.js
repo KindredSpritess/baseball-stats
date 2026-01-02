@@ -13,7 +13,7 @@ export default defineConfig({
     ],
     server: {
         host: 'baseball.lndo.site',
-        // port: 5173,
+        port: 5173,
         https: {
             key: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.key'),
             cert: fs.readFileSync('/Users/kindred/.lando/certs/appserver.baseball.crt'),

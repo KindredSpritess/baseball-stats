@@ -75,12 +75,38 @@ const initScene = () => {
   // Light
   light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
 
+  // Sky
+  scene.clearColor = new BABYLON.Color3(0.53, 0.81, 0.92) // Sky blue
+  const skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
+  const ctxSky = skyTexture.getContext()
+  ctxSky.fillStyle = '#87CEEB' // Sky blue
+  ctxSky.fillRect(0, 0, 16, 16)
+  // Draw clouds
+  ctxSky.fillStyle = 'rgba(255, 255, 255, 0.8)'
+  for (let i = 0; i < 30; i++) {
+    const x = Math.random() * 16
+    const y = Math.random() * 16
+    const radius = Math.random() * 0.625 + 0.156
+    ctxSky.beginPath()
+    ctxSky.arc(x, y, radius, 0, 2 * Math.PI)
+    ctxSky.fill()
+    // Add some overlapping for fluffier clouds
+    if (Math.random() > 0.5) {
+      ctxSky.beginPath()
+      ctxSky.arc(x + Math.random() * 1 - 0.5, y + Math.random() * 1 - 0.5, radius * 0.7, 0, 2 * Math.PI)
+      ctxSky.fill()
+    }
+  }
+  skyTexture.update()
+  const skyLayer = new BABYLON.Layer('skyLayer', null, scene)
+  skyLayer.texture = skyTexture
+
   createField();
   createStatusDisplay();
 
   // Render loop
   engine.runRenderLoop(() => {
-    animateStatusLights()
+    animateStatusLights();
     scene.render()
   })
 }
@@ -90,7 +116,28 @@ const createField = () => {
   // Field (outfield)
   const field = BABYLON.MeshBuilder.CreateGround('field', {width: 1000, height: 1000}, scene)
   const fieldMaterial = new BABYLON.StandardMaterial('fieldMat', scene)
-  fieldMaterial.diffuseColor = new BABYLON.Color3(0.46, 0.73, 0.60) // #75d89b
+  // Create grass texture
+  const grassTexture = new BABYLON.DynamicTexture('grassTexture', {width: 16, height: 16}, scene)
+  const ctx = grassTexture.getContext()
+  ctx.fillStyle = '#75d89b' // Base green
+  ctx.fillRect(0, 0, 16, 16)
+  // Draw wispy grass blades
+  ctx.strokeStyle = '#4a8c5c' // Darker green for blades
+  ctx.lineWidth = 0.1
+  ctx.globalAlpha = 0.6
+  for (let i = 0; i < 2000; i++) {
+    const x = Math.random() * 16
+    const y = Math.random() * 16
+    const length = Math.random() * 0.156 + 0.078 // Length of blade
+    const angle = Math.random() * Math.PI / 4 - Math.PI / 8 // Slight angle
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    ctx.lineTo(x + Math.sin(angle) * length, y - Math.cos(angle) * length)
+    ctx.stroke()
+  }
+  ctx.globalAlpha = 1
+  grassTexture.update()
+  fieldMaterial.diffuseTexture = grassTexture
   field.material = fieldMaterial
   field.position = new BABYLON.Vector3(224, 0, 250)
 
