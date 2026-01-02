@@ -535,8 +535,8 @@ const initialiseCast = () => {
                             </template>
                         </div>
                     </template>
-                    <box-score v-if="selectedView === 'away'" :game="game" :home="false" :state="state" :stats="stats" />
-                    <box-score v-if="selectedView === 'home'" :game="game" :home="true" :state="state" :stats="stats" />
+                    <box-score v-if="selectedView === 'away'" :game="game" :home="false" :state="state" :stats="stats" :class="{'receiver-hover-element': selectedComponent === 'away-boxscore'}" />
+                    <box-score v-if="selectedView === 'home'" :game="game" :home="true" :state="state" :stats="stats" :class="{'receiver-hover-element': selectedComponent === 'home-boxscore'}" />
                 </div>
             </div>
         </div>
