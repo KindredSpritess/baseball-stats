@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     selectedPerson = person;
                                     playerSearchInput.value = `${person.lastName}, ${person.firstName}`;
                                     playerSuggestions.style.display = 'none';
+                                    // Focus on number input
+                                    playerNumberInput.focus();
                                 });
 
                                 playerSuggestions.appendChild(item);

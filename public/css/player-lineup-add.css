@@ -60,7 +60,7 @@
     cursor: pointer;
 }
 
-.suggestion-item:hover {
+.suggestion-item:hover, .suggestion-item.active {
     background-color: #f1f1f1;
 }
 
