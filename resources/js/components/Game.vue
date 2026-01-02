@@ -257,86 +257,88 @@ onMounted(() => {
         initialiseCast();
     } else {
         selectedComponent.value = 'menu-plays';
-        window.addEventListener('keydown', (event) => {
-            // Build the component map based on selected view
-            const componentMap = {};
-            if (MENU_ROW.includes(selectedComponent.value)) {
-                componentMap.down = selectedView.value === 'away' ? 'away-boxscore' :
-                                    selectedView.value === 'home' ? 'home-boxscore' :
-                                    'inning-selector-1';
-                let pos = MENU_ROW.indexOf(selectedComponent.value);
-                componentMap.left = MENU_ROW[(pos + MENU_ROW.length - 1) % MENU_ROW.length];
-                componentMap.right = MENU_ROW[(pos + 1) % MENU_ROW.length];
-            } else if (selectedComponent.value.match(/^inning-selector-\d+$/)) {
-                const highlightedInning = parseInt(selectedComponent.value.split('-').pop());
-                componentMap.up = 'menu-plays';
-                // First component of selected inning
-                componentMap.down = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
-                componentMap.left = `inning-selector-${((highlightedInning - 2) + state.value.inning) % state.value.inning + 1}`;
-                componentMap.right = `inning-selector-${highlightedInning % state.value.inning + 1}`;
-            } else if (selectedComponent.value.match(/^play-\d+$/)) {
-                let playIndex = parseInt(selectedComponent.value.split('-').pop());
-                let topPlay = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
-                componentMap.up = topPlay === selectedComponent.value ? `inning-selector-${selectedInning.value}` : `play-${playIndex - 1}`;
-                componentMap.down = playIndex < plays.value.length - 1 ? `play-${playIndex + 1}` : null;
-            } else if (selectedComponent.value.match(/^(away|home)-boxscore$/)) {
-                // Check if we're at the top of the box score
-                const component = document.querySelector('.receiver-hover-element');
-                if (component && component.scrollTop === 0) {
-                    componentMap.up = 'menu-' + (selectedComponent.value.startsWith('away') ? 'away' : 'home');
-                } else {
-                    componentMap.up = 'scroll-5';
-                    componentMap.down = 'scroll+5';
-                }
-            }
-
-            let direction = null;
-            switch (event.key) {
-                case 'ArrowUp':
-                    direction = 'up';
-                    break;
-                case 'ArrowDown':
-                    direction = 'down';
-                    break;
-                case 'ArrowLeft':
-                    direction = 'left';
-                    break;
-                case 'ArrowRight':
-                    direction = 'right';
-                    break;
-                case 'Enter':
-                    // Simulate click on selected component
-                    const element = document.querySelector('.receiver-hover-element');
-                    if (element) {
-                        element.click();
-                        event.preventDefault();
-                    }
-                    return;
-                default:
-                    return;
-            }
-            const nextComponent = componentMap[direction];
-            console.log(`Moving ${direction} from ${selectedComponent.value} to ${nextComponent}`);
-            if (!nextComponent) {
-                return;
-            }
-            if (nextComponent.match(/^scroll[+-]\d+$/)) {
-                // Scroll the selected component
-                const component = document.querySelector('.receiver-hover-element');
-                if (component) {
-                    const amount = parseInt(nextComponent.slice(6));
-                    component.scrollBy({ top: amount, behavior: 'smooth' });
-                }
-                return;
-            }
-
-            if (nextComponent) {
-                selectedComponent.value = nextComponent;
-                event.preventDefault();
-            }
-        });
+        window.addEventListener('keydown', keyDownHandler);
     }
 });
+
+const keyDownHandler = (event) => {
+    // Build the component map based on selected view
+    const componentMap = {};
+    if (MENU_ROW.includes(selectedComponent.value)) {
+        componentMap.down = selectedView.value === 'away' ? 'away-boxscore' :
+                            selectedView.value === 'home' ? 'home-boxscore' :
+                            'inning-selector-1';
+        let pos = MENU_ROW.indexOf(selectedComponent.value);
+        componentMap.left = MENU_ROW[(pos + MENU_ROW.length - 1) % MENU_ROW.length];
+        componentMap.right = MENU_ROW[(pos + 1) % MENU_ROW.length];
+    } else if (selectedComponent.value.match(/^inning-selector-\d+$/)) {
+        const highlightedInning = parseInt(selectedComponent.value.split('-').pop());
+        componentMap.up = 'menu-plays';
+        // First component of selected inning
+        componentMap.down = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
+        componentMap.left = `inning-selector-${((highlightedInning - 2) + state.value.inning) % state.value.inning + 1}`;
+        componentMap.right = `inning-selector-${highlightedInning % state.value.inning + 1}`;
+    } else if (selectedComponent.value.match(/^play-\d+$/)) {
+        let playIndex = parseInt(selectedComponent.value.split('-').pop());
+        let topPlay = `play-${plays.value.findIndex(pa => (pa[0]?.inning ?? state.value.inning) === selectedInning.value)}`;
+        componentMap.up = topPlay === selectedComponent.value ? `inning-selector-${selectedInning.value}` : `play-${playIndex - 1}`;
+        componentMap.down = playIndex < plays.value.length - 1 ? `play-${playIndex + 1}` : null;
+    } else if (selectedComponent.value.match(/^(away|home)-boxscore$/)) {
+        // Check if we're at the top of the box score
+        const component = document.querySelector('.receiver-hover-element');
+        if (component && component.scrollTop === 0) {
+            componentMap.up = 'menu-' + (selectedComponent.value.startsWith('away') ? 'away' : 'home');
+        } else {
+            componentMap.up = 'scroll-5';
+            componentMap.down = 'scroll+5';
+        }
+    }
+
+    let direction = null;
+    switch (event.key) {
+        case 'ArrowUp':
+            direction = 'up';
+            break;
+        case 'ArrowDown':
+            direction = 'down';
+            break;
+        case 'ArrowLeft':
+            direction = 'left';
+            break;
+        case 'ArrowRight':
+            direction = 'right';
+            break;
+        case 'Enter':
+            // Simulate click on selected component
+            const element = document.querySelector('.receiver-hover-element');
+            if (element) {
+                element.click();
+                event.preventDefault();
+            }
+            return;
+        default:
+            return;
+    }
+    const nextComponent = componentMap[direction];
+    console.log(`Moving ${direction} from ${selectedComponent.value} to ${nextComponent}`);
+    if (!nextComponent) {
+        return;
+    }
+    if (nextComponent.match(/^scroll[+-]\d+$/)) {
+        // Scroll the selected component
+        const component = document.querySelector('.receiver-hover-element');
+        if (component) {
+            const amount = parseInt(nextComponent.slice(6));
+            component.scrollBy({ top: amount, behavior: 'smooth' });
+        }
+        return;
+    }
+
+    if (nextComponent) {
+        selectedComponent.value = nextComponent;
+        event.preventDefault();
+    }
+};
 
 const initialiseCast = () => {
     if (window.cast && window.cast.framework) {
