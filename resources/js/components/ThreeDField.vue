@@ -77,7 +77,6 @@ const initScene = () => {
 
   // Sky
   scene.clearColor = new BABYLON.Color3(0.53, 0.81, 0.92) // Sky blue
-  const skyMaterial = new BABYLON.StandardMaterial('skyMat', scene)
   const skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
   const ctxSky = skyTexture.getContext()
   ctxSky.fillStyle = '#87CEEB' // Sky blue

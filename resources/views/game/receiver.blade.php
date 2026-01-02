@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/game.css" />
+    <script src="https://kit.fontawesome.com/cc3e56010d.js" crossorigin="anonymous"></script>
     <script src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
     <script src="//www.gstatic.com/cast/sdk/libs/devtools/debug_layer/caf_receiver_logger.js"></script>
     <script>
@@ -30,7 +31,8 @@
             --home-secondary: #fdd835;
         }
     </style>
-    <title>Baseball Game Receiver</title>
+    <title>Stats Keeper</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
 <div id="receiver">

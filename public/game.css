@@ -419,3 +419,7 @@ tr.atbat {
 #cast-button.casting {
   fill: var(--primary);
 }
+
+#receiver .receiver-hover-element {
+  filter: drop-shadow(0 0 0.75rem var(--primary));
+}
