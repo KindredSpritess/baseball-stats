@@ -89,6 +89,18 @@
       <button @click="stage = 'scoring-decision'" class="back-btn">← Back to Scoring Decision</button>
     </div>
 
+    <div v-else-if="stage === 'strikeout-options'" class="step">
+      <h3>Strikeout Options</h3>
+      <div class="options-grid">
+        <button @click="addResult('K2')" class="option-btn out">Put Out by Catcher</button>
+        <button @click="stage = 'fielding-outcome'" class="option-btn out">Put Out Other</button>
+        <button @click="addResult('KWP')" class="option-btn advance">Reached on Wild Pitch</button>
+        <button @click="addResult('KPB')" class="option-btn advance">Reached on Passed Ball</button>
+        <button @click="decision = 'E'; decisive = true; stage = 'fielding-outcome'" class="option-btn advance">Reached on Error</button>
+      </div>
+      <button @click="stage = 'pitch'; trajectory = ''; undoLastPitch()" class="back-btn">← Undo Last Pitch</button>
+    </div>
+
     <div v-else-if="stage === 'fielding-outcome'" class="step">
       <FielderSelection :defense="state.defense[(state.half+1)%2]" :players="game.players" :actions="this.decision === 'E' ? { 'E': 'Fielding Error', 'WT': 'Throwing Error' } : { '': 'Put Out' }" @action-selected="handleFieldingAction" />
     </div>
@@ -350,13 +362,14 @@ export default {
 
     addResult(result) {
       if (result === 'K') {
-        if (this.preferences.allowDropThirdStrikes) {
+        if ((this.preferences.allowDropThirdStrikes ?? true) && (this.state.outs > 1 || this.state.bases[0] === null)) {
           this.trajectory = 'K';
-          this.stage = 'fielding-outcome';
+          this.stage = 'strikeout-options';
           return;
         }
         result = 'K2';
       }
+      this.trajectory = '';
       if (result === 'HBP') {
         this.$emit('force');
         this.pitchSequence += '.';
