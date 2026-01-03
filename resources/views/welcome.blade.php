@@ -51,7 +51,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                 <p class="game-details"><span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}">{{ $game->firstPitch->format('M j, Y g:i A') }}</span> - {{ $game->half ? 'Bottom' : 'Top' }} {{ $game->inning }}</p>
                 <a href="{{ route('game.view', ['game' => $game->id]) }}" class="game-link">View Game →</a>
                 @can('score-game', $game)
-                <a href="{{ route('game.score', ['game' => $game->id]) }}" class="game-link score-link">Continue Scoring →</a>
+                <a href="{{ route('game', ['game' => $game->id]) }}" class="game-link score-link">Score Game →</a>
                 @endcan
             </div>
             @endforeach
