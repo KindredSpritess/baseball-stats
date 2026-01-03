@@ -85,10 +85,10 @@ class GameState implements CastsAttributes
             'losing' => $players[$value['pitchersOfRecord']['losing'] ?? null] ?? null,
             'saving' => $players[$value['pitchersOfRecord']['saving'] ?? null] ?? null,
         ];
-        $game->runners = array_map(function ($r) use ($game) {
+        $game->runners = array_map(function ($r) use ($game, $players) {
             $team = $game->half ? $game->away_team : $game->home_team;
             return [
-                'pitcher' => $team->players()->find($r['pitcher']),
+                'pitcher' => $players[$r['pitcher']] ?? $team->players()->find($r['pitcher']),
                 'base' => $r['base'],
                 'earned' => $r['earned'],
                 'expectedOuts' => $r['expectedOuts'],
