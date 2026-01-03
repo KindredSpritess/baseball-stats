@@ -309,6 +309,13 @@
         }
     });
 
+    const hasBallInPlay = (pitches) => {
+        if (pitches.match(/^(#|!|DSUB|@)/)) {
+            return false;
+        }
+        return pitches.includes('x');
+    }
+
     $('#log').on('submit', (event) => {
         event.preventDefault();
         const parts = [];
@@ -330,7 +337,7 @@
         if (parts.length || $('#pitches').val()) {
             parts.unshift($('#pitches').val());
         }
-        if ($('#pitches').val().includes('x') && !$('#inplay').val()) {
+        if (hasBallInPlay($('#pitches').val()) && !$('#inplay').val()) {
             alert('No ball in play.');
             return;
         }
