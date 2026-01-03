@@ -500,6 +500,12 @@ const animateBall = (battedBall) => {
   return trajectory.duration / 30 + 0.5; // Return number of seconds for animation
 }
 
+const FOUL_BALL = {
+  position: [225.97, 442.13],
+  distance: 100,
+  type: 'G',
+};
+
 // Update status display
 const updateStatus = (status, play) => {
   if (!scene) return;
@@ -539,6 +545,7 @@ const updateStatus = (status, play) => {
   let delayFrames = 0;
 
   const hasPitch = !command && playDetails.split(',')[0] != '';
+  const foul_ball = !command && playDetails.split(',')[0].endsWith('f') ? FOUL_BALL : null;
 
   const nextRunners = {};
   // Animate runners based on actions
@@ -566,7 +573,7 @@ const updateStatus = (status, play) => {
 
   // If we have a batted ball, animate the batted ball.
   if (hasPitch) {
-    delayFrames = Math.max(delayFrames, animateBall(ball_in_play));
+    delayFrames = Math.max(delayFrames, animateBall(ball_in_play ?? foul_ball));
   }
 
   if (delayFrames > 0) {
