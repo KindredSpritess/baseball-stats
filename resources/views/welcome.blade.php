@@ -32,6 +32,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
 
     @if(auth()->check())
     <p class="welcome-subtitle">Welcome back, {{ auth()->user()->name }}!</p>
+    <p><a href="{{ route('user') }}">User Preferences</a></p>
     @endif
 
     @if($inProgressGames->count() > 0)

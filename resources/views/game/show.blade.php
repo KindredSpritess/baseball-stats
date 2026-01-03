@@ -52,7 +52,11 @@
                     <x-player-lineup-add :game="$game" :team="$game->home_team" />
                 </div>
             </div>
-            <h3 class="geotemporal"><span class="local-time" data-utc="{{ $game->firstPitch->valueOf() }}" data-format='{"month": "short", "day": "numeric", "year": "numeric", "hour": "numeric", "minute": "2-digit"}'>{{ Carbon\Carbon::parse($game->firstPitch)->format('M jS g:i') }}</span> at {{ $game->location }}</h3>
+            <h3 class="geotemporal">
+                <span class="local-time" data-utc="{{ $game->firstPitch->valueOf() }}" data-format='{"month": "short", "day": "numeric", "year": "numeric", "hour": "numeric", "minute": "2-digit"}'>{{ Carbon\Carbon::parse($game->firstPitch)->format('M jS g:i') }}</span>
+                at {{ $game->location }}
+                <a href="{{ route('game.score', ['game' => $game->id]) }}">Touch Controls</a>
+            </h3>
             @if (!$game->ended)
             <p class="current-status">
                 @if ($game->half)
