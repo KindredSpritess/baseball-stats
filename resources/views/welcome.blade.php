@@ -50,6 +50,9 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                 </div>
                 <p class="game-details"><span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}">{{ $game->firstPitch->format('M j, Y g:i A') }}</span> - {{ $game->half ? 'Bottom' : 'Top' }} {{ $game->inning }}</p>
                 <a href="{{ route('game.view', ['game' => $game->id]) }}" class="game-link">View Game →</a>
+                @can('score-game', $game)
+                <a href="{{ route('game.score', ['game' => $game->id]) }}" class="game-link score-link">Continue Scoring →</a>
+                @endcan
             </div>
             @endforeach
         </div>
@@ -106,6 +109,9 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                         <span class="game-location">(<span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}" data-format='{"month": "short", "day": "numeric", "year": "numeric"}'>{{ $game->firstPitch->format('M j, Y') }}</span>)</span>
                                     @else
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</a>
+                                        @can('score-game', $game)
+                                        <a href="{{ route('game', ['game' => $game->id]) }}" class="game-location">(Score)</a>
+                                        @endcan
                                         <span class="game-location">(<span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}">{{ $game->firstPitch->format('M j, Y g:i A') }}</span>)</span>
                                         <br/>
                                         <span class="game-location">{{ $game->location }}</span>
