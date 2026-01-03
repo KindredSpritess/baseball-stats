@@ -109,13 +109,16 @@ class GameController extends Controller
         } else {
             $plays = $request->input('plays');
         }
-        $game->players()->delete();
         $game->plays()->delete();
         $plays = collect(preg_split("/\n/", $plays))
             ->filter(fn (string $play) => trim($play))
             ->map(fn (string $play) => new Play(['play' => $play]));
         $gs = new GameState;
         $gs->get($game, 'state', '{}', []);
+        $game->players->each(function ($player) {
+            $player->stats = [];
+        });
+
         foreach ($plays as $k => $play) {
             try {
                 if (str_starts_with($play->play, 'Game Over')) {
@@ -149,6 +152,10 @@ class GameController extends Controller
                 $player->save();
             }
         }
+        $game->players->filter(function ($p) {
+            Log::info("Final stats for player {$p->id}: " . json_encode($p->stats));
+            return empty($p->stats);
+        })->each(fn ($p) => $p->delete());
         GameUpdated::dispatch($game->id, null, null, null, true);
         $gs = new GameState;
         return new JsonResponse(['status' => 'success', 'state' => json_decode($gs->set($game, '', '', []), true)]);
