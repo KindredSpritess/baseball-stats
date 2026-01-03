@@ -5,10 +5,10 @@ Welcome
 
 @section('content')
 @php
-$now = now();
+$now = \Carbon\CarbonImmutable::now();
 $threeMonthsAgo = $now->copy()->subMonths(3);
 $inProgressGames = collect($games)->filter(function($game) use ($now) {
-    return !$game->ended && $game->firstPitch < $now->subHours(2);
+    return !$game->ended && $game->firstPitch->lessThan($now->addHours(4));
 });
 $games->each(function($game) {
     // Load state.
