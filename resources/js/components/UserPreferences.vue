@@ -1,6 +1,9 @@
 <template>
   <div class="user-preferences">
     <h2>User Preferences</h2>
+    <div v-if="flashMessage" class="flash-message" :class="flashMessage.type">
+      {{ flashMessage.text }}
+    </div>
     <form @submit.prevent="savePreferences">
       <div class="preference-item">
         <label>
@@ -44,6 +47,12 @@
           Remove balk options
         </label>
       </div>
+      <div class="preference-item">
+        <label>
+          <input type="checkbox" v-model="preferences.balksCanCountTowardPitchCount" />
+          Balks can count toward pitch count
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save Preferences</button>
     </form>
   </div>
@@ -62,8 +71,11 @@ export default {
         removeIntentionalWalks: false,
         removeAdvancementOptions: false,
         removeBalks: false,
+        balksCanCountTowardPitchCount: false,
       },
+      flashMessage: null,
       saving: false,
+      flashTimeout: null,
     };
   },
   mounted() {
@@ -74,7 +86,6 @@ export default {
       try {
         const response = await fetch('/api/user', {
           headers: {
-            'Authorization': `Bearer ${this.getToken()}`,
             'Accept': 'application/json',
           },
         });
@@ -93,22 +104,31 @@ export default {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.getToken()}`,
             'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           },
           body: JSON.stringify({ preferences: this.preferences }),
         });
         if (response.ok) {
-          alert('Preferences saved successfully!');
+          this.showFlashMessage('Preferences saved successfully!', 'success');
         } else {
-          alert('Failed to save preferences.');
+          this.showFlashMessage('Failed to save preferences.', 'error');
         }
       } catch (error) {
         console.error('Failed to save preferences:', error);
-        alert('Failed to save preferences.');
+        this.showFlashMessage('Failed to save preferences.', 'error');
       } finally {
         this.saving = false;
       }
+    },
+    showFlashMessage(text, type) {
+      this.flashMessage = { text, type };
+      if (this.flashTimeout) {
+        clearTimeout(this.flashTimeout);
+      }
+      this.flashTimeout = setTimeout(() => {
+        this.flashMessage = null;
+      }, 5000); // Clear after 5 seconds
     },
     getToken() {
       return window.Laravel.apiToken;
@@ -122,6 +142,25 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.flash-message {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.flash-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.flash-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 .preference-item {
