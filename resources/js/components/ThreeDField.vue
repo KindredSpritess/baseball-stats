@@ -699,8 +699,8 @@ const drawLinescore = (ctx) => {
 
   const totalX = 70 + 9 * colWidth - 10
   ctx.fillText('R', totalX, linescoreY - lineHeight)
-  ctx.fillText(props.stats.away.R ?? 0, totalX, linescoreY)
-  ctx.fillText(props.stats.home.R ?? 0, totalX, linescoreY + lineHeight)
+  ctx.fillText(awayTotal ?? 0, totalX, linescoreY)
+  ctx.fillText(homeTotal ?? 0, totalX, linescoreY + lineHeight)
   ctx.fillText('H', totalX + colWidth, linescoreY - lineHeight)
   ctx.fillText(props.stats.away.H ?? 0, totalX + colWidth, linescoreY)
   ctx.fillText(props.stats.home.H ?? 0, totalX + colWidth, linescoreY + lineHeight)
