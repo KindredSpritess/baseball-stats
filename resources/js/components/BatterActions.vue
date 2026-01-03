@@ -224,6 +224,7 @@ export default {
         'b': 'Ball in dirt',
         'p': 'Pitchout',
         'i': 'Intentional Ball',
+        'blk': 'Balk',
       },
       basePitchClasses: {
         '.': 'advance',
@@ -238,6 +239,7 @@ export default {
         'CI': 'advance',
         'HBP': 'advance',
         'INT2': 'out',
+        'blk': 'advance',
       },
       BASES: {
         1: '1st',
@@ -278,6 +280,10 @@ export default {
       if (!this.state.bases.some(base => base !== null)) {
         delete outcomes['r']; // No runners to be going.
         delete outcomes['p']; // No runners to pitch out for.
+        delete outcomes['blk']; // No runners to balk with.
+      }
+      if (this.preferences.removeBalks) {
+        delete outcomes['blk'];
       }
       if (this.currentBalls >= 3) {
         outcomes['.'] = 'Walk';
@@ -332,8 +338,14 @@ export default {
     }
   },
   methods: {
-    addPitch(code) {
+    async addPitch(code) {
       // Add pitch to sequence
+      // If balk we need to submit the current status and then submit a balk.
+      if (code === 'blk') {
+        this.$emit('log-play', this.finalPlay, 'blk');
+        ßthis.resetAtBat();
+        return;
+      }
       this.pitchSequence += code;
 
       // Update count based on pitch

@@ -38,6 +38,12 @@
           Allow drop third strikes
         </label>
       </div>
+      <div class="preference-item">
+        <label>
+          <input type="checkbox" v-model="preferences.removeBalks" />
+          Remove balk options
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save Preferences</button>
     </form>
   </div>
@@ -55,6 +61,7 @@ export default {
         removeAdvancedPitchTypes: false,
         removeIntentionalWalks: false,
         removeAdvancementOptions: false,
+        removeBalks: false,
       },
       saving: false,
     };

@@ -141,8 +141,11 @@ export default {
       }
       this.errors = [];
     },
-    async logPlay(playCode) {
-      await this.sendPlay(playCode);
+    async logPlay(...playCodes) {
+      for (const playCode of playCodes) {
+        if (!playCode) continue;
+        await this.sendPlay(playCode);
+      }
     },
     async sendPlay(play) {
       try {
