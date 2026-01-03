@@ -270,7 +270,11 @@ class GameController extends Controller
             return view('game.view', ['game' => $game]);
         }
         $game->load('players.person');
-        return view('game.score', ['game' => $game, 'state' => $game->getRawOriginal('state')]);
+        return view('game.score', [
+            'game' => $game,
+            'state' => $game->getRawOriginal('state'),
+            'lastPlay' => $game->plays()->orderByDesc('id')->first()->human,
+        ]);
     }
 
     public function get(Game $game) {

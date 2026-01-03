@@ -62,10 +62,11 @@ export default {
     gameId: Number,
     game: Object,
     initialState: Object,
+    lastPlay: String,
   },
   data() {
     return {
-      lastResponse: null,
+      lastResponse: { status: 'success', playLog: this.lastPlay },
       currentGame: this.game,
       state: {...this.initialState},
       preferences: {},

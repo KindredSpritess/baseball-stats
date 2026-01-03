@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-<div id="app" data-game-id="{{ $game->id }}" data-game="{{ json_encode($game) }}" data-game-state="{{ $state }}"></div>
+<div id="app" data-game-id="{{ $game->id }}" data-game="{{ json_encode($game) }}" data-game-state="{{ $state }}" data-last-play="{{ $lastPlay }}"></div>
 
 @vite(['resources/js/touch-score.js'])
 </body>
