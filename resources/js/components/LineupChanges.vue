@@ -29,7 +29,7 @@
                   </div>
                   <div class="player-position">
                     {{ SHORT_POSITIONS[getPlayerPosition(spot)] }}
-                    <span v-if="changes[index]?.type === 'position'">
+                    <span v-if="changes[index]?.type === 'position'" class="position-arrow">
                       &nbsp;→&nbsp;{{ SHORT_POSITIONS[changes[index].newPosition] || SHORT_POSITIONS[getPlayerPosition(changes[index].newPlayerId)] }}
                     </span>
                   </div>
