@@ -16,6 +16,9 @@
         <button @click="defensiveChangesShow" class="option-item">Defensive Changes</button>
         <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
         <button @click="endGame" class="option-item">End Game</button>
+        <a :href="`/game/${gameId}`" style="text-decoration: none;">
+          <button  class="option-item">Full Scoring</button>
+        </a>
       </div>
     </div>
 
@@ -30,10 +33,19 @@
     </div>
 
     <DefensiveChanges
-      v-if="showDefensiveChanges"
+      v-if="showDefensiveChanges && !preferences.lineupDefensiveChanges"
       :game="game"
       :state="state"
       @defensive-change="handleDefensiveChange"
+      @close="showDefensiveChanges = false"
+    />
+
+    <LineupChanges
+      v-if="showDefensiveChanges && preferences.lineupDefensiveChanges"
+      :game="game"
+      :state="state"
+      :preferences="preferences"
+      @log-play="logPlay"
       @close="showDefensiveChanges = false"
     />
 
@@ -50,13 +62,15 @@
 import BaseRunnerActions from './BaseRunnerActions.vue';
 import BatterActions from './BatterActions.vue';
 import DefensiveChanges from './DefensiveChanges.vue';
+import LineupChanges from './LineupChanges.vue';
 
 export default {
   name: 'TouchScore',
   components: {
     BaseRunnerActions,
     BatterActions,
-    DefensiveChanges
+    DefensiveChanges,
+    LineupChanges,
   },
   props: {
     gameId: Number,
@@ -72,6 +86,7 @@ export default {
       preferences: {},
       isMounted: false,
       showOptions: false,
+      showDefensiveChanges: false,
       showDefensiveChanges: false,
       errors: [],
     }
@@ -233,6 +248,7 @@ export default {
       }
     },
     defensiveChangesShow() {
+      // this.showDefensiveChanges = true;
       this.showDefensiveChanges = true;
       this.showOptions = false;
     },

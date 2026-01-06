@@ -53,6 +53,12 @@
           Balks can count toward pitch count
         </label>
       </div>
+      <div class="preference-item">
+        <label>
+          <input type="checkbox" v-model="preferences.lineupDefensiveChanges" />
+          Use lineup for defensive changes
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save Preferences</button>
     </form>
   </div>
@@ -72,6 +78,7 @@ export default {
         removeAdvancementOptions: false,
         removeBalks: false,
         balksCanCountTowardPitchCount: false,
+        lineupDefensiveChanges: false,
       },
       flashMessage: null,
       saving: false,
