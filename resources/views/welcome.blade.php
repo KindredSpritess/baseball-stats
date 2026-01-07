@@ -16,7 +16,7 @@ $games->each(function($game) {
 });
 $recentSeasons = collect($seasons)->filter(function($season) use ($games, $threeMonthsAgo) {
     return collect($games)->some(function($game) use ($season, $threeMonthsAgo) {
-        return $game->home_team->season === $season && $game->firstPitch > $threeMonthsAgo;
+        return $game->home_team->season->is($season) && $game->firstPitch > $threeMonthsAgo;
     });
 });
 @endphp
@@ -65,8 +65,8 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
         @if($recentSeasons->count() > 0)
         <div class="seasons-grid">
             @foreach($recentSeasons as $season)
-            <div class="season-card" @click="selectedSeason = '{{ $season }}'">
-                <h3 class="season-title">{{ $season }}</h3>
+            <div class="season-card" @click="selectedSeason = '{{ $season->id }}'">
+                <h3 class="season-title">{{ $season->name }}</h3>
                 <p class="season-description">Active Season</p>
             </div>
             @endforeach
@@ -82,19 +82,22 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
             <select class="season-select" x-model="selectedSeason">
                 <option value="">Select a season</option>
                 @foreach ($seasons as $season)
-                    <option value="{{ $season }}">{{ $season }}</option>
+                    <option value="{{ $season->id }}">{{ $season->name }}</option>
                 @endforeach
             </select>
 
             @foreach ($seasons as $season)
-            <div x-show="selectedSeason === '{{ $season }}'" class="season-content">
-                <h3 class="season-content-title">{{ $season }}</h3>
+            <div x-show="selectedSeason === '{{ $season->id }}'" class="season-content">
+                <h3 class="season-content-title">{{ $season->name }}</h3>
+                @can('manage-season', $season)
+                <a href="{{ route('season.preferences', ['season' => $season]) }}" class="season-stats-link">Scoring Rules</a>
+                @endcan
                 <div class="games-list">
                     <div class="games-column">
                         <h4>Games</h4>
                         <ul class="games-list-items">
                             @foreach ($games as $game)
-                                @if ($game->home_team->season === $season)
+                                @if ($game->home_team->season->is($season))
                                 <li class="game-item">
                                     @if($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
@@ -131,14 +134,14 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                         <h4>Teams</h4>
                         <ul class="games-list-items">
                             @foreach ($teams as $team)
-                                @if ($team->season === $season)
+                                @if ($team->season->is($season))
                                 <li class="game-item teams">
                                     <a href="{{ route('team', ['team' => $team->id]) }}">{{ $team->name }}</a>
                                 </li>
                                 @endif
                             @endforeach
                             <li class="game-item teams">
-                                <a href="{{ route('stats.show', ['seasons' => [$season]]) }}">All Teams</a>
+                                <a href="{{ route('stats.show', ['seasons' => [$season->id]]) }}">All Teams</a>
                             </li>
                             @can('create-team')
                             <li class="new-item">

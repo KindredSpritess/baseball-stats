@@ -1,75 +1,88 @@
 <template>
-  <div class="user-preferences">
-    <h2>User Preferences</h2>
+  <div class="preferences">
+    <h2>{{ entityName }}</h2>
     <div v-if="flashMessage" class="flash-message" :class="flashMessage.type">
       {{ flashMessage.text }}
     </div>
     <form @submit.prevent="savePreferences">
-      <div class="preference-item">
+      <div class="preference-item" v-if="'simplifyTrajectories' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.simplifyTrajectories" />
           Simplify trajectories to Ground (G) and Fly (F) only
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'removeErrors' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.removeErrors" />
           Remove error options
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'removeAdvancedPitchTypes' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.removeAdvancedPitchTypes" />
           Remove advanced pitch types
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'removeIntentionalWalks' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.removeIntentionalWalks" />
           Remove intentional walk options
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'removeAdvancementOptions' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.removeAdvancementOptions" />
           Remove SB/CS/WP/PB from advancement options, just advance them
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'allowDropThirdStrikes' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.allowDropThirdStrikes" />
           Allow drop third strikes
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'removeBalks' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.removeBalks" />
           Remove balk options
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'balksCanCountTowardPitchCount' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.balksCanCountTowardPitchCount" />
           Balks can count toward pitch count
         </label>
       </div>
-      <div class="preference-item">
+      <div class="preference-item" v-if="'lineupDefensiveChanges' in preferences">
         <label>
           <input type="checkbox" v-model="preferences.lineupDefensiveChanges" />
           Use lineup for defensive changes
         </label>
       </div>
-      <button type="submit" :disabled="saving">Save Preferences</button>
+      <button type="submit" :disabled="saving">Save {{ entityName }}</button>
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'UserPreferences',
-  data() {
-    return {
-      preferences: {
+  name: 'Preferences',
+  props: {
+    loadUrl: {
+      type: String,
+      default: '/api/user'
+    },
+    saveUrl: {
+      type: String,
+      default: '/api/user/preferences'
+    },
+    entityName: {
+      type: String,
+      default: 'Preferences'
+    },
+    initialPreferences: {
+      type: Object,
+      default: () => ({
         allowDropThirdStrikes: true,
         simplifyTrajectories: false,
         removeErrors: false,
@@ -79,7 +92,12 @@ export default {
         removeBalks: false,
         balksCanCountTowardPitchCount: false,
         lineupDefensiveChanges: false,
-      },
+      })
+    }
+  },
+  data() {
+    return {
+      preferences: { ...this.initialPreferences },
       flashMessage: null,
       saving: false,
       flashTimeout: null,
@@ -91,14 +109,14 @@ export default {
   methods: {
     async loadPreferences() {
       try {
-        const response = await fetch('/api/user', {
+        const response = await fetch(this.loadUrl, {
           headers: {
             'Accept': 'application/json',
           },
         });
-        const user = await response.json();
-        if (user.preferences) {
-          this.preferences = { ...this.preferences, ...user.preferences };
+        const data = await response.json();
+        if (data.preferences) {
+          this.preferences = { ...this.initialPreferences, ...data.preferences };
         }
       } catch (error) {
         console.error('Failed to load preferences:', error);
@@ -106,8 +124,9 @@ export default {
     },
     async savePreferences() {
       this.saving = true;
+      console.log('Saving preferences to', this.saveUrl, this.preferences);
       try {
-        const response = await fetch('/api/user/preferences', {
+        const response = await fetch(this.saveUrl, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -117,13 +136,13 @@ export default {
           body: JSON.stringify({ preferences: this.preferences }),
         });
         if (response.ok) {
-          this.showFlashMessage('Preferences saved successfully!', 'success');
+          this.showFlashMessage(`${this.entityName} saved successfully!`, 'success');
         } else {
-          this.showFlashMessage('Failed to save preferences.', 'error');
+          this.showFlashMessage(`Failed to save ${this.entityName.toLowerCase()}.`, 'error');
         }
       } catch (error) {
         console.error('Failed to save preferences:', error);
-        this.showFlashMessage('Failed to save preferences.', 'error');
+        this.showFlashMessage(`Failed to save ${this.entityName.toLowerCase()}.`, 'error');
       } finally {
         this.saving = false;
       }
@@ -145,7 +164,7 @@ export default {
 </script>
 
 <style scoped>
-.user-preferences {
+.preferences {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;

@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\PersonController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +22,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->put('/user/preferences', [App\Http\Controllers\UserController::class, 'updatePreferences']);
+Route::middleware('auth:sanctum')->put('/user/preferences', [UserController::class, 'updatePreferences']);
+
+Route::middleware('auth:sanctum')
+    ->get('/season/{season}/preferences', [SeasonController::class, 'getPreferences'])
+    ->name('api.season.preferences');
+Route::middleware('auth:sanctum')
+    ->put('/season/{season}/preferences', [SeasonController::class, 'storePreferences'])
+    ->name('api.season.preferences.update');
 
 // Route::controller(TeamController::class)->group(function() {
 //     Route::put('/team', 'create');
@@ -32,7 +42,7 @@ Route::controller(GameController::class)->group(function() {
     // Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');
 });
 
-Route::controller(\App\Http\Controllers\PersonController::class)->group(function() {
+Route::controller(PersonController::class)->group(function() {
     Route::get('/players/search', 'search')->can('score');
     Route::get('/players/team/{team}', 'teamPlayers')->can('score');
 });

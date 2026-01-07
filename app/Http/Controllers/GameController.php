@@ -26,7 +26,7 @@ class GameController extends Controller
     public function create(Request $request)
     {
         return view('game.create', [
-            'teams' => Team::when($request->input('season'), fn ($q) => $q->whereSeason($request->input('season')))->get(),
+            'teams' => Team::when($request->input('season'), fn ($q) => $q->whereSeasonId($request->input('season')))->get(),
         ]);
     }
 

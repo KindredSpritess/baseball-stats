@@ -3,10 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TeamController;
 use App\Models\Game;
 use App\Models\Redirect;
+use App\Models\Season;
 use App\Models\Team;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +35,7 @@ Route::get('/user', function () {
 */
 
 Route::get('/', function () {
-    $seasons = Team::select('season')->distinct()->get()->pluck('season');
+    $seasons = Season::all();
     return view('welcome', [
         'seasons' => $seasons,
         'games' => Game::orderBy('firstPitch')->get(),
@@ -76,6 +78,10 @@ Route::controller(PersonController::class)->group(function () {
 
 Route::controller(StatsController::class)->group(function () {
     Route::get('/stats', 'show')->name('stats.show');
+});
+
+Route::controller(SeasonController::class)->group(function () {
+    Route::get('/season/{season}/preferences', 'preferences')->name('season.preferences');
 });
 
 Route::get('/volunteer-form/{redirect:key}', function(Redirect $redirect) {

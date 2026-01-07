@@ -40,7 +40,7 @@
 
 @section('content')
 <div class="welcome-container team-page">
-    <h1 class="welcome-title">{{ $team->name }} - {{ $team->season }}</h1>
+    <h1 class="welcome-title">{{ $team->name }} - {{ $team->season?->name }}</h1>
     <p class="page-subtitle">Edit the team details</p>
 
     <div class="stats-section">
@@ -55,8 +55,13 @@
                 <input id="short_name" name="short_name" value="{{ $team->short_name }}" autocomplete="off" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" disabled />
             </div>
             <div style="margin-bottom: 30px;">
-                <label for="season" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">Season:</label>
-                <input id="season" name="season" value="{{ $team->season }}" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" disabled />
+                <label for="season_id" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">Season:</label>
+                <select id="season_id" name="season_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;">
+                    <option value="">Select a season</option>
+                    @foreach($seasons as $season)
+                        <option value="{{ $season->id }}" {{ $team->season_id == $season->id ? 'selected' : '' }}>{{ $season->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div style="margin-bottom: 30px;">
                 <label for="primary_color" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">Primary Color:</label>

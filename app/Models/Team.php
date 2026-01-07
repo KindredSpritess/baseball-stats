@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $short_name
  * @property string $name
  * @property string|null $season
+ * @property int|null $season_id
  * @property string|null $primary_color
  * @property string|null $secondary_color
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Game> $games
@@ -40,13 +41,17 @@ class Team extends Model
     protected $fillable = [
         'short_name',
         'name',
-        'season',
+        'season_id',
         'primary_color',
         'secondary_color',
     ];
 
     public function players() {
         return $this->hasMany(Player::class);
+    }
+
+    public function season() {
+        return $this->belongsTo(Season::class);
     }
 
     public function games() {

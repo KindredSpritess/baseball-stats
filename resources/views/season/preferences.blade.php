@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-  StatsKeeper - User Preferences
+  StatsKeeper - {{ $season->name }} Preferences
 @endsection
 
 @section('head')
@@ -14,14 +14,13 @@
         @vite(['resources/js/preferences.js'])
         <div
           id="preferences-app"
-          data-entity-name="User Preferences"
+          data-entity-name="{{ $season->name }} Preferences"
+          data-load-url="{{ route('api.season.preferences', ['season' => $season->id]) }}"
+          data-save-url="{{ route('api.season.preferences.update', ['season' => $season->id]) }}"
           data-initial-preferences="{
-            &quot;simplifyTrajectories&quot;: false,
-            &quot;removeErrors&quot;: false,
-            &quot;removeAdvancedPitchTypes&quot;: false,
-            &quot;removeIntentionalWalks&quot;: false,
-            &quot;removeAdvancementOptions&quot;: false,
-            &quot;lineupDefensiveChanges&quot;: false
+            &quot;allowDropThirdStrikes&quot;: true,
+            &quot;removeBalks&quot;: false,
+            &quot;balksCanCountTowardPitchCount&quot;: false
           }"
         ></div>
     </div>

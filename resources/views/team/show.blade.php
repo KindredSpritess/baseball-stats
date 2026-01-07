@@ -40,7 +40,7 @@
 
 @section('content')
 <div class="welcome-container team-page">
-    <h1 class="welcome-title">{{ $team->name }} - {{ $team->season }}</h1>
+    <h1 class="welcome-title">{{ $team->name }} - {{ $team->season?->name }}</h1>
 
     <section class="section-spacing">
         <h2 class="section-title stats">Statistics - Qualified (<a href="{{ route('team', ['team' => $team->id, 'qualified' => 'all']) }}" class="inline-link">see all</a>)</h2>

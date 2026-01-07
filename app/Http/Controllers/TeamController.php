@@ -6,18 +6,26 @@ use App\Helpers\StatsHelper;
 use App\Models\BallInPlay;
 use App\Models\Person;
 use App\Models\Player;
+use App\Models\Season;
 use App\Models\Team;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
     public function create() {
-        return view('team.create');
+        return view('team.create', [
+            'seasons' => Season::all(),
+        ]);
     }
 
     public function store(Request $request) {
-        $team = new Team($request->input());
+        $team = new Team($request->validate([
+            'name' => 'required|string|max:100',
+            'short_name' => 'required|string|max:50',
+            'season_id' => 'required|exists:seasons,id',
+            'primary_color' => 'nullable|hex_color',
+            'secondary_color' => 'nullable|hex_color',
+        ]));
         $team->save();
         return redirect()->route('team', ['team' => $team->id]);
     }
@@ -65,12 +73,15 @@ class TeamController extends Controller
     public function edit(Team $team) {
         return view('team.edit', [
             'team' => $team,
+            'seasons' => Season::all(),
         ]);
     }
 
     public function update(Request $request, Team $team) {
         $team->fill($request->validate([
             'name' => 'required|string|max:100',
+            'short_name' => 'required|string|max:50',
+            'season_id' => 'required|exists:seasons,id',
             'primary_color' => 'nullable|hex_color',
             'secondary_color' => 'nullable|hex_color',
         ]));

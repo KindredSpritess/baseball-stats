@@ -43,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('edit-team', function (User $user, $team) {
             return $user->role === 'superuser' || $user->teams()->where('team_id', $team->id)->exists();
         });
+        Gate::define('manage-season', function (User $user, $season) {
+            return $user->role === 'superuser';
+        });
 
         Blade::directive('spaceless', function () {
             return '<?php ob_start(); ?>';

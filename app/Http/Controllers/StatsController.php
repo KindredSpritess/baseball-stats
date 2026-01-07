@@ -16,7 +16,7 @@ class StatsController extends Controller
         $players = [];
         switch (true) {
             case $request->input('seasons'):
-                $teams = Team::whereIn('season', $request->input('seasons'))->get();
+                $teams = Team::whereIn('season_id', $request->input('seasons'))->get();
                 foreach ($teams as $team) {
                     foreach ($team->players as $player) {
                         $id = $player->person->id;
@@ -48,6 +48,9 @@ class StatsController extends Controller
             $totals->merge($player);
             $player->derive();
         }
+        $team->name = 'Combined Statistics';
+        $team->primary_color = null;
+        $team->secondary_color = null;
         $totals->derive();
         return view('team.show', [
             'team' => $team,

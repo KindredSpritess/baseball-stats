@@ -17,7 +17,7 @@
                     <table class="sortable stats-table">
                         <x-hitting-stat-header />
                         @foreach ($teams as $team)
-                            <x-hitting-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
+                            <x-hitting-stat-line header="{{ $team->name }} - {{ $team->season?->name }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
                         @endforeach
                         <tfoot>
                             <x-hitting-stat-line header="Totals" :stats="$totals" />
@@ -46,10 +46,10 @@
                         <x-fielding-stat-header />
                         @foreach ($teams as $team)
                             @foreach ($stats[$team->id]->positional() as $line)
-                                <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$line" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
+                                <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season?->name }}" :stats="$line" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
                             @endforeach
                             @continue(count($stats[$team->id]->positional()) < 2)
-                            <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" :hidePosition="true" />
+                            <x-fielding-stat-line header="{{ $team->name }} - {{ $team->season?->name }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" :hidePosition="true" />
                         @endforeach
                         <tfoot>
                             @foreach ($totals->positional() as $line)
@@ -72,7 +72,7 @@
                         <x-pitching-stat-header />
                         @foreach ($teams as $team)
                             @if ($stats[$team->id]->IP)
-                                <x-pitching-stat-line header="{{ $team->name }} - {{ $team->season }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
+                                <x-pitching-stat-line header="{{ $team->name }} - {{ $team->season?->name }}" :stats="$stats[$team->id]" :link="route('person.games', ['person' => $person->id, 'team' => $team->id])" />
                             @endif
                         @endforeach
                         <tfoot>
