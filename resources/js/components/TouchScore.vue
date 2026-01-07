@@ -22,6 +22,43 @@
       </div>
     </div>
 
+    <div v-if="showEndGameModal" class="end-game-modal">
+      <div class="end-game-overlay" @click="cancelEndGame"></div>
+      <div class="end-game-content">
+        <h3>End Game</h3>
+        <div class="final-score">
+          <p>Final Score: {{ game.away_team.name }} {{ state.score[0] }} - {{ game.home_team.name }} {{ state.score[1] }}</p>
+        </div>
+        
+        <div v-if="winningTeam !== null" class="pitchers-section">
+          <div class="winning-pitcher">
+            <h4>Winning Pitcher</h4>
+            <div v-if="canSelectWinningPitcher" class="pitcher-selection">
+              <select v-model="selectedWinningPitcher" class="pitcher-select">
+                <option :value="null">Select winning pitcher...</option>
+                <option v-for="pitcher in winningPitchers" :key="pitcher.id" :value="pitcher">
+                  {{ pitcher.person.lastName }}, {{ pitcher.person.firstName }} ({{ pitcher.stats?.TO || 0 }} outs)
+                </option>
+              </select>
+            </div>
+            <div v-else class="pitcher-display">
+              <p>{{ winningPitchers[0]?.person?.lastName || 'Unknown' }}, {{ winningPitchers[0]?.person?.firstName || '' }}</p>
+            </div>
+          </div>
+
+          <div class="losing-pitcher">
+            <h4>Losing Pitcher</h4>
+            <p>{{ losingPitcher?.person?.lastName || 'Unknown' }}, {{ losingPitcher?.person?.firstName || '' }}</p>
+          </div>
+        </div>
+        
+        <div class="end-game-actions">
+          <button @click="confirmEndGame" :disabled="canSelectWinningPitcher && !selectedWinningPitcher" class="confirm-btn">End Game</button>
+          <button @click="cancelEndGame" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <div :style="{ display: showDefensiveChanges ? 'none' : null}">
       <BatterActions ref="batterActions" @log-play="logPlay" :game="game" :state="state" :runner-plays="runnerActions" :preferences="preferences" @reset-play="resetPlay" @force="forceOneBase" :errors="errors" @error="onError" />
     </div>
@@ -51,7 +88,7 @@
 
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
-        {{ lastResponse.status === 'success' ? lastResponse.playLog : 'Error: ' + lastResponse.message }}
+        {{ lastResponse.status === 'success' ? (lastResponse.play.human || lastResponse.play.game_event) : 'Error: ' + lastResponse.message }}
         <button v-if="lastResponse.status === 'success'" @click="undoLastPlay">Undo</button>
       </p>
     </div>
@@ -76,18 +113,19 @@ export default {
     gameId: Number,
     game: Object,
     initialState: Object,
-    lastPlay: String,
+    lastPlay: Object,
   },
   data() {
     return {
-      lastResponse: { status: 'success', playLog: this.lastPlay },
+      lastResponse: { status: 'success', play: this.lastPlay },
       currentGame: this.game,
       state: {...this.initialState},
       preferences: {},
       isMounted: false,
       showOptions: false,
       showDefensiveChanges: false,
-      showDefensiveChanges: false,
+      showEndGameModal: false,
+      selectedWinningPitcher: null,
       errors: [],
     }
   },
@@ -124,6 +162,42 @@ export default {
       }
 
       return forced;
+    },
+    winningTeam() {
+      const awayScore = this.state.score[0];
+      const homeScore = this.state.score[1];
+      if (awayScore > homeScore) return 0; // away
+      if (homeScore > awayScore) return 1; // home
+      return null; // tie
+    },
+    losingTeam() {
+      const awayScore = this.state.score[0];
+      const homeScore = this.state.score[1];
+      if (awayScore < homeScore) return 0; // away
+      if (homeScore < awayScore) return 1; // home
+      return null; // tie
+    },
+    winningPitchers() {
+      if (this.winningTeam === null) return [];
+      const pitchers = (this.state.pitchers[this.winningTeam] || []).map(playerId => {
+        return this.game.players.find(p => p.id === playerId);
+      }).filter(p => p);
+
+      return pitchers;
+    },
+    winningPitcher() {
+      if (this.winningTeam === null) return null;
+      return this.game.players.find(p => p.id === this.state.pitchersOfRecord.winning) ?? null;
+    },
+    losingPitcher() {
+      if (this.losingTeam === null) return null;
+      console.log('Losing pitcher ID:', this.game.players.find(p => p.id === this.state.pitchersOfRecord.losing));
+      return this.game.players.find(p => p.id === this.state.pitchersOfRecord.losing) ?? null;
+    },
+    canSelectWinningPitcher() {
+      if (!this.winningPitcher) return false;
+      const wp = this.winningPitcher;
+      return wp && this.winningPitchers[0].id === wp.id && (wp.stats?.TO || 0) < 15;
     },
   },
   mounted() {
@@ -256,10 +330,21 @@ export default {
       this.sendPlay(command);
     },
     endGame() {
-      if (confirm('Are you sure you want to end the game?')) {
-        this.sendPlay('Game Over');
-        this.showOptions = false;
+      this.selectedWinningPitcher = this.canSelectWinningPitcher ? null : this.winningPitcher;
+      this.showEndGameModal = true;
+      this.showOptions = false;
+    },
+    confirmEndGame() {
+      let play = 'Game Over';
+      if (this.canSelectWinningPitcher && this.selectedWinningPitcher) {
+        const index = this.winningPitchers.findIndex(p => p.id === this.selectedWinningPitcher.id) + 1;
+        play += ` #${index}`;
       }
+      this.sendPlay(play);
+      this.showEndGameModal = false;
+    },
+    cancelEndGame() {
+      this.showEndGameModal = false;
     },
     // A couple of events force runnners to move, when forced.
     forceOneBase() {
@@ -395,5 +480,119 @@ export default {
 .status p.error {
   background-color: #f8d7da;
   color: #721c24;
+}
+
+.end-game-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1001;
+}
+
+.end-game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.end-game-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 400px;
+  max-width: 90vw;
+}
+
+.end-game-content h3 {
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.final-score {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.pitchers-section {
+  margin-bottom: 20px;
+}
+
+.winning-pitcher, .losing-pitcher {
+  margin-bottom: 15px;
+}
+
+.winning-pitcher h4, .losing-pitcher h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.pitcher-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pitcher-select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pitcher-display p {
+  margin: 0;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.end-game-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.confirm-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.confirm-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
 }
 </style>

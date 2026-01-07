@@ -184,13 +184,15 @@ class Play extends Model
                 throw_unless($loss, 'Losing pitcher not set');
                 $loss->evt('Loss');
                 $save?->evt('Save');
-                // if ($win) {
-                //     $this->game_event .= "\nWinning pitcher: {$win?->person?->fullName()}";
-                // }
-                // $this->game_event .= " Losing pitcher: {$loss->person->fullName()}";
-                // if ($save) {
-                //     $this->game_event .= " Save: {$save->person->fullName()}";
-                // }
+                if ($win) {
+                    $this->game_event .= "\nWinning pitcher: {$win?->person?->fullName()}";
+                }
+                if ($loss) {
+                    $this->game_event .= " Losing pitcher: {$loss->person->fullName()}";
+                }
+                if ($save) {
+                    $this->game_event .= " Save: {$save->person->fullName()}";
+                }
             }
 
             return;

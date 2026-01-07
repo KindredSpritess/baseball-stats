@@ -94,7 +94,7 @@ class GameController extends Controller
         $stats = Player::getEventStats();
         GameUpdated::dispatch($game->id, [...$play->toArray(), 'actions' => $play->actions], $state, $stats);
         if ($json) {
-            return new JsonResponse(['status' => 'success', 'state' => $state, 'playLog' => $play->human, 'stats' => $stats]);
+            return new JsonResponse(['status' => 'success', 'state' => $state, 'play' => $play, 'stats' => $stats]);
         } else {
             return redirect()->route('game', ['game' => $game->id]);
         }
@@ -203,7 +203,7 @@ class GameController extends Controller
         return new JsonResponse([
             'status' => 'success',
             'state' => json_decode($gs->set($game, '', '', []), true),
-            'playLog' => $playLog,
+            'play' => $play,
             'stats' => Player::getEventStats(),
         ]);
     }
@@ -273,7 +273,7 @@ class GameController extends Controller
         return view('game.score', [
             'game' => $game,
             'state' => $game->getRawOriginal('state'),
-            'lastPlay' => $game->plays()->orderByDesc('id')->first()->human,
+            'lastPlay' => $game->plays()->orderByDesc('id')->first(),
         ]);
     }
 

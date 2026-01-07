@@ -7,5 +7,5 @@ createApp(TouchScore, {
     gameId: Number(el.dataset.gameId),
     game: JSON.parse(el.dataset.game),
     initialState: JSON.parse(el.dataset.gameState),
-    lastPlay: el.dataset.lastPlay,
+    lastPlay: JSON.parse(el.dataset.lastPlay),
 }).mount('#app');
