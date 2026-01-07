@@ -658,6 +658,9 @@ const drawLinescore = (ctx) => {
   const awayScores = [...props.state.linescore[0]]
   const homeScores = [...props.state.linescore[1]]
 
+  // Total runs (R column)
+  const awayTotal = awayScores.reduce((sum, score) => sum + score, 0)
+  const homeTotal = homeScores.reduce((sum, score) => sum + score, 0)
   if (props.state.ended) {
     // Potentially there's an extra score entry.
     if (props.state.half) {
@@ -692,10 +695,6 @@ const drawLinescore = (ctx) => {
     const homeScore = homeScores[inning - 1] ?? '';
     ctx.fillText(homeScore.toString(), x, linescoreY + lineHeight)
   }
-
-  // Total runs (R column)
-  const awayTotal = awayScores.reduce((sum, score) => sum + score, 0)
-  const homeTotal = homeScores.reduce((sum, score) => sum + score, 0)
 
   const totalX = 70 + 9 * colWidth - 10
   ctx.fillText('R', totalX, linescoreY - lineHeight)
