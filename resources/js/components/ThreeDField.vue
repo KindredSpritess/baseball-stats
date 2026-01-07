@@ -433,11 +433,12 @@ const animateBall = (battedBall) => {
   ));
 
   const trajectory = {
-    'F': { height: 60, duration: d / 73 * 30, parabolic: true, bounces: 0 },
-    'L': { height: 30, duration: d / 102 * 30, parabolic: true, bounces: 0 },
+    'F': { height: d * 0.3, duration: d / 73 * 30, parabolic: true, bounces: 0 },
+    'L': { height: d * 0.15, duration: d / 102 * 30, parabolic: true, bounces: 0 },
     'G': { height: 5, duration: d / 102 * 30, parabolic: true, bounces: 2 },
     'P': { height: 80, duration: d / 50 * 30, parabolic: true, bounces: 0 },
   }[battedBall?.type] ?? { height: 0, duration: 2, parabolic: true, bounces: 0 };
+  console.log('Animating ball to', targetPosition, 'with trajectory', trajectory);
 
   if (trajectory.parabolic) {
     // Create parabolic path
