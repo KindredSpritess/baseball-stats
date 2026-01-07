@@ -333,4 +333,14 @@ class GameController extends Controller
             'state' => json_decode($gs->set($game, '', '', []), true),
         ]);
     }
+
+    public function getPreferences(Game $game) {
+        $user = request()->user();
+        $season = $game->home_team->season;
+        $preferences = [
+            ...$user->preferences ?? [],
+            ...$season->scoring_rules ?? [],
+        ];
+        return response()->json($preferences);
+    }
 }

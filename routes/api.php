@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')
 
 Route::controller(GameController::class)->group(function() {
     Route::get('/game/{game}', 'get')->name('api.game.get');
+    Route::get('/game/{game}/preferences', 'getPreferences')->name('api.game.preferences')->middleware('auth:sanctum');
     // Route::post('/game/store', 'store');
     // Route::put('/game/{game}/log', 'play')->name('gamelog');
     // Route::patch('/game/{game}/log', 'plays')->name('fullgamelog');

@@ -207,13 +207,13 @@ export default {
   methods: {
     async loadPreferences() {
       try {
-        const response = await fetch('/api/user', {
+        const response = await fetch(`/api/game/${this.gameId}/preferences`, {
           headers: {
             'Accept': 'application/json',
           },
         });
-        const user = await response.json();
-        this.preferences = user.preferences || {};
+        const preferences = await response.json();
+        this.preferences = preferences || {};
       } catch (error) {
         console.error('Failed to load preferences:', error);
       }

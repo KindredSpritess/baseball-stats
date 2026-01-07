@@ -6,7 +6,7 @@ import * as fs from 'fs';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.js', 'resources/js/touch-score.js'],
+            input: ['resources/js/app.js', 'resources/js/preferences.js', 'resources/js/touch-score.js'],
             refresh: true,
         }),
         vue(),
