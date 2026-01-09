@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\RosterImportController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TeamController;
@@ -82,6 +83,11 @@ Route::controller(StatsController::class)->group(function () {
 
 Route::controller(SeasonController::class)->group(function () {
     Route::get('/season/{season}/preferences', 'preferences')->name('season.preferences');
+});
+
+Route::controller(RosterImportController::class)->group(function () {
+    Route::get('/roster/import', 'showImportForm')->name('roster.import')->middleware('auth:sanctum');
+    Route::post('/roster/import', 'import')->name('roster.import.process')->middleware('auth:sanctum');
 });
 
 Route::get('/volunteer-form/{redirect:key}', function(Redirect $redirect) {

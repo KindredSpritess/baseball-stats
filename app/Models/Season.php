@@ -22,4 +22,9 @@ class Season extends Model
     {
         return $this->hasMany(Team::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

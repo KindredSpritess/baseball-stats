@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Team::class);
     }
+
+    public function seasons()
+    {
+        return $this->belongsToMany(Season::class);
+    }
 }
