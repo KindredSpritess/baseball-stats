@@ -24,7 +24,7 @@
                       {{ getPlayerName(spot) }}
                     </span>
                     <span v-if="changes[index]?.type === 'substitution'">
-                      &nbsp;→&nbsp;{{ getPlayerName(changes[index].newPlayerId) }}
+                      &nbsp;→&nbsp;{{ changes[index].newPlayerName }}
                     </span>
                   </div>
                   <div class="player-position">
@@ -125,6 +125,8 @@ export default {
       showPlayerSelect: false,
       changes: {},
       changeId: 0,
+      teamPlayers: {},
+      loadingPlayers: false,
       POSITIONS: {
         1: 'Pitcher',
         2: 'Catcher',
@@ -163,6 +165,9 @@ export default {
     currentDefense() {
       return this.state.defense?.[(this.state.half + 1) % 2] || {};
     },
+    currentTeam() {
+      return this.game?.[this.state.half ? 'away_team' : 'home_team'];
+    },
     nextDefense() {
       const defense = {...this.state.defense?.[(this.state.half + 1) % 2]};
       Object.values(this.changes).forEach(change => {
@@ -176,17 +181,63 @@ export default {
     availablePlayers() {
       if (this.selectedSpot === null) return [];
 
-      const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
-      const players = this.game.players.filter(player => player.team_id === currentTeam.id);
-
-      // Sort by last name
-      return players.sort((a, b) => {
-        return a.person.lastName.localeCompare(b.person.lastName) ||
-               a.person.firstName.localeCompare(b.person.firstName);
-      });
+      // Convert teamPlayers object to array format compatible with the template
+      return Object.entries(this.teamPlayers)
+        .filter(([_playerKey, playerData]) => playerData?.person)
+        .map(([_playerKey, playerData]) => ({
+          id: playerData.person.id,
+          person: playerData.person,
+          number: playerData.number,
+        }))
+        .sort((a, b) => {
+          return a.person.lastName.localeCompare(b.person.lastName) ||
+                 a.person.firstName.localeCompare(b.person.firstName);
+        });
+    },
+  },
+  mounted() {
+    if (this.game) {
+      this.fetchTeamPlayers();
+    }
+  },
+  watch: {
+    game(newValue) {
+      if (newValue) {
+        this.fetchTeamPlayers();
+      }
     },
   },
   methods: {
+    async fetchTeamPlayers() {
+      this.loadingPlayers = true;
+      try {
+        if (!this.game) {
+          console.error('Game data is not available');
+          this.teamPlayers = {};
+          return;
+        }
+        
+        if (!this.currentTeam?.id) {
+          console.error('Current team or team ID is not available');
+          this.teamPlayers = {};
+          return;
+        }
+        
+        const response = await fetch(`/api/players/team/${this.currentTeam.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        this.teamPlayers = data || {};
+      } catch (error) {
+        console.error('Error fetching team players:', error);
+        this.teamPlayers = {};
+      } finally {
+        this.loadingPlayers = false;
+      }
+    },
     getPlayerName(playerId) {
       const player = this.game.players.find(p => p.id === playerId);
       if (player) {
@@ -253,7 +304,7 @@ export default {
       this.showPlayerSelect = false;
     },
     replacePlayer(newPlayer) {
-      const defenseTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
+      const defenseTeam = this.currentTeam;
       let command = `@${defenseTeam.short_name} ${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
       if (newPlayer.number) {
         command += ` #${newPlayer.number}`;
@@ -280,6 +331,7 @@ export default {
         lineupSpot: this.selectedSpot + 1,
         oldPlayerId: currentPlayerId,
         newPlayerId: newPlayer.id,
+        newPlayerName: `${newPlayer.person.lastName}, ${newPlayer.person.firstName}`,
         position: currentPosition,
         command: command,
       };
