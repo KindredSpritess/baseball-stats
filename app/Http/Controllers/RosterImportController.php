@@ -228,16 +228,42 @@ class RosterImportController extends Controller
 
     private function parseUrl($url)
     {
-        // Check if it's a mygameday.app URL
-        if (strpos($url, 'mygameday.app') !== false) {
-            return $this->parseMyGameDayUrl($url);
+        // Validate URL format and scheme
+        $parsedUrl = parse_url($url);
+        if (!$parsedUrl || !isset($parsedUrl['scheme']) || !isset($parsedUrl['host'])) {
+            throw new \Exception('Invalid URL format.');
+        }
+        
+        // Only allow HTTP and HTTPS
+        if (!in_array(strtolower($parsedUrl['scheme']), ['http', 'https'])) {
+            throw new \Exception('Only HTTP and HTTPS URLs are supported.');
+        }
+        
+        // Prevent access to internal/private IP addresses
+        $host = $parsedUrl['host'];
+        $ip = gethostbyname($host);
+        
+        // Check for private/reserved IP ranges
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            throw new \Exception('Access to internal/private URLs is not allowed.');
+        }
+        
+        // Check if it's a mygameday.app URL (validate host specifically)
+        if (isset($parsedUrl['host']) && strpos(strtolower($parsedUrl['host']), 'mygameday.app') !== false) {
+            // Ensure it's actually the mygameday.app domain, not a subdomain of another domain
+            $hostParts = explode('.', $parsedUrl['host']);
+            $lastTwo = implode('.', array_slice($hostParts, -2));
+            if ($lastTwo === 'mygameday.app') {
+                return $this->parseMyGameDayUrl($url);
+            }
         }
         
         // For other URLs, try to fetch as CSV
         $context = stream_context_create([
             'http' => [
-                'timeout' => 30,
+                'timeout' => 15,
                 'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'follow_location' => 0, // Prevent redirects to internal URLs
             ],
         ]);
         
@@ -270,8 +296,9 @@ class RosterImportController extends Controller
     {
         $context = stream_context_create([
             'http' => [
-                'timeout' => 30,
+                'timeout' => 15,
                 'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'follow_location' => 0, // Prevent redirects
             ],
         ]);
         
@@ -281,74 +308,81 @@ class RosterImportController extends Controller
         }
         
         // Parse HTML to extract player data
-        // MyGameDay typically shows players in a table format
         $data = [];
         
-        // Use DOMDocument to parse HTML
-        $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
-        $xpath = new \DOMXPath($dom);
+        // Disable external entity loading to prevent XXE attacks
+        $previousValue = libxml_disable_entity_loader(true);
+        libxml_use_internal_errors(true);
         
-        // Try to find player rows in tables
-        // Look for tables with player information
-        $tables = $xpath->query('//table');
-        
-        foreach ($tables as $table) {
-            $rows = $xpath->query('.//tr', $table);
-            $headerProcessed = false;
+        try {
+            // Use DOMDocument to parse HTML
+            $dom = new \DOMDocument();
+            $dom->loadHTML($html, LIBXML_NONET | LIBXML_NOENT);
+            $xpath = new \DOMXPath($dom);
             
-            foreach ($rows as $row) {
-                $cells = $xpath->query('.//td | .//th', $row);
+            // Try to find player rows in tables
+            $tables = $xpath->query('//table');
+            
+            foreach ($tables as $table) {
+                $rows = $xpath->query('.//tr', $table);
+                $headerProcessed = false;
                 
-                if ($cells->length === 0) {
-                    continue;
-                }
-                
-                // Skip header rows
-                if (!$headerProcessed) {
-                    $headerProcessed = true;
-                    continue;
-                }
-                
-                $rowData = [];
-                foreach ($cells as $cell) {
-                    $rowData[] = trim($cell->textContent);
-                }
-                
-                // Try to extract first name, last name, and number
-                // Typical format might be: Number, Name, other fields...
-                if (count($rowData) >= 2) {
-                    // Check if first column is a number (jersey number)
-                    $number = '';
-                    $nameStart = 0;
+                foreach ($rows as $row) {
+                    $cells = $xpath->query('.//td | .//th', $row);
                     
-                    if (is_numeric($rowData[0]) || $rowData[0] === '') {
-                        $number = $rowData[0];
-                        $nameStart = 1;
+                    if ($cells->length === 0) {
+                        continue;
                     }
                     
-                    // Parse name - could be "LastName, FirstName" or "FirstName LastName"
-                    if (isset($rowData[$nameStart])) {
-                        $name = $rowData[$nameStart];
+                    // Skip header rows
+                    if (!$headerProcessed) {
+                        $headerProcessed = true;
+                        continue;
+                    }
+                    
+                    $rowData = [];
+                    foreach ($cells as $cell) {
+                        $rowData[] = trim($cell->textContent);
+                    }
+                    
+                    // Try to extract first name, last name, and number
+                    if (count($rowData) >= 2) {
+                        // Check if first column is a number (jersey number)
+                        $number = '';
+                        $nameStart = 0;
                         
-                        if (strpos($name, ',') !== false) {
-                            // Format: "LastName, FirstName"
-                            $parts = array_map('trim', explode(',', $name, 2));
-                            $lastName = $parts[0];
-                            $firstName = $parts[1] ?? '';
-                        } else {
-                            // Format: "FirstName LastName" or just single name
-                            $parts = explode(' ', trim($name), 2);
-                            $firstName = $parts[0];
-                            $lastName = $parts[1] ?? '';
+                        if (isset($rowData[0]) && (is_numeric($rowData[0]) || trim($rowData[0]) === '')) {
+                            $number = $rowData[0];
+                            $nameStart = 1;
                         }
                         
-                        if ($firstName || $lastName) {
-                            $data[] = [$firstName, $lastName, $number];
+                        // Parse name - could be "LastName, FirstName" or "FirstName LastName"
+                        if (isset($rowData[$nameStart])) {
+                            $name = $rowData[$nameStart];
+                            
+                            if (strpos($name, ',') !== false) {
+                                // Format: "LastName, FirstName"
+                                $parts = array_map('trim', explode(',', $name, 2));
+                                $lastName = $parts[0];
+                                $firstName = $parts[1] ?? '';
+                            } else {
+                                // Format: "FirstName LastName" or just single name
+                                $parts = explode(' ', trim($name), 2);
+                                $firstName = $parts[0];
+                                $lastName = $parts[1] ?? '';
+                            }
+                            
+                            if ($firstName || $lastName) {
+                                $data[] = [$firstName, $lastName, $number];
+                            }
                         }
                     }
                 }
             }
+        } finally {
+            // Restore previous setting
+            libxml_disable_entity_loader($previousValue);
+            libxml_clear_errors();
         }
         
         if (empty($data)) {
