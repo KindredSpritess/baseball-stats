@@ -38,7 +38,7 @@ class PersonController extends Controller
     }
 
     public function teamGames(Person $person, Team $team) {
-        $players = $team->players()->where('person_id', $person->id)->get();
+        $players = $team->players()->where('person_id', $person->id)->where('game_id', '>', 0)->get();
         $stats = [];
         $games = [];
         $totals = new StatsHelper([]);

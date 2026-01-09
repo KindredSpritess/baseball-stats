@@ -41,7 +41,7 @@
 
 @section('content')
 <div class="welcome-container team-page">
-    <h1 class="welcome-title">{{ $person->firstName }} {{ $person->lastName }} ({{ $team->season }})</h1>
+    <h1 class="welcome-title">{{ $person->firstName }} {{ $person->lastName }} ({{ $team->season->name }})</h1>
 
     <a href="{{ route('person.show', ['person' => $person->id]) }}" class="inline-link">&larr; All Seasons</a><br/>
     <a href="{{ route('team', ['team' => $team->id]) }}" class="inline-link">&larr; Team Stats</a>

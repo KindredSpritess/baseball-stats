@@ -4,9 +4,9 @@ Create New Team
 @endsection
 
 @section('content')
-<div class="page-container">
+<div class="page-container welcome-container">
     <div class="page-header">
-        <h1 class="page-title">Create New Team</h1>
+        <h1 class="section-title">Create New Team</h1>
         <p class="page-subtitle">Add a new team to the system</p>
     </div>
 
