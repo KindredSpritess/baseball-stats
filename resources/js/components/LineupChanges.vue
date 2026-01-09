@@ -180,8 +180,8 @@ export default {
 
       // Convert teamPlayers object to array format compatible with the template
       return Object.entries(this.teamPlayers)
-        .filter(([name, playerData]) => playerData?.person)
-        .map(([name, playerData]) => ({
+        .filter(([_name, playerData]) => playerData?.person)
+        .map(([_name, playerData]) => ({
           id: playerData.person.id,
           person: playerData.person,
           number: playerData.number,
@@ -200,6 +200,13 @@ export default {
       this.loadingPlayers = true;
       try {
         const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
+        
+        if (!currentTeam?.id) {
+          console.error('Current team or team ID is not available');
+          this.teamPlayers = {};
+          return;
+        }
+        
         const response = await fetch(`/api/players/team/${currentTeam.id}`);
         
         if (!response.ok) {
