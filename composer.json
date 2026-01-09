@@ -13,6 +13,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.7",
+        "phpoffice/phpspreadsheet": "^5.3",
         "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {

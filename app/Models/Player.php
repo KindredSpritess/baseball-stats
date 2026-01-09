@@ -36,7 +36,7 @@ class Player extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['number'];
+    protected $fillable = ['number', 'person_id', 'team_id', 'game_id'];
 
     protected $with = ['person'];
 
