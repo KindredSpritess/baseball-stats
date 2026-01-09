@@ -165,6 +165,9 @@ export default {
     currentDefense() {
       return this.state.defense?.[(this.state.half + 1) % 2] || {};
     },
+    currentTeam() {
+      return this.game?.[this.state.half ? 'away_team' : 'home_team'];
+    },
     nextDefense() {
       const defense = {...this.state.defense?.[(this.state.half + 1) % 2]};
       Object.values(this.changes).forEach(change => {
@@ -180,8 +183,8 @@ export default {
 
       // Convert teamPlayers object to array format compatible with the template
       return Object.entries(this.teamPlayers)
-        .filter(([_name, playerData]) => playerData?.person)
-        .map(([_name, playerData]) => ({
+        .filter(([_playerKey, playerData]) => playerData?.person)
+        .map(([_playerKey, playerData]) => ({
           id: playerData.person.id,
           person: playerData.person,
           number: playerData.number,
@@ -197,6 +200,13 @@ export default {
       this.fetchTeamPlayers();
     }
   },
+  watch: {
+    game(newValue) {
+      if (newValue) {
+        this.fetchTeamPlayers();
+      }
+    },
+  },
   methods: {
     async fetchTeamPlayers() {
       this.loadingPlayers = true;
@@ -207,15 +217,13 @@ export default {
           return;
         }
         
-        const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
-        
-        if (!currentTeam?.id) {
+        if (!this.currentTeam?.id) {
           console.error('Current team or team ID is not available');
           this.teamPlayers = {};
           return;
         }
         
-        const response = await fetch(`/api/players/team/${currentTeam.id}`);
+        const response = await fetch(`/api/players/team/${this.currentTeam.id}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -296,7 +304,7 @@ export default {
       this.showPlayerSelect = false;
     },
     replacePlayer(newPlayer) {
-      const defenseTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
+      const defenseTeam = this.currentTeam;
       let command = `@${defenseTeam.short_name} ${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
       if (newPlayer.number) {
         command += ` #${newPlayer.number}`;
