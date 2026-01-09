@@ -398,8 +398,8 @@ export default {
     selectLocation(event) {
       const { offsetX, offsetY } = event;
       // Draw a circle centered on pos, scaled to viewBox.
-      const cx = (offsetX / event.currentTarget.clientWidth * 447.94775).toFixed(2);
-      const cy = (offsetY / event.currentTarget.clientHeight * 448.12701).toFixed(2);
+      const cx = (offsetX / event.currentTarget.clientWidth * 527.94775).toFixed(2) - 40;
+      const cy = (offsetY / event.currentTarget.clientHeight * 528.12701).toFixed(2) - 40;
       this.location = { x: cx, y: cy };
       this.stage = 'scoring-decision';
     },

@@ -69,7 +69,8 @@
             </p>
             @endif
             <div>
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 447.94775 448.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="-40 -40 527.94775 528.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
+                    <path style="fill:none;stroke:#000000;stroke-width:2" d="M -40,-40 l 527.94775,0 l 0,528.12701 l -527.94775,0 Z" />
                     <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
                         <!-- Border -->
                         <path style="fill:#ffffff" d="m 224.02066,0 c -51.375,0 -104.961,18.027 -145.843997,50.219 -37.233,29.316 -61.724,68.332 -77.84399963,120.094 -0.785,2.639 -0.16,30.431 1.65600003,32.5 L 180.08366,380.845 c -2.605,5.889 -4.125,12.355 -4.125,19.188 0,26.418 21.648,48.094 48.063,48.094 26.415,0 47.969,-21.678 47.969,-48.094 0,-6.807 -1.486,-13.25 -4.063,-19.125 l 178.031,-178.031 c 1.816,-2.068 2.442,-29.922 1.656,-32.561 -15.25,-51.344 -40.622,-90.785 -77.844,-120.094 -40.883,-32.192 -94.374,-50.219 -145.75,-50.219 z">&#10;                </path>&#10;                <path style="fill:#d89b75" d="m 224.00866,159.639 121.063,121.187 -86.344,86.344 c -8.749,-9.23 -21.048,-15.064 -34.719,-15.064 -13.677,0 -26.001,5.83 -34.781,15.064 l -86.375,-86.375 z" />
@@ -123,7 +124,7 @@
                     @if ($game->bases[2])
                     <text text-anchor="middle" font-size="x-large" font-family="sans-serif"  x=104 y=280 font-weight="bold" class="runner-text" onclick="sub('PR3', 'PR')">{{ $game->bases['2']->person->lastName }}</text>
                     @endif
-                    @if ($game->locked && $game->hitting() && !$game->ended)
+                    @if ($game->hitting() && !$game->ended)
                     @foreach ($game->hitting()->ballsInPlay as $ball)
                         @php
                             $shape = match($ball->type) {
@@ -432,8 +433,8 @@
         }
         const {offsetX, offsetY } = e.originalEvent;
         // Draw a circle centered on pos, scaled to viewBox.
-        const cx = (offsetX / e.currentTarget.clientWidth * 447.94775).toFixed(2);
-        const cy = (offsetY / e.currentTarget.clientHeight * 448.12701).toFixed(2);
+        const cx = (offsetX / e.currentTarget.clientWidth * 527.94775).toFixed(2) - 40;
+        const cy = (offsetY / e.currentTarget.clientHeight * 528.12701).toFixed(2) - 40;
         if (!bb) {
             bb = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             bb.setAttribute('r', '10');

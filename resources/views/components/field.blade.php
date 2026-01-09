@@ -1,5 +1,5 @@
 
-<svg height="450" width="447.94775" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 447.94775 450" xml:space="preserve" fill="#00000000" stroke="#00000000">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="-40 -40 527.94775 528.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
     <style>
         svg circle:hover, polygon:hover {
             stroke: red;
