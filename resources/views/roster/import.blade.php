@@ -4,9 +4,9 @@ Import Roster
 @endsection
 
 @section('content')
-<div class="page-container">
+<div class="page-container welcome-container">
     <div class="page-header">
-        <h1 class="page-title">Import Roster</h1>
+        <h1 class="section-title">Import Roster</h1>
         <p class="page-subtitle">Upload a CSV or Excel file to import players</p>
     </div>
 
@@ -41,7 +41,7 @@ Import Roster
     <div class="stats-section">
         <form action="{{ route('roster.import.process') }}" method="POST" enctype="multipart/form-data" style="max-width: 600px;">
             @csrf
-            
+
             <div style="background: #e7f3ff; border: 1px solid #b3d9ff; color: #004085; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
                 <h3 style="margin-top: 0; font-size: 1.1em;">Import Options</h3>
                 <p style="margin: 10px 0;"><strong>Option 1 - Upload File:</strong> CSV or Excel file with player data</p>
@@ -99,24 +99,24 @@ Import Roster
 </div>
 
 <script>
-    const seasons = @json($seasons);
-    
+    const seasons = JSON.parse('@json($seasons)');
+
     function clearFile() {
         const fileInput = document.getElementById('file');
         fileInput.value = '';
     }
-    
+
     function clearUrl() {
         const urlInput = document.getElementById('url');
         urlInput.value = '';
     }
-    
+
     function toggleTeamSeasonFields() {
         const checkbox = document.getElementById('columns_in_file');
         const fields = document.getElementById('team-season-fields');
         const seasonSelect = document.getElementById('season_id');
         const teamSelect = document.getElementById('team_id');
-        
+
         if (checkbox.checked) {
             fields.style.display = 'none';
             seasonSelect.required = false;
@@ -127,18 +127,18 @@ Import Roster
             teamSelect.required = true;
         }
     }
-    
+
     function updateTeamOptions() {
         const seasonSelect = document.getElementById('season_id');
         const teamSelect = document.getElementById('team_id');
         const selectedSeasonId = parseInt(seasonSelect.value);
-        
+
         teamSelect.innerHTML = '<option value="">Select a team</option>';
-        
+
         if (selectedSeasonId) {
             const season = seasons.find(s => s.id === selectedSeasonId);
             if (season && season.teams) {
-                season.teams.forEach(team => {
+                season.teams.sort((a, b) => a.name.localeCompare(b.name)).forEach(team => {
                     const option = document.createElement('option');
                     option.value = team.id;
                     option.textContent = team.name;
