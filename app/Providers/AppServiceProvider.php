@@ -47,10 +47,13 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 'superuser' || $user->seasons()->where('season_id', $season->id)->exists();
         });
         Gate::define('import-roster', function (User $user, $team) {
-            $isSuperuser = $user->role === 'superuser';
+            if ($user->role === 'superuser') {
+                return true;
+            }
+            
             $isTeamScorer = $user->teams()->where('team_id', $team->id)->exists();
             $isSeasonAdmin = $team->season_id ? $user->seasons()->where('season_id', $team->season_id)->exists() : false;
-            return $isSuperuser || $isTeamScorer || $isSeasonAdmin;
+            return $isTeamScorer || $isSeasonAdmin;
         });
 
         Blade::directive('spaceless', function () {
