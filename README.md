@@ -91,7 +91,7 @@ Before you begin, ensure you have the following installed:
    cp app/.env.example .env
    ```
    
-   Edit `.env` and configure your database connection:
+   Edit `.env` and configure your database connection with your actual credentials:
    ```
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -100,6 +100,8 @@ Before you begin, ensure you have the following installed:
    DB_USERNAME=your_username
    DB_PASSWORD=your_password
    ```
+   
+   **Note:** Replace `your_username` and `your_password` with your actual MySQL credentials, and ensure the database exists before running migrations.
 
 5. **Generate application key**
    ```bash
