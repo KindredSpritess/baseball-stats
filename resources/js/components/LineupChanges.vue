@@ -24,7 +24,7 @@
                       {{ getPlayerName(spot) }}
                     </span>
                     <span v-if="changes[index]?.type === 'substitution'">
-                      &nbsp;→&nbsp;{{ getPlayerName(changes[index].newPlayerId) }}
+                      &nbsp;→&nbsp;{{ changes[index].newPlayerName }}
                     </span>
                   </div>
                   <div class="player-position">
@@ -125,6 +125,8 @@ export default {
       showPlayerSelect: false,
       changes: {},
       changeId: 0,
+      teamPlayers: [],
+      loadingPlayers: false,
       POSITIONS: {
         1: 'Pitcher',
         2: 'Catcher',
@@ -176,17 +178,34 @@ export default {
     availablePlayers() {
       if (this.selectedSpot === null) return [];
 
-      const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
-      const players = this.game.players.filter(player => player.team_id === currentTeam.id);
-
-      // Sort by last name
-      return players.sort((a, b) => {
+      // Convert teamPlayers object to array format compatible with the template
+      return Object.entries(this.teamPlayers).map(([name, playerData]) => ({
+        id: playerData.person.id,
+        person: playerData.person,
+        number: playerData.number,
+      })).sort((a, b) => {
         return a.person.lastName.localeCompare(b.person.lastName) ||
                a.person.firstName.localeCompare(b.person.firstName);
       });
     },
   },
+  mounted() {
+    this.fetchTeamPlayers();
+  },
   methods: {
+    async fetchTeamPlayers() {
+      this.loadingPlayers = true;
+      try {
+        const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
+        const response = await fetch(`/api/players/team/${currentTeam.id}`);
+        const data = await response.json();
+        this.teamPlayers = data;
+      } catch (error) {
+        console.error('Error fetching team players:', error);
+      } finally {
+        this.loadingPlayers = false;
+      }
+    },
     getPlayerName(playerId) {
       const player = this.game.players.find(p => p.id === playerId);
       if (player) {
@@ -280,6 +299,7 @@ export default {
         lineupSpot: this.selectedSpot + 1,
         oldPlayerId: currentPlayerId,
         newPlayerId: newPlayer.id,
+        newPlayerName: `${newPlayer.person.lastName}, ${newPlayer.person.firstName}`,
         position: currentPosition,
         command: command,
       };
