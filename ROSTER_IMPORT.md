@@ -2,7 +2,7 @@
 
 ## Overview
 
-The roster import feature allows authorized users to bulk import player rosters via CSV or Excel (XLSX/XLS) files. This makes it easy to add multiple players to a team without entering them individually.
+The roster import feature allows authorized users to bulk import player rosters via CSV or Excel (XLSX/XLS) files, or directly from URLs. This makes it easy to add multiple players to a team without entering them individually.
 
 ## Access Requirements
 
@@ -15,11 +15,25 @@ To import a roster, you need one of the following:
 
 1. Navigate to `/roster/import` in your browser
 2. Choose your import method:
-   - **Option A**: Upload a file with just player data and select team/season from dropdowns
-   - **Option B**: Include team and season information in your file
+   - **File Upload**: Upload a CSV or Excel file with player data
+   - **URL Import**: Provide a URL to a roster page (e.g., MyGameDay) or a CSV/Excel file
+   - **Team/Season Selection**: Select from dropdowns OR include in your data
 
-3. Upload your CSV or Excel file
-4. Click "Import Roster"
+3. Click "Import Roster"
+
+## Import Methods
+
+### Method 1: File Upload
+
+Upload a CSV or Excel file with player data.
+
+### Method 2: URL Import
+
+Import directly from a URL, such as:
+- **MyGameDay Roster Pages**: `https://websites.mygameday.app/team_info.cgi?c=0-13003-0-655996-27257243&a=PLAYERS`
+- **CSV/Excel File URLs**: Direct links to CSV or Excel files
+
+The system will automatically parse player data from HTML tables or CSV content.
 
 ## File Format
 
@@ -80,7 +94,21 @@ Aaron,Judge,99,Yankees,2024 MLB Season
 
 Check "Team and Season columns are in the file"
 
+### Example 3: URL Import from MyGameDay
+Enter URL: `https://websites.mygameday.app/team_info.cgi?c=0-13003-0-655996-27257243&a=PLAYERS`
+
+Select team: "Your Team Name"
+Select season: "2024 Season"
+
+The system will automatically parse the roster from the MyGameDay page.
+
 ## Troubleshooting
+
+### "Failed to fetch data from URL" errors
+- Verify the URL is accessible and correct
+- Check your internet connection
+- For MyGameDay URLs, ensure the page displays a roster table
+- Try opening the URL in your browser to verify it works
 
 ### "Not authorized" errors
 - Verify you have access to the team (team scorer or season admin)
@@ -102,6 +130,8 @@ Check "Team and Season columns are in the file"
 ## Technical Details
 
 - **Supported File Types**: CSV (.csv), Excel (.xlsx, .xls)
+- **Supported URL Types**: MyGameDay roster pages, direct CSV/Excel file URLs
 - **Maximum File Size**: Depends on PHP configuration (typically 2MB-8MB)
+- **URL Timeout**: 30 seconds
 - **Character Encoding**: UTF-8 recommended
 - **Database**: Players are stored in the `players` table with `game_id = 0`
