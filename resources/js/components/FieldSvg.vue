@@ -1,6 +1,6 @@
 <template>
   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"
-    viewBox="0 0 447.94775 448.12701" xml:space="preserve" fill="#00000000" stroke="#00000000"
+    viewBox="-40 -40 527.94775 528.12701" xml:space="preserve" fill="#00000000" stroke="#00000000"
     @click="onTouch ? onTouch($event) : null">
     <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
       <!-- Border -->
