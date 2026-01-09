@@ -125,7 +125,7 @@ export default {
       showPlayerSelect: false,
       changes: {},
       changeId: 0,
-      teamPlayers: [],
+      teamPlayers: {},
       loadingPlayers: false,
       POSITIONS: {
         1: 'Pitcher',
@@ -179,14 +179,17 @@ export default {
       if (this.selectedSpot === null) return [];
 
       // Convert teamPlayers object to array format compatible with the template
-      return Object.entries(this.teamPlayers).map(([name, playerData]) => ({
-        id: playerData.person.id,
-        person: playerData.person,
-        number: playerData.number,
-      })).sort((a, b) => {
-        return a.person.lastName.localeCompare(b.person.lastName) ||
-               a.person.firstName.localeCompare(b.person.firstName);
-      });
+      return Object.entries(this.teamPlayers)
+        .filter(([name, playerData]) => playerData?.person)
+        .map(([name, playerData]) => ({
+          id: playerData.person.id,
+          person: playerData.person,
+          number: playerData.number,
+        }))
+        .sort((a, b) => {
+          return a.person.lastName.localeCompare(b.person.lastName) ||
+                 a.person.firstName.localeCompare(b.person.firstName);
+        });
     },
   },
   mounted() {
@@ -198,10 +201,16 @@ export default {
       try {
         const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
         const response = await fetch(`/api/players/team/${currentTeam.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
-        this.teamPlayers = data;
+        this.teamPlayers = data || {};
       } catch (error) {
         console.error('Error fetching team players:', error);
+        this.teamPlayers = {};
       } finally {
         this.loadingPlayers = false;
       }
