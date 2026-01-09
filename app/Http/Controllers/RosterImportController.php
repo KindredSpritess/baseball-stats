@@ -147,12 +147,25 @@ class RosterImportController extends Controller
 
             DB::commit();
 
-            $message = "Successfully imported $imported player(s).";
             if (count($errors) > 0) {
-                $message .= " " . count($errors) . " error(s) occurred: " . implode('; ', $errors);
+                if ($imported === 0) {
+                    // All rows failed
+                    $message = "Import failed. " . count($errors) . " error(s) occurred: " . implode('; ', array_slice($errors, 0, 5));
+                    if (count($errors) > 5) {
+                        $message .= ' (and ' . (count($errors) - 5) . ' more)';
+                    }
+                    return redirect()->back()->with('error', $message);
+                } else {
+                    // Partial success
+                    $message = "Successfully imported $imported player(s), but " . count($errors) . " error(s) occurred: " . implode('; ', array_slice($errors, 0, 5));
+                    if (count($errors) > 5) {
+                        $message .= ' (and ' . (count($errors) - 5) . ' more)';
+                    }
+                    return redirect()->back()->with('warning', $message);
+                }
             }
 
-            return redirect()->back()->with('success', $message);
+            return redirect()->back()->with('success', "Successfully imported $imported player(s).");
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Error importing roster: ' . $e->getMessage());
@@ -175,14 +188,16 @@ class RosterImportController extends Controller
         $data = [];
         $handle = fopen($file->getRealPath(), 'r');
         
-        // Skip header row
-        $header = fgetcsv($handle);
-        
-        while (($row = fgetcsv($handle)) !== false) {
-            $data[] = $row;
+        try {
+            // Skip header row
+            $header = fgetcsv($handle);
+            
+            while (($row = fgetcsv($handle)) !== false) {
+                $data[] = $row;
+            }
+        } finally {
+            fclose($handle);
         }
-        
-        fclose($handle);
         
         return $data;
     }

@@ -131,8 +131,8 @@ class RosterImportTest extends TestCase
         ]);
 
         // Should complete with error message about authorization
-        $response->assertSessionHas('success');
-        $this->assertStringContainsString('Not authorized', session('success'));
+        $response->assertSessionHas('error');
+        $this->assertStringContainsString('Not authorized', session('error'));
     }
 
     public function test_season_admin_can_import_to_teams_in_their_season()

@@ -16,6 +16,12 @@ Import Roster
     </div>
     @endif
 
+    @if(session('warning'))
+    <div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 12px 20px; border-radius: 4px; margin-bottom: 20px;">
+        {{ session('warning') }}
+    </div>
+    @endif
+
     @if(session('error'))
     <div style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px 20px; border-radius: 4px; margin-bottom: 20px;">
         {{ session('error') }}
