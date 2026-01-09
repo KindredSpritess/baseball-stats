@@ -1,66 +1,267 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Baseball Stats
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive baseball statistics tracking and scoring application built with Laravel and Vue.js. This application allows users to track games, manage teams and players, score live games, view real-time statistics, and generate detailed box scores.
 
-## About Laravel
+## Purpose
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Baseball Stats is designed to provide a complete solution for baseball leagues, teams, and enthusiasts to:
+- Track and manage baseball seasons, teams, and players
+- Score games in real-time with detailed play-by-play tracking
+- Generate comprehensive statistics and analytics
+- View game history and player performance
+- Cast live game data to external displays (Google Cast support)
+- Manage team rosters and player information
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Game Management
+- **Create and schedule games** - Set up games with home/away teams, location, and first pitch time
+- **Live game scoring** - Real-time play-by-play input with state management
+- **Game viewer** - Watch games with live updates
+- **Box scores** - Generate detailed box scores for completed games
+- **Undo functionality** - Correct mistakes with play-by-play undo
+- **Game locking** - Prevent accidental changes to completed games
+- **Google Cast support** - Display live game data on external displays
 
-## Learning Laravel
+### Team & Player Management
+- **Team creation and editing** - Manage team information and rosters
+- **Season-based organization** - Associate teams with specific seasons
+- **Player profiles** - Track individual player statistics and performance
+- **Player search** - Quickly find players across all teams
+- **Positional tracking** - Monitor player performance by position
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Statistics & Analytics
+- **Real-time statistics** - Automatically calculated batting and pitching stats
+- **Player statistics** - Individual performance metrics across all games
+- **Team statistics** - Aggregate team performance data
+- **Balls in play tracking** - Detailed field position analytics
+- **Historical data** - Access past games and seasonal performance
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### User Management
+- **Authentication** - OAuth integration with external providers
+- **User preferences** - Customizable settings for users and seasons
+- **Role-based permissions** - Control access to scoring and team management features
+- **Sanctum API authentication** - Secure API access
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Additional Features
+- **Schedule management** - Import and display game schedules
+- **Real-time broadcasting** - Live game updates using Laravel Reverb
+- **Responsive design** - Works on desktop and mobile devices
+- **Data visualization** - Field diagrams for balls in play using Babylon.js
 
-## Laravel Sponsors
+## Technology Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- **Backend:** PHP 8.2+ with Laravel (latest version)
+- **Frontend:** Vue.js 3.5+ with Vite
+- **Database:** MySQL (via Doctrine DBAL)
+- **Real-time:** Laravel Reverb (WebSockets)
+- **Authentication:** Laravel Sanctum & Laravel Socialite
+- **3D Graphics:** Babylon.js
+- **Development Environment:** Lando (Docker-based)
 
-### Premium Partners
+## Prerequisites
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Before you begin, ensure you have the following installed:
+- PHP 8.2 or higher
+- Composer
+- Node.js and npm
+- MySQL or MariaDB
+- Lando (optional, for Docker-based development)
 
-## Contributing
+## Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/KindredSpritess/baseball-stats.git
+   cd baseball-stats
+   ```
 
-## Code of Conduct
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. **Install JavaScript dependencies**
+   ```bash
+   npm install
+   ```
 
-## Security Vulnerabilities
+4. **Set up environment configuration**
+   ```bash
+   cp app/.env.example .env
+   ```
+   
+   Edit `.env` and configure your database connection with your actual credentials:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=baseball_stats
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
+   
+   For real-time features, configure the broadcast driver and Reverb settings:
+   ```
+   BROADCAST_DRIVER=reverb
+   
+   REVERB_APP_ID=your_app_id
+   REVERB_APP_KEY=your_app_key
+   REVERB_APP_SECRET=your_app_secret
+   REVERB_HOST=localhost
+   REVERB_PORT=8080
+   REVERB_SCHEME=http
+   ```
+   
+   **Note:** Replace `your_username` and `your_password` with your actual MySQL credentials, and ensure the database exists before running migrations. Generate secure values for Reverb credentials.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Run database migrations**
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Build frontend assets**
+   ```bash
+   npm run build
+   ```
+   
+   For development with hot reload:
+   ```bash
+   npm run dev
+   ```
+
+## Running the Application
+
+### Using PHP Built-in Server
+
+1. **Start the Laravel development server**
+   ```bash
+   php artisan serve
+   ```
+   The application will be available at `http://localhost:8000`
+
+2. **Start the Reverb WebSocket server** (in a separate terminal, **required for real-time features**)
+   ```bash
+   php artisan reverb:start
+   ```
+   
+   **Note:** The Reverb server is essential for real-time game updates, live scoring, and broadcasting features. Ensure your `.env` file has `BROADCAST_DRIVER=reverb` and the Reverb configuration values are set.
+
+### Using Lando (Recommended)
+
+If you have Lando installed, you can use the included configuration:
+
+1. **Start Lando**
+   ```bash
+   lando start
+   ```
+
+2. **Run migrations**
+   ```bash
+   lando artisan migrate
+   ```
+
+3. **Access the application**
+   - Web: `https://baseball.lndo.site`
+   - Reverb WebSocket: Port 8080
+
+## Usage
+
+### Basic Workflow
+
+1. **Create a Season** - Organize your games by season
+2. **Add Teams** - Create teams and add them to your season
+3. **Add Players** - Build team rosters with player information
+4. **Schedule Games** - Create games with home/away teams and timing
+5. **Score Games** - Use the live scoring interface to track play-by-play action
+6. **View Statistics** - Access player and team stats from the dashboard
+
+### Scoring a Game
+
+1. Navigate to a scheduled game
+2. Click "Score Game" (requires appropriate permissions)
+3. Enter plays using the play-by-play interface
+4. The game state updates automatically with scores, outs, and baserunners
+5. Use the undo feature if you make a mistake
+6. The game will be marked as ended when complete
+
+### Viewing Game Data
+
+- **Live View:** Watch games in progress with real-time updates
+- **Box Score:** View detailed statistics after game completion
+- **Cast:** Display game data on a Google Cast device
+
+## Testing
+
+Run the test suite:
+```bash
+php artisan test
+```
+
+Or with PHPUnit directly:
+```bash
+./vendor/bin/phpunit
+```
+
+## Project Structure
+
+```
+baseball-stats/
+├── app/
+│   ├── Casts/          # Custom model casts (GameState)
+│   ├── Console/        # Artisan commands
+│   ├── Events/         # Event classes (GameUpdated)
+│   ├── Helpers/        # Helper classes (StatsHelper)
+│   ├── Http/
+│   │   ├── Controllers/ # Game, Team, Person, Stats controllers
+│   │   └── Middleware/  # HTTP middleware
+│   └── Models/         # Eloquent models (Game, Team, Player, etc.)
+├── database/
+│   ├── migrations/     # Database schema migrations
+│   └── seeders/        # Database seeders
+├── public/             # Public web root
+├── resources/
+│   └── views/          # Blade templates
+├── routes/
+│   ├── api.php        # API routes
+│   ├── web.php        # Web routes
+│   └── channels.php   # Broadcasting channels
+└── tests/             # Test files
+```
+
+## API Endpoints
+
+The application provides both web and API interfaces:
+
+### Web Routes
+- `/` - Home dashboard
+- `/game/{game}` - Game scoring interface
+- `/game/view/{game}` - Game viewer
+- `/team/{team}` - Team details
+- `/person/{person}` - Player statistics
+- `/stats` - Global statistics
+
+### API Routes
+
+**Public Routes:**
+- `GET /api/game/{game}` - Get game data
+
+**Authenticated Routes (require Sanctum auth):**
+- `GET /api/user` - Get current user
+- `PUT /api/user/preferences` - Update user preferences
+- `GET /api/season/{season}/preferences` - Get season preferences
+- `PUT /api/season/{season}/preferences` - Update season preferences
+- `GET /api/game/{game}/preferences` - Get game preferences
+
+**Authorized Routes (require 'score' ability):**
+- `GET /api/players/search` - Search players
+- `GET /api/players/team/{team}` - Get team players
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
