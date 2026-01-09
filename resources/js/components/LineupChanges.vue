@@ -193,12 +193,20 @@ export default {
     },
   },
   mounted() {
-    this.fetchTeamPlayers();
+    if (this.game) {
+      this.fetchTeamPlayers();
+    }
   },
   methods: {
     async fetchTeamPlayers() {
       this.loadingPlayers = true;
       try {
+        if (!this.game) {
+          console.error('Game data is not available');
+          this.teamPlayers = {};
+          return;
+        }
+        
         const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
         
         if (!currentTeam?.id) {
