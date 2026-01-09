@@ -353,6 +353,7 @@ class Play extends Model
                              $log->consume('s') ?:  // Swinging Strike
                              $log->consume('f') ?:  // Foul
                              $log->consume('r') ?:  // Foul (runner going)
+                             $log->consume('g') ?:  // Foul (bunt)
                              $log->consume('x') ?:  // In Play
                              $log->consume('t'))) {
                 $this->lastPitch = $p;

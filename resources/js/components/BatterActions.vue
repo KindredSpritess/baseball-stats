@@ -219,6 +219,8 @@ export default {
         's': 'Swinging Strike',
         'c': 'Called Strike', 
         'f': 'Foul Ball',
+        't': 'Foul Tip',
+        'g': 'Foul (bunt)',
         'x': 'Ball In Play',
         'r': 'Foul (runner going)',
         'b': 'Ball in dirt',
@@ -231,6 +233,8 @@ export default {
         's': 'out',
         'c': 'out', 
         'f': 'out',
+        'g': 'out',
+        't': 'out',
         'x': 'in-play',
         'r': 'out',
         'b': 'advance',
@@ -276,6 +280,7 @@ export default {
         delete outcomes['b'];
         delete outcomes['p'];
         delete outcomes['i'];
+        delete outcomes['t'];
       }
       if (!this.state.bases.some(base => base !== null)) {
         delete outcomes['r']; // No runners to be going.
@@ -351,7 +356,7 @@ export default {
       // Update count based on pitch
       if (code === 'b' || code === 'i' || code === 'p' || code === '.') {
         this.balls++;
-      } else if (code === 's' || code === 'c' || code === 'v') {
+      } else if (code === 's' || code === 'c' || code === 't' || code === 'g') {
         this.strikes++;
       } else if (code === 'f') {
         // Foul ball - only increases strikes if strikes < 2
@@ -374,12 +379,17 @@ export default {
 
     addResult(result) {
       if (result === 'K') {
-        if ((this.preferences.allowDropThirdStrikes ?? true) && (this.state.outs > 1 || this.state.bases[0] === null)) {
+        if (this.pitchSequence.at(-1) === 'g') {
+          result = 'KBTS';
+        } else if (this.pitchSequence.at(-1) === 't') {
+          result = 'K2';
+        } else if ((this.preferences.allowDropThirdStrikes ?? true) && (this.state.outs > 1 || this.state.bases[0] === null)) {
           this.trajectory = 'K';
           this.stage = 'strikeout-options';
           return;
+        } else {
+          result = 'K2';
         }
-        result = 'K2';
       }
       this.trajectory = '';
       if (result === 'HBP') {

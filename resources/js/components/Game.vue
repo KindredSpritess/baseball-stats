@@ -171,6 +171,7 @@ const pitchDescription = (pitch) => ({
     't': 'Foul Tip',
     'r': 'Foul (runner going)',
     'f': 'Foul',
+    'g': 'Foul (bunt)',
     'p': 'Pitchout',
     'i': 'Intentional Ball',
 }[pitch] || `Unknown Pitch ${pitch}`);
