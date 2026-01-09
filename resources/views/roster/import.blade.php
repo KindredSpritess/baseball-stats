@@ -43,29 +43,33 @@ Import Roster
             @csrf
             
             <div style="background: #e7f3ff; border: 1px solid #b3d9ff; color: #004085; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-                <h3 style="margin-top: 0; font-size: 1.1em;">File Format Guidelines</h3>
-                <p style="margin: 10px 0;"><strong>Option 1 - Team/Season in Form:</strong></p>
-                <p style="margin: 5px 0 10px 0; font-family: monospace; background: white; padding: 8px; border-radius: 3px;">
-                    First Name, Last Name, Number (optional)
-                </p>
-                <p style="margin: 10px 0;"><strong>Option 2 - Team/Season in File:</strong></p>
-                <p style="margin: 5px 0 10px 0; font-family: monospace; background: white; padding: 8px; border-radius: 3px;">
-                    First Name, Last Name, Number (optional), Team, Season
-                </p>
-                <p style="margin: 10px 0 0 0; font-size: 0.9em;">First row should contain column headers and will be skipped during import.</p>
+                <h3 style="margin-top: 0; font-size: 1.1em;">Import Options</h3>
+                <p style="margin: 10px 0;"><strong>Option 1 - Upload File:</strong> CSV or Excel file with player data</p>
+                <p style="margin: 10px 0;"><strong>Option 2 - Import from URL:</strong> MyGameDay roster URL or CSV/Excel file URL</p>
+                <p style="margin: 10px 0 0 0; font-size: 0.9em;">Example URL: https://websites.mygameday.app/team_info.cgi?c=0-13003-0-655996-27257243&amp;a=PLAYERS</p>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label for="file" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">File (CSV or Excel):</label>
-                <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls" required style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" />
+                <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" onchange="clearUrl()" />
+            </div>
+
+            <div style="text-align: center; margin: 20px 0; color: var(--text-secondary); font-weight: 600;">
+                - OR -
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="url" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">URL:</label>
+                <input type="url" id="url" name="url" placeholder="https://websites.mygameday.app/team_info.cgi?..." style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" onchange="clearFile()" />
+                <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--text-secondary);">Enter a URL to a roster page or CSV/Excel file</p>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label style="display: flex; align-items: center; cursor: pointer;">
                     <input type="checkbox" id="columns_in_file" name="columns_in_file" value="1" onchange="toggleTeamSeasonFields()" style="margin-right: 10px;" />
-                    <span style="font-weight: 600; color: var(--text-primary);">Team and Season columns are in the file</span>
+                    <span style="font-weight: 600; color: var(--text-primary);">Team and Season columns are in the file/URL</span>
                 </label>
-                <p style="margin: 5px 0 0 30px; font-size: 0.9em; color: var(--text-secondary);">Check this if your file includes Team and Season columns</p>
+                <p style="margin: 5px 0 0 30px; font-size: 0.9em; color: var(--text-secondary);">Check this if your data includes Team and Season columns</p>
             </div>
 
             <div id="team-season-fields">
@@ -96,6 +100,16 @@ Import Roster
 
 <script>
     const seasons = @json($seasons);
+    
+    function clearFile() {
+        const fileInput = document.getElementById('file');
+        fileInput.value = '';
+    }
+    
+    function clearUrl() {
+        const urlInput = document.getElementById('url');
+        urlInput.value = '';
+    }
     
     function toggleTeamSeasonFields() {
         const checkbox = document.getElementById('columns_in_file');

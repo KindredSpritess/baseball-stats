@@ -26,19 +26,31 @@ class RosterImportController extends Controller
     public function import(Request $request)
     {
         $validated = $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx,xls',
+            'file' => 'nullable|file|mimes:csv,xlsx,xls',
+            'url' => 'nullable|url',
             'team_id' => 'nullable|exists:teams,id',
             'season_id' => 'nullable|exists:seasons,id',
             'columns_in_file' => 'nullable|boolean',
         ]);
 
+        // Validate that either file or URL is provided
+        if (!$request->hasFile('file') && !$request->filled('url')) {
+            return redirect()->back()->with('error', 'Please provide either a file or a URL.');
+        }
+
         $file = $request->file('file');
+        $url = $request->input('url');
         $columnsInFile = $request->boolean('columns_in_file');
         $defaultTeamId = $request->input('team_id');
         $defaultSeasonId = $request->input('season_id');
 
         try {
-            $data = $this->parseFile($file);
+            // Parse data from either file or URL
+            if ($url) {
+                $data = $this->parseUrl($url);
+            } else {
+                $data = $this->parseFile($file);
+            }
             
             $imported = 0;
             $errors = [];
@@ -212,5 +224,137 @@ class RosterImportController extends Controller
         array_shift($rows);
         
         return $rows;
+    }
+
+    private function parseUrl($url)
+    {
+        // Check if it's a mygameday.app URL
+        if (strpos($url, 'mygameday.app') !== false) {
+            return $this->parseMyGameDayUrl($url);
+        }
+        
+        // For other URLs, try to fetch as CSV
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 30,
+                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            ],
+        ]);
+        
+        $content = @file_get_contents($url, false, $context);
+        if ($content === false) {
+            throw new \Exception('Failed to fetch data from URL. Please check the URL and try again.');
+        }
+        
+        // Try to parse as CSV
+        $lines = explode("\n", $content);
+        $data = [];
+        
+        // Skip header row
+        array_shift($lines);
+        
+        foreach ($lines as $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+            $row = str_getcsv($line);
+            if (!empty(array_filter($row))) {
+                $data[] = $row;
+            }
+        }
+        
+        return $data;
+    }
+
+    private function parseMyGameDayUrl($url)
+    {
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 30,
+                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            ],
+        ]);
+        
+        $html = @file_get_contents($url, false, $context);
+        if ($html === false) {
+            throw new \Exception('Failed to fetch data from MyGameDay URL. Please check the URL and try again.');
+        }
+        
+        // Parse HTML to extract player data
+        // MyGameDay typically shows players in a table format
+        $data = [];
+        
+        // Use DOMDocument to parse HTML
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+        
+        // Try to find player rows in tables
+        // Look for tables with player information
+        $tables = $xpath->query('//table');
+        
+        foreach ($tables as $table) {
+            $rows = $xpath->query('.//tr', $table);
+            $headerProcessed = false;
+            
+            foreach ($rows as $row) {
+                $cells = $xpath->query('.//td | .//th', $row);
+                
+                if ($cells->length === 0) {
+                    continue;
+                }
+                
+                // Skip header rows
+                if (!$headerProcessed) {
+                    $headerProcessed = true;
+                    continue;
+                }
+                
+                $rowData = [];
+                foreach ($cells as $cell) {
+                    $rowData[] = trim($cell->textContent);
+                }
+                
+                // Try to extract first name, last name, and number
+                // Typical format might be: Number, Name, other fields...
+                if (count($rowData) >= 2) {
+                    // Check if first column is a number (jersey number)
+                    $number = '';
+                    $nameStart = 0;
+                    
+                    if (is_numeric($rowData[0]) || $rowData[0] === '') {
+                        $number = $rowData[0];
+                        $nameStart = 1;
+                    }
+                    
+                    // Parse name - could be "LastName, FirstName" or "FirstName LastName"
+                    if (isset($rowData[$nameStart])) {
+                        $name = $rowData[$nameStart];
+                        
+                        if (strpos($name, ',') !== false) {
+                            // Format: "LastName, FirstName"
+                            $parts = array_map('trim', explode(',', $name, 2));
+                            $lastName = $parts[0];
+                            $firstName = $parts[1] ?? '';
+                        } else {
+                            // Format: "FirstName LastName" or just single name
+                            $parts = explode(' ', trim($name), 2);
+                            $firstName = $parts[0];
+                            $lastName = $parts[1] ?? '';
+                        }
+                        
+                        if ($firstName || $lastName) {
+                            $data[] = [$firstName, $lastName, $number];
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (empty($data)) {
+            throw new \Exception('No player data found in the MyGameDay URL. Please verify the URL points to a team roster page.');
+        }
+        
+        return $data;
     }
 }

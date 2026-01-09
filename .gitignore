@@ -8,3 +8,4 @@
 /public/build/
 /public/hot
 /public/schedules/*.ics
+.phpunit.result.cache
