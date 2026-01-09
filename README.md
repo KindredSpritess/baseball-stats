@@ -101,7 +101,19 @@ Before you begin, ensure you have the following installed:
    DB_PASSWORD=your_password
    ```
    
-   **Note:** Replace `your_username` and `your_password` with your actual MySQL credentials, and ensure the database exists before running migrations.
+   For real-time features, configure the broadcast driver and Reverb settings:
+   ```
+   BROADCAST_DRIVER=reverb
+   
+   REVERB_APP_ID=your_app_id
+   REVERB_APP_KEY=your_app_key
+   REVERB_APP_SECRET=your_app_secret
+   REVERB_HOST=localhost
+   REVERB_PORT=8080
+   REVERB_SCHEME=http
+   ```
+   
+   **Note:** Replace `your_username` and `your_password` with your actual MySQL credentials, and ensure the database exists before running migrations. Generate secure values for Reverb credentials.
 
 5. **Generate application key**
    ```bash
@@ -133,10 +145,12 @@ Before you begin, ensure you have the following installed:
    ```
    The application will be available at `http://localhost:8000`
 
-2. **Start the Reverb WebSocket server** (in a separate terminal)
+2. **Start the Reverb WebSocket server** (in a separate terminal, **required for real-time features**)
    ```bash
    php artisan reverb:start
    ```
+   
+   **Note:** The Reverb server is essential for real-time game updates, live scoring, and broadcasting features. Ensure your `.env` file has `BROADCAST_DRIVER=reverb` and the Reverb configuration values are set.
 
 ### Using Lando (Recommended)
 
@@ -232,11 +246,21 @@ The application provides both web and API interfaces:
 - `/person/{person}` - Player statistics
 - `/stats` - Global statistics
 
-### API Routes (require authentication)
+### API Routes
+
+**Public Routes:**
 - `GET /api/game/{game}` - Get game data
-- `GET /api/players/search` - Search players
+
+**Authenticated Routes (require Sanctum auth):**
+- `GET /api/user` - Get current user
 - `PUT /api/user/preferences` - Update user preferences
-- `GET|PUT /api/season/{season}/preferences` - Season preferences
+- `GET /api/season/{season}/preferences` - Get season preferences
+- `PUT /api/season/{season}/preferences` - Update season preferences
+- `GET /api/game/{game}/preferences` - Get game preferences
+
+**Authorized Routes (require 'score' ability):**
+- `GET /api/players/search` - Search players
+- `GET /api/players/team/{team}` - Get team players
 
 ## License
 
