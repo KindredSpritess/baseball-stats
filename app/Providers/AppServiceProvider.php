@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
             if ($user->role === 'superuser') {
                 return true;
             }
-            
+
             $isTeamScorer = $user->teams()->where('team_id', $team->id)->exists();
             $isSeasonAdmin = $team->season_id ? $user->seasons()->where('season_id', $team->season_id)->exists() : false;
             return $isTeamScorer || $isSeasonAdmin;

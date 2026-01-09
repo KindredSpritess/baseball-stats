@@ -99,7 +99,7 @@ Import Roster
 </div>
 
 <script>
-    const seasons = JSON.parse('@json($seasons)');
+    const seasons = @json($seasons);
 
     function clearFile() {
         const fileInput = document.getElementById('file');

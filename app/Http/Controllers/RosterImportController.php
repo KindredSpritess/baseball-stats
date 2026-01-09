@@ -11,12 +11,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use stdClass;
 
 class RosterImportController extends Controller
 {
     public function showImportForm()
     {
         $seasons = Season::with('teams')->get();
+        if (request()->user()->role !== 'superuser') {
+            // Filter seasons and teams based on user permissions
+            $seasons = $seasons
+                ->map(fn ($season) => (object)([
+                    'id' => $season->id,
+                    'name' => $season->name,
+                    'teams' => $season->teams->filter(fn ($team) => Gate::allows('import-roster', $team))->values(),
+                ]))
+                ->filter(fn ($season) => $season->teams->isNotEmpty())
+                ->values();
+        }
 
         return view('roster.import', [
             'seasons' => $seasons,
@@ -140,6 +152,7 @@ class RosterImportController extends Controller
                         if ($number !== null) {
                             $existingPlayer->number = $number;
                             $existingPlayer->save();
+                            $imported++;
                         }
                     } else {
                         // Create new player (without a game)
@@ -149,9 +162,8 @@ class RosterImportController extends Controller
                             'number' => $number,
                             'game_id' => 0,  // No game associated
                         ]);
+                        $imported++;
                     }
-
-                    $imported++;
                 } catch (\Exception $e) {
                     $errors[] = "Row " . ($index + 1) . ": " . $e->getMessage();
                 }
@@ -296,14 +308,14 @@ class RosterImportController extends Controller
     {
         $html = Http::withOptions([
             'timeout' => 15,
-            'verify' => false,
+            'follow_redirects' => false,
         ])->get($url)->throw()->body();
 
         $data = [];
         // Use DOMDocument to parse HTML
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
-        $dom->loadHTML($html);
+        $dom->loadHTML($html, LIBXML_NONET | LIBXML_NOENT);
         libxml_clear_errors();
         $xpath = new \DOMXPath($dom);
 
@@ -311,7 +323,9 @@ class RosterImportController extends Controller
         $players = $xpath->query('//div[@class="article player-profile"]');
 
         foreach ($players as $player) {
-            $names = explode(' ', trim($player->textContent));
+            $names = explode(' ', str_replace(".", "", trim($player->textContent)));
+            // Assume first word is first name, last word is last name.
+            // We've seen middle names/initials, but we haven't used these typically.
             $data[] = [
                 $names[0] ?? '',
                 end($names) ?? '',
