@@ -141,7 +141,7 @@
           <td class="mobile-hide">{{ player.stats.BFP || 0 }}</td>
           <td class="mobile-hide">{{ player.stats.Balls || 0 }}</td>
           <td class="mobile-hide">{{ player.stats.Strikes || 0 }}</td>
-          <td>{{ (player.stats.Balls || 0) + (player.stats.Strikes || 0) }}</td>
+          <td>{{ (player.stats.Balls || 0) + (player.stats.Strikes || 0) + (player.stats.Pitch || 0) }}</td>
         </tr>
         <tr style="font-weight: bold;">
           <td class="scorers" colspan="2" style="text-align:left;">Total</td>
