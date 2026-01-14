@@ -175,7 +175,6 @@ export default {
     },
     currentLineup() {
       const lineup = this.state.lineup?.[this.half] || [];
-      console.log('Current Lineup:', lineup);
       return lineup.map(spot => spot.at(-1));
     },
     currentDefense() {
