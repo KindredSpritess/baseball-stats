@@ -761,6 +761,17 @@ class Play extends Model
 
     private function insertPlayer(Game $game, StringConsumer $log, string &$position = '', ?string &$lineupSpot = null): Player {
         $matches = [];
+        // Expected log format (optional parts in brackets):
+        //   "<TEAM> <LAST>, <FIRST> [#<NUMBER>] [: <POSITION>] [ -> #<LINEUP_SPOT>]"
+        //
+        // Capture groups:
+        //  1. ([^ ]+)                - Team short name (non-space sequence).
+        //  2. ([^,]+)                - Last name, up to the comma.
+        //  3. ([a-zA-Z][a-zA-Z -]*[a-zA-Z])
+        //                             - First name (letters, spaces, or hyphens, starting and ending with a letter).
+        //  4. (?:#(\d+))?            - Optional uniform number after '#'.
+        //  5. (?:: ([^ ]*))?         - Optional position token after ': ' (no spaces).
+        //  6. (?: -> #([^ ]*))?      - Optional new lineup spot, introduced by " -> #".
         preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: ([^ ]*))?(?: -> #([^ ]*))?$/', $log, $matches);
         $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
         $person = Person::where('firstName', $matches[3])->where('lastName', $matches[2])->first();
