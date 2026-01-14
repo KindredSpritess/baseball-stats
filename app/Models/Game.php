@@ -6,7 +6,6 @@ use App\Casts\GameState;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @property int $id
@@ -122,6 +121,11 @@ class Game extends Model
         }
 
         if (!$fieldPos) {
+            return;
+        }
+
+        // If the player is already at the position, do nothing.
+        if (isset($this->defense[$home][$fieldPos]) && $this->defense[$home][$fieldPos]->is($player)) {
             return;
         }
 
