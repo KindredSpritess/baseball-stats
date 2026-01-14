@@ -227,6 +227,7 @@ export default {
         'p': 'Pitchout',
         'i': 'Intentional Ball',
         'blk': 'Balk',
+        'blk!': 'Balk (counts toward pitch count)',
       },
       basePitchClasses: {
         '.': 'advance',
@@ -244,6 +245,7 @@ export default {
         'HBP': 'advance',
         'INT2': 'out',
         'blk': 'advance',
+        'blk!': 'advance',
       },
       BASES: {
         1: '1st',
@@ -271,7 +273,7 @@ export default {
       const defense = this.state.defense[(this.state.half + 1) % 2];
       const pitcher = defense[1];
       const player = this.game?.players?.find(p => p.id === pitcher);
-      return this.pitchSequence.length + (player?.stats?.Strikes || 0) + (player?.stats?.Balls || 0);
+      return this.pitchSequence.length + (player?.stats?.Strikes || 0) + (player?.stats?.Balls || 0) + (player?.stats?.Pitch || 0);
     },
     pitchOutcomes() {
       const outcomes = { ...this.basePitchOutcomes };
@@ -286,9 +288,14 @@ export default {
         delete outcomes['r']; // No runners to be going.
         delete outcomes['p']; // No runners to pitch out for.
         delete outcomes['blk']; // No runners to balk with.
+        delete outcomes['blk!']; // No runners to balk with.
       }
       if (this.preferences.removeBalks) {
         delete outcomes['blk'];
+        delete outcomes['blk!'];
+      }
+      if (!this.preferences.balksCanCountTowardPitchCount) {
+        delete outcomes['blk!'];
       }
       if (this.currentBalls >= 3) {
         outcomes['.'] = 'Walk';
@@ -346,9 +353,9 @@ export default {
     async addPitch(code) {
       // Add pitch to sequence
       // If balk we need to submit the current status and then submit a balk.
-      if (code === 'blk') {
-        this.$emit('log-play', this.finalPlay, 'blk');
-        ßthis.resetAtBat();
+      if (code.match(/^blk!?$/)) {
+        this.$emit('log-play', this.finalPlay, code);
+        this.resetAtBat();
         return;
       }
       this.pitchSequence += code;

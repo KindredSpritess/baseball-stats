@@ -346,6 +346,10 @@ class Play extends Model
                     $this->log($this->humanBuffer . ".");
                 }
             }
+            if ($log->consume('!')) {
+                // In some junior contexts, the balk counts as a pitch for pitch count, but by rule it does not.
+                $game->pitching()->evt('Pitch');
+            }
             $this->log("{$game->pitching()->person->lastName} balks.");
             return;
         }

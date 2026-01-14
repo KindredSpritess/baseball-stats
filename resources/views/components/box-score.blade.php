@@ -158,7 +158,7 @@
             <td class="mobile-hide">{{ $player->stats['BFP'] ?? 0 }}</td>
             <td class="mobile-hide">{{ $player->stats['Balls'] ?? 0 }}</td>
             <td class="mobile-hide">{{ $player->stats['Strikes'] ?? 0 }}</td>
-            <td>{{ ($player->stats['Balls'] ?? 0) + ($player->stats['Strikes'] ?? 0) }}</td>
+            <td>{{ ($player->stats['Balls'] ?? 0) + ($player->stats['Strikes'] ?? 0) + ($player->stats['Pitch'] ?? 0) }}</td>
         </tr>
         @endif
         @endforeach
