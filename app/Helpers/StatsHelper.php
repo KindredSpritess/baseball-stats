@@ -117,9 +117,11 @@ class StatsHelper {
         if ($this->BFP) {
             $pitches = $this->Strikes + $this->Balls;
             $this->stats['Pitches'] = $pitches + $this->Pitch;
-            $this->stats['StrkPct'] = $this->Strikes / $pitches;
-            $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
-            $this->stats['PPBFP'] = $pitches / $this->BFP;
+            if ($pitches) {
+                $this->stats['StrkPct'] = $this->Strikes / $pitches;
+                $this->stats['FPSPCT'] = $this->FPS / $this->BFP * 100;
+                $this->stats['PPBFP'] = $pitches / $this->BFP;
+            }
         }
 
         return $this;
