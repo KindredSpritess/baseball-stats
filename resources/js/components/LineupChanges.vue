@@ -14,7 +14,7 @@
                 v-for="(spot, index) in currentLineup"
                 :key="index"
                 class="lineup-spot"
-                :class="{ selected: selectedSpot === index }"
+                :class="{ selected: selectedSpot === index, 'at-bat': offensive && state.atBat[half] === index, 'on-base': offensive && state.bases.includes(spot) }"
                 @click="selectSpot(index)"
               >
                 <div class="spot-number">{{ index + 1 }}</div>
@@ -22,6 +22,12 @@
                   <div class="player-name" @click.stop="selectPlayer(index)">
                     <span :class="{substitution: changes[index]?.newPlayerName}">
                       {{ getPlayerName(spot) }}
+                    </span>
+                    <span v-if="offensive && state.atBat[half] === index">
+                      <span class="position"> (At Bat)</span>
+                    </span>
+                    <span v-if="offensive && state.bases.includes(spot)">
+                      <span class="position"> (On {{ ['1st', '2nd', '3rd'][state.bases.indexOf(spot)] }})</span>
                     </span>
                     <span v-if="changes[index]?.newPlayerName">
                       &nbsp;→&nbsp;{{ changes[index].newPlayerName }}
@@ -56,7 +62,7 @@
             </div>
           </div>
 
-          <div v-if="selectedSpot !== null && selectedSpot !== -1" class="position-column">
+          <div v-if="!offensive && selectedSpot !== null && selectedSpot !== -1" class="position-column">
             <div class="position-selector">
               <h4>Select New Position for {{ getPlayerName(currentLineup[selectedSpot]) }}</h4>
               <div class="position-buttons">
@@ -120,6 +126,10 @@ export default {
     game: Object,
     state: Object,
     preferences: Object,
+    offensive: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['lineup-change', 'close'],
   data() {
@@ -160,18 +170,22 @@ export default {
     return output;
   },
   computed: {
+    half() {
+      return this.offensive ? this.state.half : ((this.state.half + 1) % 2);
+    },
     currentLineup() {
-      const lineup = this.state.lineup?.[(this.state.half + 1) % 2] || [];
+      const lineup = this.state.lineup?.[this.half] || [];
+      console.log('Current Lineup:', lineup);
       return lineup.map(spot => spot.at(-1));
     },
     currentDefense() {
-      return this.state.defense?.[(this.state.half + 1) % 2] || {};
+      return this.state.defense?.[this.half] || {};
     },
     currentTeam() {
-      return this.game?.[this.state.half ? 'away_team' : 'home_team'];
+      return this.game?.[this.half ? 'home_team' : 'away_team'];
     },
     nextDefense() {
-      const defense = {...this.state.defense?.[(this.state.half + 1) % 2]};
+      const defense = {...this.state.defense?.[this.half]};
       Object.values(this.changes).forEach(change => {
         if (defense[change.oldPosition] === change.playerId) {
           delete defense[change.oldPosition];
@@ -221,14 +235,26 @@ export default {
       return Object.entries(this.changes).flatMap(([spot, change]) => {
         const commands = [];
         if (change.newPlayerName) {
-          if (spot == -1) {
-            commands.push(`@${this.currentTeam.short_name} ${change.newPlayerName}: ${change.oldPosition}`);
-          } else {
-            commands.push(`DSUB @${this.currentTeam.short_name} ${change.newPlayerName}`);
-            if (change.newPosition) {
-              commands[commands.length - 1] += `: ${change.newPosition} -> #${change.lineupSpot}`;
+          if (this.offensive) {
+            if (spot == this.state.atBat[this.half]) {
+              commands.push('PH');
             } else {
-              commands[commands.length - 1] += `: ${change.oldPosition}`;
+              const base = this.state.bases.findIndex(b => b === this.currentLineup[spot]);
+              if (base !== -1) {
+                commands.push(`PR${base + 1}`);
+              }
+            }
+            commands[commands.length - 1] += ` @${this.currentTeam.short_name} ${change.newPlayerName}`;
+          } else {
+            if (spot == -1) {
+              commands.push(`@${this.currentTeam.short_name} ${change.newPlayerName}: ${change.oldPosition}`);
+            } else {
+              commands.push(`DSUB @${this.currentTeam.short_name} ${change.newPlayerName}`);
+              if (change.newPosition) {
+                commands[commands.length - 1] += `: ${change.newPosition} -> #${change.lineupSpot}`;
+              } else {
+                commands[commands.length - 1] += `: ${change.oldPosition}`;
+              }
             }
           }
         } else if (change.newPosition) {
@@ -348,8 +374,6 @@ export default {
       this.showPlayerSelect = false;
     },
     replacePlayer(newPlayer) {
-      const defenseTeam = this.currentTeam;
-      let command = `@${defenseTeam.short_name} ${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
       let newPlayerName = `${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
       if (newPlayer.number) {
         newPlayerName += ` #${newPlayer.number}`;
@@ -516,6 +540,16 @@ export default {
 .lineup-spot.selected {
   border-color: #007bff;
   background: #e7f3ff;
+}
+
+.lineup-spot.at-bat {
+  border-color: #28a745;
+  background: #e6ffed;
+}
+
+.lineup-spot.on-base {
+  border-color: #ffc107;
+  background: #fff8e1;
 }
 
 .spot-number {

@@ -14,6 +14,7 @@
         <button @click="overrideCount" class="option-item">Override Count</button>
         <button @click="sideAway" class="option-item">Side Away</button>
         <button @click="defensiveChangesShow" class="option-item">Defensive Changes</button>
+        <button @click="offensiveChangesShow" class="option-item">Offensive Changes</button>
         <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
         <button @click="endGame" class="option-item">End Game</button>
         <a :href="`/game/${gameId}`" style="text-decoration: none;">
@@ -85,6 +86,15 @@
       @log-play="logPlay"
       @close="showDefensiveChanges = false"
     />
+    <LineupChanges
+      v-if="showOffensiveChanges"
+      :game="game"
+      :state="state"
+      :preferences="preferences"
+      :offensive="true"
+      @log-play="logPlay"
+      @close="showOffensiveChanges = false"
+    />
 
     <div class="status">
       <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
@@ -124,6 +134,7 @@ export default {
       isMounted: false,
       showOptions: false,
       showDefensiveChanges: false,
+      showOffensiveChanges: false,
       showEndGameModal: false,
       selectedWinningPitcher: null,
       errors: [],
@@ -322,8 +333,11 @@ export default {
       }
     },
     defensiveChangesShow() {
-      // this.showDefensiveChanges = true;
       this.showDefensiveChanges = true;
+      this.showOptions = false;
+    },
+    offensiveChangesShow() {
+      this.showOffensiveChanges = true;
       this.showOptions = false;
     },
     handleDefensiveChange(command) {
