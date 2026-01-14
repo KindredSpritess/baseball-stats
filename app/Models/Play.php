@@ -225,6 +225,10 @@ class Play extends Model
             }
             $player->push();
             $game->substitute($game->home_team()->is($team), $player, null, $matches[5]);
+            // If the game has started, we need to log the lineup addition.
+            if ($game->inning > 1 || $game->half > 0 || $game->outs || $game->balls || $game->strikes || $game->score[0] || $game->runners) {
+                $this->log("{$person->lastName} enters the game for {$team->name} playing " . (Play::POSITIONS[$matches[5]] ?? 'EH') . ".");
+            }
             return;
         }
 
@@ -254,9 +258,15 @@ class Play extends Model
         if ($log->consume('DSUB @')) {
             $home = ($game->half+1)%2;
             $position = 'EH';
-            $player = $this->insertPlayer($game, $log, $position);
-            $replacing = $game->defense[$home][$position];
-            $this->log($player->person->lastName . " replaces {$replacing->person->lastName} playing " . (Play::POSITIONS[$position] ?? $position));
+            $lineupSpot = null;
+            $player = $this->insertPlayer($game, $log, $position, $lineupSpot);
+            if ($lineupSpot === null) {
+                $replacing = $game->defense[$home][$position];
+            } else {
+                // Replace the player in the lineup spot.
+                $replacing = end($game->lineup[$home][$lineupSpot - 1]);
+            }
+            $this->log($player->person->lastName . " replaces {$replacing->person->lastName} playing " . (Play::POSITIONS[$position] ?? $position) . ".");
             $game->substitute($home, $player, $replacing, $position);
             return;
         }
@@ -749,9 +759,20 @@ class Play extends Model
         return true;
     }
 
-    private function insertPlayer(Game $game, StringConsumer $log, string &$position = ''): Player {
+    private function insertPlayer(Game $game, StringConsumer $log, string &$position = '', ?string &$lineupSpot = null): Player {
         $matches = [];
-        preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: (.*))?$/', $log, $matches);
+        // Expected log format (optional parts in brackets):
+        //   "<TEAM> <LAST>, <FIRST> [#<NUMBER>] [: <POSITION>] [ -> #<LINEUP_SPOT>]"
+        //
+        // Capture groups:
+        //  1. ([^ ]+)                - Team short name (non-space sequence).
+        //  2. ([^,]+)                - Last name, up to the comma.
+        //  3. ([a-zA-Z][a-zA-Z -]*[a-zA-Z])
+        //                             - First name (letters, spaces, or hyphens, starting and ending with a letter).
+        //  4. (?:#(\d+))?            - Optional uniform number after '#'.
+        //  5. (?:: ([^ ]*))?         - Optional position token after ': ' (no spaces).
+        //  6. (?: -> #([^ ]*))?      - Optional new lineup spot, introduced by " -> #".
+        preg_match('/^([^ ]+) +([^,]+), ([a-zA-Z][a-zA-Z -]*[a-zA-Z]) *(?:#(\d+))?(?:: ([^ ]*))?(?: -> #([^ ]*))?$/', $log, $matches);
         $team = $game->home_team->short_name === $matches[1] ? $game->home_team : $game->away_team;
         $person = Person::where('firstName', $matches[3])->where('lastName', $matches[2])->first();
         if (!$person) {
@@ -775,6 +796,9 @@ class Play extends Model
         $player->push();
         if (isset($matches[5])) {
             $position = $matches[5];
+        }
+        if (isset($matches[6])) {
+            $lineupSpot = $matches[6];
         }
 
         return $player;

@@ -14,36 +14,45 @@
                 v-for="(spot, index) in currentLineup"
                 :key="index"
                 class="lineup-spot"
-                :class="{ selected: selectedSpot === index }"
+                :class="{ selected: selectedSpot === index, 'at-bat': offensive && state.atBat[half] === index, 'on-base': offensive && state.bases.includes(spot) }"
                 @click="selectSpot(index)"
               >
                 <div class="spot-number">{{ index + 1 }}</div>
                 <div class="player-info">
                   <div class="player-name" @click.stop="selectPlayer(index)">
-                    <span :class="[changes[index]?.type]">
+                    <span :class="{substitution: changes[index]?.newPlayerName}">
                       {{ getPlayerName(spot) }}
                     </span>
-                    <span v-if="changes[index]?.type === 'substitution'">
-                      &nbsp;→&nbsp;{{ getPlayerName(changes[index].newPlayerId) }}
+                    <span v-if="offensive && state.atBat[half] === index">
+                      <span class="position"> (At Bat)</span>
+                    </span>
+                    <span v-if="offensive && state.bases.includes(spot)">
+                      <span class="position"> (On {{ ['1st', '2nd', '3rd'][state.bases.indexOf(spot)] }})</span>
+                    </span>
+                    <span v-if="changes[index]?.newPlayerName">
+                      &nbsp;→&nbsp;{{ changes[index].newPlayerName }}
                     </span>
                   </div>
                   <div class="player-position">
                     {{ SHORT_POSITIONS[getPlayerPosition(spot)] }}
-                    <span v-if="changes[index]?.type === 'position'" class="position-arrow">
-                      &nbsp;→&nbsp;{{ SHORT_POSITIONS[changes[index].newPosition] || SHORT_POSITIONS[getPlayerPosition(changes[index].newPlayerId)] }}
+                    <span v-if="changes[index]?.newPosition" class="position-arrow">
+                      &nbsp;→&nbsp;{{ SHORT_POSITIONS[changes[index].newPosition] }}
                     </span>
                   </div>
                 </div>
               </div>
               <div
-               v-if="currentDefense.DH && currentDefense[1]"
+               v-if="currentDefense.DH && !pitcherInLineup"
                class="lineup-spot"
                @click="selectPlayer(-1)"
               >
                 <div class="spot-number">P</div>
                 <div class="player-info">
                   <div class="player-name">
-                    {{ getPlayerName(currentDefense[1]) }}
+                    <span :class="{substitution: changes[-1]?.newPlayerName}">
+                      {{ getPlayerName(currentDefense[1]) }}
+                    </span>
+                    <span v-if="changes[-1]?.newPlayerName">&nbsp;→&nbsp;{{ changes[-1].newPlayerName }}</span>
                   </div>
                   <div class="player-position">
                     P
@@ -53,7 +62,7 @@
             </div>
           </div>
 
-          <div v-if="selectedSpot !== null && selectedSpot !== -1" class="position-column">
+          <div v-if="!offensive && selectedSpot !== null && selectedSpot !== -1" class="position-column">
             <div class="position-selector">
               <h4>Select New Position for {{ getPlayerName(currentLineup[selectedSpot]) }}</h4>
               <div class="position-buttons">
@@ -84,21 +93,21 @@
               class="player-option"
               @click="replacePlayer(player)"
             >
-              {{ player.person.lastName }}, {{ player.person.firstName[0] }}
+              {{ player.person.lastName }}, {{ player.person.firstName }} <span v-if="player.number">(#{{ player.number }})</span>
             </div>
           </div>
           <button @click="closePlayerSelect" class="cancel-btn">Cancel</button>
         </div>
       </div>
 
-      <!-- <div class="changes-summary" v-if="Object.keys(changes).length > 0">
+      <div class="changes-summary" v-if="Object.keys(changes).length > 0">
         <h4>Pending Changes:</h4>
         <ul>
-          <li v-for="(change, _) in changes" :key="change.id">
-            {{ change.command }}
+          <li v-for="(change, i) in commands" :key="i">
+            {{ change }}
           </li>
         </ul>
-      </div> -->
+      </div>
 
       <div class="action-buttons" v-if="Object.keys(changes).length">
         <button @click="applyChanges" class="apply-btn">
@@ -117,6 +126,10 @@ export default {
     game: Object,
     state: Object,
     preferences: Object,
+    offensive: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['lineup-change', 'close'],
   data() {
@@ -124,7 +137,8 @@ export default {
       selectedSpot: null,
       showPlayerSelect: false,
       changes: {},
-      changeId: 0,
+      teamPlayers: {},
+      loadingPlayers: false,
       POSITIONS: {
         1: 'Pitcher',
         2: 'Catcher',
@@ -156,15 +170,21 @@ export default {
     return output;
   },
   computed: {
+    half() {
+      return this.offensive ? this.state.half : ((this.state.half + 1) % 2);
+    },
     currentLineup() {
-      const lineup = this.state.lineup?.[(this.state.half + 1) % 2] || [];
+      const lineup = this.state.lineup?.[this.half] || [];
       return lineup.map(spot => spot.at(-1));
     },
     currentDefense() {
-      return this.state.defense?.[(this.state.half + 1) % 2] || {};
+      return this.state.defense?.[this.half] || {};
+    },
+    currentTeam() {
+      return this.game?.[this.half ? 'home_team' : 'away_team'];
     },
     nextDefense() {
-      const defense = {...this.state.defense?.[(this.state.half + 1) % 2]};
+      const defense = {...this.state.defense?.[this.half]};
       Object.values(this.changes).forEach(change => {
         if (defense[change.oldPosition] === change.playerId) {
           delete defense[change.oldPosition];
@@ -173,20 +193,124 @@ export default {
       });
       return defense;
     },
+    pitcherInLineup() {
+      return Object.entries(this.changes).some(([spot, change]) => {
+        return spot != -1 && change.newPosition === 1;
+      });
+    },
     availablePlayers() {
       if (this.selectedSpot === null) return [];
 
-      const currentTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
-      const players = this.game.players.filter(player => player.team_id === currentTeam.id);
+      // Convert teamPlayers object to array format compatible with the template
+      const available = Object.entries(this.teamPlayers)
+        .filter(([_playerKey, playerData]) => playerData?.person)
+        .map(([_playerKey, playerData]) => ({
+          id: playerData.person.id,
+          person: playerData.person,
+          number: playerData.number?.[0] ?? null,
+        }));
 
-      // Sort by last name
-      return players.sort((a, b) => {
-        return a.person.lastName.localeCompare(b.person.lastName) ||
-               a.person.firstName.localeCompare(b.person.firstName);
+      // If the selected spot is the DH, we can insert the pitcher.
+      if (this.currentDefense.DH && this.currentDefense.DH === this.currentLineup[this.selectedSpot]) {
+        const pitcherId = this.currentDefense[1];
+        const pitcherData = this.game.players.find(p => p.id === pitcherId);
+        if (pitcherData?.person) {
+          available.push({
+            id: pitcherData.person.id,
+            playerId: pitcherId,
+            person: pitcherData.person,
+            number: pitcherData.number?.[0] ?? null,
+          });
+        }
+      }
+
+      return available
+        .sort((a, b) => {
+          return a.person.lastName.localeCompare(b.person.lastName) ||
+                 a.person.firstName.localeCompare(b.person.firstName);
+        });
+    },
+    commands() {
+      return Object.entries(this.changes).flatMap(([spot, change]) => {
+        const commands = [];
+        if (change.newPlayerName) {
+          if (this.offensive) {
+            if (spot == this.state.atBat[this.half]) {
+              commands.push('PH');
+            } else {
+              const base = this.state.bases.findIndex(b => b === this.currentLineup[spot]);
+              if (base !== -1) {
+                commands.push(`PR${base + 1}`);
+              }
+            }
+            commands[commands.length - 1] += ` @${this.currentTeam.short_name} ${change.newPlayerName}`;
+          } else {
+            if (spot == -1) {
+              commands.push(`@${this.currentTeam.short_name} ${change.newPlayerName}: ${change.oldPosition}`);
+            } else {
+              commands.push(`DSUB @${this.currentTeam.short_name} ${change.newPlayerName}`);
+              if (change.newPosition) {
+                commands[commands.length - 1] += `: ${change.newPosition} -> #${change.lineupSpot}`;
+              } else {
+                commands[commands.length - 1] += `: ${change.oldPosition}`;
+              }
+            }
+          }
+        } else if (change.newPosition) {
+          commands.push(`DC #${change.lineupSpot} -> ${change.newPosition}`);
+        }
+        return commands;
+      }).sort((a, b) => {
+        // DSUB commands first, then DC commands.
+        if (a.startsWith('DSUB') && !b.startsWith('DSUB')) return -1;
+        if (!a.startsWith('DSUB') && b.startsWith('DSUB')) return 1;
+        return 0;
       });
     },
   },
+  mounted() {
+    if (this.game) {
+      this.fetchTeamPlayers();
+    }
+  },
+  watch: {
+    game(newValue) {
+      if (newValue) {
+        this.fetchTeamPlayers();
+      }
+    },
+  },
   methods: {
+    async fetchTeamPlayers() {
+      this.loadingPlayers = true;
+      try {
+        if (!this.game) {
+          console.error('Game data is not available');
+          this.teamPlayers = {};
+          return;
+        }
+
+        if (!this.currentTeam?.id) {
+          console.error('Current team or team ID is not available');
+          this.teamPlayers = {};
+          return;
+        }
+
+        const response = await fetch(`/api/players/team/${this.currentTeam.id}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        this.teamPlayers = data || {};
+      } catch (error) {
+        console.error('Error fetching team players:', error);
+        this.teamPlayers = {};
+      } finally {
+        this.loadingPlayers = false;
+      }
+    },
     getPlayerName(playerId) {
       const player = this.game.players.find(p => p.id === playerId);
       if (player) {
@@ -221,13 +345,11 @@ export default {
       });
 
       this.changes[this.selectedSpot] = {
-        id: ++this.changeId,
-        type: 'position',
+        ...this.changes[this.selectedSpot],
         lineupSpot: this.selectedSpot + 1,
         playerId: currentPlayerId,
         oldPosition: currentPosition,
         newPosition: position,
-        command: `DC #${this.selectedSpot + 1} -> ${position}`,
       };
 
       // If there was a player at the new position and they haven't been changed yet, create a change for them to EH.
@@ -238,13 +360,11 @@ export default {
         const lineupSpotAtNewPos = this.currentLineup.findIndex(spot => spot === playerIdAtNewPos);
         if (lineupSpotAtNewPos !== -1 && !this.changes[lineupSpotAtNewPos]) {
           this.changes[lineupSpotAtNewPos] = {
-            id: ++this.changeId,
-            type: 'position',
+            ...this.changes[lineupSpotAtNewPos],
             lineupSpot: lineupSpotAtNewPos + 1,
             playerId: playerIdAtNewPos,
             oldPosition: position,
             newPosition: 'EH',
-            command: `DC #${lineupSpotAtNewPos + 1} -> EH`,
           };
         }
       }
@@ -253,10 +373,9 @@ export default {
       this.showPlayerSelect = false;
     },
     replacePlayer(newPlayer) {
-      const defenseTeam = this.game[this.state.half ? 'away_team' : 'home_team'];
-      let command = `@${defenseTeam.short_name} ${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
+      let newPlayerName = `${newPlayer.person.lastName}, ${newPlayer.person.firstName}`;
       if (newPlayer.number) {
-        command += ` #${newPlayer.number}`;
+        newPlayerName += ` #${newPlayer.number}`;
       }
 
       let currentPlayerId;
@@ -265,30 +384,28 @@ export default {
         // Relief pitcher
         currentPlayerId = this.currentDefense[1];
         currentPosition = 1;
-        command += ': 1';
       } else {
+        // Regular lineup spot
         currentPlayerId = this.currentLineup[this.selectedSpot];
-        console.log('Setting position', this.selectedSpot, 'for player', currentPlayerId);
         currentPosition = this.getPlayerPosition(currentPlayerId);
-        // Defensive substitution
-        command = `DSUB ${command}: ${currentPosition}`;
       }
 
       this.changes[this.selectedSpot] = {
-        id: ++this.changeId,
-        type: 'substitution',
         lineupSpot: this.selectedSpot + 1,
         oldPlayerId: currentPlayerId,
-        newPlayerId: newPlayer.id,
-        position: currentPosition,
-        command: command,
+        newPlayerName,
+        oldPosition: currentPosition,
       };
+
+      if (newPlayer.playerId) {
+        this.changes[this.selectedSpot].newPosition = 1;
+      }
 
       this.closePlayerSelect();
     },
     applyChanges() {
       // Emit each change
-      this.$emit('log-play', ...Object.values(this.changes).map(({ command }) => command));
+      this.$emit('log-play', ...this.commands);
 
       // Clear changes after applying
       this.changes = {};
@@ -375,12 +492,12 @@ export default {
   .main-content {
     flex-direction: column;
   }
-  
+
   .position-column {
     flex: none;
     min-width: auto;
   }
-  
+
   .lineup-changes-modal {
     width: 95vw;
     max-width: 95vw;
@@ -422,6 +539,16 @@ export default {
 .lineup-spot.selected {
   border-color: #007bff;
   background: #e7f3ff;
+}
+
+.lineup-spot.at-bat {
+  border-color: #28a745;
+  background: #e6ffed;
+}
+
+.lineup-spot.on-base {
+  border-color: #ffc107;
+  background: #fff8e1;
 }
 
 .spot-number {
