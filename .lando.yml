@@ -7,14 +7,14 @@ services:
     build_as_root:
       - apt update && apt install libgmp-dev -y && docker-php-ext-install gmp
   reverb:
-    type: php:custom
+    type: php:8.2
     via: cli
     command: php /app/artisan reverb:start --debug
     overrides:
-      build:
-        context: .
-        dockerfile: Dockerfile
-        target: lando
+      # build:
+      #   context: .
+      #   dockerfile: Dockerfile
+      #   target: lando
       ports:
         - 8080:8080
 name: baseball
