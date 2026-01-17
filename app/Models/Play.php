@@ -69,6 +69,7 @@ class Play extends Model
     ];
 
     const TRAJECTORIES = [
+        'B' => 'bunt',
         'G' => 'ground ball',
         'L' => 'line drive',
         'F' => 'fly ball',
@@ -78,6 +79,7 @@ class Play extends Model
     ];
 
     const OUT_TRAJECTORIES = [
+        'B' => 'out on bunt to :fielder',
         'G' => 'grounds out to :fielder',
         'GDP' => 'grounds into double play; :fielder',
         'GTP' => 'grounds into triple play; :fielder',
