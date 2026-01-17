@@ -284,7 +284,7 @@ export default {
         delete outcomes['i'];
         delete outcomes['t'];
       }
-      if (!this.state.bases.some(base => base !== null)) {
+      if (!this.hasRunnersOnBase) {
         delete outcomes['r']; // No runners to be going.
         delete outcomes['p']; // No runners to pitch out for.
         delete outcomes['blk']; // No runners to balk with.
@@ -323,20 +323,21 @@ export default {
       if (balls.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       return {'HBP': 'Hit By Pitch'};
     },
+    hasRunnersOnBase() {
+      return this.state.bases.some(base => base !== null);
+    },
     fieldingActions() {
-      // Check if there are runners on base
-      const hasRunnersOnBase = this.state.bases.some(base => base !== null);
-      
       if (this.decision === 'E') {
         const actions = { 'E': 'Fielding Error', 'WT': 'Throwing Error' };
         
         // Add sacrifice options on errors only if there are runners on base
-        if (hasRunnersOnBase) {
+        // This handles cases where a sacrifice attempt results in an error
+        if (this.hasRunnersOnBase) {
           if (this.trajectory === 'F') {
-            actions['SAF'] = 'Sacrifice Fly';
+            actions['SAF'] = 'Sacrifice Fly (Error)';
           }
           if (this.trajectory === 'G') {
-            actions['SAB'] = 'Sacrifice Bunt';
+            actions['SAB'] = 'Sacrifice Bunt (Error)';
           }
         }
         
@@ -347,7 +348,7 @@ export default {
       const actions = { '': 'Put Out' };
       
       // Add sacrifice options only if there are runners on base
-      if (hasRunnersOnBase) {
+      if (this.hasRunnersOnBase) {
         // Add sacrifice fly option for fly balls
         if (this.trajectory === 'F') {
           actions['SAF'] = 'Sacrifice Fly';
@@ -595,11 +596,12 @@ export default {
       this.fielders = event.fielders;
       if (this.decision === 'E') {
         if (event.action === 'SAF' || event.action === 'SAB') {
-          // For sacrifice with error, replace the trajectory and continue to further advance
+          // For sacrifice with error, replace the trajectory
+          // The error type defaults to fielding error (lowercase 'e')
           this.trajectory = event.action;
-          this.error = 'E';
-          this.stage = 'total-bases';
-          this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+          this.error = 'e'; // Fielding error (lowercase for non-decisive error)
+          this.stage = 'further-advance?';
+          this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error}$2`));
         } else {
           this.error = event.action;
           this.stage = 'further-advance?';
