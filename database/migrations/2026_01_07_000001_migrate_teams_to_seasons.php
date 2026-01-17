@@ -13,7 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         // Insert distinct season names into seasons table
-        DB::statement('INSERT INTO seasons (name, created_at, updated_at) SELECT DISTINCT season, NOW(), NOW() FROM teams WHERE season IS NOT NULL');
+        // Use CURRENT_TIMESTAMP for SQLite compatibility
+        DB::statement("INSERT INTO seasons (name, created_at, updated_at) SELECT DISTINCT season, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP FROM teams WHERE season IS NOT NULL");
 
         // Add season_id column to teams table
         Schema::table('teams', function (Blueprint $table) {
