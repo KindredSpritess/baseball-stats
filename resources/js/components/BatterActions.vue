@@ -324,21 +324,39 @@ export default {
       return {'HBP': 'Hit By Pitch'};
     },
     fieldingActions() {
+      // Check if there are runners on base
+      const hasRunnersOnBase = this.state.bases.some(base => base !== null);
+      
       if (this.decision === 'E') {
-        return { 'E': 'Fielding Error', 'WT': 'Throwing Error' };
+        const actions = { 'E': 'Fielding Error', 'WT': 'Throwing Error' };
+        
+        // Add sacrifice options on errors only if there are runners on base
+        if (hasRunnersOnBase) {
+          if (this.trajectory === 'F') {
+            actions['SAF'] = 'Sacrifice Fly';
+          }
+          if (this.trajectory === 'G') {
+            actions['SAB'] = 'Sacrifice Bunt';
+          }
+        }
+        
+        return actions;
       }
       
       // Build actions based on trajectory
       const actions = { '': 'Put Out' };
       
-      // Add sacrifice fly option for fly balls
-      if (this.trajectory === 'F') {
-        actions['SAF'] = 'Sacrifice Fly';
-      }
-      
-      // Add sacrifice bunt option for ground balls
-      if (this.trajectory === 'G') {
-        actions['SAB'] = 'Sacrifice Bunt';
+      // Add sacrifice options only if there are runners on base
+      if (hasRunnersOnBase) {
+        // Add sacrifice fly option for fly balls
+        if (this.trajectory === 'F') {
+          actions['SAF'] = 'Sacrifice Fly';
+        }
+        
+        // Add sacrifice bunt option for ground balls
+        if (this.trajectory === 'G') {
+          actions['SAB'] = 'Sacrifice Bunt';
+        }
       }
       
       return actions;
@@ -576,9 +594,17 @@ export default {
     handleFieldingAction(event) {
       this.fielders = event.fielders;
       if (this.decision === 'E') {
-        this.error = event.action;
-        this.stage = 'further-advance?';
-        this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+        if (event.action === 'SAF' || event.action === 'SAB') {
+          // For sacrifice with error, replace the trajectory and continue to further advance
+          this.trajectory = event.action;
+          this.error = 'E';
+          this.stage = 'total-bases';
+          this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+        } else {
+          this.error = event.action;
+          this.stage = 'further-advance?';
+          this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+        }
       } else if (event.action === 'SAF' || event.action === 'SAB') {
         // For sacrifice fly or bunt, replace the trajectory and mark as out
         this.trajectory = event.action;
