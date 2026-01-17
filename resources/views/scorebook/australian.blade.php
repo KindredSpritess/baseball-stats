@@ -453,13 +453,13 @@
                 <!-- Stats for this Batter -->
                 <div class="grid-cell stats-section">
                     <div class="stats-row">
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
-                        <div class="stat-cell">-</div>
+                        <div class="stat-cell">{{ $batter['stats']['PA'] ?? 0 }}</div>
+                        <div class="stat-cell">{{ $batter['stats']['AB'] ?? 0 }}</div>
+                        <div class="stat-cell">{{ $batter['stats']['R'] ?? 0 }}</div>
+                        <div class="stat-cell">{{ ($batter['stats']['1'] ?? 0) + ($batter['stats']['2'] ?? 0) + ($batter['stats']['3'] ?? 0) + ($batter['stats']['4'] ?? 0) }}</div>
+                        <div class="stat-cell">{{ $batter['stats']['RBI'] ?? 0 }}</div>
+                        <div class="stat-cell">{{ $batter['stats']['BBs'] ?? 0 }}</div>
+                        <div class="stat-cell">{{ $batter['stats']['SO'] ?? 0 }}</div>
                     </div>
                 </div>
             </div>
@@ -481,25 +481,36 @@
                         <td><strong>BB</strong></td>
                         <td><strong>K</strong></td>
                     </tr>
-                    <!-- TODO: Add pitcher data -->
+                    @forelse($pitchers as $pitcher)
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #999;">Pitcher data to be populated</td>
+                        <td>{{ $pitcher->person->fullName() }}</td>
+                        <td>{{ isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0' }}</td>
+                        <td>{{ $pitcher->stats['HA'] ?? 0 }}</td>
+                        <td>{{ $pitcher->stats['RA'] ?? 0 }}</td>
+                        <td>{{ $pitcher->stats['ER'] ?? 0 }}</td>
+                        <td>{{ $pitcher->stats['BB'] ?? 0 }}</td>
+                        <td>{{ $pitcher->stats['K'] ?? 0 }}</td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #999;">No pitcher data available</td>
+                    </tr>
+                    @endforelse
                 </table>
                 
                 <div style="margin-top: 10px;">
                     <table class="summary">
                         <tr>
                             <td><strong>Winning Pitcher:</strong></td>
-                            <td>-</td>
+                            <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Losing Pitcher:</strong></td>
-                            <td>-</td>
+                            <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Save:</strong></td>
-                            <td>-</td>
+                            <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
                         </tr>
                     </table>
                 </div>
@@ -511,11 +522,11 @@
                 <table class="summary">
                     <tr>
                         <td><strong>{{ $opponent->short_name }}</strong></td>
-                        <td>-</td>
+                        <td>{{ $game->score[!$isHome ? 0 : 1] ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td><strong>{{ $team->short_name }}</strong></td>
-                        <td>-</td>
+                        <td>{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
                     </tr>
                 </table>
                 

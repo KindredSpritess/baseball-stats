@@ -91,11 +91,14 @@ class ExportScorebookCommand extends Command
         $teamIndex = $isHome ? 1 : 0;
         $opponentTeam = $isHome ? $game->away_team : $game->home_team;
 
-        // Load game state to get lineup information
-        $gameState = $game->state ?? [];
-        $lineup = $gameState['lineup'][$teamIndex] ?? [];
-        $defense = $gameState['defense'][$teamIndex] ?? [];
-        $linescore = $gameState['linescore'] ?? [[], []];
+        // Force load the game state which populates lineup, defense, etc.
+        $game->state;
+
+        // Now access the decoded lineup and defense from the game object
+        $lineup = $game->lineup[$teamIndex] ?? [];
+        $defense = $game->defense[$teamIndex] ?? [];
+        $linescore = $game->linescore ?? [[], []];
+        $pitchers = $game->pitchers[$teamIndex] ?? [];
 
         // Get players for this team
         $teamPlayers = $game->players()
@@ -107,16 +110,15 @@ class ExportScorebookCommand extends Command
         $battingOrder = [];
         foreach ($lineup as $spotIndex => $playersInSpot) {
             if (!empty($playersInSpot)) {
-                foreach ($playersInSpot as $playerData) {
-                    // Find the actual player
-                    $player = $teamPlayers->firstWhere('id', $playerData['id'] ?? null);
+                foreach ($playersInSpot as $player) {
                     if ($player) {
                         $battingOrder[] = [
                             'spot' => $spotIndex + 1,
                             'number' => $player->number ?? '',
                             'name' => $player->person->fullName(),
-                            'position' => $this->getPlayerPosition($playerData['id'], $defense),
+                            'position' => $this->getPlayerPosition($player, $defense),
                             'player_id' => $player->id,
+                            'stats' => $player->stats ?? [],
                         ];
                         break; // Only take the first player in each spot for now
                     }
@@ -128,8 +130,10 @@ class ExportScorebookCommand extends Command
         $plays = $game->plays()
             ->where('plate_appearance', true)
             ->whereNotNull('inning')
-            ->get()
-            ->groupBy('inning');
+            ->where('inning_half', $teamIndex)
+            ->orderBy('inning')
+            ->orderBy('id')
+            ->get();
 
         // Build inning data
         $innings = [];
@@ -142,7 +146,14 @@ class ExportScorebookCommand extends Command
         }
 
         // Extract play-by-play data for each batter in each inning
-        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $teamPlayers);
+        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $battingOrder);
+
+        // Get pitchers of record
+        $pitchersOfRecord = $game->pitchersOfRecord ?? [
+            'winning' => null,
+            'losing' => null,
+            'saving' => null,
+        ];
 
         return [
             'game' => $game,
@@ -152,10 +163,12 @@ class ExportScorebookCommand extends Command
             'battingOrder' => $battingOrder,
             'innings' => $innings,
             'batterInningData' => $batterInningData,
+            'pitchers' => $pitchers,
+            'pitchersOfRecord' => $pitchersOfRecord,
             'venue' => $game->location ?? '',
             'date' => $game->firstPitch ? $game->firstPitch->format('Y-m-d') : '',
             'timeStart' => $game->firstPitch ? $game->firstPitch->format('H:i') : '',
-            'timeFinish' => $game->duration ? $game->firstPitch->addMinutes($game->duration)->format('H:i') : '',
+            'timeFinish' => $game->duration ? $game->firstPitch->copy()->addMinutes($game->duration)->format('H:i') : '',
             'totalTime' => $game->duration ? sprintf('%d:%02d', intdiv($game->duration, 60), $game->duration % 60) : '',
         ];
     }
@@ -163,10 +176,10 @@ class ExportScorebookCommand extends Command
     /**
      * Get player's defensive position
      */
-    private function getPlayerPosition($playerId, array $defense): string
+    private function getPlayerPosition($player, array $defense): string
     {
-        foreach ($defense as $position => $playerData) {
-            if (isset($playerData['id']) && $playerData['id'] === $playerId) {
+        foreach ($defense as $position => $defensePlayer) {
+            if ($defensePlayer && $defensePlayer->id === $player->id) {
                 return $position;
             }
         }
@@ -176,23 +189,68 @@ class ExportScorebookCommand extends Command
     /**
      * Extract play data for each batter in each inning
      */
-    private function extractBatterInningData(Game $game, int $teamIndex, $playsByInning, $teamPlayers): array
+    private function extractBatterInningData(Game $game, int $teamIndex, $plays, array $battingOrder): array
     {
         // This will contain the actual play data for each batter in each inning
-        // Format: [batter_index][inning] = play_info
+        // Format: [batter_spot][inning] = play_info
         $data = [];
 
-        // For now, we'll return an empty structure
-        // In a full implementation, this would parse the play-by-play data
-        // and map it to specific batter-inning combinations
+        // Group plays by the batting position at the time
+        $atBatPosition = $game->atBat[$teamIndex] ?? 0;
         
-        // TODO: Parse plays to extract:
-        // - Result of at-bat (hit, out, walk, etc.)
-        // - Base running notation
-        // - Fielding notation (who made the out)
-        // - Scoring notation
-        // - Count information
+        foreach ($plays as $play) {
+            $inning = $play->inning;
+            
+            // Determine which batter spot this play corresponds to
+            // This is a simplified approach - actual implementation would need
+            // to track the at-bat index through the game progression
+            
+            // For now, we'll attempt to match based on play order
+            // A more complete implementation would track batting order progression
+            
+            $data[$inning][] = [
+                'play' => $play->play,
+                'human' => $play->human,
+                'result' => $this->extractPlayResult($play->play),
+            ];
+        }
         
         return $data;
+    }
+
+    /**
+     * Extract a simplified play result for scorebook notation
+     */
+    private function extractPlayResult(string $playText): string
+    {
+        // Parse play text to extract key result
+        // This is a simplified version - full implementation would parse all play notation
+        
+        if (str_contains($playText, 'K')) {
+            return 'K'; // Strikeout
+        } elseif (str_contains($playText, 'BB')) {
+            return 'BB'; // Walk
+        } elseif (str_contains($playText, 'IBB')) {
+            return 'IBB'; // Intentional walk
+        } elseif (str_contains($playText, 'HBP')) {
+            return 'HBP'; // Hit by pitch
+        } elseif (preg_match('/([FLPGBfgplb])([@!#\$])/', $playText, $matches)) {
+            // Hit: F=fly, L=line, P=pop, G=ground, B=bunt
+            // @=double, !=single, #=triple, $=home run
+            $hitType = $matches[1];
+            $bases = match($matches[2]) {
+                '!' => '1B',
+                '@' => '2B',
+                '#' => '3B',
+                '$' => 'HR',
+                default => 'H',
+            };
+            return $bases;
+        } elseif (preg_match('/([0-9\-]+)/', $playText, $matches)) {
+            // Fielding play (e.g., 6-3, 4-3, etc.)
+            return $matches[1];
+        }
+        
+        return '?'; // Unknown
     }
 }
