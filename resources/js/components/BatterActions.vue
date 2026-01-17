@@ -20,15 +20,15 @@
     <div v-if="stage === 'pitch' && !runnerPlays.some(x => x.length)" class="step">
       <h3>Select Pitch Outcome</h3>
       <div class="options-grid">
-        <button v-for="(description, code) in pitchOutcomes" 
-                :key="code" 
-                @click="addPitch(code)" 
+        <button v-for="(description, code) in pitchOutcomes"
+                :key="code"
+                @click="addPitch(code)"
                 :class="['option-btn', basePitchClasses[code]]">
           {{ description }}
         </button>
         <button v-for="(description, code) in outcomes"
-                :key="code" 
-                @click="addResult(code)" 
+                :key="code"
+                @click="addResult(code)"
                 :class="['option-btn', basePitchClasses[code]]">
           {{ description }}
         </button>
@@ -45,6 +45,7 @@
         <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('L')" class="option-btn primary">Line Drive</button>
         <button @click="selectTrajectory('F')" class="option-btn primary">Fly Ball</button>
         <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('P')" class="option-btn primary">Pop Up</button>
+        <button v-if="!preferences.simplifyTrajectories" @click="selectTrajectory('B')" class="option-btn primary">Bunt</button>
       </div>
       <button @click="undoLastPitch(); stage = 'pitch'" class="back-btn">← Back to Pitching</button>
     </div>
@@ -217,7 +218,7 @@ export default {
       basePitchOutcomes: {
         '.': 'Ball',
         's': 'Swinging Strike',
-        'c': 'Called Strike', 
+        'c': 'Called Strike',
         'f': 'Foul Ball',
         't': 'Foul Tip',
         'g': 'Foul (bunt)',
@@ -232,7 +233,7 @@ export default {
       basePitchClasses: {
         '.': 'advance',
         's': 'out',
-        'c': 'out', 
+        'c': 'out',
         'f': 'out',
         'g': 'out',
         't': 'out',
@@ -329,37 +330,37 @@ export default {
     fieldingActions() {
       if (this.decision === 'E') {
         const actions = { 'E': 'Fielding Error', 'WT': 'Throwing Error' };
-        
+
         // Add sacrifice options on errors only if there are runners on base
         // This handles cases where a sacrifice attempt results in an error
         if (this.hasRunnersOnBase) {
-          if (this.trajectory === 'F') {
+          if (['F', 'L'].includes(this.trajectory)) {
             actions['SAF'] = 'Sacrifice Fly (Error)';
           }
-          if (this.trajectory === 'G') {
+          if (this.trajectory === 'B') {
             actions['SAB'] = 'Sacrifice Bunt (Error)';
           }
         }
-        
+
         return actions;
       }
-      
+
       // Build actions based on trajectory
       const actions = { '': 'Put Out' };
-      
+
       // Add sacrifice options only if there are runners on base
       if (this.hasRunnersOnBase) {
         // Add sacrifice fly option for fly balls
-        if (this.trajectory === 'F') {
+        if (['F', 'L'].includes(this.trajectory)) {
           actions['SAF'] = 'Sacrifice Fly';
         }
-        
+
         // Add sacrifice bunt option for ground balls
-        if (this.trajectory === 'G') {
+        if (this.trajectory === 'B') {
           actions['SAB'] = 'Sacrifice Bunt';
         }
       }
-      
+
       return actions;
     },
     finalPlay() {
@@ -560,7 +561,7 @@ export default {
         }
       }
     },
-    
+
     submitPlay() {
       if (this.finalPlay) {
         this.$emit('log-play', this.finalPlay);

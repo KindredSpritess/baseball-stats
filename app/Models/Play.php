@@ -490,7 +490,8 @@ class Play extends Model
                             } else {
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$sac], ["fielder" => $this->fieldingBuffer]));
                             }
-                        } elseif (($bb = $event->consume('G')) ||
+                        } elseif (($bb = $event->consume('B')) ||
+                                  ($bb = $event->consume('G')) ||
                                   ($bb = $event->consume('FF')) ||
                                   ($bb = $event->consume('F')) ||
                                   ($bb = $event->consume('L')) ||
