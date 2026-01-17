@@ -522,7 +522,7 @@
                 <table class="summary">
                     <tr>
                         <td><strong>{{ $opponent->short_name }}</strong></td>
-                        <td>{{ $game->score[!$isHome ? 0 : 1] ?? 0 }}</td>
+                        <td>{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td><strong>{{ $team->short_name }}</strong></td>
