@@ -102,7 +102,7 @@
     </div>
 
     <div v-else-if="stage === 'fielding-outcome'" class="step">
-      <FielderSelection :defense="state.defense[(state.half+1)%2]" :players="game.players" :actions="this.decision === 'E' ? { 'E': 'Fielding Error', 'WT': 'Throwing Error' } : { '': 'Put Out' }" @action-selected="handleFieldingAction" />
+      <FielderSelection :defense="state.defense[(state.half+1)%2]" :players="game.players" :actions="fieldingActions" @action-selected="handleFieldingAction" />
     </div>
 
     <!-- Do we need to advance further? -->
@@ -322,6 +322,26 @@ export default {
       if (strikes.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       if (balls.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       return {'HBP': 'Hit By Pitch'};
+    },
+    fieldingActions() {
+      if (this.decision === 'E') {
+        return { 'E': 'Fielding Error', 'WT': 'Throwing Error' };
+      }
+      
+      // Build actions based on trajectory
+      const actions = { '': 'Put Out' };
+      
+      // Add sacrifice fly option for fly balls
+      if (this.trajectory === 'F') {
+        actions['SAF'] = 'Sacrifice Fly';
+      }
+      
+      // Add sacrifice bunt option for ground balls
+      if (this.trajectory === 'G') {
+        actions['SAB'] = 'Sacrifice Bunt';
+      }
+      
+      return actions;
     },
     finalPlay() {
       // Make sure runners plays don't count stats for the same wild pitches, passed balls, etc.
@@ -559,6 +579,11 @@ export default {
         this.error = event.action;
         this.stage = 'further-advance?';
         this.$emit('error', this.fielders.join('-').replace(/(-?)(\d)$/, `$1${this.error.toLowerCase()}$2`));
+      } else if (event.action === 'SAF' || event.action === 'SAB') {
+        // For sacrifice fly or bunt, replace the trajectory and mark as out
+        this.trajectory = event.action;
+        this.bases = -1; // Batter is out
+        this.stage = 'at-bat-ended';
       } else {
         this.stage = 'at-bat-ended';
       }
