@@ -21,8 +21,11 @@
     <td>{{ $stats->stat('4') }}</td>
     <td>{{ $stats->RBI }}</td>
     <td>{{ $stats->SO }}</td>
+    @if ($singleGameStats ?? false)<td>{{ $stats->SAB }}</td>@endif
+    @if ($singleGameStats ?? false)<td>{{ $stats->SAF }}</td>@endif
     <td>{{ $stats->BBs }}</td>
     <td>{{ $stats->HPB }}</td>
+    @if ($singleGameStats ?? false)<td>{{ $stats->CI }}</td>@endif
     <td>{{ $stats->SB }}</td>
     <td>{{ $stats->CS }}</td>
     <td>{{ $stats->GDP }}</td>

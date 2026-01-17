@@ -69,6 +69,7 @@ class Play extends Model
     ];
 
     const TRAJECTORIES = [
+        'B' => 'bunt',
         'G' => 'ground ball',
         'L' => 'line drive',
         'F' => 'fly ball',
@@ -78,6 +79,7 @@ class Play extends Model
     ];
 
     const OUT_TRAJECTORIES = [
+        'B' => 'out on bunt to :fielder',
         'G' => 'grounds out to :fielder',
         'GDP' => 'grounds into double play; :fielder',
         'GTP' => 'grounds into triple play; :fielder',
@@ -490,7 +492,9 @@ class Play extends Model
                             } else {
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$sac], ["fielder" => $this->fieldingBuffer]));
                             }
-                        } elseif (($bb = $event->consume('G')) ||
+                            $this->handleBattedBall($game, $sac, false, -1, $ballLocation ?? null);
+                        } elseif (($bb = $event->consume('B')) ||
+                                  ($bb = $event->consume('G')) ||
                                   ($bb = $event->consume('FF')) ||
                                   ($bb = $event->consume('F')) ||
                                   ($bb = $event->consume('L')) ||
@@ -873,6 +877,7 @@ class Play extends Model
             'position' => $position,
             'distance' => $this->calculateBattedBallDistance($position),
             'type' => match($type) {
+                'B' => 'B',
                 'G' => 'G',
                 'FF' => 'F',
                 'F' => 'F',
@@ -880,7 +885,7 @@ class Play extends Model
                 'PF' => 'P',
                 'P' => 'P',
                 'SAF' => 'F',
-                'SAB' => 'G',
+                'SAB' => 'B',
                 default => null,
             },
             'result' => $hit ? ($bases < 4 ? "{$bases}B" : 'HR') : 'O',

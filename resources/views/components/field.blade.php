@@ -60,6 +60,7 @@
     @foreach ($ballsInPlay as $ball)
         @php
             $shape = match($ball->type) {
+                'B' => 'downward-pointing double-triangle',
                 'G' => 'downward-pointing triangle',
                 'F' => 'diamond',
                 'L' => 'star',
@@ -85,6 +86,13 @@
             </polygon>
         @elseif($shape === 'downward-pointing triangle')
             <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}">
+                <title>{{ $ball->play->human }}</title>
+            </polygon>
+        @elseif($shape === 'downward-pointing double-triangle')
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}">
+                <title>{{ $ball->play->human }}</title>
+            </polygon>
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 5 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 9 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 9 }}" fill="{{ $color }}">
                 <title>{{ $ball->play->human }}</title>
             </polygon>
         @elseif($shape === 'diamond')

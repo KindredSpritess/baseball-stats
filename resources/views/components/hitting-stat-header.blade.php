@@ -12,8 +12,11 @@
     <td>HR</td>
     <td>RBI</td>
     <td>SO</td>
+    @if ($singleGameStats ?? false)<td>SAB</td>@endif
+    @if ($singleGameStats ?? false)<td>SAF</td>@endif
     <td>BB</td>
     <td>HBP</td>
+    @if ($singleGameStats ?? false)<td>CI</td>@endif
     <td>SB</td>
     <td>CS</td>
     <td>GDP</td>
