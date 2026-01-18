@@ -230,26 +230,56 @@
             height: 35px;
             border-bottom: 1px solid #000;
             position: relative;
-            padding: 2px;
+            padding: 0;
+            text-align: center;
         }
         
-        /* Diamond for tracking plays */
-        .diamond {
+        /* Play cell with 4 rectangles and circle */
+        .play-cell {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-collapse: collapse;
+        }
+        
+        .play-quadrant-table {
             width: 20px;
             height: 20px;
-            margin: auto;
+            margin: 2px auto 0;
+            border-collapse: collapse;
             position: relative;
-            transform: rotate(45deg);
-            border: 1px solid #000;
         }
         
-        .diamond-inner {
+        .play-quadrant {
+            width: 10px;
+            height: 10px;
+            border: 0.5px solid #000;
+            font-size: 5pt;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .run-circle {
+            width: 8px;
+            height: 8px;
+            border: 1px solid #000;
+            border-radius: 50%;
             position: absolute;
-            top: 50%;
+            top: 8px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6pt;
-            transform: translate(-50%, -50%) rotate(-45deg);
+            transform: translateX(-50%);
+            background: white;
+        }
+        
+        .run-circle.earned {
+            background: #000;
+        }
+        
+        .pitch-sequence {
+            font-size: 5pt;
+            text-align: center;
+            padding: 1px;
+            margin-top: 1px;
         }
         
         /* Statistics Section */
@@ -283,10 +313,17 @@
             border-right: 1px solid #000;
             text-align: center;
             padding: 2px;
+            width: 5.5%; /* Uniform width for each stat column */
         }
         
         .stats-row td:last-child {
             border-right: none;
+        }
+        
+        /* Fielding stats columns */
+        .main-grid td {
+            text-align: center;
+            font-size: 7pt;
         }
         
         /* Bottom sections */
@@ -366,15 +403,6 @@
 </head>
 <body>
     <div class="scorebook">
-        <!-- Game Notes Box (Top Right) -->
-        <div class="game-notes">
-            <div class="game-notes-title">GAME NOTES P. {{ $game->id }}</div>
-            <div class="game-notes-content">
-                <!-- Space for manual game notes -->
-                &nbsp;
-            </div>
-        </div>
-        
         <!-- Team Names -->
         <div class="team-names">
             <table>
@@ -527,11 +555,11 @@
                 $stats->derive();
                 @endphp
                 <tr>
-                    <td>{{ $stats->DO }}</td>
+                    <td style="text-align: center;">{{ $stats->DO }}</td>
                     <td>&nbsp;</td>
-                    <td>{{ $stats->PO }}</td>
-                    <td>{{ $stats->A }}</td>
-                    <td>{{ $stats->E }}</td>
+                    <td style="text-align: center;">{{ $stats->PO }}</td>
+                    <td style="text-align: center;">{{ $stats->A }}</td>
+                    <td style="text-align: center;">{{ $stats->E }}</td>
                     <td>&nbsp;</td>
                     <td class="fielding-player">{{ $batter['position'] ?: 'EH' }}</td>
                     <td class="fielding-pos">{{ $batter['spot'] }}</td>
@@ -546,35 +574,45 @@
                     <!-- Plate appearance cells. -->
                     @foreach($innings as $inning)
                     <td class="inning-cell">
-                        <!-- Diamond for tracking plays -->
-                        <div class="diamond">
-                            <div class="diamond-inner">
-                                <!-- TODO: Add play notation here -->
-                                {{-- This would show result codes, base running, etc. --}}
+                        <!-- Play cell with 4 quadrants and circle -->
+                        <div class="play-cell">
+                            <table class="play-quadrant-table">
+                                <tr>
+                                    <td class="play-quadrant"></td>
+                                    <td class="play-quadrant"></td>
+                                </tr>
+                                <tr>
+                                    <td class="play-quadrant"></td>
+                                    <td class="play-quadrant"></td>
+                                </tr>
+                            </table>
+                            <div class="run-circle"></div>
+                            <div class="pitch-sequence">
+                                <!-- Pitch sequence and count go here -->
                             </div>
                         </div>
                     </td>
                     @endforeach
 
                     <!-- Hitting Stats -->
-                    <td>{{ $stats->PA }}</td>
-                    <td>{{ $stats->AB }}</td>
-                    <td>{{ $stats->R }}</td>
-                    <td>{{ $stats->H }}</td>
-                    <td>{{ $stats->stat('2') }}</td>
-                    <td>{{ $stats->stat('3') }}</td>
-                    <td>{{ $stats->HR }}</td>
-                    <td>{{ $stats->RBI }}</td>
-                    <td>{{ $stats->SAB }}</td>
-                    <td>{{ $stats->SAF }}</td>
-                    <td>{{ $stats->BBs }}</td>
-                    <td>{{ $stats->HPB }}</td>
-                    <td>{{ $stats->CI }}</td>
-                    <td>{{ $stats->SO }}</td>
-                    <td>{{ $stats->GDP }}</td>
-                    <td>{{ $stats->SB }}</td>
-                    <td>{{ $stats->CS }}</td>
-                    <td>{{ $stats->LOB }}</td>
+                    <td style="text-align: center;">{{ $stats->PA }}</td>
+                    <td style="text-align: center;">{{ $stats->AB }}</td>
+                    <td style="text-align: center;">{{ $stats->R }}</td>
+                    <td style="text-align: center;">{{ $stats->H }}</td>
+                    <td style="text-align: center;">{{ $stats->stat('2') }}</td>
+                    <td style="text-align: center;">{{ $stats->stat('3') }}</td>
+                    <td style="text-align: center;">{{ $stats->HR }}</td>
+                    <td style="text-align: center;">{{ $stats->RBI }}</td>
+                    <td style="text-align: center;">{{ $stats->SAB }}</td>
+                    <td style="text-align: center;">{{ $stats->SAF }}</td>
+                    <td style="text-align: center;">{{ $stats->BBs }}</td>
+                    <td style="text-align: center;">{{ $stats->HPB }}</td>
+                    <td style="text-align: center;">{{ $stats->CI }}</td>
+                    <td style="text-align: center;">{{ $stats->SO }}</td>
+                    <td style="text-align: center;">{{ $stats->GDP }}</td>
+                    <td style="text-align: center;">{{ $stats->SB }}</td>
+                    <td style="text-align: center;">{{ $stats->CS }}</td>
+                    <td style="text-align: center;">{{ $stats->LOB }}</td>
                 </tr>
                 @endforeach
                 @endforeach
@@ -586,7 +624,7 @@
             <table>
                 <tr>
                     <!-- Left Column: Pitchers and Catchers -->
-                    <td style="width: 50%; vertical-align: top;">
+                    <td style="width: 60%; vertical-align: top;">
                         <div class="section-title">PITCHERS</div>
                         <table class="summary">
                             <tr>
@@ -615,22 +653,22 @@
                             @endphp
                             <tr>
                                 <td>{{ $pitcher->person->fullName() }}</td>
-                                <td>{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
-                                <td>{{ $stats->HA }}</td>
-                                <td>{{ $stats->K }}</td>
-                                <td>{{ $stats->BB }}</td>
-                                <td>{{ $stats->HBP }}</td>
-                                <td>{{ $stats->RA }}</td>
-                                <td>{{ $stats->ER }}</td>
-                                <td>{{ $stats->WP }}</td>
-                                <td>{{ $stats->BLK }}</td>
-                                <td>{{ $stats->PO }}</td>
-                                <td>{{ $stats->PCS }}</td>
-                                <td>{{ $stats->BFP }}</td>
-                                <td>{{ $stats->Balls }}</td>
-                                <td>{{ $stats->Strikes }}</td>
-                                <td>{{ $stats->Pitches }}</td>
-                                <td>{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
+                                <td style="text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
+                                <td style="text-align: center;">{{ $stats->HA }}</td>
+                                <td style="text-align: center;">{{ $stats->K }}</td>
+                                <td style="text-align: center;">{{ $stats->BB }}</td>
+                                <td style="text-align: center;">{{ $stats->HBP }}</td>
+                                <td style="text-align: center;">{{ $stats->RA }}</td>
+                                <td style="text-align: center;">{{ $stats->ER }}</td>
+                                <td style="text-align: center;">{{ $stats->WP }}</td>
+                                <td style="text-align: center;">{{ $stats->BLK }}</td>
+                                <td style="text-align: center;">{{ $stats->PO }}</td>
+                                <td style="text-align: center;">{{ $stats->PCS }}</td>
+                                <td style="text-align: center;">{{ $stats->BFP }}</td>
+                                <td style="text-align: center;">{{ $stats->Balls }}</td>
+                                <td style="text-align: center;">{{ $stats->Strikes }}</td>
+                                <td style="text-align: center;">{{ $stats->Pitches }}</td>
+                                <td style="text-align: center;">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -650,7 +688,6 @@
                                     <td><strong>SB</strong></td>
                                     <td><strong>CS</strong></td>
                                     <td><strong>SCS</strong></td>
-                                    <td><strong>COACH</strong></td>
                                 </tr>
                                 @php
                                 $catchers = collect($battingOrder)->filter(function($batter) {
@@ -665,43 +702,32 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $catcher['name'] }}</td>
-                                    <td>{{ $do2 ? number_format($do2 / 3, 1) : '0.0' }}</td>
-                                    <td>{{ $stats->PB }}</td>
-                                    <td>{{ $stats->CSB }}</td>
-                                    <td>{{ $stats->CCS }}</td>
-                                    <td>-</td>
-                                    <td>&nbsp;</td>
+                                    <td style="text-align: center;">{{ $do2 ? number_format($do2 / 3, 1) : '0.0' }}</td>
+                                    <td style="text-align: center;">{{ $stats->PB }}</td>
+                                    <td style="text-align: center;">{{ $stats->CSB }}</td>
+                                    <td style="text-align: center;">{{ $stats->CCS }}</td>
+                                    <td style="text-align: center;">-</td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7">&nbsp;</td>
+                                    <td colspan="6">&nbsp;</td>
                                 </tr>
                                 @endforelse
                             </table>
                         </div>
-                        
-                        <!-- Umpire Sign Section -->
-                        <div style="margin-top: 10px;">
-                            <div class="section-title">UMPIRE SIGN</div>
-                            <table class="summary">
-                                <tr>
-                                    <td style="height: 40px;">&nbsp;</td>
-                                </tr>
-                            </table>
-                        </div>
                     </td>
                     
-                    <!-- Right Column: Score, Coach, Officials, On Bench -->
-                    <td style="width: 50%; vertical-align: top;">
+                    <!-- Right Column: Score and Scorer -->
+                    <td style="width: 40%; vertical-align: top;">
                         <div class="section-title">SCORE</div>
                         <table class="summary">
                             <tr>
                                 <td style="width: 50%;"><strong>{{ $opponent->short_name }}</strong></td>
-                                <td>{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
+                                <td style="text-align: center;">{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
                             </tr>
                             <tr>
                                 <td><strong>{{ $team->short_name }}</strong></td>
-                                <td>{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
+                                <td style="text-align: center;">{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
                             </tr>
                         </table>
                         
@@ -723,59 +749,12 @@
                             </table>
                         </div>
                         
-                        <!-- Umpires and Plate/Game Info -->
-                        <div style="margin-top: 10px;">
-                            <table class="summary">
-                                <tr>
-                                    <td colspan="2"><strong>UMPIRES: PLATE</strong> _____________</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><strong>GAME</strong> _____________</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                        <!-- Coach Section -->
-                        <div style="margin-top: 10px;">
-                            <div class="section-title">COACH</div>
-                            <table class="summary">
-                                <tr>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                        <!-- Official/Recorder Section -->
-                        <div style="margin-top: 10px;">
-                            <div class="section-title">OFFICIAL RECORDER</div>
-                            <table class="summary">
-                                <tr>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
                         <!-- Scorer Section -->
                         <div style="margin-top: 10px;">
                             <div class="section-title">SCORER</div>
                             <table class="summary">
                                 <tr>
-                                    <td style="width: 30%;"><strong>HOME</strong></td>
                                     <td>{{ $game->scorer ? $game->scorer->name : '' }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>VISITING</strong></td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                        <!-- On Bench Section -->
-                        <div style="margin-top: 10px;">
-                            <div class="section-title">ON BENCH</div>
-                            <table class="summary">
-                                <tr>
-                                    <td>&nbsp;</td>
                                 </tr>
                             </table>
                         </div>
