@@ -64,6 +64,13 @@ class ExportScorebookCommand extends Command
         // Prepare data for the scorebook
         $data = $this->prepareScorebookData($game, $teamType, $team);
 
+        // Generate HTML
+        $html = view('scorebook.australian', $data)->render();
+        $filename = "scorebook_game{$game->id}_{$teamType}_{$team->short_name}.html";
+        $htmlPath = storage_path("app/public/scorebooks/{$filename}");
+        file_put_contents($htmlPath, $html);
+        $this->info("Saved HTML: {$htmlPath}");
+
         // Generate PDF
         $pdf = Pdf::loadView('scorebook.australian', $data);
         $pdf->setPaper('a3', 'landscape');
