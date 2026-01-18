@@ -327,6 +327,24 @@
         }
         
         /* Bottom sections */
+        .pitcher-innings-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 2px solid #000;
+            font-size: 7pt;
+        }
+        
+        .pitcher-innings-table td {
+            border: 1px solid #000;
+            padding: 2px;
+            vertical-align: middle;
+        }
+        
+        .pitcher-inning-cell {
+            width: 30px;
+            text-align: center;
+        }
+        
         .bottom-section {
             width: 100%;
             border-top: 2px solid #000;
@@ -617,6 +635,79 @@
                 @endforeach
                 @endforeach
             </tbody>
+        </table>
+        
+        <!-- Pitcher Inning-by-Inning Stats -->
+        <table class="pitcher-innings-table">
+            <tr>
+                <td style="width: 80px; border-right: 2px solid #000; padding: 4px; font-weight: bold;">PITCHERS</td>
+                <td style="width: 120px; border-right: 2px solid #000;">&nbsp;</td>
+                <td>&nbsp;</td>
+                @foreach($innings as $inning)
+                <td class="pitcher-inning-cell">{{ $inning['number'] }}</td>
+                @endforeach
+                <td colspan="18" style="border-left: 2px solid #000;">&nbsp;</td>
+            </tr>
+            <tr style="font-size: 6pt;">
+                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">P</td>
+                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">INN</td>
+                <td style="padding: 2px; text-align: center;">H</td>
+                @foreach($innings as $inning)
+                <td class="pitcher-inning-cell">
+                    <!-- Pitcher stats per inning: K, BB, HBP, R, ER, WP, BLK, PO, PCS, BFP, B, S, PIT -->
+                </td>
+                @endforeach
+                <td style="border-left: 2px solid #000; padding: 2px; text-align: center;">K</td>
+                <td style="padding: 2px; text-align: center;">BB</td>
+                <td style="padding: 2px; text-align: center;">HBP</td>
+                <td style="padding: 2px; text-align: center;">R</td>
+                <td style="padding: 2px; text-align: center;">ER</td>
+                <td style="padding: 2px; text-align: center;">WP</td>
+                <td style="padding: 2px; text-align: center;">BLK</td>
+                <td style="padding: 2px; text-align: center;">PO</td>
+                <td style="padding: 2px; text-align: center;">PCS</td>
+                <td style="padding: 2px; text-align: center;">BFP</td>
+                <td style="padding: 2px; text-align: center;">B</td>
+                <td style="padding: 2px; text-align: center;">S</td>
+                <td style="padding: 2px; text-align: center;">PIT</td>
+                <td style="padding: 2px; text-align: center;">W/L/S</td>
+                <td style="padding: 2px; text-align: center;">SKS</td>
+                <td style="padding: 2px; text-align: center;">CI</td>
+                <td style="padding: 2px; text-align: center;">LOB</td>
+            </tr>
+            @foreach($pitchers as $pitcher)
+            @php
+            $stats = new \App\Helpers\StatsHelper($pitcher->stats);
+            $stats->derive();
+            @endphp
+            <tr style="font-size: 6pt;">
+                <td style="border-right: 2px solid #000; padding: 2px;">{{ $pitcher->person->lastName() }}</td>
+                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->HA }}</td>
+                @foreach($innings as $inning)
+                <td class="pitcher-inning-cell">
+                    <!-- Tally marks or numbers for this pitcher's performance in this inning -->
+                </td>
+                @endforeach
+                <td style="border-left: 2px solid #000; padding: 2px; text-align: center;">{{ $stats->K }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->BB }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->HBP }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->RA }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->ER }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->WP }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->BLK }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->PO }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->PCS }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->BFP }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->Balls }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->Strikes }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->Pitches }}</td>
+                <td style="padding: 2px; text-align: center;">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
+                <td style="padding: 2px; text-align: center;">-</td>
+                <td style="padding: 2px; text-align: center;">-</td>
+                <td style="padding: 2px; text-align: center;">-</td>
+            </tr>
+            @endforeach
         </table>
         
         <!-- Bottom Section -->
