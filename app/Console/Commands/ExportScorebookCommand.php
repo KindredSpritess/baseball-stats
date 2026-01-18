@@ -64,6 +64,12 @@ class ExportScorebookCommand extends Command
         // Prepare data for the scorebook
         $data = $this->prepareScorebookData($game, $teamType, $team);
 
+        // Ensure directory exists
+        $dir = storage_path("app/public/scorebooks");
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         // Generate HTML
         $html = view('scorebook.australian', $data)->render();
         $filename = "scorebook_game{$game->id}_{$teamType}_{$team->short_name}.html";
@@ -78,11 +84,6 @@ class ExportScorebookCommand extends Command
         // Save to storage
         $filename = "scorebook_game{$game->id}_{$teamType}_{$team->short_name}.pdf";
         $path = storage_path("app/public/scorebooks/{$filename}");
-        
-        // Ensure directory exists
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
 
         $pdf->save($path);
 
@@ -149,6 +150,7 @@ class ExportScorebookCommand extends Command
             $innings[] = [
                 'number' => $i,
                 'runs' => $linescore[$teamIndex][$i - 1] ?? 0,
+                'lob' => 0, // TODO: Calculate LOB per inning from plays
             ];
         }
 

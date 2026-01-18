@@ -82,6 +82,7 @@
             border: 2px solid #000;
             padding: 5px;
             width: 200px;
+            background: white;
         }
         
         .game-notes-title {
@@ -89,6 +90,12 @@
             font-weight: bold;
             border-bottom: 1px solid #000;
             padding: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .game-notes-content {
+            min-height: 60px;
+            font-size: 7pt;
         }
         
         /* Main Grid */
@@ -359,6 +366,15 @@
 </head>
 <body>
     <div class="scorebook">
+        <!-- Game Notes Box (Top Right) -->
+        <div class="game-notes">
+            <div class="game-notes-title">GAME NOTES P. {{ $game->id }}</div>
+            <div class="game-notes-content">
+                <!-- Space for manual game notes -->
+                &nbsp;
+            </div>
+        </div>
+        
         <!-- Team Names -->
         <div class="team-names">
             <table>
@@ -477,8 +493,28 @@
                     <th>LOB</th>
                 </tr>
             </thead>
-            <!-- Runs Row -->
+            <!-- Totals/Summary Row -->
             <tbody>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="8" style="text-align: right; padding: 2px 4px; font-weight: bold;">RUNS</td>
+                    <td colspan="2">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    @foreach($innings as $inning)
+                    <td style="text-align: center; font-weight: bold;">{{ $inning['runs'] }}</td>
+                    @endforeach
+                    <td colspan="18" style="text-align: center; font-weight: bold;">
+                        TOTAL: {{ array_sum(array_column($innings, 'runs')) }}
+                    </td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="8" style="text-align: right; padding: 2px 4px; font-weight: bold;">LOB</td>
+                    <td colspan="2">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    @foreach($innings as $inning)
+                    <td style="text-align: center;">{{ $inning['lob'] ?? 0 }}</td>
+                    @endforeach
+                    <td colspan="18">&nbsp;</td>
+                </tr>
                 <!-- Batter Rows -->
                 @php
                 $groupedBatters = collect($battingOrder)->groupBy('spot');
@@ -549,7 +585,8 @@
         <div class="bottom-section">
             <table>
                 <tr>
-                    <td class="pitchers-section">
+                    <!-- Left Column: Pitchers and Catchers -->
+                    <td style="width: 50%; vertical-align: top;">
                         <div class="section-title">PITCHERS</div>
                         <table class="summary">
                             <tr>
@@ -602,30 +639,64 @@
                             @endforelse
                         </table>
                         
+                        <!-- Catchers Section -->
                         <div style="margin-top: 10px;">
+                            <div class="section-title">CATCHERS</div>
                             <table class="summary">
                                 <tr>
-                                    <td><strong>Winning Pitcher:</strong></td>
-                                    <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
+                                    <td style="width: 40%;"><strong>Name</strong></td>
+                                    <td><strong>INN</strong></td>
+                                    <td><strong>PB</strong></td>
+                                    <td><strong>SB</strong></td>
+                                    <td><strong>CS</strong></td>
+                                    <td><strong>SCS</strong></td>
+                                    <td><strong>COACH</strong></td>
                                 </tr>
+                                @php
+                                $catchers = collect($battingOrder)->filter(function($batter) {
+                                    return $batter['position'] == '2';
+                                });
+                                @endphp
+                                @forelse($catchers as $catcher)
+                                @php
+                                $stats = new \App\Helpers\StatsHelper($catcher['stats']);
+                                $stats->derive();
+                                $do2 = $stats->stat('DO.2');
+                                @endphp
                                 <tr>
-                                    <td><strong>Losing Pitcher:</strong></td>
-                                    <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
+                                    <td>{{ $catcher['name'] }}</td>
+                                    <td>{{ $do2 ? number_format($do2 / 3, 1) : '0.0' }}</td>
+                                    <td>{{ $stats->PB }}</td>
+                                    <td>{{ $stats->CSB }}</td>
+                                    <td>{{ $stats->CCS }}</td>
+                                    <td>-</td>
+                                    <td>&nbsp;</td>
                                 </tr>
+                                @empty
                                 <tr>
-                                    <td><strong>Save:</strong></td>
-                                    <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
+                                    <td colspan="7">&nbsp;</td>
+                                </tr>
+                                @endforelse
+                            </table>
+                        </div>
+                        
+                        <!-- Umpire Sign Section -->
+                        <div style="margin-top: 10px;">
+                            <div class="section-title">UMPIRE SIGN</div>
+                            <table class="summary">
+                                <tr>
+                                    <td style="height: 40px;">&nbsp;</td>
                                 </tr>
                             </table>
                         </div>
                     </td>
                     
-                    <!-- Totals Section -->
-                    <td class="totals-section">
+                    <!-- Right Column: Score, Coach, Officials, On Bench -->
+                    <td style="width: 50%; vertical-align: top;">
                         <div class="section-title">SCORE</div>
                         <table class="summary">
                             <tr>
-                                <td><strong>{{ $opponent->short_name }}</strong></td>
+                                <td style="width: 50%;"><strong>{{ $opponent->short_name }}</strong></td>
                                 <td>{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
                             </tr>
                             <tr>
@@ -634,14 +705,79 @@
                             </tr>
                         </table>
                         
+                        <!-- Pitchers of Record -->
+                        <div style="margin-top: 10px;">
+                            <table class="summary">
+                                <tr>
+                                    <td style="width: 50%;"><strong>PITCHER WIN:</strong></td>
+                                    <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>LOSS:</strong></td>
+                                    <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SAVE:</strong></td>
+                                    <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Umpires and Plate/Game Info -->
+                        <div style="margin-top: 10px;">
+                            <table class="summary">
+                                <tr>
+                                    <td colspan="2"><strong>UMPIRES: PLATE</strong> _____________</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><strong>GAME</strong> _____________</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Coach Section -->
+                        <div style="margin-top: 10px;">
+                            <div class="section-title">COACH</div>
+                            <table class="summary">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Official/Recorder Section -->
+                        <div style="margin-top: 10px;">
+                            <div class="section-title">OFFICIAL RECORDER</div>
+                            <table class="summary">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Scorer Section -->
                         <div style="margin-top: 10px;">
                             <div class="section-title">SCORER</div>
                             <table class="summary">
                                 <tr>
-                                    <td><strong>Name:</strong></td>
-                                    <td>{{ $game->scorer ? $game->scorer->name : '-' }}</td>
-                            </tr>
-                        </table>
+                                    <td style="width: 30%;"><strong>HOME</strong></td>
+                                    <td>{{ $game->scorer ? $game->scorer->name : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>VISITING</strong></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- On Bench Section -->
+                        <div style="margin-top: 10px;">
+                            <div class="section-title">ON BENCH</div>
+                            <table class="summary">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
                         </div>
                     </td>
                 </tr>
