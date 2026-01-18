@@ -137,6 +137,8 @@ class Play extends Model
             return;
         }
 
+        $game->scorer()->associate(auth()->user());
+
         $this->inning = $game->inning;
         $this->inning_half = $game->half;
         $this->plate_appearance = false;
