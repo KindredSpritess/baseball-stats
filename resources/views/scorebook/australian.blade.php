@@ -46,12 +46,28 @@
         }
         
         .team-names {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
+            width: 100%;
             border-bottom: 2px solid #000;
             font-size: 12pt;
             font-weight: bold;
+        }
+        
+        .team-names table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .team-names td {
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .team-names td:first-child {
+            text-align: left;
+        }
+        
+        .team-names td:last-child {
+            text-align: right;
         }
         
         .team-home {
@@ -77,16 +93,11 @@
         
         /* Main Grid */
         .main-grid {
-            display: table;
             width: 100%;
+            border-collapse: collapse;
         }
         
-        .grid-row {
-            display: table-row;
-        }
-        
-        .grid-cell {
-            display: table-cell;
+        .main-grid th, .main-grid td {
             border: 1px solid #000;
             vertical-align: top;
         }
@@ -94,7 +105,7 @@
         /* Fielding Section */
         .fielding-section {
             width: 80px;
-            border-right: 2px solid #000;
+            border-right: 2px solid #000 !important;
         }
         
         .fielding-header {
@@ -106,29 +117,37 @@
         }
         
         .fielding-row {
-            display: flex;
+            width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
+        }
+        
+        .fielding-row table {
+            width: 100%;
+            border-collapse: collapse;
+            height: 100%;
+        }
+        
+        .fielding-row td {
+            border: none;
+            padding: 2px;
+            font-size: 7pt;
         }
         
         .fielding-pos {
             width: 20px;
             border-right: 1px solid #000;
             text-align: center;
-            padding: 2px;
-            font-size: 7pt;
         }
         
         .fielding-player {
-            flex: 1;
-            padding: 2px;
-            font-size: 7pt;
+            text-align: left;
         }
         
         /* Batting Order Section */
         .batting-section {
             width: 120px;
-            border-right: 2px solid #000;
+            border-right: 2px solid #000 !important;
         }
         
         .batting-header {
@@ -140,50 +159,46 @@
         }
         
         .batting-row {
-            display: flex;
+            width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
+        }
+        
+        .batting-row table {
+            width: 100%;
+            border-collapse: collapse;
+            height: 100%;
+        }
+        
+        .batting-row td {
+            border: none;
+            padding: 2px;
+            font-size: 7pt;
         }
         
         .batting-number {
             width: 15px;
             border-right: 1px solid #000;
             text-align: center;
-            padding: 2px;
-            font-size: 7pt;
         }
         
         .batting-jersey {
             width: 20px;
             border-right: 1px solid #000;
             text-align: center;
-            padding: 2px;
-            font-size: 7pt;
+            color: red;
         }
         
         .batting-name {
-            flex: 1;
-            padding: 2px 4px;
-            font-size: 7pt;
+            text-align: left;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
         
         /* Inning Columns */
-        .innings-section {
-            flex: 1;
-            display: flex;
-            border-right: 2px solid #000;
-        }
-        
         .inning-column {
-            flex: 1;
-            border-right: 1px solid #000;
-        }
-        
-        .inning-column:last-child {
-            border-right: none;
+            width: 30px;
         }
         
         .inning-header {
@@ -193,6 +208,7 @@
             border-bottom: 1px solid #000;
             background-color: #f0f0f0;
             font-size: 7pt;
+            height: 100%;
         }
         
         .inning-runs {
@@ -243,38 +259,51 @@
         }
         
         .stats-row {
+            width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
-            display: flex;
             font-size: 6pt;
         }
         
-        .stat-cell {
-            flex: 1;
+        .stats-row table {
+            width: 100%;
+            border-collapse: collapse;
+            height: 100%;
+        }
+        
+        .stats-row td {
+            border: none;
             border-right: 1px solid #000;
             text-align: center;
             padding: 2px;
         }
         
-        .stat-cell:last-child {
+        .stats-row td:last-child {
             border-right: none;
         }
         
         /* Bottom sections */
         .bottom-section {
-            display: flex;
+            width: 100%;
             border-top: 2px solid #000;
         }
         
-        .pitchers-section {
-            flex: 1;
-            border-right: 2px solid #000;
+        .bottom-section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .bottom-section td {
+            vertical-align: top;
             padding: 5px;
+        }
+        
+        .pitchers-section {
+            border-right: 2px solid #000;
         }
         
         .totals-section {
             width: 300px;
-            padding: 5px;
         }
         
         .section-title {
@@ -332,13 +361,17 @@
     <div class="scorebook">
         <!-- Team Names -->
         <div class="team-names">
-            <div class="{{ !$isHome ? 'team-home' : '' }}">
-                {{ $opponent->name }} ({{ !$isHome ? 'HOME' : 'AWAY' }})
-            </div>
-            <div>V</div>
-            <div class="{{ $isHome ? 'team-home' : '' }}">
-                {{ $team->name }} ({{ $isHome ? 'HOME' : 'AWAY' }})
-            </div>
+            <table>
+                <tr>
+                    <td class="{{ !$isHome ? 'team-home' : '' }}">
+                        {{ $opponent->name }} ({{ !$isHome ? 'HOME' : 'AWAY' }})
+                    </td>
+                    <td>V</td>
+                    <td class="{{ $isHome ? 'team-home' : '' }}">
+                        {{ $team->name }} ({{ $isHome ? 'HOME' : 'AWAY' }})
+                    </td>
+                </tr>
+            </table>
         </div>
         
         <!-- Venue Information -->
@@ -351,195 +384,268 @@
         </div>
         
         <!-- Main Grid -->
-        <div class="main-grid">
+        <table class="main-grid">
             <!-- Header Row -->
-            <div class="grid-row">
-                <!-- Fielding Header -->
-                <div class="grid-cell fielding-section">
-                    <div class="fielding-header">FIELDING</div>
-                </div>
-                
-                <!-- Batting Order Header -->
-                <div class="grid-cell batting-section">
-                    <div class="batting-header">BATTING ORDER</div>
-                </div>
-                
-                <!-- Innings Headers -->
-                <div class="grid-cell innings-section">
-                    <div style="display: flex;">
-                        @foreach($innings as $inning)
-                        <div class="inning-column">
-                            <div class="inning-header">{{ $inning['number'] }}</div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                
-                <!-- Stats Header -->
-                <div class="grid-cell stats-section">
-                    <div class="stats-header">BATTING</div>
-                </div>
-            </div>
-            
+            <thead>
+                <tr>
+                    <th rowspan="3" colspan="8" class="fielding-section">
+                        <div class="fielding-header">FIELDING</div>
+                    </th>
+                    <th rowspan="1" colspan="2" class="batting-section">
+                        <div class="batting-header">BATTING ORDER</div>
+                    </th>
+                    <th>&nbsp;</th>
+                    @foreach($innings as $inning)
+                    <th class="inning-column"><div class="inning-header">{{ $inning['number'] }}</div></th>
+                    @endforeach
+                    <th rowspan="3" colspan="20" class="stats-section">
+                        <div class="stats-header">BATTING</div>
+                    </th>
+                </tr>
+                <tr>
+                    <!-- Batting Order Sub-Header -->
+                    <th rowspan="3" colspan="2" class="batting-section">
+                        <div style="padding: 4px; text-align: center; font-weight: bold; height: 15px;">TEAM: {{ $team->name }}</div>
+                    </th>
+                    <!-- Assist row for each inning -->
+                    <th>A</th>
+                    @foreach($innings as $inning)
+                    <td class="inning-fielding">
+                        <!-- loop over plays within the inning,
+                            * if it has a assist write the number,
+                            * if it has a putout or error leave a space
+                            * other wise leave blank
+                        -->
+                        &nbsp;
+                    </td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <!-- Putout row for each inning -->
+                    <th>PO</th>
+                    @foreach($innings as $inning)
+                    <td class="inning-fielding">
+                        <!-- loop over plays within the inning,
+                            * if it has a putout write the number,
+                            * if it has a assist or error leave a space
+                            * other wise leave blank
+                        -->
+                        &nbsp;
+                    </td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <th>DO</th>
+                    <th>&nbsp;</th>
+                    <th>PO</th>
+                    <th>A</th>
+                    <th>E</th>
+                    <th>&nbsp;</th>
+                    <th>Pos</th>
+                    <th>Ch</th>
+                    <!-- Error row for each inning -->
+                    <th>E</th>
+                    @foreach($innings as $inning)
+                    <td class="inning-fielding">
+                        <!-- loop over plays within the inning,
+                            * if it has a error write the number,
+                            * if it has a assist or putout leave a space
+                            * other wise leave blank
+                        -->
+                        &nbsp;
+                    </td>
+                    @endforeach
+
+                    <!-- Hitting Stats Headers -->
+                    <th>PA</th>
+                    <th>AB</th>
+                    <th>R</th>
+                    <th>H</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>HR</th>
+                    <th>RBI</th>
+                    <th>SAB</th>
+                    <th>SAF</th>
+                    <th>BB</th>
+                    <th>HBP</th>
+                    <th>CI</th>
+                    <th>K</th>
+                    <th>GDP</th>
+                    <th>SB</th>
+                    <th>CS</th>
+                    <th>LOB</th>
+                </tr>
+            </thead>
             <!-- Runs Row -->
-            <div class="grid-row">
-                <div class="grid-cell fielding-section">
-                    <div style="padding: 4px; text-align: center; font-weight: bold; height: 15px;">POS</div>
-                </div>
-                <div class="grid-cell batting-section">
-                    <div style="padding: 4px; text-align: center; font-weight: bold; height: 15px;">TEAM: {{ $team->short_name }}</div>
-                </div>
-                <div class="grid-cell innings-section">
-                    <div style="display: flex;">
-                        @foreach($innings as $inning)
-                        <div class="inning-column">
-                            <div class="inning-runs">{{ $inning['runs'] }}</div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="grid-cell stats-section">
-                    <div style="padding: 4px; text-align: center; font-size: 6pt; height: 15px; display: flex;">
-                        <div style="flex: 1;">PA</div>
-                        <div style="flex: 1;">AB</div>
-                        <div style="flex: 1;">R</div>
-                        <div style="flex: 1;">H</div>
-                        <div style="flex: 1;">RBI</div>
-                        <div style="flex: 1;">BB</div>
-                        <div style="flex: 1;">SO</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Batter Rows -->
-            @foreach($battingOrder as $index => $batter)
-            <div class="grid-row">
-                <!-- Fielding Position -->
-                <div class="grid-cell fielding-section">
-                    <div class="fielding-row">
-                        <div class="fielding-pos">{{ $batter['spot'] }}</div>
-                        <div class="fielding-player">{{ $batter['position'] }}</div>
-                    </div>
-                </div>
-                
-                <!-- Batter Info -->
-                <div class="grid-cell batting-section">
-                    <div class="batting-row">
-                        <div class="batting-number">{{ $batter['spot'] }}</div>
-                        <div class="batting-jersey">{{ $batter['number'] }}</div>
-                        <div class="batting-name">{{ $batter['name'] }}</div>
-                    </div>
-                </div>
-                
-                <!-- Inning Cells for this Batter -->
-                <div class="grid-cell innings-section">
-                    <div style="display: flex;">
-                        @foreach($innings as $inning)
-                        <div class="inning-column">
-                            <div class="inning-cell">
-                                <!-- Diamond for tracking plays -->
-                                <div class="diamond">
-                                    <div class="diamond-inner">
-                                        <!-- TODO: Add play notation here -->
-                                        {{-- This would show result codes, base running, etc. --}}
-                                    </div>
-                                </div>
+            <tbody>
+                <!-- Batter Rows -->
+                @php
+                $groupedBatters = collect($battingOrder)->groupBy('spot');
+                @endphp
+                @foreach($groupedBatters as $spot => $batters)
+                @php $rowspan = count($batters); @endphp
+                @foreach($batters as $index => $batter)
+                @php
+                $stats = new \App\Helpers\StatsHelper($batter['stats']);
+                $stats->derive();
+                @endphp
+                <tr>
+                    <td>{{ $stats->DO }}</td>
+                    <td>&nbsp;</td>
+                    <td>{{ $stats->PO }}</td>
+                    <td>{{ $stats->A }}</td>
+                    <td>{{ $stats->E }}</td>
+                    <td>&nbsp;</td>
+                    <td class="fielding-player">{{ $batter['position'] ?: 'EH' }}</td>
+                    <td class="fielding-pos">{{ $batter['spot'] }}</td>
+
+                    <!-- Batter name and jersey number -->
+                    <td class="batting-name">{{ $batter['name'] }}</td>
+                    <td class="batting-jersey">{{ $batter['number'] }}</td>
+                    @if ($loop->first)
+                    <td class="batting-number" rowspan="{{ $rowspan }}">{{ $spot }}</td>
+                    @endif
+
+                    <!-- Plate appearance cells. -->
+                    @foreach($innings as $inning)
+                    <td class="inning-cell">
+                        <!-- Diamond for tracking plays -->
+                        <div class="diamond">
+                            <div class="diamond-inner">
+                                <!-- TODO: Add play notation here -->
+                                {{-- This would show result codes, base running, etc. --}}
                             </div>
                         </div>
-                        @endforeach
-                    </div>
-                </div>
-                
-                <!-- Stats for this Batter -->
-                <div class="grid-cell stats-section">
-                    <div class="stats-row">
-                        <div class="stat-cell">{{ $batter['stats']['PA'] ?? 0 }}</div>
-                        <div class="stat-cell">{{ $batter['stats']['AB'] ?? 0 }}</div>
-                        <div class="stat-cell">{{ $batter['stats']['R'] ?? 0 }}</div>
-                        <div class="stat-cell">{{ ($batter['stats']['1'] ?? 0) + ($batter['stats']['2'] ?? 0) + ($batter['stats']['3'] ?? 0) + ($batter['stats']['4'] ?? 0) }}</div>
-                        <div class="stat-cell">{{ $batter['stats']['RBI'] ?? 0 }}</div>
-                        <div class="stat-cell">{{ $batter['stats']['BBs'] ?? 0 }}</div>
-                        <div class="stat-cell">{{ $batter['stats']['SO'] ?? 0 }}</div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
+                    </td>
+                    @endforeach
+
+                    <!-- Hitting Stats -->
+                    <td>{{ $stats->PA }}</td>
+                    <td>{{ $stats->AB }}</td>
+                    <td>{{ $stats->R }}</td>
+                    <td>{{ $stats->H }}</td>
+                    <td>{{ $stats->stat('2') }}</td>
+                    <td>{{ $stats->stat('3') }}</td>
+                    <td>{{ $stats->HR }}</td>
+                    <td>{{ $stats->RBI }}</td>
+                    <td>{{ $stats->SAB }}</td>
+                    <td>{{ $stats->SAF }}</td>
+                    <td>{{ $stats->BBs }}</td>
+                    <td>{{ $stats->HPB }}</td>
+                    <td>{{ $stats->CI }}</td>
+                    <td>{{ $stats->SO }}</td>
+                    <td>{{ $stats->GDP }}</td>
+                    <td>{{ $stats->SB }}</td>
+                    <td>{{ $stats->CS }}</td>
+                    <td>{{ $stats->LOB }}</td>
+                </tr>
+                @endforeach
+                @endforeach
+            </tbody>
+        </table>
         
         <!-- Bottom Section -->
         <div class="bottom-section">
-            <!-- Pitchers Section -->
-            <div class="pitchers-section">
-                <div class="section-title">PITCHERS</div>
-                <table class="summary">
-                    <tr>
-                        <td><strong>Name</strong></td>
-                        <td><strong>IP</strong></td>
-                        <td><strong>H</strong></td>
-                        <td><strong>R</strong></td>
-                        <td><strong>ER</strong></td>
-                        <td><strong>BB</strong></td>
-                        <td><strong>K</strong></td>
-                    </tr>
-                    @forelse($pitchers as $pitcher)
-                    <tr>
-                        <td>{{ $pitcher->person->fullName() }}</td>
-                        <td>{{ isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0' }}</td>
-                        <td>{{ $pitcher->stats['HA'] ?? 0 }}</td>
-                        <td>{{ $pitcher->stats['RA'] ?? 0 }}</td>
-                        <td>{{ $pitcher->stats['ER'] ?? 0 }}</td>
-                        <td>{{ $pitcher->stats['BB'] ?? 0 }}</td>
-                        <td>{{ $pitcher->stats['K'] ?? 0 }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #999;">No pitcher data available</td>
-                    </tr>
-                    @endforelse
-                </table>
-                
-                <div style="margin-top: 10px;">
-                    <table class="summary">
-                        <tr>
-                            <td><strong>Winning Pitcher:</strong></td>
-                            <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Losing Pitcher:</strong></td>
-                            <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Save:</strong></td>
-                            <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Totals Section -->
-            <div class="totals-section">
-                <div class="section-title">SCORE</div>
-                <table class="summary">
-                    <tr>
-                        <td><strong>{{ $opponent->short_name }}</strong></td>
-                        <td>{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>{{ $team->short_name }}</strong></td>
-                        <td>{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
-                    </tr>
-                </table>
-                
-                <div style="margin-top: 10px;">
-                    <div class="section-title">SCORER</div>
-                    <table class="summary">
-                        <tr>
-                            <td><strong>Name:</strong></td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            <table>
+                <tr>
+                    <td class="pitchers-section">
+                        <div class="section-title">PITCHERS</div>
+                        <table class="summary">
+                            <tr>
+                                <td><strong>Name</strong></td>
+                                <td><strong>IP</strong></td>
+                                <td><strong>H</strong></td>
+                                <td><strong>K</strong></td>
+                                <td><strong>BB</strong></td>
+                                <td><strong>HBP</strong></td>
+                                <td><strong>RS</strong></td>
+                                <td><strong>ER</strong></td>
+                                <td><strong>WP</strong></td>
+                                <td><strong>BLK</strong></td>
+                                <td><strong>PO</strong></td>
+                                <td><strong>PCS</strong></td>
+                                <td><strong>BFP</strong></td>
+                                <td><strong>B</strong></td>
+                                <td><strong>S</strong></td>
+                                <td><strong>PIT</strong></td>
+                                <td><strong>W/L/S</strong></td>
+                            </tr>
+                            @forelse($pitchers as $pitcher)
+                            @php
+                            $stats = new \App\Helpers\StatsHelper($pitcher->stats);
+                            $stats->derive();
+                            @endphp
+                            <tr>
+                                <td>{{ $pitcher->person->fullName() }}</td>
+                                <td>{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
+                                <td>{{ $stats->HA }}</td>
+                                <td>{{ $stats->K }}</td>
+                                <td>{{ $stats->BB }}</td>
+                                <td>{{ $stats->HBP }}</td>
+                                <td>{{ $stats->RA }}</td>
+                                <td>{{ $stats->ER }}</td>
+                                <td>{{ $stats->WP }}</td>
+                                <td>{{ $stats->BLK }}</td>
+                                <td>{{ $stats->PO }}</td>
+                                <td>{{ $stats->PCS }}</td>
+                                <td>{{ $stats->BFP }}</td>
+                                <td>{{ $stats->Balls }}</td>
+                                <td>{{ $stats->Strikes }}</td>
+                                <td>{{ $stats->Pitches }}</td>
+                                <td>{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="17" style="text-align: center; color: #999;">No pitcher data available</td>
+                            </tr>
+                            @endforelse
+                        </table>
+                        
+                        <div style="margin-top: 10px;">
+                            <table class="summary">
+                                <tr>
+                                    <td><strong>Winning Pitcher:</strong></td>
+                                    <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Losing Pitcher:</strong></td>
+                                    <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Save:</strong></td>
+                                    <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    
+                    <!-- Totals Section -->
+                    <td class="totals-section">
+                        <div class="section-title">SCORE</div>
+                        <table class="summary">
+                            <tr>
+                                <td><strong>{{ $opponent->short_name }}</strong></td>
+                                <td>{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>{{ $team->short_name }}</strong></td>
+                                <td>{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
+                            </tr>
+                        </table>
+                        
+                        <div style="margin-top: 10px;">
+                            <div class="section-title">SCORER</div>
+                            <table class="summary">
+                                <tr>
+                                    <td><strong>Name:</strong></td>
+                                    <td>{{ $game->scorer ? $game->scorer->name : '-' }}</td>
+                            </tr>
+                        </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
         
         <!-- Notation Notes -->
