@@ -97,6 +97,10 @@ class Game extends Model
         return $this->hasMany(Player::class);
     }
 
+    public function scorer() {
+        return $this->belongsTo(User::class, 'scorer_id', 'id');
+    }
+
     public function substitute(int $home, Player $player, ?Player $replacing = null, ?string $fieldPos = null) : void {
         $lineup =& $this->lineup[$home];
         if ($replacing) {
