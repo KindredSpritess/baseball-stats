@@ -84,7 +84,11 @@
             width: 200px;
             background: white;
         }
-        
+
+        tr.hitter-row {
+            height: 45px;
+        }
+
         .game-notes-title {
             text-align: center;
             font-weight: bold;
@@ -106,7 +110,7 @@
         
         .main-grid th, .main-grid td {
             border: 1px solid #000;
-            vertical-align: top;
+            vertical-align: middle;
         }
         
         /* Fielding Section */
@@ -196,11 +200,12 @@
             color: red;
         }
         
-        .batting-name {
+        .main-grid td.batting-name {
             text-align: left;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            padding-left: 10px;
         }
         
         /* Inning Columns */
@@ -216,6 +221,7 @@
             background-color: #f0f0f0;
             font-size: 7pt;
             height: 100%;
+            width: 60px;
         }
         
         .inning-runs {
@@ -227,7 +233,7 @@
         }
         
         .inning-cell {
-            height: 35px;
+            height: 45px;
             border-bottom: 1px solid #000;
             position: relative;
             padding: 0;
@@ -241,18 +247,14 @@
             position: relative;
             border-collapse: collapse;
         }
-        
         .play-quadrant-table {
-            width: 20px;
-            height: 20px;
-            margin: 2px auto 0;
             border-collapse: collapse;
             position: relative;
         }
-        
+
         .play-quadrant {
-            width: 10px;
-            height: 10px;
+            width: 30px;
+            height: 17px;
             border: 0.5px solid #000;
             font-size: 5pt;
             text-align: center;
@@ -260,12 +262,12 @@
         }
         
         .run-circle {
-            width: 8px;
-            height: 8px;
+            width: 13px;
+            height: 13px;
             border: 1px solid #000;
             border-radius: 50%;
             position: absolute;
-            top: 8px;
+            top: 11px;
             left: 50%;
             transform: translateX(-50%);
             background: white;
@@ -275,11 +277,18 @@
             background: #000;
         }
         
-        .pitch-sequence {
-            font-size: 5pt;
-            text-align: center;
-            padding: 1px;
-            margin-top: 1px;
+        .play-quadrant-table td.pitch-sequence {
+            font-size: 6pt;
+            text-align: left;
+            padding-left: 2px;
+            border-right: none;
+        }
+
+        .play-quadrant-table td.pitch-total {
+            font-size: 6pt;
+            text-align: right;
+            padding-right: 1px;
+            border-left: none;
         }
         
         /* Statistics Section */
@@ -417,6 +426,25 @@
         .notation-notes ul {
             margin-left: 15px;
         }
+
+        table th.main-stats-header {
+            width: 16px;
+            font-size: 5pt;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .non-ab-stat {
+            background-color: #f0f0f0;
+        }
+
+        td.batting-number {
+            width: 20px;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 9pt;
+        }
     </style>
 </head>
 <body>
@@ -450,19 +478,13 @@
             <!-- Header Row -->
             <thead>
                 <tr>
-                    <th rowspan="3" colspan="8" class="fielding-section">
-                        <div class="fielding-header">FIELDING</div>
-                    </th>
-                    <th rowspan="1" colspan="2" class="batting-section">
-                        <div class="batting-header">BATTING ORDER</div>
-                    </th>
+                    <th rowspan="3" colspan="8" class="fielding-section fielding-header">FIELDING</th>
+                    <th rowspan="1" colspan="2" class="batting-section batting-header">BATTING ORDER</th>
                     <th>&nbsp;</th>
                     @foreach($innings as $inning)
-                    <th class="inning-column"><div class="inning-header">{{ $inning['number'] }}</div></th>
+                    <th class="inning-column inning-header">{{ $inning['number'] }}</th>
                     @endforeach
-                    <th rowspan="3" colspan="20" class="stats-section">
-                        <div class="stats-header">BATTING</div>
-                    </th>
+                    <th rowspan="3" colspan="20" class="stats-section stats-header">BATTING</th>
                 </tr>
                 <tr>
                     <!-- Batting Order Sub-Header -->
@@ -470,7 +492,7 @@
                         <div style="padding: 4px; text-align: center; font-weight: bold; height: 15px;">TEAM: {{ $team->name }}</div>
                     </th>
                     <!-- Assist row for each inning -->
-                    <th>A</th>
+                    <th class="main-stats-header">A</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
                         <!-- loop over plays within the inning,
@@ -484,7 +506,7 @@
                 </tr>
                 <tr>
                     <!-- Putout row for each inning -->
-                    <th>PO</th>
+                    <th class="main-stats-header">PO</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
                         <!-- loop over plays within the inning,
@@ -497,16 +519,16 @@
                     @endforeach
                 </tr>
                 <tr>
-                    <th>DO</th>
+                    <th class="main-stats-header">DO</th>
                     <th>&nbsp;</th>
-                    <th>PO</th>
-                    <th>A</th>
-                    <th>E</th>
+                    <th class="main-stats-header">PO</th>
+                    <th class="main-stats-header">A</th>
+                    <th class="main-stats-header">E</th>
                     <th>&nbsp;</th>
-                    <th>Pos</th>
-                    <th>Ch</th>
+                    <th class="main-stats-header">Pos</th>
+                    <th class="main-stats-header">Ch</th>
                     <!-- Error row for each inning -->
-                    <th>E</th>
+                    <th class="main-stats-header">E</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
                         <!-- loop over plays within the inning,
@@ -519,48 +541,28 @@
                     @endforeach
 
                     <!-- Hitting Stats Headers -->
-                    <th>PA</th>
-                    <th>AB</th>
-                    <th>R</th>
-                    <th>H</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>HR</th>
-                    <th>RBI</th>
-                    <th>SAB</th>
-                    <th>SAF</th>
-                    <th>BB</th>
-                    <th>HBP</th>
-                    <th>CI</th>
-                    <th>K</th>
-                    <th>GDP</th>
-                    <th>SB</th>
-                    <th>CS</th>
-                    <th>LOB</th>
+                    <th class="main-stats-header">PA</th>
+                    <th class="main-stats-header">AB</th>
+                    <th class="main-stats-header">R</th>
+                    <th class="main-stats-header">H</th>
+                    <th class="main-stats-header">2</th>
+                    <th class="main-stats-header">3</th>
+                    <th class="main-stats-header">HR</th>
+                    <th class="main-stats-header">RBI</th>
+                    <th class="main-stats-header non-ab-stat">SAB</th>
+                    <th class="main-stats-header non-ab-stat">SAF</th>
+                    <th class="main-stats-header non-ab-stat">BB</th>
+                    <th class="main-stats-header non-ab-stat">HBP</th>
+                    <th class="main-stats-header non-ab-stat">CI</th>
+                    <th class="main-stats-header">K</th>
+                    <th class="main-stats-header">GDP</th>
+                    <th class="main-stats-header">SB</th>
+                    <th class="main-stats-header">CS</th>
+                    <th class="main-stats-header">LOB</th>
                 </tr>
             </thead>
             <!-- Totals/Summary Row -->
             <tbody>
-                <tr style="background-color: #f0f0f0;">
-                    <td colspan="8" style="text-align: right; padding: 2px 4px; font-weight: bold;">RUNS</td>
-                    <td colspan="2">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    @foreach($innings as $inning)
-                    <td style="text-align: center; font-weight: bold;">{{ $inning['runs'] }}</td>
-                    @endforeach
-                    <td colspan="18" style="text-align: center; font-weight: bold;">
-                        TOTAL: {{ array_sum(array_column($innings, 'runs')) }}
-                    </td>
-                </tr>
-                <tr style="background-color: #f0f0f0;">
-                    <td colspan="8" style="text-align: right; padding: 2px 4px; font-weight: bold;">LOB</td>
-                    <td colspan="2">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    @foreach($innings as $inning)
-                    <td style="text-align: center;">{{ $inning['lob'] ?? 0 }}</td>
-                    @endforeach
-                    <td colspan="18">&nbsp;</td>
-                </tr>
                 <!-- Batter Rows -->
                 @php
                 $groupedBatters = collect($battingOrder)->groupBy('spot');
@@ -572,7 +574,7 @@
                 $stats = new \App\Helpers\StatsHelper($batter['stats']);
                 $stats->derive();
                 @endphp
-                <tr>
+                <tr class="hitter-row">
                     <td style="text-align: center;">{{ $stats->DO }}</td>
                     <td>&nbsp;</td>
                     <td style="text-align: center;">{{ $stats->PO }}</td>
@@ -603,11 +605,12 @@
                                     <td class="play-quadrant"></td>
                                     <td class="play-quadrant"></td>
                                 </tr>
+                                <tr style="height: 11px;">
+                                    <td class="pitch-sequence">&bull; f c x</td>
+                                    <td class="pitch-total">33</td>
+                                </tr>
                             </table>
                             <div class="run-circle"></div>
-                            <div class="pitch-sequence">
-                                <!-- Pitch sequence and count go here -->
-                            </div>
                         </div>
                     </td>
                     @endforeach
@@ -621,11 +624,11 @@
                     <td style="text-align: center;">{{ $stats->stat('3') }}</td>
                     <td style="text-align: center;">{{ $stats->HR }}</td>
                     <td style="text-align: center;">{{ $stats->RBI }}</td>
-                    <td style="text-align: center;">{{ $stats->SAB }}</td>
-                    <td style="text-align: center;">{{ $stats->SAF }}</td>
-                    <td style="text-align: center;">{{ $stats->BBs }}</td>
-                    <td style="text-align: center;">{{ $stats->HPB }}</td>
-                    <td style="text-align: center;">{{ $stats->CI }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAB }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAF }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->BBs }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->HPB }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->CI }}</td>
                     <td style="text-align: center;">{{ $stats->SO }}</td>
                     <td style="text-align: center;">{{ $stats->GDP }}</td>
                     <td style="text-align: center;">{{ $stats->SB }}</td>
@@ -635,79 +638,53 @@
                 @endforeach
                 @endforeach
             </tbody>
-        </table>
-        
-        <!-- Pitcher Inning-by-Inning Stats -->
-        <table class="pitcher-innings-table">
-            <tr>
-                <td style="width: 80px; border-right: 2px solid #000; padding: 4px; font-weight: bold;">PITCHERS</td>
-                <td style="width: 120px; border-right: 2px solid #000;">&nbsp;</td>
-                <td>&nbsp;</td>
-                @foreach($innings as $inning)
-                <td class="pitcher-inning-cell">{{ $inning['number'] }}</td>
-                @endforeach
-                <td colspan="18" style="border-left: 2px solid #000;">&nbsp;</td>
-            </tr>
-            <tr style="font-size: 6pt;">
-                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">P</td>
-                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">INN</td>
-                <td style="padding: 2px; text-align: center;">H</td>
-                @foreach($innings as $inning)
-                <td class="pitcher-inning-cell">
-                    <!-- Pitcher stats per inning: K, BB, HBP, R, ER, WP, BLK, PO, PCS, BFP, B, S, PIT -->
-                </td>
-                @endforeach
-                <td style="border-left: 2px solid #000; padding: 2px; text-align: center;">K</td>
-                <td style="padding: 2px; text-align: center;">BB</td>
-                <td style="padding: 2px; text-align: center;">HBP</td>
-                <td style="padding: 2px; text-align: center;">R</td>
-                <td style="padding: 2px; text-align: center;">ER</td>
-                <td style="padding: 2px; text-align: center;">WP</td>
-                <td style="padding: 2px; text-align: center;">BLK</td>
-                <td style="padding: 2px; text-align: center;">PO</td>
-                <td style="padding: 2px; text-align: center;">PCS</td>
-                <td style="padding: 2px; text-align: center;">BFP</td>
-                <td style="padding: 2px; text-align: center;">B</td>
-                <td style="padding: 2px; text-align: center;">S</td>
-                <td style="padding: 2px; text-align: center;">PIT</td>
-                <td style="padding: 2px; text-align: center;">W/L/S</td>
-                <td style="padding: 2px; text-align: center;">SKS</td>
-                <td style="padding: 2px; text-align: center;">CI</td>
-                <td style="padding: 2px; text-align: center;">LOB</td>
-            </tr>
-            @foreach($pitchers as $pitcher)
-            @php
-            $stats = new \App\Helpers\StatsHelper($pitcher->stats);
-            $stats->derive();
-            @endphp
-            <tr style="font-size: 6pt;">
-                <td style="border-right: 2px solid #000; padding: 2px;">{{ $pitcher->person->lastName() }}</td>
-                <td style="border-right: 2px solid #000; padding: 2px; text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->HA }}</td>
-                @foreach($innings as $inning)
-                <td class="pitcher-inning-cell">
-                    <!-- Tally marks or numbers for this pitcher's performance in this inning -->
-                </td>
-                @endforeach
-                <td style="border-left: 2px solid #000; padding: 2px; text-align: center;">{{ $stats->K }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->BB }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->HBP }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->RA }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->ER }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->WP }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->BLK }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->PO }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->PCS }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->BFP }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->Balls }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->Strikes }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->Pitches }}</td>
-                <td style="padding: 2px; text-align: center;">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
-                <td style="padding: 2px; text-align: center;">-</td>
-                <td style="padding: 2px; text-align: center;">-</td>
-                <td style="padding: 2px; text-align: center;">-</td>
-            </tr>
-            @endforeach
+            <tbody class="pitcher-innings-section">
+                <tr>
+                    <!-- Put a table for pitchers fielding statistics when the DH is in use. -->
+                    <td colspan="10" rowspan="8">&nbsp;</td>
+                    <td class="main-stats-header">RUNS</td>
+                    @foreach ($innings as $inning)
+                    <td>0 / 0</td>
+                    @endforeach
+                </tr>
+                <tr><td colspan="{{ count($innings) + 1 }}">&nbsp;</td></tr>
+                <tr>
+                    <td class="main-stats-header">Balls</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="main-stats-header">Srikes</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="main-stats-header">Pit</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="main-stats-header">BFP</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="main-stats-header">HITS</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+                <tr>
+                    <td class="main-stats-header">LOB</td>
+                    @foreach ($innings as $inning)
+                    <td>0</td>
+                    @endforeach
+                </tr>
+            </tbody>
         </table>
         
         <!-- Bottom Section -->
@@ -743,7 +720,7 @@
                             $stats->derive();
                             @endphp
                             <tr>
-                                <td>{{ $pitcher->person->fullName() }}</td>
+                                <td>{{ $pitcher->person->lastName }}, {{ $pitcher->person->firstName }}</td>
                                 <td style="text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
                                 <td style="text-align: center;">{{ $stats->HA }}</td>
                                 <td style="text-align: center;">{{ $stats->K }}</td>
@@ -778,7 +755,6 @@
                                     <td><strong>PB</strong></td>
                                     <td><strong>SB</strong></td>
                                     <td><strong>CS</strong></td>
-                                    <td><strong>SCS</strong></td>
                                 </tr>
                                 @php
                                 $catchers = collect($battingOrder)->filter(function($batter) {
@@ -797,7 +773,6 @@
                                     <td style="text-align: center;">{{ $stats->PB }}</td>
                                     <td style="text-align: center;">{{ $stats->CSB }}</td>
                                     <td style="text-align: center;">{{ $stats->CCS }}</td>
-                                    <td style="text-align: center;">-</td>
                                 </tr>
                                 @empty
                                 <tr>

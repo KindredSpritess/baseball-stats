@@ -123,7 +123,7 @@ class ExportScorebookCommand extends Command
                         $battingOrder[] = [
                             'spot' => $spotIndex + 1,
                             'number' => $player->number ?? '',
-                            'name' => $player->person->fullName(),
+                            'name' => "{$player->person->lastName}, {$player->person->firstName}",
                             'position' => $this->getPlayerPosition($player, $defense),
                             'player_id' => $player->id,
                             'stats' => $player->stats ?? [],
