@@ -202,6 +202,10 @@ class ExportScorebookCommand extends Command
 
         $state = new GameState();
         $state->get($game, 'state', '{}', []);
+        
+        $inningEndSpot = []; // Track which spot ended each inning
+        $lastInning = 0;
+        
         foreach ($plays as $play) {
             // Skip comments and announcements.
             if ($play->play[0] === '!' || $play->play[0] === '#') {
@@ -214,6 +218,7 @@ class ExportScorebookCommand extends Command
 
             $inning = $game->inning;
             $atbat = $game->atBat[$teamIndex] + 1;
+            $outsBeforePlay = $game->outs;
 
             $runners = [];
             // We need to work out which spots are on base for this play.
@@ -233,13 +238,44 @@ class ExportScorebookCommand extends Command
                 continue;
             }
 
+            // Track inning changes
+            if ($inning !== $lastInning && $lastInning > 0) {
+                $inningEndSpot[$lastInning] = $atbat - 1;
+            }
+            $lastInning = $inning;
+
             $data[$atbat] ??= [];
-            $data[$atbat][$inning] ??= ['pitches' => ''];
+            $data[$atbat][$inning] ??= ['pitches' => '', 'out_number' => null, 'run_earned' => null, 'inning_end' => false, 'inning_start' => false];
 
             $parts = explode(',', $play->play);
 
             $data[$atbat][$inning]['pitches'] .= $parts[0];
             $data[$atbat][$inning]['pitch-total'] = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
+
+            // Check if this play resulted in an out for the batter
+            $outsAfterPlay = $game->outs;
+            if ($outsAfterPlay > $outsBeforePlay && isset($parts[1])) {
+                // Batter was retired
+                $data[$atbat][$inning]['out_number'] = $outsAfterPlay;
+            }
+
+            // Check if this play resulted in a run being scored
+            // We need to check runners scoring in the play
+            $runnerAdvances = array_slice($parts, 2); // Skip pitches and batter result
+            foreach ($runnerAdvances as $idx => $advance) {
+                $runnerSpot = $runners[$idx] ?? null;
+                if ($runnerSpot && str_contains($advance, 'H')) {
+                    // Runner scored
+                    // For now, assume earned run unless marked otherwise
+                    // TODO: Implement earned run logic based on game rules
+                    $earned = !str_contains($advance, '(UR)');
+                    if ($runnerSpot === $atbat && isset($data[$atbat][$inning])) {
+                        $data[$atbat][$inning]['run_earned'] = $earned;
+                    } elseif (isset($data[$runnerSpot][$inning])) {
+                        $data[$runnerSpot][$inning]['run_earned'] = $earned;
+                    }
+                }
+            }
 
             if ($parts[1] ?? null) {
                 $data[$atbat][$inning][0] = $this->extractPlayResult($parts[1], $atbat);
@@ -252,6 +288,20 @@ class ExportScorebookCommand extends Command
             }
             if ($parts[4] ?? null) {
                 $data[$runners[2]][$inning][3] = $this->extractPlayResult($parts[4], $atbat);
+            }
+        }
+        
+        // Mark inning end spots
+        if ($lastInning > 0) {
+            $inningEndSpot[$lastInning] = $atbat;
+        }
+        foreach ($inningEndSpot as $inning => $spot) {
+            if (isset($data[$spot][$inning])) {
+                $data[$spot][$inning]['inning_end'] = true;
+                // Mark next inning start for this batter
+                if (isset($data[$spot][$inning + 1])) {
+                    $data[$spot][$inning + 1]['inning_start'] = true;
+                }
             }
         }
 

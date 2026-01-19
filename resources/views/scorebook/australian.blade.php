@@ -271,6 +271,11 @@
             left: 50%;
             transform: translateX(-50%);
             background: white;
+            font-size: 7pt;
+            font-weight: bold;
+            color: #ff6600;
+            line-height: 13px;
+            text-align: center;
         }
 
         .play-quadrant.play-blue {
@@ -280,7 +285,34 @@
         }
 
         .run-circle.earned {
-            background: #000;
+            background: #00cc00;
+        }
+        
+        .run-circle.unearned {
+            background: #ff0000;
+        }
+        
+        .inning-cell.inning-end {
+            position: relative;
+        }
+        
+        .inning-cell.inning-end::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+            border-left: 2px solid #ff6600;
+            transform: skewY(-45deg);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+        
+        .inning-cell.inning-start {
+            border-top: 3px solid #ff6600;
         }
         
         .play-quadrant-table td.pitch-sequence {
@@ -577,7 +609,7 @@
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters as $index => $batter)
                 @php
-                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats))->derive();
+                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
                 @endphp
                 <tr class="hitter-row">
                     <td style="text-align: center;">{{ $stats->DO }}</td>
@@ -603,8 +635,16 @@
                     $lastPitch = strtoupper(substr($play['pitches'] ?? '', -1));
                     $lastPitch = $lastPitch === 'S' ? '2' : $lastPitch;
                     $bigK = ($play[0][0] ?? '') === 'K2';
+                    $outNumber = $play['out_number'] ?? null;
+                    $runEarned = $play['run_earned'] ?? null;
+                    $inningEnd = $play['inning_end'] ?? false;
+                    $inningStart = $play['inning_start'] ?? false;
                     @endphp
-                    <td class="inning-cell">
+                    <td @class([
+                        'inning-cell',
+                        'inning-end' => $inningEnd,
+                        'inning-start' => $inningStart,
+                    ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
                             <table class="play-quadrant-table">
@@ -625,7 +665,11 @@
                                     <td class="pitch-total">{{ $play['pitch-total'] ?? '' }}</td>
                                 </tr>
                             </table>
-                            <div class="run-circle"></div>
+                            <div @class([
+                                'run-circle',
+                                'earned' => $runEarned === true,
+                                'unearned' => $runEarned === false,
+                            ])>{{ $outNumber ?? '' }}</div>
                         </div>
                     </td>
                     @endforeach
@@ -778,7 +822,7 @@
                                 @endphp
                                 @forelse($catchers as $catcher)
                                 @php
-                                $stats = (new \App\Helpers\StatsHelper($catcher['player']->stats))->derive();
+                                $stats = (new \App\Helpers\StatsHelper($catcher['player']->stats ?? []))->derive();
                                 $do2 = $stats->stat('DO.2');
                                 @endphp
                                 <tr>
