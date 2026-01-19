@@ -203,7 +203,6 @@ class ExportScorebookCommand extends Command
         $state = new GameState();
         $state->get($game, 'state', '{}', []);
         
-        $inningEndSpot = []; // Track which spot ended each inning
         $lastInning = 0;
         
         foreach ($plays as $play) {
@@ -238,12 +237,6 @@ class ExportScorebookCommand extends Command
                 continue;
             }
 
-            // Track inning changes
-            if ($inning !== $lastInning && $lastInning > 0) {
-                $inningEndSpot[$lastInning] = $atbat - 1;
-            }
-            $lastInning = $inning;
-
             $data[$atbat] ??= [];
             $data[$atbat][$inning] ??= ['pitches' => '', 'out_number' => null, 'run_earned' => null, 'inning_end' => false, 'inning_start' => false];
 
@@ -254,25 +247,42 @@ class ExportScorebookCommand extends Command
 
             // Check if this play resulted in an out for the batter
             $outsAfterPlay = $game->outs;
-            if ($outsAfterPlay > $outsBeforePlay && isset($parts[1])) {
-                // Batter was retired
+            // Handle inning change (outs reset to 0)
+            if ($outsAfterPlay < $outsBeforePlay) {
+                // Inning changed, the batter made the 3rd out
+                if (isset($parts[1])) {
+                    $data[$atbat][$inning]['out_number'] = 3;
+                    $data[$atbat][$inning]['inning_end'] = true;
+                    // Mark next inning start for this batter
+                    $data[$atbat][$inning + 1] ??= ['pitches' => '', 'out_number' => null, 'run_earned' => null, 'inning_end' => false, 'inning_start' => true];
+                    $data[$atbat][$inning + 1]['inning_start'] = true;
+                }
+            } elseif ($outsAfterPlay > $outsBeforePlay && isset($parts[1])) {
+                // Batter was retired in the same inning
                 $data[$atbat][$inning]['out_number'] = $outsAfterPlay;
             }
 
             // Check if this play resulted in a run being scored
-            // We need to check runners scoring in the play
-            $runnerAdvances = array_slice($parts, 2); // Skip pitches and batter result
-            foreach ($runnerAdvances as $idx => $advance) {
-                $runnerSpot = $runners[$idx] ?? null;
-                if ($runnerSpot && str_contains($advance, 'H')) {
-                    // Runner scored
-                    // For now, assume earned run unless marked otherwise
-                    // TODO: Implement earned run logic based on game rules
-                    $earned = !str_contains($advance, '(UR)');
-                    if ($runnerSpot === $atbat && isset($data[$atbat][$inning])) {
-                        $data[$atbat][$inning]['run_earned'] = $earned;
-                    } elseif (isset($data[$runnerSpot][$inning])) {
-                        $data[$runnerSpot][$inning]['run_earned'] = $earned;
+            // Parse the play parts for scoring runners
+            $parts = explode(',', $play->play);
+            
+            // Check batter scoring
+            if (isset($parts[1]) && preg_match('/H(\(UR\))?/', $parts[1], $matches)) {
+                $earned = !isset($matches[1]); // No (UR) marker means earned
+                $data[$atbat][$inning]['run_earned'] = $earned;
+            }
+            
+            // Check runners scoring
+            for ($i = 2; $i <= 4; $i++) {
+                if (isset($parts[$i])) {
+                    $advance = $parts[$i];
+                    $runnerSpot = $runners[$i - 2] ?? null;
+                    
+                    if ($runnerSpot && preg_match('/H(\(UR\))?/', $advance, $matches)) {
+                        $earned = !isset($matches[1]); // No (UR) marker means earned
+                        if (isset($data[$runnerSpot][$inning])) {
+                            $data[$runnerSpot][$inning]['run_earned'] = $earned;
+                        }
                     }
                 }
             }
@@ -288,20 +298,6 @@ class ExportScorebookCommand extends Command
             }
             if ($parts[4] ?? null) {
                 $data[$runners[2]][$inning][3] = $this->extractPlayResult($parts[4], $atbat);
-            }
-        }
-        
-        // Mark inning end spots
-        if ($lastInning > 0) {
-            $inningEndSpot[$lastInning] = $atbat;
-        }
-        foreach ($inningEndSpot as $inning => $spot) {
-            if (isset($data[$spot][$inning])) {
-                $data[$spot][$inning]['inning_end'] = true;
-                // Mark next inning start for this batter
-                if (isset($data[$spot][$inning + 1])) {
-                    $data[$spot][$inning + 1]['inning_start'] = true;
-                }
             }
         }
 

@@ -292,27 +292,30 @@
             background: #ff0000;
         }
         
-        .inning-cell.inning-end {
-            position: relative;
-        }
-        
-        .inning-cell.inning-end::after {
-            content: '';
+        .diagonal-line {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border-top: 2px solid transparent;
-            border-bottom: 2px solid transparent;
-            border-left: 2px solid #ff6600;
-            transform: skewY(-45deg);
-            transform-origin: top left;
             pointer-events: none;
+            z-index: 10;
+        }
+        
+        .diagonal-line::after {
+            content: '';
+            position: absolute;
+            width: 141%; /* sqrt(2) * 100% to cover diagonal */
+            height: 3px;
+            background-color: #ff6600;
+            top: 50%;
+            left: -20%;
+            transform: rotate(-45deg);
+            transform-origin: center;
         }
         
         .inning-cell.inning-start {
-            border-top: 3px solid #ff6600;
+            border-top: 3px solid #ff6600 !important;
         }
         
         .play-quadrant-table td.pitch-sequence {
@@ -647,6 +650,9 @@
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
+                            @if($inningEnd)
+                            <div class="diagonal-line"></div>
+                            @endif
                             <table class="play-quadrant-table">
                                 <tr>
                                     @if ($bigK)
