@@ -272,7 +272,13 @@
             transform: translateX(-50%);
             background: white;
         }
-        
+
+        .play-quadrant.play-blue {
+            color: blue;
+            background-color: skyblue;
+            font-weight: bold;
+        }
+
         .run-circle.earned {
             background: #000;
         }
@@ -571,8 +577,7 @@
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters as $index => $batter)
                 @php
-                $stats = new \App\Helpers\StatsHelper($batter['stats']);
-                $stats->derive();
+                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats))->derive();
                 @endphp
                 <tr class="hitter-row">
                     <td style="text-align: center;">{{ $stats->DO }}</td>
@@ -593,21 +598,31 @@
 
                     <!-- Plate appearance cells. -->
                     @foreach($innings as $inning)
+                    @php
+                    $play = ($batterInningData[$batter['spot']] ?? [])[$inning['number']] ?? [];
+                    $lastPitch = strtoupper(substr($play['pitches'] ?? '', -1));
+                    $lastPitch = $lastPitch === 'S' ? '2' : $lastPitch;
+                    $bigK = ($play[0][0] ?? '') === 'K2';
+                    @endphp
                     <td class="inning-cell">
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
                             <table class="play-quadrant-table">
                                 <tr>
-                                    <td class="play-quadrant"></td>
-                                    <td class="play-quadrant"></td>
+                                    @if ($bigK)
+                                    <td class="play-quadrant play-blue" rowspan="2">K</td>
+                                    @else
+                                    <x-score-quadrant :play="$play[2] ?? null" />
+                                    @endif
+                                    <x-score-quadrant :play="$play[1] ?? null" />
                                 </tr>
                                 <tr>
-                                    <td class="play-quadrant"></td>
-                                    <td class="play-quadrant"></td>
+                                    @unless($bigK)<x-score-quadrant :play="$play[3] ?? null" />@endunless
+                                    <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play[0] ?? null" />
                                 </tr>
                                 <tr style="height: 11px;">
-                                    <td class="pitch-sequence">&bull; f c x</td>
-                                    <td class="pitch-total">33</td>
+                                    <td class="pitch-sequence">{{ $play['pitches'] ?? '' }}</td>
+                                    <td class="pitch-total">{{ $play['pitch-total'] ?? '' }}</td>
                                 </tr>
                             </table>
                             <div class="run-circle"></div>
@@ -644,7 +659,7 @@
                     <td colspan="10" rowspan="8">&nbsp;</td>
                     <td class="main-stats-header">RUNS</td>
                     @foreach ($innings as $inning)
-                    <td>0 / 0</td>
+                    <td>{{ $inning['runs'] }} / {{ $inning['runs_total'] }}</td>
                     @endforeach
                 </tr>
                 <tr><td colspan="{{ count($innings) + 1 }}">&nbsp;</td></tr>
@@ -681,7 +696,7 @@
                 <tr>
                     <td class="main-stats-header">LOB</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>{{ $inning['lob'] }}</td>
                     @endforeach
                 </tr>
             </tbody>
@@ -730,7 +745,7 @@
                                 <td style="text-align: center;">{{ $stats->ER }}</td>
                                 <td style="text-align: center;">{{ $stats->WP }}</td>
                                 <td style="text-align: center;">{{ $stats->BLK }}</td>
-                                <td style="text-align: center;">{{ $stats->PO }}</td>
+                                <td style="text-align: center;">{{ $stats->POs }}</td>
                                 <td style="text-align: center;">{{ $stats->PCS }}</td>
                                 <td style="text-align: center;">{{ $stats->BFP }}</td>
                                 <td style="text-align: center;">{{ $stats->Balls }}</td>
@@ -763,8 +778,7 @@
                                 @endphp
                                 @forelse($catchers as $catcher)
                                 @php
-                                $stats = new \App\Helpers\StatsHelper($catcher['stats']);
-                                $stats->derive();
+                                $stats = (new \App\Helpers\StatsHelper($catcher['player']->stats))->derive();
                                 $do2 = $stats->stat('DO.2');
                                 @endphp
                                 <tr>
@@ -798,10 +812,12 @@
                         </table>
                         
                         <!-- Pitchers of Record -->
+                        @if($game->ended)
                         <div style="margin-top: 10px;">
+                            <div class="section-title">PITCHERS OF RECORD</div>
                             <table class="summary">
                                 <tr>
-                                    <td style="width: 50%;"><strong>PITCHER WIN:</strong></td>
+                                    <td style="width: 50%;"><strong>WIN:</strong></td>
                                     <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
                                 </tr>
                                 <tr>
@@ -814,6 +830,7 @@
                                 </tr>
                             </table>
                         </div>
+                        @endif
                         
                         <!-- Scorer Section -->
                         <div style="margin-top: 10px;">

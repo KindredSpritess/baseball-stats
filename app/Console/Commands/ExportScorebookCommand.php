@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Casts\GameState;
+use App\Helpers\StatsHelper;
 use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Console\Command;
@@ -108,12 +110,6 @@ class ExportScorebookCommand extends Command
         $linescore = $game->linescore ?? [[], []];
         $pitchers = $game->pitchers[$teamIndex] ?? [];
 
-        // Get players for this team
-        $teamPlayers = $game->players()
-            ->where('team_id', $team->id)
-            ->with('person')
-            ->get();
-
         // Build batting order with players
         $battingOrder = [];
         foreach ($lineup as $spotIndex => $playersInSpot) {
@@ -125,32 +121,28 @@ class ExportScorebookCommand extends Command
                             'number' => $player->number ?? '',
                             'name' => "{$player->person->lastName}, {$player->person->firstName}",
                             'position' => $this->getPlayerPosition($player, $defense),
-                            'player_id' => $player->id,
-                            'stats' => $player->stats ?? [],
+                            'player' => $player,
                         ];
-                        break; // Only take the first player in each spot for now
                     }
                 }
             }
         }
 
         // Get plays for this team's at-bats
-        $plays = $game->plays()
-            ->where('plate_appearance', true)
-            ->whereNotNull('inning')
-            ->where('inning_half', $teamIndex)
-            ->orderBy('inning')
-            ->orderBy('id')
-            ->get();
+        $plays = $game->plays;
 
         // Build inning data
         $innings = [];
-        $maxInnings = max(12, count($linescore[$teamIndex] ?? []));
+        $maxInnings = count($linescore[$teamIndex] ?? []);
+        $runs = 0;
         for ($i = 1; $i <= $maxInnings; $i++) {
+            $runs += $linescore[$teamIndex][$i - 1] ?? 0;
             $innings[] = [
                 'number' => $i,
                 'runs' => $linescore[$teamIndex][$i - 1] ?? 0,
+                'runs_total' => $runs,
                 'lob' => 0, // TODO: Calculate LOB per inning from plays
+                'width' => 1, // This will increase if the team bats around.
             ];
         }
 
@@ -197,52 +189,97 @@ class ExportScorebookCommand extends Command
 
     /**
      * Extract play data for each batter in each inning
+     * 
+     * @var Play[] $plays
+     * 
+     * @return array Format: [batter_spot][inning][quadrant] = play_info
      */
     private function extractBatterInningData(Game $game, int $teamIndex, $plays, array $battingOrder): array
     {
         // This will contain the actual play data for each batter in each inning
-        // Format: [batter_spot][inning] = play_info
+        // Format: [batter_spot][inning][quadrant] = play_info
         $data = [];
 
-        // Group plays by the batting position at the time
-        $atBatPosition = $game->atBat[$teamIndex] ?? 0;
-        
+        $state = new GameState();
+        $state->get($game, 'state', '{}', []);
         foreach ($plays as $play) {
-            $inning = $play->inning;
-            
-            // Determine which batter spot this play corresponds to
-            // This is a simplified approach - actual implementation would need
-            // to track the at-bat index through the game progression
-            
-            // For now, we'll attempt to match based on play order
-            // A more complete implementation would track batting order progression
-            
-            $data[$inning][] = [
-                'play' => $play->play,
-                'human' => $play->human,
-                'result' => $this->extractPlayResult($play->play),
-            ];
+            // Skip comments and announcements.
+            if ($play->play[0] === '!' || $play->play[0] === '#') {
+                continue;
+            }
+
+            // Strip off batted ball, as it's unused.
+            $playText = preg_replace('/,\d+(\.\d+)?:\d+(.\d+)?$/', '', $play->play);
+            $play->play = $playText;
+
+            $inning = $game->inning;
+            $atbat = $game->atBat[$teamIndex] + 1;
+
+            $runners = [];
+            // We need to work out which spots are on base for this play.
+            foreach ($game->bases as $baseIndex => $runner) {
+                if (!$runner) continue;
+                foreach ($game->lineup[$teamIndex] as $spot => $players) {
+                    if (end($players)?->id === $runner->id) {
+                        $runners[$baseIndex] = $spot + 1;
+                        break;
+                    }
+                }
+            }
+
+            $play->apply($game);
+
+            if ($play->command || $play->inning_half !== $teamIndex) {
+                continue;
+            }
+
+            $data[$atbat] ??= [];
+            $data[$atbat][$inning] ??= ['pitches' => ''];
+
+            $parts = explode(',', $play->play);
+
+            $data[$atbat][$inning]['pitches'] .= $parts[0];
+            $data[$atbat][$inning]['pitch-total'] = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
+
+            if ($parts[1] ?? null) {
+                $data[$atbat][$inning][0] = $this->extractPlayResult($parts[1], $atbat);
+            }
+            if ($parts[2] ?? null) {
+                $data[$runners[0]][$inning][1] = $this->extractPlayResult($parts[2], $atbat);
+            }
+            if ($parts[3] ?? null) {
+                $data[$runners[1]][$inning][2] = $this->extractPlayResult($parts[3], $atbat);
+            }
+            if ($parts[4] ?? null) {
+                $data[$runners[2]][$inning][3] = $this->extractPlayResult($parts[4], $atbat);
+            }
         }
-        
+
         return $data;
     }
 
     /**
      * Extract a simplified play result for scorebook notation
      */
-    private function extractPlayResult(string $playText): string
+    private function extractPlayResult(string $playText, int $atbat): array
     {
         // Parse play text to extract key result
         // This is a simplified version - full implementation would parse all play notation
-        
-        if (str_contains($playText, 'K')) {
-            return 'K'; // Strikeout
+
+        if ($playText === 'K2') {
+            return ['K2', 'blue']; // Strikeout
         } elseif (str_contains($playText, 'BB')) {
-            return 'BB'; // Walk
+            return ['BB', 'blue']; // Walk
         } elseif (str_contains($playText, 'IBB')) {
-            return 'IBB'; // Intentional walk
+            return ['IBB', 'blue']; // Intentional walk
         } elseif (str_contains($playText, 'HBP')) {
-            return 'HBP'; // Hit by pitch
+            return ['HBP', 'blue']; // Hit by pitch
+        } elseif (preg_match('/^F?[FLP]\d$/', $playText, $matches)) {
+            // Fly out, line out, pop out
+            return [$playText, 'black'];
+        } elseif (preg_match('/^[BG]\d$/', $playText, $matches)) {
+            // Unassisted ground out
+            return ["UA$playText", 'black'];
         } elseif (preg_match('/([FLPGBfgplb])([@!#\$])/', $playText, $matches)) {
             // Hit: F=fly, L=line, P=pop, G=ground, B=bunt
             // @=double, !=single, #=triple, $=home run
@@ -254,12 +291,20 @@ class ExportScorebookCommand extends Command
                 '$' => 'HR',
                 default => 'H',
             };
-            return $bases;
+            return [$bases, 'green'];
         } elseif (preg_match('/([0-9\-]+)/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
-            return $matches[1];
+            return [$matches[1], 'black'];
+        } elseif ($playText === 'SB') {
+            return ["SB$atbat", 'black']; // Stolen base
+        } elseif (in_array($playText, ['WP', '(WP)'])) {
+            return ["WP$atbat", 'blue'];
+        } elseif (in_array($playText, ['PB', '(PB)'])) {
+            return ["PB$atbat", 'red'];
+        } elseif (in_array($playText, ['!', '@', '#', '$'])) {
+            return [$atbat, 'black']; // Advanced on hitter.
         }
         
-        return '?'; // Unknown
+        return [$playText, 'black']; // Unknown
     }
 }
