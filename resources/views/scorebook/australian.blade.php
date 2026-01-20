@@ -10,18 +10,18 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             font-size: 8pt;
             padding: 10px;
         }
-        
+
         .scorebook {
             width: 100%;
             border: 2px solid #000;
         }
-        
+
         /* Header Section */
         .header {
             display: table;
@@ -29,51 +29,51 @@
             border-bottom: 2px solid #000;
             background-color: #fff;
         }
-        
+
         .header-row {
             display: table-row;
         }
-        
+
         .header-cell {
             display: table-cell;
             padding: 4px;
             border-right: 1px solid #000;
             font-size: 10pt;
         }
-        
+
         .header-cell:last-child {
             border-right: none;
         }
-        
+
         .team-names {
             width: 100%;
             border-bottom: 2px solid #000;
             font-size: 12pt;
             font-weight: bold;
         }
-        
+
         .team-names table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .team-names td {
             padding: 8px;
             text-align: center;
         }
-        
+
         .team-names td:first-child {
             text-align: left;
         }
-        
+
         .team-names td:last-child {
             text-align: right;
         }
-        
+
         .team-home {
             text-decoration: underline;
         }
-        
+
         /* Game Notes Section */
         .game-notes {
             position: absolute;
@@ -96,29 +96,29 @@
             padding: 2px;
             margin-bottom: 5px;
         }
-        
+
         .game-notes-content {
             min-height: 60px;
             font-size: 7pt;
         }
-        
+
         /* Main Grid */
         .main-grid {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .main-grid th, .main-grid td {
             border: 1px solid #000;
             vertical-align: middle;
         }
-        
+
         /* Fielding Section */
         .fielding-section {
             width: 80px;
             border-right: 2px solid #000 !important;
         }
-        
+
         .fielding-header {
             padding: 4px;
             text-align: center;
@@ -126,41 +126,41 @@
             border-bottom: 1px solid #000;
             background-color: #f0f0f0;
         }
-        
+
         .fielding-row {
             width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
         }
-        
+
         .fielding-row table {
             width: 100%;
             border-collapse: collapse;
             height: 100%;
         }
-        
+
         .fielding-row td {
             border: none;
             padding: 2px;
             font-size: 7pt;
         }
-        
+
         .fielding-pos {
             width: 20px;
             border-right: 1px solid #000;
             text-align: center;
         }
-        
+
         .fielding-player {
             text-align: left;
         }
-        
+
         /* Batting Order Section */
         .batting-section {
             width: 120px;
             border-right: 2px solid #000 !important;
         }
-        
+
         .batting-header {
             padding: 4px;
             text-align: center;
@@ -168,38 +168,38 @@
             border-bottom: 1px solid #000;
             background-color: #f0f0f0;
         }
-        
+
         .batting-row {
             width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
         }
-        
+
         .batting-row table {
             width: 100%;
             border-collapse: collapse;
             height: 100%;
         }
-        
+
         .batting-row td {
             border: none;
             padding: 2px;
             font-size: 7pt;
         }
-        
+
         .batting-number {
             width: 15px;
             border-right: 1px solid #000;
             text-align: center;
         }
-        
+
         .batting-jersey {
             width: 20px;
             border-right: 1px solid #000;
             text-align: center;
             color: red;
         }
-        
+
         .main-grid td.batting-name {
             text-align: left;
             overflow: hidden;
@@ -207,12 +207,12 @@
             white-space: nowrap;
             padding-left: 10px;
         }
-        
+
         /* Inning Columns */
         .inning-column {
             width: 30px;
         }
-        
+
         .inning-header {
             text-align: center;
             padding: 2px;
@@ -223,7 +223,7 @@
             height: 100%;
             width: 60px;
         }
-        
+
         .inning-runs {
             text-align: center;
             padding: 2px;
@@ -231,7 +231,7 @@
             font-size: 7pt;
             height: 15px;
         }
-        
+
         .inning-cell {
             height: 45px;
             border-bottom: 1px solid #000;
@@ -239,7 +239,7 @@
             padding: 0;
             text-align: center;
         }
-        
+
         /* Play cell with 4 rectangles and circle */
         .play-cell {
             width: 100%;
@@ -250,6 +250,7 @@
         .play-quadrant-table {
             border-collapse: collapse;
             position: relative;
+            height: 100%;
         }
 
         .play-quadrant {
@@ -260,7 +261,7 @@
             text-align: center;
             vertical-align: middle;
         }
-        
+
         .run-circle {
             width: 13px;
             height: 13px;
@@ -287,11 +288,11 @@
         .run-circle.earned {
             background: #00cc00;
         }
-        
+
         .run-circle.unearned {
             background: #ff0000;
         }
-        
+
         .diagonal-line {
             position: absolute;
             top: 0;
@@ -301,23 +302,23 @@
             pointer-events: none;
             z-index: 10;
         }
-        
+
         .diagonal-line::after {
             content: '';
             position: absolute;
-            width: 141%; /* sqrt(2) * 100% to cover diagonal */
+            width: calc(hypot(60px, 48px));
             height: 3px;
             background-color: #ff6600;
-            top: 50%;
-            left: -20%;
-            transform: rotate(-45deg);
-            transform-origin: center;
+            bottom: -3px;
+            left: -1px;
+            transform: rotate(calc(atan(-48 / 58)));
+            transform-origin: top left;
         }
-        
+
         .inning-cell.inning-start {
             border-top: 3px solid #ff6600 !important;
         }
-        
+
         .play-quadrant-table td.pitch-sequence {
             font-size: 6pt;
             text-align: left;
@@ -331,12 +332,12 @@
             padding-right: 1px;
             border-left: none;
         }
-        
+
         /* Statistics Section */
         .stats-section {
             width: 150px;
         }
-        
+
         .stats-header {
             padding: 4px;
             text-align: center;
@@ -344,20 +345,20 @@
             border-bottom: 1px solid #000;
             background-color: #f0f0f0;
         }
-        
+
         .stats-row {
             width: 100%;
             height: 35px;
             border-bottom: 1px solid #000;
             font-size: 6pt;
         }
-        
+
         .stats-row table {
             width: 100%;
             border-collapse: collapse;
             height: 100%;
         }
-        
+
         .stats-row td {
             border: none;
             border-right: 1px solid #000;
@@ -365,17 +366,17 @@
             padding: 2px;
             width: 5.5%; /* Uniform width for each stat column */
         }
-        
+
         .stats-row td:last-child {
             border-right: none;
         }
-        
+
         /* Fielding stats columns */
         .main-grid td {
             text-align: center;
             font-size: 7pt;
         }
-        
+
         /* Bottom sections */
         .pitcher-innings-table {
             width: 100%;
@@ -383,73 +384,73 @@
             border-top: 2px solid #000;
             font-size: 7pt;
         }
-        
+
         .pitcher-innings-table td {
             border: 1px solid #000;
             padding: 2px;
             vertical-align: middle;
         }
-        
+
         .pitcher-inning-cell {
             width: 30px;
             text-align: center;
         }
-        
+
         .bottom-section {
             width: 100%;
             border-top: 2px solid #000;
         }
-        
+
         .bottom-section table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .bottom-section td {
             vertical-align: top;
             padding: 5px;
         }
-        
+
         .pitchers-section {
             border-right: 2px solid #000;
         }
-        
+
         .totals-section {
             width: 300px;
         }
-        
+
         .section-title {
             font-weight: bold;
             border-bottom: 1px solid #000;
             padding: 2px;
             margin-bottom: 4px;
         }
-        
+
         table.summary {
             width: 100%;
             border-collapse: collapse;
             font-size: 7pt;
         }
-        
+
         table.summary td {
             border: 1px solid #000;
             padding: 2px 4px;
         }
-        
+
         /* Venue information */
         .venue-info {
             padding: 4px 8px;
             border-bottom: 1px solid #000;
             font-size: 9pt;
         }
-        
+
         /* Print optimizations */
         @media print {
             body {
                 padding: 0;
             }
         }
-        
+
         /* Notes section for unclear notations */
         .notation-notes {
             margin-top: 10px;
@@ -458,12 +459,12 @@
             background-color: #fffef0;
             font-size: 7pt;
         }
-        
+
         .notation-notes h4 {
             font-size: 8pt;
             margin-bottom: 3px;
         }
-        
+
         .notation-notes ul {
             margin-left: 15px;
         }
@@ -504,7 +505,7 @@
                 </tr>
             </table>
         </div>
-        
+
         <!-- Venue Information -->
         <div class="venue-info">
             <strong>VENUE:</strong> {{ $venue }} &nbsp;&nbsp;
@@ -513,7 +514,7 @@
             <strong>FINISH:</strong> {{ $timeFinish }} &nbsp;&nbsp;
             <strong>TOTAL:</strong> {{ $totalTime }}
         </div>
-        
+
         <!-- Main Grid -->
         <table class="main-grid">
             <!-- Header Row -->
@@ -751,7 +752,7 @@
                 </tr>
             </tbody>
         </table>
-        
+
         <!-- Bottom Section -->
         <div class="bottom-section">
             <table>
@@ -809,7 +810,7 @@
                             </tr>
                             @endforelse
                         </table>
-                        
+
                         <!-- Catchers Section -->
                         <div style="margin-top: 10px;">
                             <div class="section-title">CATCHERS</div>
@@ -846,7 +847,7 @@
                             </table>
                         </div>
                     </td>
-                    
+
                     <!-- Right Column: Score and Scorer -->
                     <td style="width: 40%; vertical-align: top;">
                         <div class="section-title">SCORE</div>
@@ -860,7 +861,7 @@
                                 <td style="text-align: center;">{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
                             </tr>
                         </table>
-                        
+
                         <!-- Pitchers of Record -->
                         @if($game->ended)
                         <div style="margin-top: 10px;">
@@ -881,7 +882,7 @@
                             </table>
                         </div>
                         @endif
-                        
+
                         <!-- Scorer Section -->
                         <div style="margin-top: 10px;">
                             <div class="section-title">SCORER</div>
@@ -895,7 +896,7 @@
                 </tr>
             </table>
         </div>
-        
+
         <!-- Notation Notes -->
         <div class="notation-notes">
             <h4>⚠ Notation Implementation Notes:</h4>
