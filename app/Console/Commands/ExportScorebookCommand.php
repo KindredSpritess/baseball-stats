@@ -202,9 +202,7 @@ class ExportScorebookCommand extends Command
 
         $state = new GameState();
         $state->get($game, 'state', '{}', []);
-        
-        $lastInning = 0;
-        
+
         foreach ($plays as $play) {
             // Skip comments and announcements.
             if ($play->play[0] === '!' || $play->play[0] === '#') {
@@ -233,12 +231,39 @@ class ExportScorebookCommand extends Command
 
             $play->apply($game);
 
+            if ($play->inning_half === $teamIndex && ($game->inning !== $inning || $game->half !== $teamIndex)) {
+                // Inning changed, reset at-bat count for new inning
+                $data[$game->atBat[$teamIndex]+1] ??= [];
+                $data[$game->atBat[$teamIndex]+1][$inning] ??= [
+                    'pitches' => '',
+                    'out_number' => null,
+                    'run_earned' => null,
+                    'inning_end' => false,
+                    'inning_start' => false,
+                ];
+                $data[$game->atBat[$teamIndex]+1][$inning]['inning_end'] = true;
+                $data[$game->atBat[$teamIndex]+1][$inning + 1] ??= [
+                    'pitches' => '',
+                    'out_number' => null,
+                    'run_earned' => null,
+                    'inning_end' => false,
+                    'inning_start' => false,
+                ];
+                $data[$game->atBat[$teamIndex]+1][$inning + 1]['inning_start'] = true;
+            }
+
             if ($play->command || $play->inning_half !== $teamIndex) {
                 continue;
             }
 
             $data[$atbat] ??= [];
-            $data[$atbat][$inning] ??= ['pitches' => '', 'out_number' => null, 'run_earned' => null, 'inning_end' => false, 'inning_start' => false];
+            $data[$atbat][$inning] ??= [
+                'pitches' => '',
+                'out_number' => null,
+                'run_earned' => null,
+                'inning_end' => false,
+                'inning_start' => false,
+            ];
 
             $parts = explode(',', $play->play);
 
@@ -252,10 +277,6 @@ class ExportScorebookCommand extends Command
                 // Inning changed, the batter made the 3rd out
                 if (isset($parts[1])) {
                     $data[$atbat][$inning]['out_number'] = 3;
-                    $data[$atbat][$inning]['inning_end'] = true;
-                    // Mark next inning start for this batter
-                    $data[$atbat][$inning + 1] ??= ['pitches' => '', 'out_number' => null, 'run_earned' => null, 'inning_end' => false, 'inning_start' => true];
-                    $data[$atbat][$inning + 1]['inning_start'] = true;
                 }
             } elseif ($outsAfterPlay > $outsBeforePlay && isset($parts[1])) {
                 // Batter was retired in the same inning
