@@ -25,6 +25,19 @@ class ExportScorebookCommand extends Command
      */
     protected $description = 'Export an Australian style scorebook PDF for a game';
 
+    const BASES = [
+        '!' => 1,
+        '@' => 2,
+        '#' => 3,
+        '$' => 4,
+    ];
+    const CURVES = [
+        0 => '╯',
+        1 => '╮',
+        2 => '╭',
+        3 => '╰',
+    ];
+
     /**
      * Execute the console command.
      */
@@ -116,15 +129,26 @@ class ExportScorebookCommand extends Command
             if (!empty($playersInSpot)) {
                 foreach ($playersInSpot as $player) {
                     if ($player) {
-                        $battingOrder[] = [
+                        $battingOrder[$player->id] = [
                             'spot' => $spotIndex + 1,
                             'number' => $player->number ?? '',
                             'name' => "{$player->person->lastName}, {$player->person->firstName}",
-                            'position' => $this->getPlayerPosition($player, $defense),
                             'player' => $player,
+                            'positions' => [],
                         ];
                     }
                 }
+            }
+        }
+        foreach ($pitchers as $pitcher) {
+            if (!isset($battingOrder[$pitcher->id])) {
+                $battingOrder[$pitcher->id] = [
+                    'spot' => 'P',
+                    'number' => $pitcher->number ?? '',
+                    'name' => "{$pitcher->person->lastName}, {$pitcher->person->firstName}",
+                    'player' => $pitcher,
+                    'positions' => [],
+                ];
             }
         }
 
@@ -143,11 +167,13 @@ class ExportScorebookCommand extends Command
                 'runs_total' => $runs,
                 'lob' => 0, // TODO: Calculate LOB per inning from plays
                 'width' => 1, // This will increase if the team bats around.
+                'fielding' => [],
+                'pitching' => [],
             ];
         }
 
         // Extract play-by-play data for each batter in each inning
-        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $battingOrder);
+        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $innings, $battingOrder);
 
         // Get pitchers of record
         $pitchersOfRecord = $game->pitchersOfRecord ?? [
@@ -187,6 +213,14 @@ class ExportScorebookCommand extends Command
         return '';
     }
 
+    private static function progTotal(array $cur, array $next, string $stat): string
+    {
+        if ($cur[$stat]) {
+            return ($next[$stat] - $cur[$stat]) . " / " . $next[$stat];
+        }
+        return "{$next[$stat]}";
+    }
+
     /**
      * Extract play data for each batter in each inning
      * 
@@ -194,7 +228,7 @@ class ExportScorebookCommand extends Command
      * 
      * @return array Format: [batter_spot][inning][quadrant] = play_info
      */
-    private function extractBatterInningData(Game $game, int $teamIndex, $plays, array $battingOrder): array
+    private function extractBatterInningData(Game $game, int $teamIndex, $plays, array &$inningsData, array &$battingOrder): array
     {
         // This will contain the actual play data for each batter in each inning
         // Format: [batter_spot][inning][quadrant] = play_info
@@ -202,6 +236,17 @@ class ExportScorebookCommand extends Command
 
         $state = new GameState();
         $state->get($game, 'state', '{}', []);
+
+        $team = $teamIndex === 0 ? $game->away_team : $game->home_team;
+
+        $totals = [
+            'b' => 0,
+            's' => 0,
+            'p' => 0,
+            'bfp' => 0,
+            'h' => 0,
+            'lob' => 0,
+        ];
 
         foreach ($plays as $play) {
             // Skip comments and announcements.
@@ -215,9 +260,14 @@ class ExportScorebookCommand extends Command
 
             $inning = $game->inning;
             $atbat = $game->atBat[$teamIndex] + 1;
-            $outsBeforePlay = $game->outs;
+            $outs = $game->outs;
 
             $runners = [];
+            try {
+                $pitcher = $game->pitching();
+            } catch (\Exception $e) {
+                $pitcher = null;
+            }
             // We need to work out which spots are on base for this play.
             foreach ($game->bases as $baseIndex => $runner) {
                 if (!$runner) continue;
@@ -228,8 +278,16 @@ class ExportScorebookCommand extends Command
                     }
                 }
             }
+            $runnerMeta = [];
+            foreach ($game->runners as $k => $runner) {
+                $runnerMeta[$k] = &$game->runners[$k];
+            }
 
             $play->apply($game);
+
+            if (str_starts_with($play->play, 'Game Over')) {
+                continue;
+            }
 
             if ($play->inning_half === $teamIndex && ($game->inning !== $inning || $game->half !== $teamIndex)) {
                 // Inning changed, reset at-bat count for new inning
@@ -250,6 +308,96 @@ class ExportScorebookCommand extends Command
                     'inning_start' => false,
                 ];
                 $data[$game->atBat[$teamIndex]+1][$inning + 1]['inning_start'] = true;
+                $nextTotals = [
+                    'b' => $pitcher?->stats['Balls'] ?? 0,
+                    's' => $pitcher?->stats['Strikes'] ?? 0,
+                    'p' => $pitcher?->stats['Pitch'] ?? 0,
+                    'bfp' => $pitcher?->stats['BFP'] ?? 0,
+                    'h' => $pitcher?->stats['HA'] ?? 0,
+                    'lob' => $game->lob + $totals['lob'],
+                ];
+                $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
+                $inningsData[$inning - 1]['pitching'][] = [
+                    'pitcher' => $pitcher,
+                    'b' => self::progTotal($totals, $nextTotals, 'b'),
+                    's' => self::progTotal($totals, $nextTotals, 's'),
+                    'p' => self::progTotal($totals, $nextTotals, 'p'),
+                    'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
+                    'h' => self::progTotal($totals, $nextTotals, 'h'),
+                    ];
+                $inningsData[$inning - 1]['lob'] = self::progTotal($totals, $nextTotals, 'lob');
+                $totals = $nextTotals;
+            }
+
+            // Handle the case of players being added to the lineup.
+            if ($play->command) {
+                switch (true) {
+                    case str_starts_with($play->play, "@{$team->short_name} "):
+                        // Player added to lineup
+                        // Extract player position from play text after last ': '
+                        $position = trim(substr($play->play, strrpos($play->play, ': ') + 1));
+                        if ($position === '1') {
+                            $player = end($game->pitchers[$teamIndex]);
+                        } else {
+                            $spot = end($game->lineup[$teamIndex]);
+                            $player = end($spot);
+                        }
+                        $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position];
+                        break;
+                    case str_starts_with($play->play, "DC #"):
+                        // Player moved.
+                        $matches = [];
+                        preg_match('/DC #(\d+) -> (.+)/', $play->play, $matches);
+                        if ($game->half === $teamIndex) {
+                            if ($matches[2] === '1') {
+                                $inningsData[$inning - 1]['fielding'][] = ['PC' => true];
+                                $data[$atbat] ??= [];
+                                $data[$atbat][$inning] ??= [
+                                    'pitches' => '',
+                                    'out_number' => null,
+                                    'run_earned' => null,
+                                    'inning_end' => false,
+                                    'inning_start' => false,
+                                    'pitcher-change' => false,
+                                ];
+                                $data[$atbat][$inning]['pitcher-change'] = true;
+
+                                $pitchers = $game->pitchers[($teamIndex + 1) % 2];
+                                $pitcher = $pitchers[count($pitchers) - 2];
+                                $nextTotals = [
+                                    'b' => $pitcher?->stats['Balls'] ?? 0,
+                                    's' => $pitcher?->stats['Strikes'] ?? 0,
+                                    'p' => $pitcher?->stats['Pitch'] ?? 0,
+                                    'bfp' => $pitcher?->stats['BFP'] ?? 0,
+                                    'h' => $pitcher?->stats['HA'] ?? 0,
+                                ];
+                                $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
+                                $inningsData[$inning - 1]['pitching'][] = [
+                                    'pitcher' => $pitcher,
+                                    'b' => self::progTotal($totals, $nextTotals, 'b'),
+                                    's' => self::progTotal($totals, $nextTotals, 's'),
+                                    'p' => self::progTotal($totals, $nextTotals, 'p'),
+                                    'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
+                                    'h' => self::progTotal($totals, $nextTotals, 'h'),
+                                ];
+                                $totals = [
+                                    'b' => 0,
+                                    's' => 0,
+                                    'p' => 0,
+                                    'bfp' => 0,
+                                    'h' => 0,
+                                    'lob' => $totals['lob'],
+                                ];
+
+                            } else if (!array_intersect_key(['PC' => true, 'DC' => true], end($inningsData[$inning - 1]['fielding']) ?: [])) {
+                                $inningsData[$inning - 1]['fielding'][] = ['DC' => true];
+                            }
+                        } else {
+                            $player = end($game->lineup[$teamIndex][intval($matches[1]) - 1]);
+                            array_unshift($battingOrder[$player->id]['positions'], [$game->inning, $game->outs, $matches[2]]);
+                        }
+                        break;
+                }
             }
 
             if ($play->command || $play->inning_half !== $teamIndex) {
@@ -263,6 +411,7 @@ class ExportScorebookCommand extends Command
                 'run_earned' => null,
                 'inning_end' => false,
                 'inning_start' => false,
+                'pitcher-change' => false,
             ];
 
             $parts = explode(',', $play->play);
@@ -270,59 +419,60 @@ class ExportScorebookCommand extends Command
             $data[$atbat][$inning]['pitches'] .= $parts[0];
             $data[$atbat][$inning]['pitch-total'] = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
 
-            // Check if this play resulted in an out for the batter
-            $outsAfterPlay = $game->outs;
-            // Handle inning change (outs reset to 0)
-            if ($outsAfterPlay < $outsBeforePlay) {
-                // Inning changed, the batter made the 3rd out
-                if (isset($parts[1])) {
-                    $data[$atbat][$inning]['out_number'] = 3;
-                }
-            } elseif ($outsAfterPlay > $outsBeforePlay && isset($parts[1])) {
-                // Batter was retired in the same inning
-                $data[$atbat][$inning]['out_number'] = $outsAfterPlay;
-            }
-
-            // Check if this play resulted in a run being scored
-            // Parse the play parts for scoring runners
-            $parts = explode(',', $play->play);
-            
-            // Check batter scoring
-            if (isset($parts[1]) && preg_match('/H(\(UR\))?/', $parts[1], $matches)) {
-                $earned = !isset($matches[1]); // No (UR) marker means earned
-                $data[$atbat][$inning]['run_earned'] = $earned;
-            }
-            
-            // Check runners scoring
-            for ($i = 2; $i <= 4; $i++) {
-                if (isset($parts[$i])) {
-                    $advance = $parts[$i];
-                    $runnerSpot = $runners[$i - 2] ?? null;
-                    
-                    if ($runnerSpot && preg_match('/H(\(UR\))?/', $advance, $matches)) {
-                        $earned = !isset($matches[1]); // No (UR) marker means earned
-                        if (isset($data[$runnerSpot][$inning])) {
-                            $data[$runnerSpot][$inning]['run_earned'] = $earned;
+            for ($i = 1; $i <= 4; $i++) {
+                if ($parts[$i] ?? null) {
+                    $b = $i - 1;
+                    $plays = explode('/', $parts[$i]);
+                    $spot = $i === 1 ? $atbat : ($runners[$i - 2] ?? null);
+                    foreach ($plays as $playSegment) {
+                        $playResult = $this->extractPlayResult($playSegment, $atbat);
+                        [$note, $colour, $bases] = $playResult;
+                        if (count($playResult) > 3) {
+                            $inningsData[$inning - 1]['fielding'][] = $playResult[3];
+                        }
+                        if ($bases < 0) {
+                            $data[$spot][$inning]['out_number'] = ++$outs;
+                            $data[$spot][$inning][$b++] = [$note, $colour];
+                        } else {
+                            while ($bases--) {
+                                if ($bases) {
+                                    $data[$spot][$inning][$b++] = [self::CURVES[$b-1], $colour];
+                                } else {
+                                    $data[$spot][$inning][$b++] = [$note, $colour];
+                                }
+                            }
+                            if ($b === 4) {
+                                // Run scored.
+                                $data[$spot][$inning]['run_earned'] = false;
+                            }
                         }
                     }
                 }
             }
-
-            if ($parts[1] ?? null) {
-                $data[$atbat][$inning][0] = $this->extractPlayResult($parts[1], $atbat);
-            }
-            if ($parts[2] ?? null) {
-                $data[$runners[0]][$inning][1] = $this->extractPlayResult($parts[2], $atbat);
-            }
-            if ($parts[3] ?? null) {
-                $data[$runners[1]][$inning][2] = $this->extractPlayResult($parts[3], $atbat);
-            }
-            if ($parts[4] ?? null) {
-                $data[$runners[2]][$inning][3] = $this->extractPlayResult($parts[4], $atbat);
-            }
+            $this->correctEarnedRuns($game, $teamIndex, $data, $inning, $runnerMeta);
         }
 
         return $data;
+    }
+
+    private function correctEarnedRuns(Game $game, int $teamIndex, array &$data, int $inning, array $runnerMeta)
+    {
+        // Go through each batter's data for the inning
+        foreach ($data as $spot => &$inningData) {
+            if (!isset($inningData[$inning])) {
+                continue;
+            }
+            $batterInning = &$inningData[$inning];
+            if ($batterInning['run_earned'] === false) {
+                // Check if the run was actually earned
+                $atbat = $spot;
+                $runnerKey = end($game->lineup[$teamIndex][$atbat - 1])->id ?? null;
+                $meta = $runnerMeta[$runnerKey] ?? [];
+                if ($meta && $meta['earned'] >= 4 && $meta['expectedOuts'] < 3) {
+                    $batterInning['run_earned'] = true;
+                }
+            }
+        }
     }
 
     /**
@@ -334,44 +484,55 @@ class ExportScorebookCommand extends Command
         // This is a simplified version - full implementation would parse all play notation
 
         if ($playText === 'K2') {
-            return ['K2', 'blue']; // Strikeout
+            return ['K2', 'blue', -1, ['PO' => 2]]; // Strikeout
+        } elseif ($playText === 'KBTS') {
+            return ['KBTS', 'blue', -1, ['PO' => 2]]; // Strikeout
+        } elseif ($playText === 'KPB') {
+            return ['<span style="color:blue;">K</span><span style="color:red">PB</span>', 'black', 1];
+        } elseif ($playText === 'KWP') {
+            return ['KWP', 'blue-text', 1];
         } elseif (str_contains($playText, 'BB')) {
-            return ['BB', 'blue']; // Walk
+            return ['BB', 'blue', 1]; // Walk
         } elseif (str_contains($playText, 'IBB')) {
-            return ['IBB', 'blue']; // Intentional walk
+            return ['IBB', 'blue', 1]; // Intentional walk
         } elseif (str_contains($playText, 'HBP')) {
-            return ['HBP', 'blue']; // Hit by pitch
-        } elseif (preg_match('/^F?[FLP]\d$/', $playText, $matches)) {
+            return ['HBP', 'blue', 1]; // Hit by pitch
+        } elseif (preg_match('/^F?[FLP](\d)$/', $playText, $matches)) {
             // Fly out, line out, pop out
-            return [$playText, 'black'];
-        } elseif (preg_match('/^[BG]\d$/', $playText, $matches)) {
+            return [$playText, 'black', -1, ['PO' => $matches[1]]];
+        } elseif (preg_match('/^[BG](\d)$/', $playText, $matches)) {
             // Unassisted ground out
-            return ["UA$playText", 'black'];
-        } elseif (preg_match('/([FLPGBfgplb])([@!#\$])/', $playText, $matches)) {
+            return ["UA$playText", 'black', -1, ['PO' => $matches[1]]];
+        } elseif (preg_match('/^[FLPGB]?([!@#$]?)(((\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
+            // Error play
+            return [$matches[2], 'red', self::BASES[$matches[1]] ?? 1, ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
+        } elseif (preg_match('/^[FLPGB]?(CS|PO)?(((\d-)*)(\d))$/', $playText, $matches)) {
+            // Fielding play (e.g., 6-3, 4-3, etc.)
+            return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];
+        } elseif ($playText === 'SB') {
+            return ["SB$atbat", 'black', 1]; // Stolen base
+        } elseif (in_array($playText, ['WP', '(WP)'])) {
+            return ["WP$atbat", 'blue-text', 1]; // Wild pitch
+        } elseif (in_array($playText, ['PB', '(PB)'])) {
+            return ["PB$atbat", 'red-text', 1];
+        } elseif (in_array($playText, ['!', '@', '#', '$'])) {
+            return [$atbat, 'black', self::BASES[$playText] ?? 1]; // Advanced on hitter.
+        } elseif (preg_match('/^(F?[FLPGB])([@!#\$]?)$/', $playText, $matches)) {
             // Hit: F=fly, L=line, P=pop, G=ground, B=bunt
             // @=double, !=single, #=triple, $=home run
-            $hitType = $matches[1];
-            $bases = match($matches[2]) {
-                '!' => '1B',
-                '@' => '2B',
-                '#' => '3B',
-                '$' => 'HR',
-                default => 'H',
+            $symbol = match($matches[2]) {
+                '!' => '-',
+                '@' => '=',
+                '#' => '≡',
+                '$' => '≣',
+                default => '-',
             };
-            return [$bases, 'green'];
-        } elseif (preg_match('/([0-9\-]+)/', $playText, $matches)) {
-            // Fielding play (e.g., 6-3, 4-3, etc.)
-            return [$matches[1], 'black'];
-        } elseif ($playText === 'SB') {
-            return ["SB$atbat", 'black']; // Stolen base
-        } elseif (in_array($playText, ['WP', '(WP)'])) {
-            return ["WP$atbat", 'blue'];
-        } elseif (in_array($playText, ['PB', '(PB)'])) {
-            return ["PB$atbat", 'red'];
-        } elseif (in_array($playText, ['!', '@', '#', '$'])) {
-            return [$atbat, 'black']; // Advanced on hitter.
+            return [$symbol, 'green', self::BASES[$matches[2]] ?? 1];
+        } elseif (preg_match('/^[FLGPB]?([!@#$]?)FC$/', $playText, $matches)) {
+            // Fielder's choice
+            return ['FC', 'black', self::BASES[$matches[1]] ?? 1];
         }
-        
-        return [$playText, 'black']; // Unknown
+
+        return [$playText, 'black', 1]; // Unknown
     }
 }

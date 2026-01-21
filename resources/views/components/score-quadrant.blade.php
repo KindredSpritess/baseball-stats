@@ -1,4 +1,4 @@
 <td @class([
     'play-quadrant',
     "play-$colour",
-])>{{ $play }}</td>
+])>{!! $play !!}</td>

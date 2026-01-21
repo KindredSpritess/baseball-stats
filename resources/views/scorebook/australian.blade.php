@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
     <title>Australian Scorebook - Game {{ $game->id }}</title>
     <style>
         * {
@@ -39,6 +42,12 @@
             padding: 4px;
             border-right: 1px solid #000;
             font-size: 10pt;
+        }
+
+        .abel-regular {
+            font-family: "Abel", sans-serif;
+            font-weight: 400;
+            font-style: normal;
         }
 
         .header-cell:last-child {
@@ -86,7 +95,7 @@
         }
 
         tr.hitter-row {
-            height: 45px;
+            height: 56px;
         }
 
         .game-notes-title {
@@ -268,7 +277,7 @@
             border: 1px solid #000;
             border-radius: 50%;
             position: absolute;
-            top: 11px;
+            top: 14px;
             left: 50%;
             transform: translateX(-50%);
             background: white;
@@ -281,12 +290,28 @@
 
         .play-quadrant.play-blue {
             color: blue;
-            background-color: skyblue;
+            background-color: rgb(155, 226, 255);
+            font-weight: bold;
+        }
+
+        .play-quadrant.play-blue-text {
+            color: blue;
+        }
+
+        .play-quadrant.play-green {
+            color: green;
+            background-color: #ccffcc;
+            font-weight: bold;
+        }
+
+        .play-quadrant.play-red {
+            color: red;
+            background-color: #ffcccc;
             font-weight: bold;
         }
 
         .run-circle.earned {
-            background: #00cc00;
+            background: #88ff88;
         }
 
         .run-circle.unearned {
@@ -308,15 +333,24 @@
             position: absolute;
             width: calc(hypot(60px, 48px));
             height: 3px;
-            background-color: #ff6600;
+            background-color: #ffaa00;
             bottom: -3px;
             left: -1px;
             transform: rotate(calc(atan(-48 / 58)));
             transform-origin: top left;
         }
 
+        .inning-fielding {
+            text-align: left;
+            font-family: monospace;
+        }
+
         .inning-cell.inning-start {
-            border-top: 3px solid #ff6600 !important;
+            border-top: 3px solid #ffaa00 !important;
+        }
+
+        .inning-cell.pitcher-change {
+            border-top: 3px solid blue !important;
         }
 
         .play-quadrant-table td.pitch-sequence {
@@ -487,6 +521,31 @@
             vertical-align: middle;
             font-size: 9pt;
         }
+
+        .inning-fielding table.fielding-stats-row td {
+            font-size: 6pt;
+            border: none;
+            line-height: normal;
+        }
+
+        .inning-fielding {
+            position: relative;
+            border-collapse: collapse;
+        }
+
+        .inning-fielding > div {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-collapse: collapse;
+        }
+
+        .inning-fielding table.fielding-stats-row {
+            position: relative;
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -537,12 +596,23 @@
                     <th class="main-stats-header">A</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
-                        <!-- loop over plays within the inning,
-                            * if it has a assist write the number,
-                            * if it has a putout or error leave a space
-                            * other wise leave blank
-                        -->
-                        &nbsp;
+                        <div>
+                            <table class="fielding-stats-row"><tr>
+                                <td>
+                                    @foreach ($inning['fielding'] as $fielding)
+                                        @if ($fielding['A'] ?? false)
+                                            {{ $fielding['A'] }}
+                                        @elseif (isset($fielding['PC']))
+                                            </td><td style="border-left: 2px solid blue;">
+                                        @elseif (isset($fielding['DC']))
+                                            </td><td style="border-left: 2px solid orange;">
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr></table>
+                        </div>
                     </td>
                     @endforeach
                 </tr>
@@ -551,12 +621,26 @@
                     <th class="main-stats-header">PO</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
-                        <!-- loop over plays within the inning,
-                            * if it has a putout write the number,
-                            * if it has a assist or error leave a space
-                            * other wise leave blank
-                        -->
-                        &nbsp;
+                        <div>
+                            <table class="fielding-stats-row"><tr>
+                                <td>
+                                    @foreach ($inning['fielding'] as $fielding)
+                                        @for($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++)
+                                            &nbsp;
+                                        @endfor
+                                        @if (isset($fielding['PO']))
+                                            {{ $fielding['PO'] }}
+                                        @elseif (isset($fielding['PC']))
+                                            </td><td style="border-left: 2px solid blue;">
+                                        @elseif (isset($fielding['DC']))
+                                            </td><td style="border-left: 2px solid orange;">
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr></table>
+                        </div>
                     </td>
                     @endforeach
                 </tr>
@@ -573,12 +657,26 @@
                     <th class="main-stats-header">E</th>
                     @foreach($innings as $inning)
                     <td class="inning-fielding">
-                        <!-- loop over plays within the inning,
-                            * if it has a error write the number,
-                            * if it has a assist or putout leave a space
-                            * other wise leave blank
-                        -->
-                        &nbsp;
+                        <div>
+                            <table class="fielding-stats-row"><tr>
+                                <td>
+                                    @foreach ($inning['fielding'] as $fielding)
+                                        @for($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++)
+                                            &nbsp;
+                                        @endfor
+                                        @if (isset($fielding['E']))
+                                            <span style="color:red">{{ $fielding['E'] }}</span>
+                                        @elseif (isset($fielding['PC']))
+                                            </td><td style="border-left: 2px solid blue;">
+                                        @elseif (isset($fielding['DC']))
+                                            </td><td style="border-left: 2px solid orange;">
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr></table>
+                        </div>
                     </td>
                     @endforeach
 
@@ -622,8 +720,24 @@
                     <td style="text-align: center;">{{ $stats->A }}</td>
                     <td style="text-align: center;">{{ $stats->E }}</td>
                     <td>&nbsp;</td>
-                    <td class="fielding-player">{{ $batter['position'] ?: 'EH' }}</td>
-                    <td class="fielding-pos">{{ $batter['spot'] }}</td>
+                    <td class="fielding-player">
+                        @foreach ($batter['positions'] as $position)
+                            @if ($loop->first)
+                                {{ $position[2] }}<br/>
+                            @else
+                                <span style="text-decoration:line-through">{{ $position[2] }}</span><br/>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td class="fielding-pos">
+                        @foreach ($batter['positions'] as $position)
+                            @if (!$loop->last)
+                                {{ $position[0] }}@if($position[1]).{{ $position[1] }}@endif<br/>
+                            @else
+                                &nbsp;<br/>
+                            @endif
+                        @endforeach
+                    </td>
 
                     <!-- Batter name and jersey number -->
                     <td class="batting-name">{{ $batter['name'] }}</td>
@@ -648,6 +762,7 @@
                         'inning-cell',
                         'inning-end' => $inningEnd,
                         'inning-start' => $inningStart,
+                        'pitcher-change' => $play['pitcher-change'] ?? false,
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
@@ -657,7 +772,7 @@
                             <table class="play-quadrant-table">
                                 <tr>
                                     @if ($bigK)
-                                    <td class="play-quadrant play-blue" rowspan="2">K</td>
+                                    <td class="play-quadrant play-blue abel-regular" rowspan="2" style="font-size: 24pt;">K</td>
                                     @else
                                     <x-score-quadrant :play="$play[2] ?? null" />
                                     @endif
@@ -717,31 +832,51 @@
                 <tr>
                     <td class="main-stats-header">Balls</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>
+                        @foreach ($inning['pitching'] as $p)
+                        {{  $p['b'] ?? 0 }}
+                        @endforeach
+                    </td>
                     @endforeach
                 </tr>
                 <tr>
-                    <td class="main-stats-header">Srikes</td>
+                    <td class="main-stats-header">Strikes</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>
+                        @foreach ($inning['pitching'] as $p)
+                        {{  $p['s'] ?? 0 }}
+                        @endforeach
+                    </td>
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">Pit</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>
+                        @foreach ($inning['pitching'] as $p)
+                        {{  $p['p'] ?? 0 }}
+                        @endforeach
+                    </td>
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">BFP</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>
+                        @foreach ($inning['pitching'] as $p)
+                        {{  $p['bfp'] ?? 0 }}
+                        @endforeach
+                    </td>
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">HITS</td>
                     @foreach ($innings as $inning)
-                    <td>0</td>
+                    <td>
+                        @foreach ($inning['pitching'] as $p)
+                        {{  $p['h'] ?? 0 }}
+                        @endforeach
+                    </td>
                     @endforeach
                 </tr>
                 <tr>
@@ -824,7 +959,7 @@
                                 </tr>
                                 @php
                                 $catchers = collect($battingOrder)->filter(function($batter) {
-                                    return $batter['position'] == '2';
+                                    return !empty(array_filter($batter['positions'], fn($pos) => $pos[2] == '2'));
                                 });
                                 @endphp
                                 @forelse($catchers as $catcher)
@@ -895,21 +1030,6 @@
                     </td>
                 </tr>
             </table>
-        </div>
-
-        <!-- Notation Notes -->
-        <div class="notation-notes">
-            <h4>⚠ Notation Implementation Notes:</h4>
-            <ul>
-                <li><strong>Diamond notation:</strong> The diamond in each cell should show the result of the at-bat using standard baseball scoring notation (K for strikeout, 6-3 for groundout, 1B/2B/3B/HR for hits, BB for walk, etc.)</li>
-                <li><strong>Base paths:</strong> Lines should be drawn on the diamond to show base running (1st to 2nd, advancement to 3rd, scoring)</li>
-                <li><strong>Run tracking:</strong> Numbers should be used instead of tally marks for counting runs, hits, errors, etc.</li>
-                <li><strong>Pitcher changes:</strong> Should be noted in fielding column when they occur</li>
-                <li><strong>Substitutions:</strong> New players entering the game should be shown in the lineup</li>
-                <li><strong>Play details:</strong> Additional notation space around the diamond for fielding details, errors, stolen bases</li>
-                <li><strong>Count information:</strong> Ball-strike count could be shown in smaller text near the diamond</li>
-                <li><strong>Scoring symbols:</strong> Filled vs unfilled diamonds or other markers to indicate runs scored</li>
-            </ul>
         </div>
     </div>
 </body>
