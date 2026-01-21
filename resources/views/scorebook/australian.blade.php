@@ -14,15 +14,22 @@
             box-sizing: border-box;
         }
 
+        @page {
+            size: A3 landscape;
+            margin: 10mm;
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 8pt;
-            padding: 10px;
+            padding: 0;
+            margin: 0;
         }
 
         .scorebook {
             width: 100%;
             border: 2px solid #000;
+            page-break-inside: avoid;
         }
 
         /* Header Section */
@@ -97,6 +104,16 @@
         tr.hitter-row {
             height: 56px;
         }
+        
+        /* Ensure consistent heights for fielding header rows */
+        .main-grid thead tr {
+            height: auto;
+        }
+        
+        .main-grid thead tr th.main-stats-header {
+            height: 18px;
+            line-height: 18px;
+        }
 
         .game-notes-title {
             text-align: center;
@@ -115,11 +132,21 @@
         .main-grid {
             width: 100%;
             border-collapse: collapse;
+            page-break-inside: avoid;
         }
 
         .main-grid th, .main-grid td {
             border: 1px solid #000;
             vertical-align: middle;
+        }
+        
+        /* Narrow spacing columns */
+        .main-grid td.spacing-col,
+        .main-grid th.spacing-col {
+            width: 8px;
+            min-width: 8px;
+            max-width: 8px;
+            padding: 0;
         }
 
         /* Fielding Section */
@@ -214,7 +241,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            padding-left: 10px;
+            padding-left: 5px;
+            max-width: 80px;
+            font-size: 7pt;
         }
 
         /* Inning Columns */
@@ -463,12 +492,29 @@
         table.summary {
             width: 100%;
             border-collapse: collapse;
-            font-size: 7pt;
+            font-size: 6pt;
+            table-layout: fixed;
         }
 
         table.summary td {
             border: 1px solid #000;
-            padding: 2px 4px;
+            padding: 1px 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        table.summary td strong {
+            font-size: 5pt;
+        }
+        
+        /* Pitcher stats table - narrow columns */
+        .section-title + table.summary td:not(:first-child) {
+            width: 25px;
+            text-align: center;
+        }
+        
+        .section-title + table.summary td:first-child {
+            width: auto;
         }
 
         /* Venue information */
@@ -483,6 +529,29 @@
             body {
                 padding: 0;
             }
+            
+            .scorebook {
+                page-break-inside: avoid;
+            }
+            
+            .main-grid {
+                page-break-inside: avoid;
+            }
+            
+            .main-grid tbody {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* PDF-specific optimizations */
+        .scorebook {
+            max-width: 100%;
+        }
+        
+        /* Prevent page breaks */
+        .main-grid, .main-grid tbody, .main-grid tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         /* Notes section for unclear notations */
@@ -646,11 +715,11 @@
                 </tr>
                 <tr>
                     <th class="main-stats-header">DO</th>
-                    <th>&nbsp;</th>
+                    <th class="spacing-col">&nbsp;</th>
                     <th class="main-stats-header">PO</th>
                     <th class="main-stats-header">A</th>
                     <th class="main-stats-header">E</th>
-                    <th>&nbsp;</th>
+                    <th class="spacing-col">&nbsp;</th>
                     <th class="main-stats-header">Pos</th>
                     <th class="main-stats-header">Ch</th>
                     <!-- Error row for each inning -->
@@ -715,11 +784,11 @@
                 @endphp
                 <tr class="hitter-row">
                     <td style="text-align: center;">{{ $stats->DO }}</td>
-                    <td>&nbsp;</td>
+                    <td class="spacing-col">&nbsp;</td>
                     <td style="text-align: center;">{{ $stats->PO }}</td>
                     <td style="text-align: center;">{{ $stats->A }}</td>
                     <td style="text-align: center;">{{ $stats->E }}</td>
-                    <td>&nbsp;</td>
+                    <td class="spacing-col">&nbsp;</td>
                     <td class="fielding-player">
                         @foreach ($batter['positions'] as $position)
                             @if ($loop->first)
