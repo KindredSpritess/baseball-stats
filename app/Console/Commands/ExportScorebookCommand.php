@@ -497,9 +497,17 @@ class ExportScorebookCommand extends Command
             return ['IBB', 'blue', 1]; // Intentional walk
         } elseif (str_contains($playText, 'HBP')) {
             return ['HBP', 'blue', 1]; // Hit by pitch
+        } elseif (preg_match('/^SAF(E?)(\d)$/', $playText, $matches)) {
+            // Sac fly
+            $error = boolval($matches[1]);
+            return ['<span style="color:blue;">S</span>' . ($error ? "<span style=\"color:red\">MF{$matches[2]}</span>" : "F{$matches[2]}"), 'black', $matches[1] ? 1 : -1, [($error ? 'E' : 'PO') => $matches[2]]];
         } elseif (preg_match('/^F?[FLP](\d)$/', $playText, $matches)) {
             // Fly out, line out, pop out
             return [$playText, 'black', -1, ['PO' => $matches[1]]];
+        } elseif (preg_match('/^SAB((\d-)*(WT|E)?(\d))$/', $playText, $matches)) {
+            // Sac bunt
+            $error = boolval($matches[3]);
+            return ['<span style="color:blue;">S</span>' . ($error ? "$matches[2]<span style=\"color:red\">{$matches[3]}{$matches[4]}</span>" : "{$matches[1]}"), 'black', $error ? 1 : -1, [($error ? 'E' : 'PO') => $matches[4], 'A' => str_replace('-', '', $matches[2])]];
         } elseif (preg_match('/^[BG](\d)$/', $playText, $matches)) {
             // Unassisted ground out
             return ["UA$playText", 'black', -1, ['PO' => $matches[1]]];
