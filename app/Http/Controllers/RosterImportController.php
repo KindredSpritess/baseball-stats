@@ -17,16 +17,29 @@ class RosterImportController extends Controller
     public function showImportForm()
     {
         $seasons = Season::with('teams')->get();
+        $restrictTeam = request()->query('team', null);
         if (request()->user()->role !== 'superuser') {
             // Filter seasons and teams based on user permissions
             $seasons = $seasons
                 ->map(fn ($season) => (object)([
                     'id' => $season->id,
                     'name' => $season->name,
-                    'teams' => $season->teams->filter(fn ($team) => Gate::allows('import-roster', $team))->values(),
+                    'teams' => $season->teams->filter(fn ($team) => (is_null($restrictTeam) || $team->id == $restrictTeam) && Gate::allows('import-roster', $team))->values(),
                 ]))
                 ->filter(fn ($season) => $season->teams->isNotEmpty())
                 ->values();
+        } else {
+            if ($restrictTeam) {
+                // Further restrict to the specified team
+                $seasons = $seasons
+                    ->map(fn ($season) => (object)([
+                        'id' => $season->id,
+                        'name' => $season->name,
+                        'teams' => $season->teams->filter(fn ($team) => $team->id == $restrictTeam)->values(),
+                    ]))
+                    ->filter(fn ($season) => $season->teams->isNotEmpty())
+                    ->values();
+            }
         }
 
         return view('roster.import', [

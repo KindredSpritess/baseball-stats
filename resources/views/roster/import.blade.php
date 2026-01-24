@@ -75,10 +75,10 @@ Import Roster
             <div id="team-season-fields">
                 <div style="margin-bottom: 20px;">
                     <label for="season_id" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">Season:</label>
-                    <select id="season_id" name="season_id" onchange="updateTeamOptions()" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;">
-                        <option value="">Select a season</option>
+                    <select id="season_id" name="season_id" onchange="updateTeamOptions()" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" {{ count($seasons) === 1 ? 'disabled' : '' }}>
+                        @if(count($seasons) > 1)<option value="">Select a season</option>@endif
                         @foreach($seasons as $season)
-                            <option value="{{ $season->id }}">{{ $season->name }}</option>
+                            <option value="{{ $season->id }}" {{ count($seasons) === 1 ? 'selected' : '' }}>{{ $season->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -100,6 +100,13 @@ Import Roster
 
 <script>
     const seasons = @json($seasons);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const seasonSelect = document.getElementById('season_id');
+        if (seasonSelect.value) {
+            updateTeamOptions();
+        }
+    });
 
     function clearFile() {
         const fileInput = document.getElementById('file');
@@ -144,6 +151,9 @@ Import Roster
                     option.textContent = team.name;
                     teamSelect.appendChild(option);
                 });
+                if (season.teams.length === 1) {
+                    teamSelect.value = season.teams[0].id;
+                }
             }
         }
     }
