@@ -292,17 +292,8 @@ class Play extends Model
             }
             $game->defense[($game->half+1)%2][$position] = $player;
             $this->log($player->person->lastName . " moves to " . (Play::POSITIONS[$position] ?? $position));
-            if ($position == '1') {
-                $player->evt('GP');
-                $game->expectedOuts = $game->outs;
-                $game->pitchers[($game->half+1)%2][] = $player;
-                foreach ($game->bases as $runner) {
-                    if ($runner) $game->pitching()->evt('IR');
-                }
-                $lead = $game->score[($game->half+1)%2] - $game->score[$game->half];
-                if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($game->bases)) + 2)) {
-                    $game->pitchersOfRecord['saving'] = $player;
-                }
+            if ($position === '1') {
+                $game->pitcherChange(($game->half+1)%2, $player);
             }
             return;
         }
@@ -470,7 +461,7 @@ class Play extends Model
                             $game->hitting()->evt('HPB');
                             $game->pitching()->evt('HBP');
                             $b = $this->advance($game, -1, 0, false);
-                            $game->advanceRunner($game->hitting(), 1, true, false, 'W');
+                            $game->advanceRunner($game->hitting(), 1, true, false, 'HP');
                             $this->logBuffer("hit by pitch");
                         } elseif ($event->consume('CI')) {
                             $game->hitting()->evt('CI');
