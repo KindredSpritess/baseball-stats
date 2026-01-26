@@ -144,18 +144,40 @@ class Game extends Model
         }
         $this->defense[$home][$fieldPos] = $player;
         if ($fieldPos === '1') {
-            $player->evt('GP');
-            $this->expectedOuts = $this->outs;
-            $this->pitchers[$home][] = $player;
-            // Add inherited runners.
-            foreach ($this->bases as $runner) {
-                if ($runner) $this->pitching()->evt('IR');
-            }
-            // Check for save situation.
-            $lead = $this->score[$home] - $this->score[($home+1)%2];
-            if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($this->bases)) + 2)) {
-                $this->pitchersOfRecord['saving'] = $player;
-            }
+            $this->pitcherChange($home, $player);
+        }
+    }
+
+    public function pitcherChange(int $home, Player $player) : void {
+        $player->evt('GP');
+        $this->expectedOuts = $this->outs;
+        $this->pitchers[$home][] = $player;
+        // Add inherited runners.
+        foreach ($this->bases as $runner) {
+            if ($runner) $this->pitching()->evt('IR');
+        }
+
+        // Give the old pitcher ownership of the hitter if the count is in the hitter's favor.
+        switch ([$this->balls, $this->strikes]) {
+            case [3, 0]:
+            case [3, 1]:
+            case [3, 2]:
+            case [2, 1]:
+            case [2, 0]:
+                $this->runners[$this->hitting()->id] = [
+                    'pitcher' => $this->pitchers[$home][count($this->pitchers[$home]) - 2] ?? null,
+                    'base' => 0,
+                    'earned' => 0,
+                    'expectedOuts' => (int)$this->expectedOuts,
+                    'origin' => 'W',
+                ];
+                break;
+        }
+
+        // Check for save situation.
+        $lead = $this->score[$home] - $this->score[($home+1)%2];
+        if (($lead > 0 && $lead <= 3) || ($lead > 0 && $lead <= count(array_filter($this->bases)) + 2)) {
+            $this->pitchersOfRecord['saving'] = $player;
         }
     }
 
@@ -179,6 +201,7 @@ class Game extends Model
                                   ?string $origin = null,
                                   bool $replaces = false) {
         if (!isset($this->runners[$player->id])) {
+            $origin = $origin === 'HP' ? 'W' : $origin;
             $this->runners[$player->id] = [
                 'pitcher' => $this->pitching(),
                 'base' => 0,
@@ -186,6 +209,10 @@ class Game extends Model
                 'expectedOuts' => (int)$this->expectedOuts,
                 'origin' => $origin ?? null,
             ];
+        } else if ($origin && $origin !== 'W') {
+            // Update the owning pitcher if he didn't walk.
+            $this->runners[$player->id]['origin'] = $origin;
+            $this->runners[$player->id]['pitcher'] = $this->pitching();
         }
 
         if ($decisiveError) {

@@ -80,7 +80,6 @@ class TeamController extends Controller
     public function update(Request $request, Team $team) {
         $team->fill($request->validate([
             'name' => 'required|string|max:100',
-            'short_name' => 'required|string|max:50',
             'season_id' => 'required|exists:seasons,id',
             'primary_color' => 'nullable|hex_color',
             'secondary_color' => 'nullable|hex_color',
