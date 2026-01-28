@@ -64,8 +64,8 @@ class TeamController extends Controller
             'people' => Person::whereIn('id', $people)->get(),
             'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
             'pitchingBIP' => $pitcherBalls,
-            'minPA' => $qualified ? $team->games()->whereEnded()->count() * ($totals->PA / $totals->GS - 1) : 0,
-            'minIP' => $qualified ? $team->games()->whereEnded()->count() / 3 : 0,
+            'minPA' => $qualified ? $team->games()->whereEnded(true)->count() * ($totals->PA / $totals->GS - 1) : 0,
+            'minIP' => $qualified ? $team->games()->whereEnded(true)->count() / 3 : 0,
             'minFI' => $qualified ? $totals->FI / 9 / 2 : 0,
         ]);
     }
