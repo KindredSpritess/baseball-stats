@@ -344,4 +344,33 @@ class GameController extends Controller
         ];
         return response()->json($preferences);
     }
+
+    /**
+     * Export scorebook HTML for a game
+     *
+     * @param Game $game
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function exportScorebook(Game $game, Request $request)
+    {
+        $teamFilter = $request->query('team');
+        
+        // Run the artisan command
+        \Illuminate\Support\Facades\Artisan::call('scorebook:export', [
+            'game' => $game->id,
+            '--team' => $teamFilter,
+        ]);
+
+        // Determine the filename that was generated
+        if ($teamFilter && in_array($teamFilter, ['home', 'away'])) {
+            $team = $teamFilter === 'home' ? $game->home_team : $game->away_team;
+            $filename = "scorebook_game{$game->id}_{$teamFilter}_{$team->short_name}.html";
+        } else {
+            $filename = "scorebook_game{$game->id}_both.html";
+        }
+
+        // Redirect to the generated HTML file
+        return redirect("/storage/scorebooks/{$filename}");
+    }
 }
