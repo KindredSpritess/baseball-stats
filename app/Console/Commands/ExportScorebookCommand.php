@@ -156,7 +156,7 @@ class ExportScorebookCommand extends Command
 
         // Build inning data
         $innings = [];
-        $maxInnings = max(9, count($linescore[$teamIndex] ?? []));
+        $maxInnings = max(12, count($linescore[$teamIndex] ?? []));
         $runs = 0;
         for ($i = 1; $i <= $maxInnings; $i++) {
             $runs += $linescore[$teamIndex][$i - 1] ?? 0;
@@ -310,7 +310,6 @@ class ExportScorebookCommand extends Command
             if ($play->inning_half === $teamIndex && ($game->inning !== $inning || $game->half !== $teamIndex)) {
                 // Inning changed, reset at-bat count for new inning
                 // Check that the batter at-bat 
-                end($data[$game->atBat[$teamIndex]+1][$inning])->inning_end = true;
                 end($data[$game->atBat[$teamIndex]+1][$inning + 1])->inning_start = true;
                 $nextTotals = [
                     'b' => $pitcher?->stats['Balls'] ?? 0,
@@ -545,13 +544,32 @@ class ExportScorebookCommand extends Command
                 $innings[$inning - 1]['width'] = max($innings[$inning - 1]['width'], count($plates));
             }
         }
-        foreach ($innings as &$inning) {
+        foreach ($innings as $ix => &$inning) {
             $width = $inning['width'];
             while ($width > 1) {
                 // Remove empty inning.
                 $width--;
                 if (end($innings)['runs_total'] === null) {
                     array_pop($innings);
+                }
+            }
+            // Work out the batter who started the inning.
+            $startingBatter = null;
+            foreach ($batterInningData as $spot => $plates) {
+                if (isset($plates[$inning['number']]) && $plates[$inning['number']][0]->inning_start) {
+                    $startingBatter = $spot;
+                    break;
+                }
+            }
+
+            // Mark the end of the inning for the starting batter.
+            if ($startingBatter) {
+                $pax = ($innings[$ix - 1]['width'] ?? 1) - 1;
+                // Check if it makes sense to put an inning end marker.
+                $batterInningData[$startingBatter][$inning['number'] - 1][$pax] ??= new PlateAppearence();
+                $pa = &$batterInningData[$startingBatter][$inning['number'] - 1][$pax];
+                if (!($pa->results[0] ?? null)) {
+                    $pa->inning_end = true;
                 }
             }
         }
