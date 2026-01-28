@@ -387,6 +387,8 @@
             text-align: left;
             padding-left: 2px;
             border-right: none;
+            text-transform: uppercase;
+            font-family: monospace;
         }
 
         .play-quadrant-table td.pitch-total {
@@ -829,6 +831,11 @@
                     $runEarned = $play?->run_earned ?? null;
                     $inningEnd = $play?->inning_end ?? false;
                     $inningStart = $play?->inning_start ?? false;
+                    $pitches = $play->pitches ?? '';
+                    if ($play->results[0] ?? null) {
+                        $pitches = substr($pitches, 0, -1);
+                    }
+                    $pitches = str_replace('.', '&middot;', $pitches);
                     @endphp
                     <td @class([
                         'inning-cell',
@@ -855,7 +862,7 @@
                                     <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play->results[0] ?? null" />
                                 </tr>
                                 <tr style="height: 11px;">
-                                    <td class="pitch-sequence">{{ $play->pitches ?? '' }}</td>
+                                    <td class="pitch-sequence">{!! $pitches !!}</td>
                                     <td class="pitch-total">{{ $play->pitch_total ?? '' }}</td>
                                 </tr>
                             </table>
