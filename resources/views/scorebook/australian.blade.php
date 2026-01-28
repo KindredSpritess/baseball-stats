@@ -360,12 +360,12 @@
         .diagonal-line::after {
             content: '';
             position: absolute;
-            width: calc(hypot(60px, 48px));
+            width: calc(hypot(60px, 56px));
             height: 3px;
             background-color: #ffaa00;
             bottom: -3px;
             left: -1px;
-            transform: rotate(calc(atan(-48 / 58)));
+            transform: rotate(calc(atan(-56 / 60)));
             transform-origin: top left;
         }
 
@@ -1049,11 +1049,11 @@
                         <div class="section-title">SCORE</div>
                         <table class="summary">
                             <tr>
-                                <td style="width: 50%;"><strong>{{ $opponent->short_name }}</strong></td>
+                                <td style="width: 50%;"><strong>{{ $opponent->name }}</strong></td>
                                 <td style="text-align: center;">{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
                             </tr>
                             <tr>
-                                <td><strong>{{ $team->short_name }}</strong></td>
+                                <td><strong>{{ $team->name }}</strong></td>
                                 <td style="text-align: center;">{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
                             </tr>
                         </table>
