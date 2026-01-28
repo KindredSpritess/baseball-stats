@@ -19,11 +19,11 @@ class LocateBallInPlayTest extends TestCase
         
         // Ball very close to pitcher position (224, 260)
         $result = $method->invoke($command, '224:260');
-        $this->assertEquals(1, $result);
+        $this->assertEquals('1', $result);
         
         // Ball slightly offset from pitcher
         $result = $method->invoke($command, '230:265');
-        $this->assertEquals(1, $result);
+        $this->assertEquals('1', $result);
     }
 
     /**
@@ -56,10 +56,10 @@ class LocateBallInPlayTest extends TestCase
         
         // Ball near first base position (344, 310)
         $result = $method->invoke($command, '344:310');
-        $this->assertEquals(3, $result);
+        $this->assertEquals('3', $result);
         
         $result = $method->invoke($command, '340:305');
-        $this->assertEquals(3, $result);
+        $this->assertEquals('3', $result);
     }
 
     /**
@@ -110,10 +110,10 @@ class LocateBallInPlayTest extends TestCase
         
         // Ball near shortstop position (164, 210)
         $result = $method->invoke($command, '164:210');
-        $this->assertEquals(6, $result);
+        $this->assertEquals('6', $result);
         
         $result = $method->invoke($command, '160:215');
-        $this->assertEquals(6, $result);
+        $this->assertEquals('6', $result);
     }
 
     /**
@@ -191,8 +191,8 @@ class LocateBallInPlayTest extends TestCase
         $result = $method->invoke($command, '224');
         $this->assertEquals('', $result);
         
-        // Malformed input - floatval('abc') = 0, so position is (0,0)
-        // Closest fielder to (0,0) is left field at (104, 130)
+        // Malformed input - floatval('abc') returns 0.0 (not null), 
+        // so position is (0,0). Closest fielder to (0,0) is left field at (104, 130)
         $result = $method->invoke($command, 'abc:def');
         $this->assertEquals('7', $result);
     }
