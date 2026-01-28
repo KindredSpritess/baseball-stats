@@ -92,17 +92,21 @@ export default {
   height: 100%;
 }
 
+.fielder-selection h3 {
+  flex-shrink: 0;
+}
+
 .field-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  flex-shrink: 1;
+  flex-grow: 1;
   width: 80vw;
-  height: 80vh;
-  max-width: 600px;
-  max-height: 600px;
+  height: 1px;
   margin: 0 auto;
+}
+
+.field-container svg {
+  width: auto;
+  height: 100%;
 }
 
 .undo-btn {
@@ -127,6 +131,11 @@ export default {
   padding: 10px;
   background: #f0f0f0;
   text-align: center;
+  flex-shrink: 0;
+}
+
+.selected-fielders p {
+  margin: 0;
 }
 
 .actions {
@@ -135,6 +144,7 @@ export default {
   padding: 10px;
   justify-content: center;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .action-btn {
