@@ -43,6 +43,7 @@ class GameController extends Controller
         $game->away_team()->associate(Team::find($request->input('away')));
         $game->fill($request->input());
         $game->firstPitch = Carbon::createFromFormat('Y-m-d\TH:i', $request->input('firstPitch'), $request->input('timezone'))->setTimezone('UTC');
+        $game->timeZone = $request->input('timezone');
         $game->save();
         return new JsonResponse(['status' => 'success', 'created' => $game->id]);
     }

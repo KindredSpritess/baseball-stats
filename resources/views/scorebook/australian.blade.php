@@ -111,8 +111,8 @@
         }
         
         .main-grid thead tr th.main-stats-header {
-            height: 18px;
-            line-height: 18px;
+            height: 10px;
+            line-height: 10px;
         }
 
         .game-notes-title {
@@ -652,7 +652,9 @@
                     <th rowspan="1" colspan="2" class="batting-section batting-header">BATTING ORDER</th>
                     <th>&nbsp;</th>
                     @foreach($innings as $inning)
+                    @for($i = 0; $i < $inning['width']; $i++)
                     <th class="inning-column inning-header">{{ $inning['number'] }}</th>
+                    @endfor
                     @endforeach
                     <th rowspan="3" colspan="20" class="stats-section stats-header">BATTING</th>
                 </tr>
@@ -664,7 +666,7 @@
                     <!-- Assist row for each inning -->
                     <th class="main-stats-header">A</th>
                     @foreach($innings as $inning)
-                    <td class="inning-fielding">
+                    <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
                                 <td>
@@ -689,7 +691,7 @@
                     <!-- Putout row for each inning -->
                     <th class="main-stats-header">PO</th>
                     @foreach($innings as $inning)
-                    <td class="inning-fielding">
+                    <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
                                 <td>
@@ -725,7 +727,7 @@
                     <!-- Error row for each inning -->
                     <th class="main-stats-header">E</th>
                     @foreach($innings as $inning)
-                    <td class="inning-fielding">
+                    <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
                                 <td>
@@ -817,21 +819,22 @@
 
                     <!-- Plate appearance cells. -->
                     @foreach($innings as $inning)
+                    @for($i = 0; $i < $inning['width']; $i++)
                     @php
-                    $play = ($batterInningData[$batter['spot']] ?? [])[$inning['number']] ?? [];
-                    $lastPitch = strtoupper(substr($play['pitches'] ?? '', -1));
+                    $play = ($batterInningData[$batter['spot']] ?? [])[$inning['number']][$i] ?? null;
+                    $lastPitch = strtoupper(substr($play?->pitches ?? '', -1));
                     $lastPitch = $lastPitch === 'S' ? '2' : $lastPitch;
-                    $bigK = ($play[0][0] ?? '') === 'K2';
-                    $outNumber = $play['out_number'] ?? null;
-                    $runEarned = $play['run_earned'] ?? null;
-                    $inningEnd = $play['inning_end'] ?? false;
-                    $inningStart = $play['inning_start'] ?? false;
+                    $bigK = ($play?->results[0][0] ?? '') === 'K2';
+                    $outNumber = $play?->out_number ?? null;
+                    $runEarned = $play?->run_earned ?? null;
+                    $inningEnd = $play?->inning_end ?? false;
+                    $inningStart = $play?->inning_start ?? false;
                     @endphp
                     <td @class([
                         'inning-cell',
                         'inning-end' => $inningEnd,
                         'inning-start' => $inningStart,
-                        'pitcher-change' => $play['pitcher-change'] ?? false,
+                        'pitcher-change' => $play?->pitcher_change ?? false,
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
@@ -843,17 +846,17 @@
                                     @if ($bigK)
                                     <td class="play-quadrant play-blue abel-regular" rowspan="2" style="font-size: 24pt;">K</td>
                                     @else
-                                    <x-score-quadrant :play="$play[2] ?? null" />
+                                    <x-score-quadrant :play="$play->results[2] ?? null" />
                                     @endif
-                                    <x-score-quadrant :play="$play[1] ?? null" />
+                                    <x-score-quadrant :play="$play->results[1] ?? null" />
                                 </tr>
                                 <tr>
-                                    @unless($bigK)<x-score-quadrant :play="$play[3] ?? null" />@endunless
-                                    <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play[0] ?? null" />
+                                    @unless($bigK)<x-score-quadrant :play="$play->results[3] ?? null" />@endunless
+                                    <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play->results[0] ?? null" />
                                 </tr>
                                 <tr style="height: 11px;">
-                                    <td class="pitch-sequence">{{ $play['pitches'] ?? '' }}</td>
-                                    <td class="pitch-total">{{ $play['pitch-total'] ?? '' }}</td>
+                                    <td class="pitch-sequence">{{ $play->pitches ?? '' }}</td>
+                                    <td class="pitch-total">{{ $play->pitch_total ?? '' }}</td>
                                 </tr>
                             </table>
                             <div @class([
@@ -863,6 +866,7 @@
                             ])>{{ $outNumber ?? '' }}</div>
                         </div>
                     </td>
+                    @endfor
                     @endforeach
 
                     <!-- Hitting Stats -->
@@ -894,64 +898,52 @@
                     <td colspan="10" rowspan="8">&nbsp;</td>
                     <td class="main-stats-header">RUNS</td>
                     @foreach ($innings as $inning)
-                    <td>{{ $inning['runs'] }} / {{ $inning['runs_total'] }}</td>
+                    @for($i = 0; $i < $inning['width']; $i++)
+                    <td>
+                        @unless($i !== $inning['width'] - 1 || is_null($inning['runs_total']))
+                            {{ $inning['runs'] }} / {{ $inning['runs_total'] }}
+                        @endunless
+                    </td>
+                    @endfor
                     @endforeach
                 </tr>
-                <tr><td colspan="{{ count($innings) + 1 }}">&nbsp;</td></tr>
+                <tr><td colspan="{{ array_sum(array_column($innings, 'width')) + 1 }}">&nbsp;</td></tr>
                 <tr>
                     <td class="main-stats-header">Balls</td>
                     @foreach ($innings as $inning)
-                    <td>
-                        @foreach ($inning['pitching'] as $p)
-                        {{  $p['b'] ?? 0 }}
-                        @endforeach
-                    </td>
+                    <x-score-pitcher-stat :inning="$inning" stat="b" />
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">Strikes</td>
                     @foreach ($innings as $inning)
-                    <td>
-                        @foreach ($inning['pitching'] as $p)
-                        {{  $p['s'] ?? 0 }}
-                        @endforeach
-                    </td>
+                    <x-score-pitcher-stat :inning="$inning" stat="s" />
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">Pit</td>
                     @foreach ($innings as $inning)
-                    <td>
-                        @foreach ($inning['pitching'] as $p)
-                        {{  $p['p'] ?? 0 }}
-                        @endforeach
-                    </td>
+                    <x-score-pitcher-stat :inning="$inning" stat="p" />
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">BFP</td>
                     @foreach ($innings as $inning)
-                    <td>
-                        @foreach ($inning['pitching'] as $p)
-                        {{  $p['bfp'] ?? 0 }}
-                        @endforeach
-                    </td>
+                    <x-score-pitcher-stat :inning="$inning" stat="bfp" />
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">HITS</td>
                     @foreach ($innings as $inning)
-                    <td>
-                        @foreach ($inning['pitching'] as $p)
-                        {{  $p['h'] ?? 0 }}
-                        @endforeach
-                    </td>
+                    <x-score-pitcher-stat :inning="$inning" stat="h" />
                     @endforeach
                 </tr>
                 <tr>
                     <td class="main-stats-header">LOB</td>
                     @foreach ($innings as $inning)
-                    <td>{{ $inning['lob'] }}</td>
+                    @for($i = 0; $i < $inning['width']; $i++)
+                    <td>@if($i === $inning['width'] - 1){{ $inning['lob'] }}@endif</td>
+                    @endfor
                     @endforeach
                 </tr>
             </tbody>

@@ -157,16 +157,16 @@ class ExportScorebookCommand extends Command
 
         // Build inning data
         $innings = [];
-        $maxInnings = count($linescore[$teamIndex] ?? []);
+        $maxInnings = max(9, count($linescore[$teamIndex] ?? []));
         $runs = 0;
         for ($i = 1; $i <= $maxInnings; $i++) {
             $runs += $linescore[$teamIndex][$i - 1] ?? 0;
             $innings[] = [
                 'number' => $i,
                 'runs' => $linescore[$teamIndex][$i - 1] ?? 0,
-                'runs_total' => $runs,
-                'lob' => 0, // TODO: Calculate LOB per inning from plays
-                'width' => 1, // This will increase if the team bats around.
+                'runs_total' => isset($linescore[$teamIndex][$i - 1]) ? $runs : null,
+                'lob' => isset($linescore[$teamIndex][$i - 1]) ? 0 : null,
+                'width' => 1,
                 'fielding' => [],
                 'pitching' => [],
             ];
@@ -174,6 +174,7 @@ class ExportScorebookCommand extends Command
 
         // Extract play-by-play data for each batter in each inning
         $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $innings, $battingOrder);
+        $this->splitLongInnings($batterInningData, $innings);
 
         // Get pitchers of record
         $pitchersOfRecord = $game->pitchersOfRecord ?? [
@@ -193,24 +194,11 @@ class ExportScorebookCommand extends Command
             'pitchers' => $pitchers,
             'pitchersOfRecord' => $pitchersOfRecord,
             'venue' => $game->location ?? '',
-            'date' => $game->firstPitch ? $game->firstPitch->format('Y-m-d') : '',
-            'timeStart' => $game->firstPitch ? $game->firstPitch->format('H:i') : '',
-            'timeFinish' => $game->duration ? $game->firstPitch->copy()->addMinutes($game->duration)->format('H:i') : '',
+            'date' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('Y-m-d') : '',
+            'timeStart' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('H:i') : '',
+            'timeFinish' => $game->duration ? $game->firstPitch->copy()->addMinutes($game->duration)->timezone($game->timeZone)->format('H:i') : '',
             'totalTime' => $game->duration ? sprintf('%d:%02d', intdiv($game->duration, 60), $game->duration % 60) : '',
         ];
-    }
-
-    /**
-     * Get player's defensive position
-     */
-    private function getPlayerPosition($player, array $defense): string
-    {
-        foreach ($defense as $position => $defensePlayer) {
-            if ($defensePlayer && $defensePlayer->id === $player->id) {
-                return $position;
-            }
-        }
-        return '';
     }
 
     private static function progTotal(array $cur, array $next, string $stat): string
@@ -231,8 +219,16 @@ class ExportScorebookCommand extends Command
     private function extractBatterInningData(Game $game, int $teamIndex, $plays, array &$inningsData, array &$battingOrder): array
     {
         // This will contain the actual play data for each batter in each inning
-        // Format: [batter_spot][inning][quadrant] = play_info
+        // Format: [batter_spot][inning][][quadrant] = play_info
         $data = [];
+
+        // Prefill batterInningData with empty entries.
+        for ($i = 1; $i <= count($game->lineup[$teamIndex]); $i++) {
+            $data[$i] = [];
+            for ($j = 1; $j <= count($inningsData); $j++) {
+                $data[$i][$j] = [new PlateAppearence()];
+            }
+        }
 
         $state = new GameState();
         $state->get($game, 'state', '{}', []);
@@ -286,28 +282,37 @@ class ExportScorebookCommand extends Command
             $play->apply($game);
 
             if (str_starts_with($play->play, 'Game Over')) {
+                if ($play->inning_half === $teamIndex) {
+                    $pitcher = $pitchers[count($pitchers) - 1];
+                    $nextTotals = [
+                        'b' => $pitcher?->stats['Balls'] ?? 0,
+                        's' => $pitcher?->stats['Strikes'] ?? 0,
+                        'p' => $pitcher?->stats['Pitch'] ?? 0,
+                        'bfp' => $pitcher?->stats['BFP'] ?? 0,
+                        'h' => $pitcher?->stats['HA'] ?? 0,
+                        'lob' => count(array_filter($game->bases)) + $totals['lob'],
+                    ];
+                    $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
+                    if ($nextTotals['p'] !== $totals['p']) {
+                        $inningsData[$inning - 1]['pitching'][] = [
+                            'pitcher' => $pitcher,
+                            'b' => self::progTotal($totals, $nextTotals, 'b'),
+                            's' => self::progTotal($totals, $nextTotals, 's'),
+                            'p' => self::progTotal($totals, $nextTotals, 'p'),
+                            'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
+                            'h' => self::progTotal($totals, $nextTotals, 'h'),
+                        ];
+                        $inningsData[$inning - 1]['lob'] = self::progTotal($totals, $nextTotals, 'lob');
+                    }
+                }
                 continue;
             }
 
             if ($play->inning_half === $teamIndex && ($game->inning !== $inning || $game->half !== $teamIndex)) {
                 // Inning changed, reset at-bat count for new inning
-                $data[$game->atBat[$teamIndex]+1] ??= [];
-                $data[$game->atBat[$teamIndex]+1][$inning] ??= [
-                    'pitches' => '',
-                    'out_number' => null,
-                    'run_earned' => null,
-                    'inning_end' => false,
-                    'inning_start' => false,
-                ];
-                $data[$game->atBat[$teamIndex]+1][$inning]['inning_end'] = true;
-                $data[$game->atBat[$teamIndex]+1][$inning + 1] ??= [
-                    'pitches' => '',
-                    'out_number' => null,
-                    'run_earned' => null,
-                    'inning_end' => false,
-                    'inning_start' => false,
-                ];
-                $data[$game->atBat[$teamIndex]+1][$inning + 1]['inning_start'] = true;
+                // Check that the batter at-bat 
+                end($data[$game->atBat[$teamIndex]+1][$inning])->inning_end = true;
+                end($data[$game->atBat[$teamIndex]+1][$inning + 1])->inning_start = true;
                 $nextTotals = [
                     'b' => $pitcher?->stats['Balls'] ?? 0,
                     's' => $pitcher?->stats['Strikes'] ?? 0,
@@ -324,7 +329,7 @@ class ExportScorebookCommand extends Command
                     'p' => self::progTotal($totals, $nextTotals, 'p'),
                     'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
                     'h' => self::progTotal($totals, $nextTotals, 'h'),
-                    ];
+                ];
                 $inningsData[$inning - 1]['lob'] = self::progTotal($totals, $nextTotals, 'lob');
                 $totals = $nextTotals;
             }
@@ -351,16 +356,10 @@ class ExportScorebookCommand extends Command
                         if ($game->half === $teamIndex) {
                             if ($matches[2] === '1') {
                                 $inningsData[$inning - 1]['fielding'][] = ['PC' => true];
-                                $data[$atbat] ??= [];
-                                $data[$atbat][$inning] ??= [
-                                    'pitches' => '',
-                                    'out_number' => null,
-                                    'run_earned' => null,
-                                    'inning_end' => false,
-                                    'inning_start' => false,
-                                    'pitcher-change' => false,
-                                ];
-                                $data[$atbat][$inning]['pitcher-change'] = true;
+                                if (isset(end($data[$atbat][$inning])->result[0])) {
+                                    $data[$atbat][$inning][] = new PlateAppearence();
+                                }
+                                end($data[$atbat][$inning])->pitcher_change = true;
 
                                 $pitchers = $game->pitchers[($teamIndex + 1) % 2];
                                 $pitcher = $pitchers[count($pitchers) - 2];
@@ -372,14 +371,16 @@ class ExportScorebookCommand extends Command
                                     'h' => $pitcher?->stats['HA'] ?? 0,
                                 ];
                                 $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
-                                $inningsData[$inning - 1]['pitching'][] = [
-                                    'pitcher' => $pitcher,
-                                    'b' => self::progTotal($totals, $nextTotals, 'b'),
-                                    's' => self::progTotal($totals, $nextTotals, 's'),
-                                    'p' => self::progTotal($totals, $nextTotals, 'p'),
-                                    'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
-                                    'h' => self::progTotal($totals, $nextTotals, 'h'),
-                                ];
+                                if ($nextTotals['p'] !== $totals['p']) {
+                                    $inningsData[$inning - 1]['pitching'][] = [
+                                        'pitcher' => $pitcher,
+                                        'b' => self::progTotal($totals, $nextTotals, 'b'),
+                                        's' => self::progTotal($totals, $nextTotals, 's'),
+                                        'p' => self::progTotal($totals, $nextTotals, 'p'),
+                                        'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
+                                        'h' => self::progTotal($totals, $nextTotals, 'h'),
+                                    ];
+                                }
                                 $totals = [
                                     'b' => 0,
                                     's' => 0,
@@ -404,20 +405,14 @@ class ExportScorebookCommand extends Command
                 continue;
             }
 
-            $data[$atbat] ??= [];
-            $data[$atbat][$inning] ??= [
-                'pitches' => '',
-                'out_number' => null,
-                'run_earned' => null,
-                'inning_end' => false,
-                'inning_start' => false,
-                'pitcher-change' => false,
-            ];
+            if (end($data[$atbat][$inning])?->results[0] ?? null) {
+                $data[$atbat][$inning][] = new PlateAppearence();
+            }
 
             $parts = explode(',', $play->play);
 
-            $data[$atbat][$inning]['pitches'] .= $parts[0];
-            $data[$atbat][$inning]['pitch-total'] = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
+            end($data[$atbat][$inning])->pitches .= $parts[0];
+            end($data[$atbat][$inning])->pitch_total = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
 
             for ($i = 1; $i <= 4; $i++) {
                 if ($parts[$i] ?? null) {
@@ -431,19 +426,19 @@ class ExportScorebookCommand extends Command
                             $inningsData[$inning - 1]['fielding'][] = $playResult[3];
                         }
                         if ($bases < 0) {
-                            $data[$spot][$inning]['out_number'] = ++$outs;
-                            $data[$spot][$inning][$b++] = [$note, $colour];
+                            end($data[$spot][$inning])->out_number = ++$outs;
+                            end($data[$spot][$inning])->results[$b++] = [$note, $colour];
                         } else {
                             while ($bases--) {
                                 if ($bases) {
-                                    $data[$spot][$inning][$b++] = [self::CURVES[$b-1], $colour];
+                                    end($data[$spot][$inning])->results[$b++] = [self::CURVES[$b-1], $colour];
                                 } else {
-                                    $data[$spot][$inning][$b++] = [$note, $colour];
+                                    end($data[$spot][$inning])->results[$b++] = [$note, $colour];
                                 }
                             }
                             if ($b === 4) {
                                 // Run scored.
-                                $data[$spot][$inning]['run_earned'] = false;
+                                end($data[$spot][$inning])->run_earned = false;
                             }
                         }
                     }
@@ -463,13 +458,13 @@ class ExportScorebookCommand extends Command
                 continue;
             }
             $batterInning = &$inningData[$inning];
-            if ($batterInning['run_earned'] === false) {
+            if (end($batterInning)->run_earned === false) {
                 // Check if the run was actually earned
                 $atbat = $spot;
                 $runnerKey = end($game->lineup[$teamIndex][$atbat - 1])->id ?? null;
                 $meta = $runnerMeta[$runnerKey] ?? [];
                 if ($meta && $meta['earned'] >= 4 && $meta['expectedOuts'] < 3) {
-                    $batterInning['run_earned'] = true;
+                    end($batterInning)->run_earned = true;
                 }
             }
         }
@@ -508,13 +503,13 @@ class ExportScorebookCommand extends Command
             // Sac bunt
             $error = boolval($matches[3]);
             return ['<span style="color:blue;">S</span>' . ($error ? "$matches[2]<span style=\"color:red\">{$matches[3]}{$matches[4]}</span>" : "{$matches[1]}"), 'black', $error ? 1 : -1, [($error ? 'E' : 'PO') => $matches[4], 'A' => str_replace('-', '', $matches[2])]];
-        } elseif (preg_match('/^[BG](\d)$/', $playText, $matches)) {
+        } elseif (preg_match('/^[BG]?`?(\d)$/', $playText, $matches)) {
             // Unassisted ground out
-            return ["UA$playText", 'black', -1, ['PO' => $matches[1]]];
+            return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
         } elseif (preg_match('/^[FLPGB]?([!@#$]?)(((\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
             return [$matches[2], 'red', self::BASES[$matches[1]] ?? 1, ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
-        } elseif (preg_match('/^[FLPGB]?(CS|PO)?(((\d-)*)(\d))$/', $playText, $matches)) {
+        } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];
         } elseif ($playText === 'SB') {
@@ -543,4 +538,35 @@ class ExportScorebookCommand extends Command
 
         return [$playText, 'black', 1]; // Unknown
     }
+
+    private function splitLongInnings(array &$batterInningData, array &$innings): void
+    {
+        foreach ($batterInningData as $inningPlates) {
+            foreach ($inningPlates as $inning => $plates) {
+                $innings[$inning - 1]['width'] = max($innings[$inning - 1]['width'], count($plates));
+            }
+        }
+        foreach ($innings as &$inning) {
+            $width = $inning['width'];
+            while ($width > 1) {
+                // Remove empty inning.
+                $width--;
+                if (end($innings)['runs_total'] === null) {
+                    array_pop($innings);
+                }
+            }
+        }
+    }
+}
+
+class PlateAppearence
+{
+    public $pitches = '';
+    public $pitch_total = null;
+    public $out_number = null;
+    public $run_earned = null;
+    public $inning_end = false;
+    public $inning_start = false;
+    public $pitcher_change = false;
+    public $results = []; // Each entry: [note, colour]
 }
