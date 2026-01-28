@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Casts\GameState;
 use App\Helpers\StatsHelper;
 use App\Models\Game;
+use App\Models\Play;
 use App\Models\Team;
 use Illuminate\Console\Command;
 
@@ -244,14 +245,17 @@ class ExportScorebookCommand extends Command
         ];
 
         foreach ($plays as $play) {
+            /** @var Play $play */
             // Skip comments and announcements.
             if ($play->play[0] === '!' || $play->play[0] === '#') {
                 continue;
             }
 
+            $matches = [];
             // Strip off batted ball, as it's unused.
-            $playText = preg_replace('/,\d+(\.\d+)?:\d+(.\d+)?$/', '', $play->play);
-            $play->play = $playText;
+            preg_match('/^(.*,)(\d+(\.\d+)?:\d+(.\d+)?)$/', $play->getOriginal('play'), $matches);
+            $play->play = $matches[1] ?? $play->play;
+            $ballInPlay = $matches[2] ?? null;
 
             $inning = $game->inning;
             $atbat = $game->atBat[$teamIndex] + 1;
@@ -420,6 +424,10 @@ class ExportScorebookCommand extends Command
                     foreach ($plays as $playSegment) {
                         $playResult = $this->extractPlayResult($playSegment, $atbat);
                         [$note, $colour, $bases] = $playResult;
+                        if ($colour === 'green' && $ballInPlay) {
+                            // Locate ball in play position.
+                            $note .= $this->locateBallInPlay($ballInPlay);
+                        }
                         if (count($playResult) > 3) {
                             $inningsData[$inning - 1]['fielding'][] = $playResult[3];
                         }
@@ -446,6 +454,51 @@ class ExportScorebookCommand extends Command
         }
 
         return $data;
+    }
+
+    private function locateBallInPlay(string $ballInPlay): string
+    {
+        $ballInPlay = trim($ballInPlay, ',');
+        $parts = explode(':', $ballInPlay);
+        $x = isset($parts[0]) ? floatval($parts[0]) : null;
+        $y = isset($parts[1]) ? floatval($parts[1]) : null;
+
+        // Return empty string if coordinates are missing
+        if ($x === null || $y === null) {
+            return '';
+        }
+
+        // Standard fielding positions based on the SVG field diagram
+        // Coordinates match the field visualization used in game/show.blade.php
+        $fielderPositions = [
+            1 => ['x' => 224, 'y' => 260], // Pitcher
+            2 => ['x' => 224, 'y' => 435], // Catcher
+            3 => ['x' => 344, 'y' => 310], // First Base
+            4 => ['x' => 284, 'y' => 210], // Second Base
+            5 => ['x' => 104, 'y' => 310], // Third Base
+            6 => ['x' => 164, 'y' => 210], // Shortstop
+            7 => ['x' => 104, 'y' => 130], // Left Field
+            8 => ['x' => 224, 'y' => 80],  // Center Field
+            9 => ['x' => 344, 'y' => 130], // Right Field
+        ];
+
+        // Find the closest fielder to the ball position
+        $closestFielder = 1;
+        $minDistance = PHP_FLOAT_MAX;
+
+        foreach ($fielderPositions as $fielderNum => $position) {
+            $distance = sqrt(
+                pow($x - $position['x'], 2) + 
+                pow($y - $position['y'], 2)
+            );
+
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $closestFielder = $fielderNum;
+            }
+        }
+
+        return (string)$closestFielder;
     }
 
     private function correctEarnedRuns(Game $game, int $teamIndex, array &$data, int $inning, array $runnerMeta)
