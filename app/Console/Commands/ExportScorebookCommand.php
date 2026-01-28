@@ -463,8 +463,42 @@ class ExportScorebookCommand extends Command
         $x = isset($parts[0]) ? floatval($parts[0]) : null;
         $y = isset($parts[1]) ? floatval($parts[1]) : null;
 
-        // TODO: return the correct fielder for the batted ball location.
-        return 1;
+        // Return empty string if coordinates are missing
+        if ($x === null || $y === null) {
+            return '';
+        }
+
+        // Standard fielding positions based on the SVG field diagram
+        // Coordinates match the field visualization used in game/show.blade.php
+        $fielderPositions = [
+            1 => ['x' => 224, 'y' => 260], // Pitcher
+            2 => ['x' => 224, 'y' => 435], // Catcher
+            3 => ['x' => 344, 'y' => 310], // First Base
+            4 => ['x' => 284, 'y' => 210], // Second Base
+            5 => ['x' => 104, 'y' => 310], // Third Base
+            6 => ['x' => 164, 'y' => 210], // Shortstop
+            7 => ['x' => 104, 'y' => 130], // Left Field
+            8 => ['x' => 224, 'y' => 80],  // Center Field
+            9 => ['x' => 344, 'y' => 130], // Right Field
+        ];
+
+        // Find the closest fielder to the ball position
+        $closestFielder = 1;
+        $minDistance = PHP_FLOAT_MAX;
+
+        foreach ($fielderPositions as $fielderNum => $position) {
+            $distance = sqrt(
+                pow($x - $position['x'], 2) + 
+                pow($y - $position['y'], 2)
+            );
+
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $closestFielder = $fielderNum;
+            }
+        }
+
+        return (string)$closestFielder;
     }
 
     private function correctEarnedRuns(Game $game, int $teamIndex, array &$data, int $inning, array $runnerMeta)
