@@ -7,7 +7,6 @@ use App\Helpers\StatsHelper;
 use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Console\Command;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportScorebookCommand extends Command
 {
@@ -23,7 +22,7 @@ class ExportScorebookCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Export an Australian style scorebook PDF for a game';
+    protected $description = 'Export an Australian style scorebook HTML for a game';
 
     const BASES = [
         '!' => 1,
@@ -60,24 +59,10 @@ class ExportScorebookCommand extends Command
             $teams[] = ['type' => 'home', 'team' => $game->home_team];
         }
 
+        $htmlContents = [];
         foreach ($teams as $teamInfo) {
-            $this->exportTeamScorebook($game, $teamInfo['type'], $teamInfo['team']);
+            $htmlContents[] = $this->generateTeamScorebookHtml($game, $teamInfo['type'], $teamInfo['team']);
         }
-
-        $this->info('Scorebook export completed successfully!');
-
-        return 0;
-    }
-
-    /**
-     * Export scorebook for a specific team
-     */
-    private function exportTeamScorebook(Game $game, string $teamType, Team $team)
-    {
-        $this->info("Generating scorebook for {$team->name} ({$teamType})...");
-
-        // Prepare data for the scorebook
-        $data = $this->prepareScorebookData($game, $teamType, $team);
 
         // Ensure directory exists
         $dir = storage_path("app/public/scorebooks");
@@ -85,24 +70,38 @@ class ExportScorebookCommand extends Command
             mkdir($dir, 0755, true);
         }
 
-        // Generate HTML
-        $html = view('scorebook.australian', $data)->render();
-        $filename = "scorebook_game{$game->id}_{$teamType}_{$team->short_name}.html";
+        // Combine HTML if both teams
+        $combinedHtml = implode('<div style="page-break-before: always;"></div>', $htmlContents);
+
+        // Determine filename
+        if (count($teams) === 1) {
+            $teamInfo = $teams[0];
+            $filename = "scorebook_game{$game->id}_{$teamInfo['type']}_{$teamInfo['team']->short_name}.html";
+        } else {
+            $filename = "scorebook_game{$game->id}_both.html";
+        }
+
         $htmlPath = storage_path("app/public/scorebooks/{$filename}");
-        file_put_contents($htmlPath, $html);
+        file_put_contents($htmlPath, $combinedHtml);
         $this->info("Saved HTML: {$htmlPath}");
 
-        // Generate PDF
-        $pdf = Pdf::loadView('scorebook.australian', $data);
-        $pdf->setPaper('a3', 'landscape');
+        $this->info('Scorebook export completed successfully!');
 
-        // Save to storage
-        $filename = "scorebook_game{$game->id}_{$teamType}_{$team->short_name}.pdf";
-        $path = storage_path("app/public/scorebooks/{$filename}");
+        return 0;
+    }
 
-        $pdf->save($path);
+    /**
+     * Generate HTML for scorebook for a specific team
+     */
+    private function generateTeamScorebookHtml(Game $game, string $teamType, Team $team): string
+    {
+        $this->info("Generating scorebook for {$team->name} ({$teamType})...");
 
-        $this->info("Saved: {$path}");
+        // Prepare data for the scorebook
+        $data = $this->prepareScorebookData($game, $teamType, $team);
+
+        // Generate HTML
+        return view('scorebook.australian', $data)->render();
     }
 
     /**
