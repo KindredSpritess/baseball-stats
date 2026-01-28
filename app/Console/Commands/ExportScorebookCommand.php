@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Casts\GameState;
 use App\Helpers\StatsHelper;
 use App\Models\Game;
+use App\Models\Play;
 use App\Models\Team;
 use Illuminate\Console\Command;
 
@@ -244,14 +245,17 @@ class ExportScorebookCommand extends Command
         ];
 
         foreach ($plays as $play) {
+            /** @var Play $play */
             // Skip comments and announcements.
             if ($play->play[0] === '!' || $play->play[0] === '#') {
                 continue;
             }
 
+            $matches = [];
             // Strip off batted ball, as it's unused.
-            $playText = preg_replace('/,\d+(\.\d+)?:\d+(.\d+)?$/', '', $play->play);
-            $play->play = $playText;
+            preg_match('/^(.*,)(\d+(\.\d+)?:\d+(.\d+)?)$/', $play->getOriginal('play'), $matches);
+            $play->play = $matches[1] ?? $play->play;
+            $ballInPlay = $matches[2] ?? null;
 
             $inning = $game->inning;
             $atbat = $game->atBat[$teamIndex] + 1;
@@ -420,6 +424,10 @@ class ExportScorebookCommand extends Command
                     foreach ($plays as $playSegment) {
                         $playResult = $this->extractPlayResult($playSegment, $atbat);
                         [$note, $colour, $bases] = $playResult;
+                        if ($colour === 'green' && $ballInPlay) {
+                            // Locate ball in play position.
+                            $note .= $this->locateBallInPlay($ballInPlay);
+                        }
                         if (count($playResult) > 3) {
                             $inningsData[$inning - 1]['fielding'][] = $playResult[3];
                         }
@@ -446,6 +454,17 @@ class ExportScorebookCommand extends Command
         }
 
         return $data;
+    }
+
+    private function locateBallInPlay(string $ballInPlay): string
+    {
+        $ballInPlay = trim($ballInPlay, ',');
+        $parts = explode(':', $ballInPlay);
+        $x = isset($parts[0]) ? floatval($parts[0]) : null;
+        $y = isset($parts[1]) ? floatval($parts[1]) : null;
+
+        // TODO: return the correct fielder for the batted ball location.
+        return 1;
     }
 
     private function correctEarnedRuns(Game $game, int $teamIndex, array &$data, int $inning, array $runnerMeta)
