@@ -603,6 +603,9 @@ class ExportScorebookCommand extends Command
     {
         // Parse play text to extract key result
         // This is a simplified version - full implementation would parse all play notation
+        $matches = [];
+        preg_match('/^(\(?)([^)]*?)(\)?)$/', $playText, $matches);
+        [$_, $prefix, $playText, $suffix] = $matches;
 
         if ($playText === 'K2') {
             return ['K2', 'blue', -1, ['PO' => 2]]; // Strikeout
@@ -634,16 +637,16 @@ class ExportScorebookCommand extends Command
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
         } elseif (preg_match('/^[FLPGB]?([!@#$]?)(((\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
-            return [$matches[2], 'red', self::BASES[$matches[1]] ?? 1, ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
+            return ["{$prefix}{$matches[2]}{$suffix}", 'red', self::BASES[$matches[1]] ?? 1, ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
         } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];
         } elseif ($playText === 'SB') {
             return ["SB$atbat", 'black', 1]; // Stolen base
-        } elseif (in_array($playText, ['WP', '(WP)'])) {
-            return ["WP$atbat", 'blue-text', 1]; // Wild pitch
-        } elseif (in_array($playText, ['PB', '(PB)'])) {
-            return ["PB$atbat", 'red-text', 1];
+        } elseif ($playText === 'WP') {
+            return ["{$prefix}WP{$atbat}{$suffix}", 'blue-text', 1];
+        } elseif ($playText === 'PB') {
+            return ["{$prefix}PB{$atbat}{$suffix}", 'red-text', 1];
         } elseif (in_array($playText, ['!', '@', '#', '$'])) {
             return [$atbat, 'black', self::BASES[$playText] ?? 1]; // Advanced on hitter.
         } elseif (preg_match('/^(F?[FLPGB])([@!#\$]?)$/', $playText, $matches)) {

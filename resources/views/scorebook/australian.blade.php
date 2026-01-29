@@ -321,7 +321,7 @@
             color: blue;
             background-color: rgb(155, 226, 255);
             font-weight: bold;
-        }7
+        }
 
         .play-quadrant.play-blue-text {
             color: blue;
