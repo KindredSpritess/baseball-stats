@@ -203,7 +203,7 @@ class ExportScorebookCommand extends Command
 
     private static function progTotal(array $cur, array $next, string $stat): string
     {
-        if ($cur[$stat]) {
+        if ($cur['p']) {
             return ($next[$stat] - $cur[$stat]) . " / " . $next[$stat];
         }
         return "{$next[$stat]}";
@@ -286,6 +286,7 @@ class ExportScorebookCommand extends Command
 
             if (str_starts_with($play->play, 'Game Over')) {
                 if ($play->inning_half === $teamIndex) {
+                    $pitchers = $game->pitchers[($teamIndex + 1) % 2];
                     $pitcher = $pitchers[count($pitchers) - 1];
                     $nextTotals = [
                         'b' => $pitcher?->stats['Balls'] ?? 0,
@@ -338,6 +339,42 @@ class ExportScorebookCommand extends Command
 
             // Handle the case of players being added to the lineup.
             if ($play->command) {
+                $handleReliefPitcher = function () use ($data, $game, $teamIndex, $inning, &$inningsData, &$totals, $atbat) {
+                    $pitchers = $game->pitchers[($teamIndex + 1) % 2];
+                    if (count($pitchers) < 2) {
+                        return;
+                    }
+                    end($data[$atbat][$inning])->pitcher_change = true;
+                    $inningsData[$inning - 1]['fielding'][] = ['PC' => true];
+                    $pitcher = $pitchers[count($pitchers) - 2];
+                    $nextTotals = [
+                        'b' => $pitcher?->stats['Balls'] ?? 0,
+                        's' => $pitcher?->stats['Strikes'] ?? 0,
+                        'p' => $pitcher?->stats['Pitch'] ?? 0,
+                        'bfp' => $pitcher?->stats['BFP'] ?? 0,
+                        'h' => $pitcher?->stats['HA'] ?? 0,
+                    ];
+                    $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
+                    if ($nextTotals['p'] !== $totals['p']) {
+                        $inningsData[$inning - 1]['pitching'][] = [
+                            'pitcher' => $pitcher,
+                            'b' => self::progTotal($totals, $nextTotals, 'b'),
+                            's' => self::progTotal($totals, $nextTotals, 's'),
+                            'p' => self::progTotal($totals, $nextTotals, 'p'),
+                            'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
+                            'h' => self::progTotal($totals, $nextTotals, 'h'),
+                        ];
+                    }
+                    $totals = [
+                        'b' => 0,
+                        's' => 0,
+                        'p' => 0,
+                        'bfp' => 0,
+                        'h' => 0,
+                        'lob' => $totals['lob'],
+                    ];
+                };
+
                 switch (true) {
                     case str_starts_with($play->play, "@{$team->short_name} "):
                         // Player added to lineup
@@ -374,8 +411,23 @@ class ExportScorebookCommand extends Command
                         }
                         break;
 
-                    // TODO: Handle new opponent pitcher / fielder being substituted in.
-
+                    case str_starts_with($play->play, "DSUB @"):
+                    case str_starts_with($play->play, "@"):
+                        // Opponent player substituted into the lineup
+                        $matches = [];
+                        
+                        if (!preg_match('/(DSUB )?@.*: (.+)( -> #(.+))?/', $play->play, $matches)) {
+                            dd($play->play);
+                        }
+                        if ($matches[2] === '1') {
+                            $handleReliefPitcher();
+                        } elseif (intval($matches[2])) {
+                            // New fielder.
+                            if (!array_intersect_key(['PC' => true, 'DC' => true], end($inningsData[$inning - 1]['fielding']) ?: [])) {
+                                $inningsData[$inning - 1]['fielding'][] = ['DC' => true];
+                            }
+                        }
+                        break;
                     case str_starts_with($play->play, "PH @{$team->short_name} "):
                         // Pinch hitter
                         $playerIn = end($game->lineup[$teamIndex][$atbat - 1]);
@@ -399,10 +451,8 @@ class ExportScorebookCommand extends Command
                                 // Find the runner's batting spot and mark their next at-bat
                                 $runnerSpot = $battingOrder[$runner->id]['spot'] ?? null;
                                 if ($runnerSpot && $runnerSpot !== 'P') {
-                                    if (isset(end($data[$runnerSpot][$inning])->results[0])) {
-                                        $data[$runnerSpot][$inning][] = new PlateAppearence();
-                                    }
-                                    end($data[$runnerSpot][$inning])->next_at_bat = true;
+                                    $pas = count($data[$runnerSpot][$inning]);
+                                    $data[$runnerSpot][$inning][$pas - 1]->results[$base - 1][2] = true;
                                 }
                             }
                         }
@@ -413,41 +463,10 @@ class ExportScorebookCommand extends Command
                         preg_match('/DC #(\d+) -> (.+)/', $play->play, $matches);
                         if ($game->half === $teamIndex) {
                             if ($matches[2] === '1') {
-                                $inningsData[$inning - 1]['fielding'][] = ['PC' => true];
-                                if (isset(end($data[$atbat][$inning])->result[0])) {
+                                if (isset(end($data[$atbat][$inning])->results[0])) {
                                     $data[$atbat][$inning][] = new PlateAppearence();
                                 }
-                                end($data[$atbat][$inning])->pitcher_change = true;
-
-                                $pitchers = $game->pitchers[($teamIndex + 1) % 2];
-                                $pitcher = $pitchers[count($pitchers) - 2];
-                                $nextTotals = [
-                                    'b' => $pitcher?->stats['Balls'] ?? 0,
-                                    's' => $pitcher?->stats['Strikes'] ?? 0,
-                                    'p' => $pitcher?->stats['Pitch'] ?? 0,
-                                    'bfp' => $pitcher?->stats['BFP'] ?? 0,
-                                    'h' => $pitcher?->stats['HA'] ?? 0,
-                                ];
-                                $nextTotals['p'] += $nextTotals['b'] + $nextTotals['s'];
-                                if ($nextTotals['p'] !== $totals['p']) {
-                                    $inningsData[$inning - 1]['pitching'][] = [
-                                        'pitcher' => $pitcher,
-                                        'b' => self::progTotal($totals, $nextTotals, 'b'),
-                                        's' => self::progTotal($totals, $nextTotals, 's'),
-                                        'p' => self::progTotal($totals, $nextTotals, 'p'),
-                                        'bfp' => self::progTotal($totals, $nextTotals, 'bfp'),
-                                        'h' => self::progTotal($totals, $nextTotals, 'h'),
-                                    ];
-                                }
-                                $totals = [
-                                    'b' => 0,
-                                    's' => 0,
-                                    'p' => 0,
-                                    'bfp' => 0,
-                                    'h' => 0,
-                                    'lob' => $totals['lob'],
-                                ];
-
+                                $handleReliefPitcher();
                             } else if (!array_intersect_key(['PC' => true, 'DC' => true], end($inningsData[$inning - 1]['fielding']) ?: [])) {
                                 $inningsData[$inning - 1]['fielding'][] = ['DC' => true];
                             }
