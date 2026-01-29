@@ -948,7 +948,10 @@
                     <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">
                         @if (isset($groupedBatters['P']))
                         <table class="pitchers-fielding-stats">
-                            @foreach ($groupedBatters['P'] as $batter)
+                            @foreach ($groupedBatters['P'] as $pitcher)
+                            @php
+                            $stats = (new \App\Helpers\StatsHelper($pitcher['player']->stats ?? []))->derive();
+                            @endphp
                             <tr style="height: calc(88px / {{ isset($groupedBatters['P']) ? count($groupedBatters['P']) : 1 }})">
                                 <td class="fielding-stats">{{ $stats->DO }}</td>
                                 <td class="spacing-col">&nbsp;</td>
@@ -957,7 +960,7 @@
                                 <td class="fielding-stats">{{ $stats->E }}</td>
                                 <td class="spacing-col">&nbsp;</td>
                                 <td class="fielding-stats">
-                                    @foreach ($batter['positions'] as $position)
+                                    @foreach ($pitcher['positions'] as $position)
                                         @if ($loop->first)
                                             {{ $position[2] }}<br/>
                                         @else
@@ -966,7 +969,7 @@
                                     @endforeach
                                 </td>
                                 <td class="fielding-stats">
-                                    @foreach ($batter['positions'] as $position)
+                                    @foreach ($pitcher['positions'] as $position)
                                         @if (!$loop->last)
                                             {{ $position[0] }}@if($position[1]).{{ $position[1] }}@endif<br/>
                                         @else
@@ -974,8 +977,8 @@
                                         @endif
                                     @endforeach
                                 </td>
-                                <td class="batting-name">{{ $batter['name'] }}</td>
-                                <td class="batting-jersey">{{ $batter['number'] }}</td>
+                                <td class="batting-name">{{ $pitcher['name'] }}</td>
+                                <td class="batting-jersey">{{ $pitcher['number'] }}</td>
                             </tr>
                             @endforeach
                         </table>
