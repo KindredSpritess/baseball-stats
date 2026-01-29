@@ -293,7 +293,7 @@
 
         .play-quadrant {
             width: 30px;
-            height: 17px;
+            height: 20.5px;
             border: 0.5px solid #000;
             font-size: 5pt;
             text-align: center;
@@ -321,7 +321,7 @@
             color: blue;
             background-color: rgb(155, 226, 255);
             font-weight: bold;
-        }
+        }7
 
         .play-quadrant.play-blue-text {
             color: blue;
@@ -337,6 +337,25 @@
             color: red;
             background-color: #ffcccc;
             font-weight: bold;
+        }
+
+        .play-quadrant .play-circled {
+            border: 1px solid #000;
+            border-radius: 50%;
+            padding: 3px 1px;
+            line-height: normal;
+        }
+
+        .play-quadrant-table tr:first-of-type td.pinch-runner:first-of-type {
+            border-bottom: 2px solid green;
+        }
+
+        .play-quadrant-table tr:first-of-type td.pinch-runner:last-of-type {
+            border-left: 2px solid green;
+        }
+
+        .play-quadrant-table tr:nth-of-type(2) td:last-of-type.pinch-runner {
+            border-top: 2px solid green;
         }
 
         .run-circle.earned {
@@ -382,7 +401,11 @@
             border-top: 3px solid blue !important;
         }
 
-        .play-quadrant-table td.pitch-sequence {
+        .inning-cell.next-at-bat {
+            border-left: 3px solid green !important;
+        }
+
+        .play-quadrant-table .pitch-sequence {
             font-size: 6pt;
             text-align: left;
             padding-left: 2px;
@@ -391,7 +414,7 @@
             font-family: monospace;
         }
 
-        .play-quadrant-table td.pitch-total {
+        .play-quadrant-table .pitch-total {
             font-size: 6pt;
             text-align: right;
             padding-right: 1px;
@@ -647,12 +670,12 @@
         <div class="team-names">
             <table>
                 <tr>
-                    <td class="{{ !$isHome ? 'team-home' : '' }}">
-                        {{ $opponent->name }} ({{ !$isHome ? 'HOME' : 'AWAY' }})
+                    <td class="{{ $isHome ? 'team-home' : '' }}">
+                        {{ $isHome ? $team->name : $opponent->name }} (HOME)
                     </td>
                     <td>V</td>
-                    <td class="{{ $isHome ? 'team-home' : '' }}">
-                        {{ $team->name }} ({{ $isHome ? 'HOME' : 'AWAY' }})
+                    <td class="{{ !$isHome ? 'team-home' : '' }}">
+                        {{ $isHome ? $opponent->name : $team->name }} (AWAY)
                     </td>
                 </tr>
             </table>
@@ -874,6 +897,7 @@
                         'inning-end' => $inningEnd,
                         'inning-start' => $inningStart,
                         'pitcher-change' => $play?->pitcher_change ?? false,
+                        'next-at-bat' => $play?->next_at_bat ?? false,
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
@@ -883,7 +907,7 @@
                             <table class="play-quadrant-table">
                                 <tr>
                                     @if ($bigK)
-                                    <td class="play-quadrant play-blue abel-regular" rowspan="2" style="font-size: 24pt;">K</td>
+                                    <td class="play-quadrant play-blue abel-regular" rowspan="2" style="font-size:24pt;line-height:1">K</td>
                                     @else
                                     <x-score-quadrant :play="$play->results[2] ?? null" />
                                     @endif
@@ -893,9 +917,13 @@
                                     @unless($bigK)<x-score-quadrant :play="$play->results[3] ?? null" />@endunless
                                     <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play->results[0] ?? null" />
                                 </tr>
-                                <tr style="height: 11px;">
-                                    <td class="pitch-sequence">{!! $pitches !!}</td>
-                                    <td class="pitch-total">{{ $play->pitch_total ?? '' }}</td>
+                                <tr style="height: 12.47px;">
+                                    <td colspan="2">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <div class="pitch-sequence">{!! $pitches !!}</div>
+                                            <div class="pitch-total">{{ $play->pitch_total ?? '' }}</div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                             <div @class([

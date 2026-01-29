@@ -11,6 +11,8 @@ class ScoreQuadrant extends Component
 
     public $play = '';
     public $colour = '';
+    public $circled = false;
+    public $pinchRunner = false;
 
     /**
      * Create a new component instance.
@@ -21,6 +23,11 @@ class ScoreQuadrant extends Component
             $play = ['', 'black'];
         }
         [$this->play, $this->colour] = $play;
+        if (preg_match('/^\(.*\)$/', $this->play)) {
+            $this->circled = true;
+            $this->play = preg_replace('/^\((.*)\)$/', '$1', $this->play);
+        }
+        $this->pinchRunner = $play[2] ?? false;
     }
 
     /**
