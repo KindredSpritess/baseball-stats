@@ -101,9 +101,9 @@
             background: white;
         }
 
-        tr.hitter-row {
+        /* tr.hitter-row {
             height: 56px;
-        }
+        } */
         
         /* Ensure consistent heights for fielding header rows */
         .main-grid thead tr {
@@ -616,6 +616,44 @@
             border-collapse: collapse;
             width: 100%;
             height: 100%;
+            border: none;
+            border-spacing: 0;
+        }
+
+        table.pitchers-fielding-stats {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.pitchers-fielding-stats td:first-of-type {
+            border-left: none;
+        }
+
+        table.pitchers-fielding-stats td:last-of-type {
+            border-right: none;
+        }
+
+        table.pitchers-fielding-stats td {
+            border-top: none;
+            border-bottom: none
+        }
+
+        table.pitchers-fielding-stats tr {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        table.pitchers-fielding-stats tr:first-of-type {
+            border-top: none;
+        }
+
+        table.pitchers-fielding-stats tr:last-of-type {
+            border-bottom: none;
+        }
+
+        td.fielding-stats {
+            width: 16px;
+            text-align: center;
         }
     </style>
 </head>
@@ -781,6 +819,9 @@
                 $groupedBatters = collect($battingOrder)->groupBy('spot');
                 @endphp
                 @foreach($groupedBatters as $spot => $batters)
+                @if ($spot === 'P')
+                    @continue
+                @endif
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters as $index => $batter)
                 @php
@@ -820,6 +861,7 @@
                     @endif
 
                     <!-- Plate appearance cells. -->
+                    @if ($loop->first)
                     @foreach($innings as $inning)
                     @for($i = 0; $i < $inning['width']; $i++)
                     @php
@@ -837,7 +879,7 @@
                     }
                     $pitches = str_replace('.', '&middot;', $pitches);
                     @endphp
-                    <td @class([
+                    <td rowspan="{{ $loop->parent->count }}" @class([
                         'inning-cell',
                         'inning-end' => $inningEnd,
                         'inning-start' => $inningStart,
@@ -875,6 +917,7 @@
                     </td>
                     @endfor
                     @endforeach
+                    @endif
 
                     <!-- Hitting Stats -->
                     <td style="text-align: center;">{{ $stats->PA }}</td>
@@ -902,7 +945,44 @@
             <tbody class="pitcher-innings-section">
                 <tr>
                     <!-- Put a table for pitchers fielding statistics when the DH is in use. -->
-                    <td colspan="10" rowspan="8">&nbsp;</td>
+                    <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">
+                        @if (isset($groupedBatters['P']))
+                        <table class="pitchers-fielding-stats">
+                            @foreach ($groupedBatters['P'] as $batter)
+                            <tr style="height: calc(88px / {{ isset($groupedBatters['P']) ? count($groupedBatters['P']) : 1 }})">
+                                <td class="fielding-stats">{{ $stats->DO }}</td>
+                                <td class="spacing-col">&nbsp;</td>
+                                <td class="fielding-stats">{{ $stats->PO }}</td>
+                                <td class="fielding-stats">{{ $stats->A }}</td>
+                                <td class="fielding-stats">{{ $stats->E }}</td>
+                                <td class="spacing-col">&nbsp;</td>
+                                <td class="fielding-stats">
+                                    @foreach ($batter['positions'] as $position)
+                                        @if ($loop->first)
+                                            {{ $position[2] }}<br/>
+                                        @else
+                                            <span style="text-decoration:line-through">{{ $position[2] }}</span><br/>
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td class="fielding-stats">
+                                    @foreach ($batter['positions'] as $position)
+                                        @if (!$loop->last)
+                                            {{ $position[0] }}@if($position[1]).{{ $position[1] }}@endif<br/>
+                                        @else
+                                            &nbsp;<br/>
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td class="batting-name">{{ $batter['name'] }}</td>
+                                <td class="batting-jersey">{{ $batter['number'] }}</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        @else
+                            &nbsp;
+                        @endif
+                    </td>
                     <td class="main-stats-header">RUNS</td>
                     @foreach ($innings as $inning)
                     @for($i = 0; $i < $inning['width']; $i++)
