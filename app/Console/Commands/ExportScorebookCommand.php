@@ -351,6 +351,38 @@ class ExportScorebookCommand extends Command
                         }
                         $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position];
                         break;
+                    case str_starts_with($play->play, "DSUB @{$team->short_name} "):
+                        // Player substituted out of lineup
+                        $matches = [];
+                        preg_match('/DSUB @' . $team->short_name . '.*: (\d+)( -> #(.+))?/', $play->play, $matches);
+                        $position = $matches[1];
+                        if (intval($position)) {
+                            $player = $game->defense[$teamIndex][intval($position)];
+                        } elseif (isset($matches[3])) {
+                            $player = end($game->lineup[$teamIndex][intval($matches[3]) - 1]);
+                        }
+                        if ($player) {
+                            $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position];
+                        }
+                        break;
+                    case str_starts_with($play->play, "PH @{$team->short_name} "):
+                        // Pinch hitter
+                        $playerIn = end($game->lineup[$teamIndex][$atbat - 1]);
+                        if ($playerIn) {
+                            $battingOrder[$playerIn->id]['positions'][] = [$game->inning, $game->outs, 'PH'];
+                        }
+                        break;
+                    case str_starts_with($play->play, "PR"):
+                        // Pinch runner
+                        // Get the player at the base if correct team.
+                        if ($game->half === $teamIndex) {
+                            $base = intval($play->play[2]);
+                            $runner = $game->bases[$base - 1];
+                            if ($runner) {
+                                $battingOrder[$runner->id]['positions'][] = [$game->inning, $game->outs, 'PR'];
+                            }
+                        }
+                        break;
                     case str_starts_with($play->play, "DC #"):
                         // Player moved.
                         $matches = [];

@@ -620,40 +620,24 @@
             border-spacing: 0;
         }
 
-        table.pitchers-fielding-stats {
+        table.pitcher-stats-subtable {
             width: 100%;
+            border: none;
             border-collapse: collapse;
         }
-
-        table.pitchers-fielding-stats td:first-of-type {
-            border-left: none;
+        table.pitcher-stats-subtable td {
+            border: none !important;
         }
-
-        table.pitchers-fielding-stats td:last-of-type {
-            border-right: none;
-        }
-
-        table.pitchers-fielding-stats td {
-            border-top: none;
-            border-bottom: none
-        }
-
-        table.pitchers-fielding-stats tr {
-            border-top: 1px solid black;
+        table.pitcher-stats-subtable tr {
             border-bottom: 1px solid black;
         }
-
-        table.pitchers-fielding-stats tr:first-of-type {
-            border-top: none;
-        }
-
-        table.pitchers-fielding-stats tr:last-of-type {
+        table.pitcher-stats-subtable tr:last-of-type {
             border-bottom: none;
         }
 
-        td.fielding-stats {
-            width: 16px;
-            text-align: center;
+        .pitcher-name td {
+            text-align: left;
+            padding-left: 6px;
         }
     </style>
 </head>
@@ -823,7 +807,7 @@
                     @continue
                 @endif
                 @php $rowspan = count($batters); @endphp
-                @foreach($batters as $index => $batter)
+                @foreach($batters->reverse() as $index => $batter)
                 @php
                 $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
                 @endphp
@@ -835,18 +819,18 @@
                     <td style="text-align: center;">{{ $stats->E }}</td>
                     <td class="spacing-col">&nbsp;</td>
                     <td class="fielding-player">
-                        @foreach ($batter['positions'] as $position)
-                            @if ($loop->first)
-                                {{ $position[2] }}<br/>
+                        @foreach ($batter['positions'] as [$inning, $outs, $position])
+                            @if ($loop->first && $loop->parent->first)
+                                {{ $position }}<br/>
                             @else
-                                <span style="text-decoration:line-through">{{ $position[2] }}</span><br/>
+                                <span style="text-decoration:line-through">{{ $position }}</span><br/>
                             @endif
                         @endforeach
                     </td>
                     <td class="fielding-pos">
-                        @foreach ($batter['positions'] as $position)
-                            @if (!$loop->last)
-                                {{ $position[0] }}@if($position[1]).{{ $position[1] }}@endif<br/>
+                        @foreach ($batter['positions'] as [$inning, $outs, $position])
+                            @if ($inning !== 1 || $outs !== 0)
+                                {{ $inning }}@if($outs).{{ $outs }}@endif<br/>
                             @else
                                 &nbsp;<br/>
                             @endif
@@ -854,7 +838,13 @@
                     </td>
 
                     <!-- Batter name and jersey number -->
-                    <td class="batting-name">{{ $batter['name'] }}</td>
+                    <td class="batting-name">
+                        @if ($loop->first)
+                            {{ $batter['name'] }}
+                        @else
+                            <span style="text-decoration: line-through;">{{ $batter['name'] }}</span>
+                        @endif
+                    </td>
                     <td class="batting-jersey">{{ $batter['number'] }}</td>
                     @if ($loop->first)
                     <td class="batting-number" rowspan="{{ $rowspan }}">{{ $spot }}</td>
@@ -945,47 +935,20 @@
             <tbody class="pitcher-innings-section">
                 <tr>
                     <!-- Put a table for pitchers fielding statistics when the DH is in use. -->
-                    <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">
-                        @if (isset($groupedBatters['P']))
-                        <table class="pitchers-fielding-stats">
-                            @foreach ($groupedBatters['P'] as $pitcher)
-                            @php
-                            $stats = (new \App\Helpers\StatsHelper($pitcher['player']->stats ?? []))->derive();
-                            @endphp
-                            <tr style="height: calc(88px / {{ isset($groupedBatters['P']) ? count($groupedBatters['P']) : 1 }})">
-                                <td class="fielding-stats">{{ $stats->DO }}</td>
-                                <td class="spacing-col">&nbsp;</td>
-                                <td class="fielding-stats">{{ $stats->PO }}</td>
-                                <td class="fielding-stats">{{ $stats->A }}</td>
-                                <td class="fielding-stats">{{ $stats->E }}</td>
-                                <td class="spacing-col">&nbsp;</td>
-                                <td class="fielding-stats">
-                                    @foreach ($pitcher['positions'] as $position)
-                                        @if ($loop->first)
-                                            {{ $position[2] }}<br/>
-                                        @else
-                                            <span style="text-decoration:line-through">{{ $position[2] }}</span><br/>
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td class="fielding-stats">
-                                    @foreach ($pitcher['positions'] as $position)
-                                        @if (!$loop->last)
-                                            {{ $position[0] }}@if($position[1]).{{ $position[1] }}@endif<br/>
-                                        @else
-                                            &nbsp;<br/>
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td class="batting-name">{{ $pitcher['name'] }}</td>
-                                <td class="batting-jersey">{{ $pitcher['number'] }}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
+                    @if (isset($groupedBatters['P']))
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :stat="'DO'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="spacing-col" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :stat="'PO'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :stat="'A'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :stat="'E'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="spacing-col" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :position="true" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :changes="true" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="pitcher-name" :detail="'name'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="batting-jersey" :detail="'number'" />
+                    @else
+                        <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">&nbsp;</td>
+                    @endif
                     <td class="main-stats-header">RUNS</td>
                     @foreach ($innings as $inning)
                     @for($i = 0; $i < $inning['width']; $i++)
