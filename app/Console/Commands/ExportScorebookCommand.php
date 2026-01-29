@@ -363,13 +363,29 @@ class ExportScorebookCommand extends Command
                         }
                         if ($player) {
                             $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
+                            // Find the player's batting spot and mark their next at-bat
+                            $playerSpot = $battingOrder[$player->id]['spot'] ?? null;
+                            if ($playerSpot && $playerSpot !== 'P') {
+                                if (isset(end($data[$playerSpot][$inning])->results[0])) {
+                                    $data[$playerSpot][$inning][] = new PlateAppearence();
+                                }
+                                end($data[$playerSpot][$inning])->next_at_bat = true;
+                            }
                         }
                         break;
+
+                    // TODO: Handle new opponent pitcher / fielder being substituted in.
+
                     case str_starts_with($play->play, "PH @{$team->short_name} "):
                         // Pinch hitter
                         $playerIn = end($game->lineup[$teamIndex][$atbat - 1]);
                         if ($playerIn) {
                             $battingOrder[$playerIn->id]['positions'][] = [$game->inning, $game->outs, 'PH', $game->half];
+                            // Mark the current at-bat for the pinch hitter
+                            if (isset(end($data[$atbat][$inning])->results[0])) {
+                                $data[$atbat][$inning][] = new PlateAppearence();
+                            }
+                            end($data[$atbat][$inning])->next_at_bat = true;
                         }
                         break;
                     case str_starts_with($play->play, "PR"):
@@ -380,6 +396,14 @@ class ExportScorebookCommand extends Command
                             $runner = $game->bases[$base - 1];
                             if ($runner) {
                                 $battingOrder[$runner->id]['positions'][] = [$game->inning, $game->outs, 'PR', $game->half];
+                                // Find the runner's batting spot and mark their next at-bat
+                                $runnerSpot = $battingOrder[$runner->id]['spot'] ?? null;
+                                if ($runnerSpot && $runnerSpot !== 'P') {
+                                    if (isset(end($data[$runnerSpot][$inning])->results[0])) {
+                                        $data[$runnerSpot][$inning][] = new PlateAppearence();
+                                    }
+                                    end($data[$runnerSpot][$inning])->next_at_bat = true;
+                                }
                             }
                         }
                         break;
@@ -670,5 +694,6 @@ class PlateAppearence
     public $inning_end = false;
     public $inning_start = false;
     public $pitcher_change = false;
+    public $next_at_bat = false;
     public $results = []; // Each entry: [note, colour]
 }

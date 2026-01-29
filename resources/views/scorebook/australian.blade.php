@@ -382,6 +382,10 @@
             border-top: 3px solid blue !important;
         }
 
+        .inning-cell.next-at-bat {
+            border-left: 3px solid green !important;
+        }
+
         .play-quadrant-table td.pitch-sequence {
             font-size: 6pt;
             text-align: left;
@@ -874,6 +878,7 @@
                         'inning-end' => $inningEnd,
                         'inning-start' => $inningStart,
                         'pitcher-change' => $play?->pitcher_change ?? false,
+                        'next-at-bat' => $play?->next_at_bat ?? false,
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">
