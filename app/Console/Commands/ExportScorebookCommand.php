@@ -362,13 +362,18 @@ class ExportScorebookCommand extends Command
                             $player = end($game->lineup[$teamIndex][intval($matches[3]) - 1]);
                         }
                         if ($player) {
+                            // TODO: Add a green border left border for the next at bat, similar to pitching change.
                             $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
                         }
                         break;
+
+                    // TODO: Handle new opponent pitcher / fielder being substituted in.
+
                     case str_starts_with($play->play, "PH @{$team->short_name} "):
                         // Pinch hitter
                         $playerIn = end($game->lineup[$teamIndex][$atbat - 1]);
                         if ($playerIn) {
+                            // TODO: Add a green border for new batter.
                             $battingOrder[$playerIn->id]['positions'][] = [$game->inning, $game->outs, 'PH', $game->half];
                         }
                         break;
@@ -379,6 +384,7 @@ class ExportScorebookCommand extends Command
                             $base = intval($play->play[2]);
                             $runner = $game->bases[$base - 1];
                             if ($runner) {
+                                // TODO: Add a green border for new runner.
                                 $battingOrder[$runner->id]['positions'][] = [$game->inning, $game->outs, 'PR', $game->half];
                             }
                         }
