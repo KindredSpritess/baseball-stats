@@ -828,9 +828,9 @@
                         @endforeach
                     </td>
                     <td class="fielding-pos">
-                        @foreach ($batter['positions'] as [$inning, $outs, $position])
+                        @foreach ($batter['positions'] as [$inning, $outs, $position, $half])
                             @if ($inning !== 1 || $outs !== 0)
-                                {{ $inning }}@if($outs).{{ $outs }}@endif<br/>
+                                <span @style(["text-decoration:overline" => !$half, 'text-decoration:underline' => $half])>{{ $inning }}@if($outs).{{ $outs }}@endif</span><br/>
                             @else
                                 &nbsp;<br/>
                             @endif

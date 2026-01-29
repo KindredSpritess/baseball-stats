@@ -11,7 +11,7 @@
         @elseif (isset($detail))
           {{ $pitcher[$detail] }}
         @elseif (isset($position))
-          @foreach ($pitcher['positions'] as [$inning, $out, $pos])
+          @foreach ($pitcher['positions'] as [$inning, $out, $pos, $half])
             @if ($loop->first)
               {{ $pos }}<br/>
             @else
@@ -19,9 +19,9 @@
             @endif
           @endforeach
         @elseif (isset($changes))
-          @foreach ($pitcher['positions'] as [$inning, $out, $pos])
+          @foreach ($pitcher['positions'] as [$inning, $out, $pos, $half])
             @if ($inning !== 1 || $out !== 0)
-              {{ $inning }}@if($out).{{ $out }}@endif<br/>
+              <span @style(["text-decoration:overline" => !$half, 'text-decoration:underline' => $half])>{{ $inning }}@if($out).{{ $out }}@endif</span><br/>
             @else
               &nbsp;<br/>
             @endif

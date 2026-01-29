@@ -349,7 +349,7 @@ class ExportScorebookCommand extends Command
                             $spot = end($game->lineup[$teamIndex]);
                             $player = end($spot);
                         }
-                        $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position];
+                        $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
                         break;
                     case str_starts_with($play->play, "DSUB @{$team->short_name} "):
                         // Player substituted out of lineup
@@ -362,14 +362,14 @@ class ExportScorebookCommand extends Command
                             $player = end($game->lineup[$teamIndex][intval($matches[3]) - 1]);
                         }
                         if ($player) {
-                            $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position];
+                            $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
                         }
                         break;
                     case str_starts_with($play->play, "PH @{$team->short_name} "):
                         // Pinch hitter
                         $playerIn = end($game->lineup[$teamIndex][$atbat - 1]);
                         if ($playerIn) {
-                            $battingOrder[$playerIn->id]['positions'][] = [$game->inning, $game->outs, 'PH'];
+                            $battingOrder[$playerIn->id]['positions'][] = [$game->inning, $game->outs, 'PH', $game->half];
                         }
                         break;
                     case str_starts_with($play->play, "PR"):
@@ -379,7 +379,7 @@ class ExportScorebookCommand extends Command
                             $base = intval($play->play[2]);
                             $runner = $game->bases[$base - 1];
                             if ($runner) {
-                                $battingOrder[$runner->id]['positions'][] = [$game->inning, $game->outs, 'PR'];
+                                $battingOrder[$runner->id]['positions'][] = [$game->inning, $game->outs, 'PR', $game->half];
                             }
                         }
                         break;
@@ -429,7 +429,7 @@ class ExportScorebookCommand extends Command
                             }
                         } else {
                             $player = end($game->lineup[$teamIndex][intval($matches[1]) - 1]);
-                            array_unshift($battingOrder[$player->id]['positions'], [$game->inning, $game->outs, $matches[2]]);
+                            array_unshift($battingOrder[$player->id]['positions'], [$game->inning, $game->outs, $matches[2], $game->half]);
                         }
                         break;
                 }
