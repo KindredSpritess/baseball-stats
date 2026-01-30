@@ -137,7 +137,7 @@ class Play extends Model
             return;
         }
 
-        if (auth()->check()) {
+        if (auth()->check() && !$game->scorer) {
             $game->scorer()->associate(auth()->user());
         }
 
