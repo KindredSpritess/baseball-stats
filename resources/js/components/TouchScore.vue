@@ -20,6 +20,9 @@
         <a :href="`/game/${gameId}`" style="text-decoration: none;">
           <button  class="option-item">Full Scoring</button>
         </a>
+        <a :href="`/game/${gameId}/scorebook`" style="text-decoration: none;">
+          <button class="option-item">Export Scorebook</button>
+        </a>
       </div>
     </div>
 

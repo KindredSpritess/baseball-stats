@@ -69,6 +69,8 @@ class Game extends Model
 
     public array $pitchers = [[], []];
 
+    public int $lob = 0;
+
     public array $pitchersOfRecord = [
         'winning' => null,
         'losing' => null,
@@ -95,6 +97,10 @@ class Game extends Model
 
     public function players() {
         return $this->hasMany(Player::class);
+    }
+
+    public function scorer() {
+        return $this->belongsTo(User::class, 'scorer_id', 'id');
     }
 
     public function substitute(int $home, Player $player, ?Player $replacing = null, ?string $fieldPos = null) : void {
@@ -176,6 +182,7 @@ class Game extends Model
     }
 
     public function sideAway() {
+        $this->lob = count(array_filter($this->bases));
         $this->outs = 0;
         $this->expectedOuts = 0;
         $this->balls = 0;

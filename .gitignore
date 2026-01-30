@@ -9,3 +9,4 @@
 /public/hot
 /public/schedules/*.ics
 .phpunit.result.cache
+public/storage

@@ -137,6 +137,10 @@ class Play extends Model
             return;
         }
 
+        if (auth()->check()) {
+            $game->scorer()->associate(auth()->user());
+        }
+
         $this->inning = $game->inning;
         $this->inning_half = $game->half;
         $this->plate_appearance = false;
@@ -182,17 +186,19 @@ class Play extends Model
                         $save = $lastPitcher;
                     }
                 }
-                $win?->evt('Win');
                 throw_unless($loss, 'Losing pitcher not set');
                 $loss->evt('Loss');
-                $save?->evt('Save');
                 if ($win) {
+                    $win->evt('Win');
+                    $game->pitchersOfRecord['winning'] = $win;
                     $this->game_event .= "\nWinning pitcher: {$win?->person?->fullName()}";
                 }
                 if ($loss) {
                     $this->game_event .= " Losing pitcher: {$loss->person->fullName()}";
                 }
                 if ($save) {
+                    $save->evt('Save');
+                    $game->pitchersOfRecord['saving'] = $save;
                     $this->game_event .= " Save: {$save->person->fullName()}";
                 }
             }
@@ -216,6 +222,7 @@ class Play extends Model
                 $player->person()->associate($person);
                 $player->team()->associate($team);
                 $player->game()->associate($game);
+                $player->push();
             } else {
                 // Reset stats for re-entry.
                 $player->stats = [];
@@ -225,7 +232,6 @@ class Play extends Model
             if (isset($matches[4])) {
                 $player->number = $matches[4];
             }
-            $player->push();
             $game->substitute($game->home_team()->is($team), $player, null, $matches[5]);
             // If the game has started, we need to log the lineup addition.
             if ($game->inning > 1 || $game->half > 0 || $game->outs || $game->balls || $game->strikes || $game->score[0] || $game->runners) {
