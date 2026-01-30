@@ -19,6 +19,7 @@ Baseball Stats is designed to provide a complete solution for baseball leagues, 
 - **Live game scoring** - Real-time play-by-play input with state management
 - **Game viewer** - Watch games with live updates
 - **Box scores** - Generate detailed box scores for completed games
+- **Australian scorebook export** - Export detailed HTML scorebooks that can be printed to PDF
 - **Undo functionality** - Correct mistakes with play-by-play undo
 - **Game locking** - Prevent accidental changes to completed games
 - **Google Cast support** - Display live game data on external displays
@@ -44,6 +45,13 @@ Baseball Stats is designed to provide a complete solution for baseball leagues, 
 - **Sanctum API authentication** - Secure API access
 
 ### Additional Features
+- **Australian scorebook export** - Generate detailed HTML scorebooks matching Australian baseball format
+  - Command-line and web interface access
+  - Visual indicators for outs, runs (earned/unearned), and inning transitions
+  - Player substitution tracking (PH, PR, DSUB)
+  - Comprehensive statistics and pitcher tracking
+  - Print directly from browser to create PDF
+  - See [SCOREBOOK.md](SCOREBOOK.md) for detailed documentation
 - **Schedule management** - Import and display game schedules
 - **Real-time broadcasting** - Live game updates using Laravel Reverb
 - **Responsive design** - Works on desktop and mobile devices
@@ -194,6 +202,7 @@ If you have Lando installed, you can use the included configuration:
 
 - **Live View:** Watch games in progress with real-time updates
 - **Box Score:** View detailed statistics after game completion
+- **Scorebook:** Export Australian-style scorebook HTML (⚙️ Options → Export Scorebook)
 - **Cast:** Display game data on a Google Cast device
 
 ## Testing
@@ -241,6 +250,7 @@ The application provides both web and API interfaces:
 ### Web Routes
 - `/` - Home dashboard
 - `/game/{game}` - Game scoring interface
+- `/game/{game}/scorebook` - Export scorebook HTML
 - `/game/view/{game}` - Game viewer
 - `/team/{team}` - Team details
 - `/person/{person}` - Player statistics
