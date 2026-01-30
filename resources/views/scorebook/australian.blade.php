@@ -66,23 +66,22 @@
             border-bottom: 2px solid #000;
             font-size: 12pt;
             font-weight: bold;
-        }
-
-        .team-names table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .team-names td {
+            display: flex;
+            flex-direction: row;
+            column-gap: 20px;
             padding: 8px;
+        }
+
+        .team-names div {
+            /* flex: 0; */
             text-align: center;
         }
 
-        .team-names td:first-child {
+        .team-names div:first-child {
             text-align: left;
         }
 
-        .team-names td:last-child {
+        .team-names div:last-child {
             text-align: right;
         }
 
@@ -104,12 +103,12 @@
         /* tr.hitter-row {
             height: 56px;
         } */
-        
+
         /* Ensure consistent heights for fielding header rows */
         .main-grid thead tr {
             height: auto;
         }
-        
+
         .main-grid thead tr th.main-stats-header {
             height: 10px;
             line-height: 10px;
@@ -139,7 +138,7 @@
             border: 1px solid #000;
             vertical-align: middle;
         }
-        
+
         /* Narrow spacing columns */
         .main-grid td.spacing-col,
         .main-grid th.spacing-col {
@@ -152,7 +151,6 @@
         /* Fielding Section */
         .fielding-section {
             width: 80px;
-            border-right: 2px solid #000 !important;
         }
 
         .fielding-header {
@@ -194,7 +192,6 @@
         /* Batting Order Section */
         .batting-section {
             width: 120px;
-            border-right: 2px solid #000 !important;
         }
 
         .batting-header {
@@ -300,6 +297,22 @@
             vertical-align: middle;
         }
 
+        .play-quadrant-table tr:first-of-type td {
+            border-top: none;
+        }
+
+        .play-quadrant-table tr:last-of-type td {
+            border-bottom: none;
+        }
+
+        .play-quadrant-table tr td:first-of-type {
+            border-left: none;
+        }
+
+        .play-quadrant-table tr td:last-of-type {
+            border-right: none;
+        }
+
         .run-circle {
             width: 13px;
             height: 13px;
@@ -327,6 +340,10 @@
             color: blue;
         }
 
+        .play-quadrant.play-red-text {
+            color: red;
+        }
+
         .play-quadrant.play-green {
             color: green;
             background-color: #ccffcc;
@@ -342,20 +359,30 @@
         .play-quadrant .play-circled {
             border: 1px solid #000;
             border-radius: 50%;
-            padding: 3px 1px;
-            line-height: normal;
+            padding: 1px 1px;
+            font-size: 6pt;
+            line-height: 1;
+            font-weight: bold;
+        }
+
+        .play-quadrant-table .play-blue-text span.play-circled {
+            border-color: blue;
+        }
+
+        .play-quadrant-table .play-red-text span.play-circled, .play-quadrant-table .play-red span.play-circled {
+            border-color: red;
         }
 
         .play-quadrant-table tr:first-of-type td.pinch-runner:first-of-type {
-            border-bottom: 2px solid green;
+            border-bottom: 2px solid #00b000;
         }
 
         .play-quadrant-table tr:first-of-type td.pinch-runner:last-of-type {
-            border-left: 2px solid green;
+            border-left: 2px solid #00b000;
         }
 
         .play-quadrant-table tr:nth-of-type(2) td:last-of-type.pinch-runner {
-            border-top: 2px solid green;
+            border-top: 2px solid #00b000;
         }
 
         .run-circle.earned {
@@ -394,15 +421,27 @@
         }
 
         .inning-cell.inning-start {
-            border-top: 3px solid #ffaa00 !important;
+            border-top: 2px solid #ffaa00 !important;
+        }
+
+        .inning-cell.inning-start table.play-quadrant-table tr:first-of-type td {
+            border-top: 1px solid #ffaa00 !important;
         }
 
         .inning-cell.pitcher-change {
-            border-top: 3px solid blue !important;
+            border-top: 2px solid blue !important;
+        }
+
+        .inning-cell.pitcher-change table.play-quadrant-table tr:first-of-type .play-quadrant, .inning-cell.inning-start table.play-quadrant-table tr:first-of-type .play-quadrant {
+            height: 20px;
+        }
+
+        .inning-cell.pitcher-change table.play-quadrant-table tr:first-of-type td {
+            border-top: 1px solid blue !important;
         }
 
         .inning-cell.next-at-bat {
-            border-left: 3px solid green !important;
+            border-left: 3px solid #00b000 !important;
         }
 
         .play-quadrant-table .pitch-sequence {
@@ -517,7 +556,7 @@
         table.summary {
             width: 100%;
             border-collapse: collapse;
-            font-size: 6pt;
+            font-size: 7pt;
             table-layout: fixed;
         }
 
@@ -527,17 +566,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         table.summary td strong {
-            font-size: 5pt;
+            font-size: 7pt;
         }
-        
+
         /* Pitcher stats table - narrow columns */
         .section-title + table.summary td:not(:first-child) {
             width: 25px;
             text-align: center;
         }
-        
+
         .section-title + table.summary td:first-child {
             width: auto;
         }
@@ -554,25 +593,25 @@
             body {
                 padding: 0;
             }
-            
+
             .scorebook {
                 page-break-inside: avoid;
             }
-            
+
             .main-grid {
                 page-break-inside: avoid;
             }
-            
+
             .main-grid tbody {
                 page-break-inside: avoid;
             }
         }
-        
+
         /* PDF-specific optimizations */
         .scorebook {
             max-width: 100%;
         }
-        
+
         /* Prevent page breaks */
         .main-grid, .main-grid tbody, .main-grid tr {
             page-break-inside: avoid;
@@ -654,13 +693,17 @@
         table.pitcher-stats-subtable tr {
             border-bottom: 1px solid black;
         }
-        table.pitcher-stats-subtable tr:last-of-type {
+        /* table.pitcher-stats-subtable tr:last-of-type {
             border-bottom: none;
-        }
+        } */
 
         .pitcher-name td {
             text-align: left;
             padding-left: 6px;
+        }
+
+        tr.hitter-row.hitter-divider > td {
+            border-top: 2px solid black;
         }
     </style>
 </head>
@@ -668,17 +711,11 @@
     <div class="scorebook">
         <!-- Team Names -->
         <div class="team-names">
-            <table>
-                <tr>
-                    <td class="{{ $isHome ? 'team-home' : '' }}">
-                        {{ $isHome ? $team->name : $opponent->name }} (HOME)
-                    </td>
-                    <td>V</td>
-                    <td class="{{ !$isHome ? 'team-home' : '' }}">
-                        {{ $isHome ? $opponent->name : $team->name }} (AWAY)
-                    </td>
-                </tr>
-            </table>
+            <div class="{{ $isHome ? 'team-home' : '' }}">{{ $isHome ? $team->name : $opponent->name }} (HOME)</div>
+            <div>V</div>
+            <div class="{{ !$isHome ? 'team-home' : '' }}">
+                {{ $isHome ? $opponent->name : $team->name }} (AWAY)
+            </div>
         </div>
 
         <!-- Venue Information -->
@@ -834,7 +871,7 @@
                 @php
                 $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
                 @endphp
-                <tr class="hitter-row">
+                <tr @class(['hitter-row', 'hitter-divider' => $loop->first])>
                     <td style="text-align: center;">{{ $stats->DO }}</td>
                     <td class="spacing-col">&nbsp;</td>
                     <td style="text-align: center;">{{ $stats->PO }}</td>
@@ -938,27 +975,32 @@
                     @endif
 
                     <!-- Hitting Stats -->
-                    <td style="text-align: center;">{{ $stats->PA }}</td>
-                    <td style="text-align: center;">{{ $stats->AB }}</td>
-                    <td style="text-align: center;">{{ $stats->R }}</td>
-                    <td style="text-align: center;">{{ $stats->H }}</td>
-                    <td style="text-align: center;">{{ $stats->stat('2') }}</td>
-                    <td style="text-align: center;">{{ $stats->stat('3') }}</td>
-                    <td style="text-align: center;">{{ $stats->HR }}</td>
-                    <td style="text-align: center;">{{ $stats->RBI }}</td>
-                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAB }}</td>
-                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAF }}</td>
-                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->BBs }}</td>
-                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->HPB }}</td>
-                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->CI }}</td>
-                    <td style="text-align: center;">{{ $stats->SO }}</td>
-                    <td style="text-align: center;">{{ $stats->GDP }}</td>
-                    <td style="text-align: center;">{{ $stats->SB }}</td>
-                    <td style="text-align: center;">{{ $stats->CS }}</td>
-                    <td style="text-align: center;">{{ $stats->LOB }}</td>
+                    <td style="text-align: center;">{{ $stats->PA ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->AB ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->R ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->H ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->stat('2') ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->stat('3') ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->HR ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->RBI ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAB ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAF ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->BBs ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->HPB ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->CI ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->SO ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->GDP ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->SB ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->CS ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->LOB ?: '' }}</td>
                 </tr>
                 @endforeach
                 @endforeach
+            </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="41" style="height:5px;"></td>
+                </tr>
             </tbody>
             <tbody class="pitcher-innings-section">
                 <tr>
@@ -1065,20 +1107,20 @@
                             <tr>
                                 <td>{{ $pitcher->person->lastName }}, {{ $pitcher->person->firstName }}</td>
                                 <td style="text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
-                                <td style="text-align: center;">{{ $stats->HA }}</td>
-                                <td style="text-align: center;">{{ $stats->K }}</td>
-                                <td style="text-align: center;">{{ $stats->BB }}</td>
-                                <td style="text-align: center;">{{ $stats->HBP }}</td>
-                                <td style="text-align: center;">{{ $stats->RA }}</td>
-                                <td style="text-align: center;">{{ $stats->ER }}</td>
-                                <td style="text-align: center;">{{ $stats->WP }}</td>
-                                <td style="text-align: center;">{{ $stats->BLK }}</td>
-                                <td style="text-align: center;">{{ $stats->POs }}</td>
-                                <td style="text-align: center;">{{ $stats->PCS }}</td>
-                                <td style="text-align: center;">{{ $stats->BFP }}</td>
-                                <td style="text-align: center;">{{ $stats->Balls }}</td>
-                                <td style="text-align: center;">{{ $stats->Strikes }}</td>
-                                <td style="text-align: center;">{{ $stats->Pitches }}</td>
+                                <td style="text-align: center;">{{ $stats->HA ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->K ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->BB ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->HBP ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->RA ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->ER ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->WP ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->BLK ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->POs ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->PCS ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->BFP ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->Balls ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->Strikes ?: '' }}</td>
+                                <td style="text-align: center;">{{ $stats->Pitches ?: '' }}</td>
                                 <td style="text-align: center;">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
                             </tr>
                             @empty
@@ -1127,17 +1169,7 @@
 
                     <!-- Right Column: Score and Scorer -->
                     <td style="width: 40%; vertical-align: top;">
-                        <div class="section-title">SCORE</div>
-                        <table class="summary">
-                            <tr>
-                                <td style="width: 50%;"><strong>{{ $opponent->name }}</strong></td>
-                                <td style="text-align: center;">{{ $game->score[$isHome ? 0 : 1] ?? 0 }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>{{ $team->name }}</strong></td>
-                                <td style="text-align: center;">{{ $game->score[$isHome ? 1 : 0] ?? 0 }}</td>
-                            </tr>
-                        </table>
+                        <div class="section-title">SCORE: {{ $opponent->name }} {{ $game->score[$isHome ? 0 : 1] ?? 0 }} - {{ $team->name }} {{ $game->score[$isHome ? 1 : 0] ?? 0 }}</div>
 
                         <!-- Pitchers of Record -->
                         @if($game->ended)

@@ -503,7 +503,7 @@ class ExportScorebookCommand extends Command
                             // Locate ball in play position.
                             $note .= $this->locateBallInPlay($ballInPlay);
                         }
-                        if (count($playResult) > 3) {
+                        if (count($playResult) > 3 && $playResult[3]) {
                             $inningsData[$inning - 1]['fielding'][] = $playResult[3];
                         }
                         if ($bases < 0) {
@@ -637,7 +637,7 @@ class ExportScorebookCommand extends Command
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
         } elseif (preg_match('/^[FLPGB]?([!@#$]?)(((\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
-            return ["{$prefix}{$matches[2]}{$suffix}", 'red', self::BASES[$matches[1]] ?? 1, ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
+            return ["{$prefix}{$matches[2]}{$suffix}", 'red', self::BASES[$matches[1]] ?? 1, $prefix ? null : ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
         } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];

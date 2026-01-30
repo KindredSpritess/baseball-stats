@@ -1,10 +1,10 @@
-<td rowspan="8" class="{{ $class }}">
+<td rowspan="8" class="{{ $class }}" style="vertical-align:top">
   <table class="pitcher-stats-subtable">
   @foreach ($groupedBatters['P'] as $pitcher)
     @php
     $stats = (new \App\Helpers\StatsHelper($pitcher['player']->stats ?? []))->derive();
     @endphp
-    <tr style="height: calc(88px / {{ isset($groupedBatters['P']) ? count($groupedBatters['P']) : 1 }})">
+    <tr style="height: calc(88px / {{ isset($groupedBatters['P']) ? max(6, count($groupedBatters['P'])) : 1 }})">
       <td>
         @if (isset($stat))
           {{ $stats->$stat }}

@@ -13,6 +13,7 @@ class ScoreQuadrant extends Component
     public $colour = '';
     public $circled = false;
     public $pinchRunner = false;
+    public $padding = '1px';
 
     /**
      * Create a new component instance.
@@ -28,6 +29,8 @@ class ScoreQuadrant extends Component
             $this->play = preg_replace('/^\((.*)\)$/', '$1', $this->play);
         }
         $this->pinchRunner = $play[2] ?? false;
+
+        $this->padding = strlen($this->play) > 2 ? '3px' : '1px';
     }
 
     /**
