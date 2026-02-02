@@ -159,6 +159,18 @@ class Play extends Model
             $lastPlay = $game->plays()->orderByDesc('id')->first();
             $game->inning = $lastPlay?->inning ?? $game->inning;
             $game->half = $lastPlay?->inning_half ?? $game->half;
+
+            $overriden = false;
+            if ($log->consume(' !')) {
+                // Scores is being overriden.
+                $matches = [];
+                throw_unless(preg_match('/^(\d+)-(\d+)/', (string)$log, $matches), 'Expected score format "Game Over !X-Y"');
+                $game->score[0] = intval($matches[1]);
+                $game->score[1] = intval($matches[2]);
+                $log->consume($matches[0]);
+                $overriden = true;
+            }
+
             $this->game_event = 'End of the game. Final score: ';
             $this->game_event .= " {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.";
             // $game->locked = true;
@@ -166,7 +178,7 @@ class Play extends Model
 
             // Work out pitchers of record.
             $lead = $game->score[0] - $game->score[1];
-            if ($lead) {
+            if ($lead && !$overriden) {
                 // Ensure the starter went 5 innings for a win.
                 $win = $game->pitchersOfRecord['winning'];
                 $loss = $game->pitchersOfRecord['losing'];
@@ -201,6 +213,12 @@ class Play extends Model
                     $game->pitchersOfRecord['saving'] = $save;
                     $this->game_event .= " Save: {$save->person->fullName()}";
                 }
+            } else {
+                $game->pitchersOfRecord = [
+                    'winning' => null,
+                    'losing' => null,
+                    'saving' => null,
+                ];
             }
 
             return;

@@ -32,8 +32,19 @@
         <h3>End Game</h3>
         <div class="final-score">
           <p>Final Score: {{ game.away_team.name }} {{ state.score[0] }} - {{ game.home_team.name }} {{ state.score[1] }}</p>
+          <div @click="enableScoreOverride" class="edit-score">Override?</div>
         </div>
-        
+        <div v-if="overrideEnabled" class="score-override">
+          <label>
+            {{ game.away_team.name }}:
+            <input type="number" v-model.number="overrideScore.away" min="0" />
+          </label>
+          <label>
+            {{ game.home_team.name }}:
+            <input type="number" v-model.number="overrideScore.home" min="0" />
+          </label>
+        </div>
+
         <div v-if="winningTeam !== null" class="pitchers-section">
           <div class="winning-pitcher">
             <h4>Winning Pitcher</h4>
@@ -141,6 +152,8 @@ export default {
       showEndGameModal: false,
       selectedWinningPitcher: null,
       errors: [],
+      overrideEnabled: false,
+      overrideScore: { away: null, home: null },
     }
   },
   computed: {
@@ -322,6 +335,11 @@ export default {
         this.showOptions = false;
       }
     },
+    enableScoreOverride() {
+      this.overrideEnabled = true;
+      this.overrideScore.away = this.state.score[0];
+      this.overrideScore.home = this.state.score[1];
+    },
     sideAway() {
       if (confirm('Are you sure you want to call "Side Away"?')) {
         this.sendPlay('Side Away');
@@ -353,19 +371,25 @@ export default {
     },
     confirmEndGame() {
       let play = 'Game Over';
+      if (this.overrideEnabled) {
+        play += ` !${this.overrideScore.away}-${this.overrideScore.home}`;
+      }
       if (this.canSelectWinningPitcher && this.selectedWinningPitcher) {
         const index = this.winningPitchers.findIndex(p => p.id === this.selectedWinningPitcher.id) + 1;
         play += ` #${index}`;
       }
       this.sendPlay(play);
       this.showEndGameModal = false;
+      this.overrideEnabled = false;
+      this.overrideScore = { away: null, home: null };
     },
     cancelEndGame() {
       this.showEndGameModal = false;
+      this.overrideEnabled = false;
+      this.overrideScore = { away: null, home: null };
     },
     // A couple of events force runnners to move, when forced.
     forceOneBase() {
-      console.log('Forcing runners to advance one base');
       if (!this.state.bases[0]) {
         return;
       }
@@ -574,6 +598,33 @@ export default {
   background-color: #f5f5f5;
   border-radius: 4px;
   font-size: 14px;
+}
+
+.score-override {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.score-override label {
+  font-size: 14px;
+}
+
+.score-override input {
+  width: 60px;
+  padding: 5px;
+  margin-left: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-score {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 12px;
 }
 
 .end-game-actions {
