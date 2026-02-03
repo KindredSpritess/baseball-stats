@@ -86,12 +86,6 @@ export default {
 </script>
 
 <style scoped>
-.fielder-selection {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .fielder-selection h3 {
   flex-shrink: 0;
 }
@@ -100,13 +94,8 @@ export default {
   flex-shrink: 1;
   flex-grow: 1;
   width: 80vw;
-  height: 1px;
+  height: stretch;
   margin: 0 auto;
-}
-
-.field-container svg {
-  width: auto;
-  height: 100%;
 }
 
 .undo-btn {
@@ -168,10 +157,12 @@ export default {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: stretch;
   background: white;
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
