@@ -393,7 +393,7 @@
             background: #ff0000;
         }
 
-        .diagonal-line {
+        .diagonal-line, .diamond-up-left, .diamond-up-right, .diamond-down-left, .diamond-down-right {
             position: absolute;
             top: 0;
             left: 0;
@@ -403,16 +403,55 @@
             z-index: 10;
         }
 
+         .diamond-up-left::after, .diamond-up-right::after, .diamond-down-left::after, .diamond-down-right::after {
+            content: '';
+            position: absolute;
+            height: 3px;
+            background-color: #ffaa0088;
+         }
+
         .diagonal-line::after {
             content: '';
             position: absolute;
-            width: calc(hypot(60px, 56px));
             height: 3px;
             background-color: #ffaa00;
+            width: calc(hypot(60px, 56px));
             bottom: -3px;
             left: -1px;
             transform: rotate(calc(atan(-56 / 60)));
             transform-origin: top left;
+        }
+
+        .diamond-up-left::after {
+            bottom: -3px;
+            left: -1px;
+            width: calc(hypot(30px, 56px));
+            transform: rotate(calc(atan(-56 / 30)));
+            transform-origin: top left;
+        }
+
+        .diamond-up-right::after {
+            bottom: -3px;
+            right: -1px;
+            width: calc(hypot(30px, 56px));
+            transform: rotate(calc(atan(56 / 30)));
+            transform-origin: top right;
+        }
+
+        .diamond-down-left::after {
+            top: -3px;
+            left: -1px;
+            width: calc(hypot(30px, 56px));
+            transform: rotate(calc(atan(56 / 30)));
+            transform-origin: bottom left;
+        }
+
+        .diamond-down-right::after {
+            top: -3px;
+            right: -1px;
+            width: calc(hypot(30px, 56px));
+            transform: rotate(calc(atan(-56 / 30)));
+            transform-origin: bottom right;
         }
 
         .inning-fielding {
@@ -705,6 +744,17 @@
         tr.hitter-row.hitter-divider > td {
             border-top: 2px solid black;
         }
+
+        .player-name {
+            font-size: 10pt !important;
+        }
+
+        .pitcher-stat, .catcher-stat, .totals-stat {
+            font-size: 8pt !important;
+            text-align: center;
+            vertical-align: middle !important;
+            padding: 0px !important;
+        }
     </style>
 </head>
 <body>
@@ -861,6 +911,7 @@
                 <!-- Batter Rows -->
                 @php
                 $groupedBatters = collect($battingOrder)->groupBy('spot');
+                $teamStats = new \App\Helpers\StatsHelper([]);
                 @endphp
                 @foreach($groupedBatters as $spot => $batters)
                 @if ($spot === 'P')
@@ -869,7 +920,8 @@
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters->reverse() as $index => $batter)
                 @php
-                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
+                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []));
+                $teamStats->merge($stats);
                 @endphp
                 <tr @class(['hitter-row', 'hitter-divider' => $loop->first])>
                     <td style="text-align: center;">{{ $stats->DO }}</td>
@@ -898,7 +950,7 @@
                     </td>
 
                     <!-- Batter name and jersey number -->
-                    <td class="batting-name">
+                    <td class="batting-name player-name">
                         @if ($loop->first)
                             {{ $batter['name'] }}
                         @else
@@ -923,6 +975,8 @@
                     $runEarned = $play?->run_earned ?? null;
                     $inningEnd = $play?->inning_end ?? false;
                     $inningStart = $play?->inning_start ?? false;
+                    $diamondUp = $play?->diamondUp ?? false;
+                    $diamondDown = $play?->diamondDown ?? false;
                     $pitches = $play->pitches ?? '';
                     if ($play->results[0] ?? null) {
                         $pitches = substr($pitches, 0, -1);
@@ -940,6 +994,14 @@
                         <div class="play-cell">
                             @if($inningEnd)
                             <div class="diagonal-line"></div>
+                            @endif
+                            @if($diamondUp)
+                            <div class="diamond-up-left"></div>
+                            <div class="diamond-up-right"></div>
+                            @endif
+                            @if($diamondDown)
+                            <div class="diamond-down-left"></div>
+                            <div class="diamond-down-right"></div>
                             @endif
                             <table class="play-quadrant-table">
                                 <tr>
@@ -1014,7 +1076,7 @@
                         <x-pitcher-fielding-stats-column :$groupedBatters class="spacing-col" />
                         <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :position="true" />
                         <x-pitcher-fielding-stats-column :$groupedBatters class="fielding-stats" :changes="true" />
-                        <x-pitcher-fielding-stats-column :$groupedBatters class="pitcher-name" :detail="'name'" />
+                        <x-pitcher-fielding-stats-column :$groupedBatters class="pitcher-name player-name" :detail="'name'" />
                         <x-pitcher-fielding-stats-column :$groupedBatters class="batting-jersey" :detail="'number'" />
                     @else
                         <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">&nbsp;</td>
@@ -1022,13 +1084,31 @@
                     <td class="main-stats-header">RUNS</td>
                     @foreach ($innings as $inning)
                     @for($i = 0; $i < $inning['width']; $i++)
-                    <td>
+                    <td class="totals-stat">
                         @unless($i !== $inning['width'] - 1 || is_null($inning['runs_total']))
                             {{ $inning['runs'] }} / {{ $inning['runs_total'] }}
                         @endunless
                     </td>
                     @endfor
                     @endforeach
+                    <td class="totals-stat">{{  $teamStats->PA ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->AB ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->R ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->H ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->stat('2') ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->stat('3') ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->HR ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->RBI ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->SAB ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->SAF ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->BBs ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->HPB ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->CI ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->SO ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->GDP ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->SB ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->CS ?: '' }}</td>
+                    <td class="totals-stat">{{  $teamStats->LOB ?: '' }}</td>
                 </tr>
                 <tr><td colspan="{{ array_sum(array_column($innings, 'width')) + 1 }}">&nbsp;</td></tr>
                 <tr>
@@ -1105,23 +1185,23 @@
                             $stats->derive();
                             @endphp
                             <tr>
-                                <td>{{ $pitcher->person->lastName }}, {{ $pitcher->person->firstName }}</td>
-                                <td style="text-align: center;">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
-                                <td style="text-align: center;">{{ $stats->HA ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->K ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->BB ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->HBP ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->RA ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->ER ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->WP ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->BLK ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->POs ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->PCS ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->BFP ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->Balls ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->Strikes ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->Pitches ?: '' }}</td>
-                                <td style="text-align: center;">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
+                                <td class="player-name">{{ $pitcher->person->lastName }}, {{ $pitcher->person->firstName }}</td>
+                                <td class="pitcher-stat">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
+                                <td class="pitcher-stat">{{ $stats->HA ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->K ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->BB ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->HBP ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->RA ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->ER ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->WP ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->BLK ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->POs ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->PCS ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->BFP ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->Balls ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->Strikes ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->Pitches ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -1152,11 +1232,11 @@
                                 $do2 = $stats->stat('DO.2');
                                 @endphp
                                 <tr>
-                                    <td>{{ $catcher['name'] }}</td>
-                                    <td style="text-align: center;">{{ $do2 ? number_format($do2 / 3, 1) : '0.0' }}</td>
-                                    <td style="text-align: center;">{{ $stats->PB }}</td>
-                                    <td style="text-align: center;">{{ $stats->CSB }}</td>
-                                    <td style="text-align: center;">{{ $stats->CCS }}</td>
+                                    <td class="player-name">{{ $catcher['name'] }}</td>
+                                    <td class="catcher-stat">{{ $do2 ? \App\Helpers\StatsHelper::innings_format($do2 / 3) : '0' }}</td>
+                                    <td class="catcher-stat">{{ $stats->PB }}</td>
+                                    <td class="catcher-stat">{{ $stats->CSB }}</td>
+                                    <td class="catcher-stat">{{ $stats->CCS }}</td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -1178,15 +1258,15 @@
                             <table class="summary">
                                 <tr>
                                     <td style="width: 50%;"><strong>WIN:</strong></td>
-                                    <td>{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
+                                    <td class="player-name">{{ $pitchersOfRecord['winning'] ? $pitchersOfRecord['winning']->person->fullName() : '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>LOSS:</strong></td>
-                                    <td>{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
+                                    <td class="player-name">{{ $pitchersOfRecord['losing'] ? $pitchersOfRecord['losing']->person->fullName() : '-' }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>SAVE:</strong></td>
-                                    <td>{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
+                                    <td class="player-name">{{ $pitchersOfRecord['saving'] ? $pitchersOfRecord['saving']->person->fullName() : '-' }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -1197,7 +1277,7 @@
                             <div class="section-title">SCORER</div>
                             <table class="summary">
                                 <tr>
-                                    <td>{{ $game->scorer ? $game->scorer->name : '' }}</td>
+                                    <td class="player-name">{{ $game->scorer ? $game->scorer->name : '' }}</td>
                                 </tr>
                             </table>
                         </div>

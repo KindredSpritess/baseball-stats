@@ -203,7 +203,7 @@ class ExportScorebookCommand extends Command
 
     private static function progTotal(array $cur, array $next, string $stat): string
     {
-        if ($cur['p']) {
+        if ($cur['p'] || ($stat === 'lob' && $cur['lob'])) {
             return ($next[$stat] - $cur[$stat]) . " / " . $next[$stat];
         }
         return "{$next[$stat]}";
@@ -491,7 +491,23 @@ class ExportScorebookCommand extends Command
             end($data[$atbat][$inning])->pitches .= $parts[0];
             end($data[$atbat][$inning])->pitch_total = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
 
-            for ($i = 1; $i <= 4; $i++) {
+            $dp = ($outs + 2) % 3 === $game->outs;
+            if ($dp) {
+                $diamondUp = $outs + 1;
+                $diamondDown = $outs + 2;
+            }
+
+            $init = 1;
+            $limit = 5;
+            $step = 1;
+            if ($dp && $parts[1][0] === 'G') {
+                // GDP - process in reverse order
+                $init = 4;
+                $limit = 0;
+                $step = -1;
+            }
+
+            for ($i = $init; $i != $limit; $i += $step) {
                 if ($parts[$i] ?? null) {
                     $b = $i - 1;
                     $plays = explode('/', $parts[$i]);
@@ -509,6 +525,8 @@ class ExportScorebookCommand extends Command
                         if ($bases < 0) {
                             end($data[$spot][$inning])->out_number = ++$outs;
                             end($data[$spot][$inning])->results[$b++] = [$note, $colour];
+                            end($data[$spot][$inning])->diamondUp = $dp && $diamondUp === $outs;
+                            end($data[$spot][$inning])->diamondDown = $dp && $diamondDown === $outs;
                         } else {
                             while ($bases--) {
                                 if ($bases) {
@@ -717,5 +735,7 @@ class PlateAppearence
     public $inning_start = false;
     public $pitcher_change = false;
     public $next_at_bat = false;
+    public $diamondUp = false;
+    public $diamondDown = false;
     public $results = []; // Each entry: [note, colour]
 }
