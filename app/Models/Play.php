@@ -195,10 +195,14 @@ class Play extends Model
                 if (!$save) {
                     // Check if the last pitcher qualifies for a save.
                     $lastPitcher = end($game->pitchers[$lead > 0 ? 0 : 1]);
-                    if ($lastPitcher && $lastPitcher->isNot($win) && ($lastPitcher->stats['TO'] ?? 0) >= 9) {
+                    if ($lastPitcher && ($lastPitcher->stats['TO'] ?? 0) >= 9) {
                         $save = $lastPitcher;
                     }
                 }
+                if ($save && $save->is($win)) {
+                    $save = null;
+                }
+
                 throw_unless($loss, 'Losing pitcher not set');
                 $loss->evt('Loss');
                 if ($win) {
