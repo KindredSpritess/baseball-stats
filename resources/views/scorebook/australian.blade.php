@@ -920,7 +920,7 @@
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters->reverse() as $index => $batter)
                 @php
-                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []));
+                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
                 $teamStats->merge($stats);
                 @endphp
                 <tr @class(['hitter-row', 'hitter-divider' => $loop->first])>
