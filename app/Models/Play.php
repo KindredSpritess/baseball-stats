@@ -188,6 +188,7 @@ class Play extends Model
                     $win = null;
                     if ($log->consume(' #')) {
                         $win = $game->pitchers[$lead > 0 ? 0 : 1][$log->upto(' ') - 1];
+                        $game->pitchersOfRecord['winning'] = $win;
                     }
                 }
 
@@ -197,10 +198,12 @@ class Play extends Model
                     $lastPitcher = end($game->pitchers[$lead > 0 ? 0 : 1]);
                     if ($lastPitcher && ($lastPitcher->stats['TO'] ?? 0) >= 9) {
                         $save = $lastPitcher;
+                        $game->pitchersOfRecord['saving'] = $save;
                     }
                 }
                 if ($save && $save->is($win)) {
                     $save = null;
+                    $game->pitchersOfRecord['saving'] = null;
                 }
 
                 throw_unless($loss, 'Losing pitcher not set');
