@@ -920,8 +920,9 @@
                 @php $rowspan = count($batters); @endphp
                 @foreach($batters->reverse() as $index => $batter)
                 @php
-                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []))->derive();
+                $stats = (new \App\Helpers\StatsHelper($batter['player']->stats ?? []));
                 $teamStats->merge($stats);
+                $stats->derive();
                 @endphp
                 <tr @class(['hitter-row', 'hitter-divider' => $loop->first])>
                     <td style="text-align: center;">{{ $stats->DO }}</td>
@@ -1091,6 +1092,9 @@
                     </td>
                     @endfor
                     @endforeach
+                    @php
+                    $teamStats->derive();
+                    @endphp
                     <td class="totals-stat">{{  $teamStats->PA ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->AB ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->R ?: '' }}</td>
