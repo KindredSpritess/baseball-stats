@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\StatsHelper;
 use App\Models\BallInPlay;
+use App\Models\Game;
 use App\Models\Person;
 use App\Models\Player;
 use App\Models\Season;
@@ -57,6 +58,13 @@ class TeamController extends Controller
             $pitcherBalls = collect();
         }
 
+        $teamGames = Game::whereEnded(true)
+            ->where(function($q) use ($team) {
+                $q->where('home', $team->id)
+                  ->orWhere('away', $team->id);
+            })
+            ->count();
+
         return view('team.show', [
             'team' => $team,
             'stats' => $players,
@@ -64,8 +72,8 @@ class TeamController extends Controller
             'people' => Person::whereIn('id', $people)->get(),
             'ballsInPlay' => BallInPlay::whereRelation('player', 'team_id', $team->id)->get()->groupBy('player.person_id'),
             'pitchingBIP' => $pitcherBalls,
-            'minPA' => $qualified ? $team->games()->whereEnded(true)->count() * ($totals->PA / $totals->GS - 1) : 0,
-            'minIP' => $qualified ? $team->games()->whereEnded(true)->count() / 3 : 0,
+            'minPA' => $qualified ? $teamGames * ($totals->PA / $totals->GS - 1) : 0,
+            'minIP' => $qualified ? $teamGames / 3 : 0,
             'minFI' => $qualified ? $totals->FI / 9 / 2 : 0,
         ]);
     }
