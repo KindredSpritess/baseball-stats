@@ -88,6 +88,7 @@ class Play extends Model
         'P' => 'pops out to :fielder',
         'FF' => 'flies out to :fielder in foul territory',
         'PF' => 'pops out to :fielder in foul territory',
+        'IF' => 'out on infield fly, out to :fielder',
         'SAF' => 'out on sacrifice fly to :fielder',
         'SAB' => 'out on sacrifice bunt to :fielder',
     ];
@@ -512,6 +513,7 @@ class Play extends Model
                                   ($bb = $event->consume('G')) ||
                                   ($bb = $event->consume('FF')) ||
                                   ($bb = $event->consume('F')) ||
+                                  ($bb = $event->consume('IF')) ||
                                   ($bb = $event->consume('L')) ||
                                   ($bb = $event->consume('PF')) ||
                                   ($bb = $event->consume('P'))) {
@@ -895,6 +897,7 @@ class Play extends Model
                 'B' => 'B',
                 'G' => 'G',
                 'FF' => 'F',
+                'IF' => 'F',
                 'F' => 'F',
                 'L' => 'L',
                 'PF' => 'P',
