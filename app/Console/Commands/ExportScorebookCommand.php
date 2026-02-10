@@ -633,6 +633,11 @@ class ExportScorebookCommand extends Command
             return ['<span style="color:blue;">K</span><span style="color:red">PB</span>', 'black', 1];
         } elseif ($playText === 'KWP') {
             return ['KWP', 'blue-text', 1];
+        } elseif (preg_match('/^K((\d-)*)(\d)+$/', $playText, $matches)) {
+            return [$playText, 'blue', -1, ['PO' => $matches[3], 'A' => str_replace('-', '', $matches[1])]]; // Strikeout
+        } elseif (preg_match('/^K([@!#\$]?)((\d-)*)(E|e|wt|WT)(\d)+$/', $playText, $matches)) {
+            // Strikeout, reach on error.
+            return ["<span style=\"color:blue;\">K</span>{$matches[2]}<span style=\"color:red\">{$matches[4]}{$matches[5]}</span>", 'black', self::BASES[$matches[1]] ?? 1, ['E' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];
         } elseif (str_contains($playText, 'BB')) {
             return ['BB', 'blue', 1]; // Walk
         } elseif (str_contains($playText, 'IBB')) {

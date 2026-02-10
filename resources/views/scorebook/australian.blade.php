@@ -969,9 +969,16 @@
                     @for($i = 0; $i < $inning['width']; $i++)
                     @php
                     $play = ($batterInningData[$batter['spot']] ?? [])[$inning['number']][$i] ?? null;
+                    $pa = $play?->results[0][0] ?? '';
                     $lastPitch = strtoupper(substr($play?->pitches ?? '', -1));
                     $lastPitch = $lastPitch === 'S' ? '2' : $lastPitch;
-                    $bigK = ($play?->results[0][0] ?? '') === 'K2';
+                    if (preg_match('/^K[\d-]+$/', $pa)) {
+                        $bigK = true;
+                        $lastPitch = $pa === 'K2' ? $lastPitch : ltrim($pa, 'K');
+                    } else {
+                        $bigK = false;
+                    }
+
                     $outNumber = $play?->out_number ?? null;
                     $runEarned = $play?->run_earned ?? null;
                     $inningEnd = $play?->inning_end ?? false;
