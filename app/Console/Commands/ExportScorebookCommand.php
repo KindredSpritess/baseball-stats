@@ -8,6 +8,7 @@ use App\Models\Game;
 use App\Models\Play;
 use App\Models\Team;
 use Illuminate\Console\Command;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class ExportScorebookCommand extends Command
 {
@@ -16,7 +17,7 @@ class ExportScorebookCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scorebook:export {game : The ID of the game to export} {--team= : Export for specific team (home/away), or both if not specified}';
+    protected $signature = 'scorebook:export {game : The ID of the game to export} {--team= : Export for specific team (home/away), or both if not specified} {--format=html : Export format (currently only HTML is supported)}';
 
     /**
      * The console command description.
@@ -45,7 +46,7 @@ class ExportScorebookCommand extends Command
     {
         $gameId = $this->argument('game');
         $teamFilter = $this->option('team');
-
+        $format = $this->option('format');
         $game = Game::with(['home_team', 'away_team', 'players.person', 'plays'])
             ->findOrFail($gameId);
 
@@ -77,14 +78,24 @@ class ExportScorebookCommand extends Command
         // Determine filename
         if (count($teams) === 1) {
             $teamInfo = $teams[0];
-            $filename = "scorebook_game{$game->id}_{$teamInfo['type']}_{$teamInfo['team']->short_name}.html";
+            $filename = "scorebook_game{$game->id}_{$teamInfo['type']}_{$teamInfo['team']->short_name}.{$format}";
         } else {
-            $filename = "scorebook_game{$game->id}_both.html";
+            $filename = "scorebook_game{$game->id}_both.{$format}";
         }
 
-        $htmlPath = storage_path("app/public/scorebooks/{$filename}");
-        file_put_contents($htmlPath, $combinedHtml);
-        $this->info("Saved HTML: {$htmlPath}");
+        if ($format === 'html') {
+            $htmlPath = storage_path("app/public/scorebooks/{$filename}");
+            file_put_contents($htmlPath, $combinedHtml);
+            $this->info("Saved HTML: {$htmlPath}");
+            return 0;
+        } elseif ($format === 'pdf') {
+            Pdf::html($combinedHtml)
+                ->landscape()
+                ->format('a4')
+                ->save(storage_path("app/public/scorebooks/" . $filename));
+            $this->info("Saved PDF: " . $filename);
+        }
+
 
         $this->info('Scorebook export completed successfully!');
 
