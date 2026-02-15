@@ -65,6 +65,12 @@ Import Roster
             </div>
 
             <div style="margin-bottom: 20px;">
+                <label for="gc_token" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary);">GameChanger Token:</label>
+                <input type="text" id="gc_token" name="gc_token" placeholder="Enter your GameChanger token" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 1em;" />
+                <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--text-secondary);">Enter your GameChanger token to access GameChanger URLs</p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
                 <label style="display: flex; align-items: center; cursor: pointer;">
                     <input type="checkbox" id="columns_in_file" name="columns_in_file" value="1" onchange="toggleTeamSeasonFields()" style="margin-right: 10px;" />
                     <span style="font-weight: 600; color: var(--text-primary);">Team and Season columns are in the file/URL</span>

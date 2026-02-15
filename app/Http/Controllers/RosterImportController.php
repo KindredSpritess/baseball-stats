@@ -52,6 +52,7 @@ class RosterImportController extends Controller
         $validated = $request->validate([
             'file' => 'nullable|file|mimes:csv,xlsx,xls',
             'url' => 'nullable|url',
+            'gc_token' => 'nullable|string',
             'team_id' => 'nullable|exists:teams,id',
             'season_id' => 'nullable|exists:seasons,id',
             'columns_in_file' => 'nullable|boolean',
@@ -64,6 +65,7 @@ class RosterImportController extends Controller
 
         $file = $request->file('file');
         $url = $request->input('url');
+        $gcToken = $request->input('gc_token');
         $columnsInFile = $request->boolean('columns_in_file');
         $defaultTeamId = $request->input('team_id');
         $defaultSeasonId = $request->input('season_id');
@@ -71,7 +73,7 @@ class RosterImportController extends Controller
         try {
             // Parse data from either file or URL
             if ($url) {
-                $data = $this->parseUrl($url);
+                $data = $this->parseUrl($url, $gcToken);
             } else {
                 $data = $this->parseFile($file);
             }
@@ -250,7 +252,7 @@ class RosterImportController extends Controller
         return $rows;
     }
 
-    private function parseUrl($url)
+    private function parseUrl($url, $gcToken = null)
     {
         // Validate URL format and scheme
         $parsedUrl = parse_url($url);
@@ -279,6 +281,15 @@ class RosterImportController extends Controller
             $lastTwo = implode('.', array_slice($hostParts, -2));
             if ($lastTwo === 'mygameday.app') {
                 return $this->parseMyGameDayUrl($url);
+            }
+        }
+
+        if (isset($parsedUrl['host']) && strpos(strtolower($parsedUrl['host']), 'gc.com') !== false) {
+            // Ensure it's actually the gc.com domain, not a subdomain of another domain
+            $hostParts = explode('.', $parsedUrl['host']);
+            $lastTwo = implode('.', array_slice($hostParts, -2));
+            if ($lastTwo === 'gc.com') {
+                return $this->parseGameChangerUrl($url, $gcToken);
             }
         }
 
@@ -314,6 +325,32 @@ class RosterImportController extends Controller
         }
 
         return $data;
+    }
+
+    private function parseGameChangerUrl($url, $gcToken)
+    {
+        if (!$gcToken) {
+            throw new \Exception('GameChanger token is required to access GameChanger URLs.');
+        }
+
+        $response = Http::withHeaders([
+            'gc-token' => $gcToken,
+        ])->get($url);
+
+        if ($response->failed()) {
+            throw new \Exception('Failed to fetch data from GameChanger URL. Please check the URL and token, and try again.');
+        }
+
+        $data = $response->json();
+
+        // Transform GameChanger data into expected format
+        return array_map(function ($player) {
+            return [
+                $player['first_name'] ?? '',
+                $player['last_name'] ?? '',
+                $player['number'] ?? null,
+            ];
+        }, $data['players'] ?? []);
     }
 
     private function parseMyGameDayUrl($url)
