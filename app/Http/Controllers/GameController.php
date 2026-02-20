@@ -13,6 +13,7 @@ use App\Models\Team;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -34,9 +35,9 @@ class GameController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
         $game = new Game();
         $game->home_team()->associate(Team::find($request->input('home')));
@@ -45,7 +46,13 @@ class GameController extends Controller
         $game->firstPitch = Carbon::createFromFormat('Y-m-d\TH:i', $request->input('firstPitch'), $request->input('timezone'))->setTimezone('UTC');
         $game->timeZone = $request->input('timezone');
         $game->save();
-        return new JsonResponse(['status' => 'success', 'created' => $game->id]);
+        if ($request->wantsJson()) {
+            return new JsonResponse(['status' => 'success', 'created' => $game->id]);
+        }
+        if ($request->input('action') === 'score') {
+            return redirect()->route('game', ['game' => $game->id]);
+        }
+        return redirect()->route('game.create', ['season' => $game->home_team?->season_id]);
     }
 
     public function play(Game $game, Request $request) {

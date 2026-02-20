@@ -30,8 +30,9 @@ Create New Team
                     @endforeach
                 </select>
             </div>
-            <div>
-                <button type="submit" style="background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 4px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">Create Team</button>
+            <div style="display: flex; gap: 12px;">
+                <button type="submit" name="action" value="view" style="background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 4px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">Create Team</button>
+                <button type="submit" name="action" value="another" style="background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 12px 24px; border-radius: 4px; font-size: 1em; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">Create Another Team</button>
             </div>
         </form>
     </div>
