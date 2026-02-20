@@ -45,7 +45,13 @@ class GameController extends Controller
         $game->firstPitch = Carbon::createFromFormat('Y-m-d\TH:i', $request->input('firstPitch'), $request->input('timezone'))->setTimezone('UTC');
         $game->timeZone = $request->input('timezone');
         $game->save();
-        return new JsonResponse(['status' => 'success', 'created' => $game->id]);
+        if ($request->wantsJson()) {
+            return new JsonResponse(['status' => 'success', 'created' => $game->id]);
+        }
+        if ($request->input('action') === 'score') {
+            return redirect()->route('game.score', ['game' => $game->id]);
+        }
+        return redirect()->route('game.create', ['season' => $game->home_team?->season_id]);
     }
 
     public function play(Game $game, Request $request) {

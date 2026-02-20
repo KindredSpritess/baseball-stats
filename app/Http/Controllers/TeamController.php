@@ -28,6 +28,9 @@ class TeamController extends Controller
             'secondary_color' => 'nullable|hex_color',
         ]));
         $team->save();
+        if ($request->input('action') === 'another') {
+            return redirect()->route('team.create', ['season' => $team->season_id]);
+        }
         return redirect()->route('team', ['team' => $team->id]);
     }
 

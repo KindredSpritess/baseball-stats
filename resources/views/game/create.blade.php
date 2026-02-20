@@ -38,7 +38,8 @@ Create New Game
                 </select>
             </div>
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Create Game</button>
+                <button type="submit" name="action" value="score" class="btn btn-primary">Create and Score</button>
+                <button type="submit" name="action" value="create" class="btn btn-secondary">Create</button>
             </div>
         </form>
     </div>
