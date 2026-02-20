@@ -84,8 +84,8 @@
     </section>
 
     <section class="section-spacing">
-        <h2 onclick="$('.balls-in-play').toggle()" class="section-title spray spray-toggle">Spray Charts</h2>
-        <div class='balls-in-play' style="display:none;">
+        <h2 onclick="$('#balls-in-play').toggle()" class="section-title spray spray-toggle">Spray Charts</h2>
+        <div id="balls-in-play" class='balls-in-play' style="display:none;">
             @foreach ($people->sortBy(fn($person) => $person->lastName) as $person)
                 @if ($stats[$person->id]->PA < $minPA)
                     @continue
@@ -152,8 +152,8 @@
     </section>
 
     <section class="section-spacing">
-        <h2 onclick="$('.balls-in-play').toggle()" class="section-title spray spray-toggle">Pitcher Spray Charts</h2>
-        <div class='balls-in-play' style="display:none;">
+        <h2 onclick="$('#pitches-in-play').toggle()" class="section-title spray spray-toggle">Pitcher Spray Charts</h2>
+        <div id="pitches-in-play" class='balls-in-play' style="display:none;">
             @foreach ($people->filter(fn($person) => $stats[$person->id]->IP)->sortBy(fn($person) => $person->lastName) as $person)
                 @if ($stats[$person->id]->IP < $minIP)
                     @continue
