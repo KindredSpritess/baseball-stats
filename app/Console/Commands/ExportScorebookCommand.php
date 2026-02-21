@@ -549,6 +549,11 @@ class ExportScorebookCommand extends Command
                             if ($b === 4) {
                                 // Run scored.
                                 end($data[$spot][$inning])->run_earned = false;
+                                if (str_starts_with($note, '≣')) {
+                                    if ($game->expectedOuts < 3) {
+                                        end($data[$spot][$inning])->run_earned = false;
+                                    }
+                                }
                             }
                         }
                     }
