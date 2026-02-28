@@ -111,7 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     previousPlayersList.innerHTML = '';
 
-                    Object.entries(data).forEach(([name, playerData]) => {
+                    Object.entries(data)
+                            .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+                            .forEach(([name, playerData]) => {
                         const item = document.createElement('div');
                         item.className = 'previous-player-item';
                         item.textContent = `${name}${playerData.number ? ` #${playerData.number}` : ''}`;
