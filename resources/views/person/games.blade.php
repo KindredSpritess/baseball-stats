@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('title')
-{{ $person->firstName }} {{ $person->lastName }} ({{ $team->season }})
+{{ $person->firstName }} {{ $person->lastName }} ({{ $team->season->name }})
 @endsection
 
 @section('head')
