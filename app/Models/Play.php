@@ -530,8 +530,10 @@ class Play extends Model
                             // reaches on an error by the fielder
                             // grounds out to the fielder.
                             $tb = self::getBases($event);
+                            $decisiveError = false;
                             if ($this->handleFielding($game, $event, $hit)) {
-                                $game->advanceRunner($game->hitting(), $tb, $hit, !$hit && (string)$event !== 'FC', $hit ? 'H' : 'E');
+                                $decisiveError = !$hit && (string)$event !== 'FC';
+                                $game->advanceRunner($game->hitting(), $tb, $hit, $decisiveError, $hit ? 'H' : 'E');
                                 $format = null;
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");
@@ -569,7 +571,7 @@ class Play extends Model
                                 }
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$bb], ["fielder" => $this->fieldingBuffer]));
                             }
-                            $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null);
+                            $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null, $decisiveError);
                         } elseif ($event->consume('MFF')) {
                             // Muffed foul fly, error, At Bat continues.
                             // Need to handle batter being an expected out.
@@ -894,7 +896,7 @@ class Play extends Model
         return $inside;
     }
 
-    private function handleBattedBall(Game $game, string $type, bool $hit, int $bases, ?string $action) {
+    private function handleBattedBall(Game $game, string $type, bool $hit, int $bases, ?string $action, bool $decisiveError = false) {
         if (empty($action)) return;
         $position = array_map(fn ($p) => round($p, 2), explode(':', $action));
         $battedBall = new BallInPlay([
@@ -913,7 +915,7 @@ class Play extends Model
                 'SAB' => 'B',
                 default => null,
             },
-            'result' => $hit ? ($bases < 4 ? "{$bases}B" : 'HR') : 'O',
+            'result' => $decisiveError ? 'E' : ($hit ? ($bases < 4 ? "{$bases}B" : 'HR') : 'O'),
             'fielders' => array_map(fn ($p) => $game->fielding($p)?->id, [1, 2, 3, 4, 5, 6, 7, 8, 9]),
         ]);
         $battedBall->player()->associate($game->hitting());

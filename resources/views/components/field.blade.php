@@ -73,6 +73,7 @@
                 '2B' => '#2196f3',
                 '3B' => '#ff9800',
                 'HR' => '#ffd700',
+                'E' => '#e53935',
                 default => '#9e9e9e'
             };
         @endphp
@@ -126,7 +127,7 @@
     </g>
 
     <g transform="translate(8, 350)">
-        <rect x="-5" y="-5" width="77" height="90" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
+        <rect x="-5" y="-5" width="77" height="105" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
 
         <!-- Colors by Result -->
         <circle cx="5" cy="10" r="5" fill="#9e9e9e"/>
@@ -143,5 +144,8 @@
 
         <circle cx="5" cy="70" r="5" fill="#ffd700"/>
         <text fill="black" x="15" y="73" font-family="Arial" font-size="11">Home Run</text>
+
+        <circle cx="5" cy="85" r="5" fill="#e53935"/>
+        <text fill="black" x="15" y="88" font-family="Arial" font-size="11">Error</text>
     </g>
 </svg>
