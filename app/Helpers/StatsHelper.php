@@ -23,6 +23,9 @@ class StatsHelper {
         if (is_null($other)) return $this;
         if ($other instanceof self) return $this->merge($other->stats);
         foreach ($other as $k => $v) {
+            if (is_array($v)) {
+                continue;
+            }
             $this->stats[$k] = ($this->stats[$k] ?? 0) + $v;
         }
         return $this;
