@@ -60,7 +60,7 @@
     @foreach ($ballsInPlay as $ball)
         @php
             $shape = match($ball->type) {
-                'B' => 'downward-pointing double-triangle',
+                'B' => 'minus',
                 'G' => 'downward-pointing triangle',
                 'F' => 'diamond',
                 'L' => 'star',
@@ -89,11 +89,8 @@
             <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}">
                 <title>{{ $ball->play->human }}</title>
             </polygon>
-        @elseif($shape === 'downward-pointing double-triangle')
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 5 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 9 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 9 }}" fill="{{ $color }}">
+        @elseif($shape === 'minus')
+            <polygon points="{{ $ball->position[0] + 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 3 }}" fill="{{ $color }}">
                 <title>{{ $ball->play->human }}</title>
             </polygon>
         @elseif($shape === 'diamond')
@@ -111,19 +108,24 @@
     <g transform="translate(355, 350)">
         <rect x="-5" y="-5" width="95" height="100" fill="white" fill-opacity="0.9" stroke="black" stroke-width="1" rx="5"/>
 
-        <!-- Shapes by Type -->
-        <polygon points="5,4 10,10 5,16 0,10" fill="none" stroke="black" stroke-width="2"/>
-        <text fill="black" x="15" y="15" font-family="Arial" font-size="13">Fly Ball</text>
+        <g transform="translate(0, -5)">
+            <!-- Shapes by Type -->
+            <polygon points="5,4 10,10 5,16 0,10" fill="none" stroke="black" stroke-width="2"/>
+            <text fill="black" x="15" y="15" font-family="Arial" font-size="13">Fly Ball</text>
 
-        <polygon points="5,25 10,35 0,35" fill="none" stroke="black" stroke-width="2"/>
-        <text fill="black" x="15" y="35" font-family="Arial" font-size="13">Pop Up</text>
+            <polygon points="5,25 10,35 0,35" fill="none" stroke="black" stroke-width="2"/>
+            <text fill="black" x="15" y="35" font-family="Arial" font-size="13">Pop Up</text>
 
 
-        <polygon points="5,42 7,47 13,47 8,51 10,57 5,53 0,57 2,51 -2,47 3,47" fill="none" stroke="black" stroke-width="2"/>
-        <text fill="black" x="15" y="55" font-family="Arial" font-size="13">Line Drive</text>
+            <polygon points="5,42 7,47 13,47 8,51 10,57 5,53 0,57 2,51 -2,47 3,47" fill="none" stroke="black" stroke-width="2"/>
+            <text fill="black" x="15" y="55" font-family="Arial" font-size="13">Line Drive</text>
 
-        <polygon points="5,75 10,65 0,65" fill="none" stroke="black" stroke-width="2"/>
-        <text fill="black" x="15" y="75" font-family="Arial" font-size="13">Ground Ball</text>
+            <polygon points="5,75 10,65 0,65" fill="none" stroke="black" stroke-width="2"/>
+            <text fill="black" x="15" y="75" font-family="Arial" font-size="13">Ground Ball</text>
+
+            <polygon points="0,88 10,88 10,92 0,92 0,88" fill="none" stroke="black" stroke-width="2"/>
+            <text fill="black" x="15" y="95" font-family="Arial" font-size="13">Bunt</text>
+        </g>
     </g>
 
     <g transform="translate(8, 350)">
