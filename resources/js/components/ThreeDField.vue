@@ -116,27 +116,10 @@ const createField = () => {
   // Field (outfield)
   const field = BABYLON.MeshBuilder.CreateGround('field', {width: 1000, height: 1000}, scene)
   const fieldMaterial = new BABYLON.StandardMaterial('fieldMat', scene)
-  // Create grass texture
-  const grassTexture = new BABYLON.DynamicTexture('grassTexture', {width: 16, height: 16}, scene)
-  const ctx = grassTexture.getContext()
-  ctx.fillStyle = '#75d89b' // Base green
-  ctx.fillRect(0, 0, 16, 16)
-  // Draw wispy grass blades
-  ctx.strokeStyle = '#4a8c5c' // Darker green for blades
-  ctx.lineWidth = 0.1
-  ctx.globalAlpha = 0.6
-  for (let i = 0; i < 2000; i++) {
-    const x = Math.random() * 16
-    const y = Math.random() * 16
-    const length = Math.random() * 0.156 + 0.078 // Length of blade
-    const angle = Math.random() * Math.PI / 4 - Math.PI / 8 // Slight angle
-    ctx.beginPath()
-    ctx.moveTo(x, y)
-    ctx.lineTo(x + Math.sin(angle) * length, y - Math.cos(angle) * length)
-    ctx.stroke()
-  }
-  ctx.globalAlpha = 1
-  grassTexture.update()
+  // Create grass texture using /green-grass-texture.jpg 64x64 and repeat it across the field
+  const grassTexture = new BABYLON.Texture('/green-grass-texture.jpg', scene)
+  grassTexture.uScale = 1000 / 16
+  grassTexture.vScale = 1000 / 16
   fieldMaterial.diffuseTexture = grassTexture
   field.material = fieldMaterial
   field.position = new BABYLON.Vector3(224, 0, 250)
