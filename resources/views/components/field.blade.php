@@ -1,4 +1,8 @@
-
+@props(['ballsInPlay', 'interactive' => true])
+@php $wrapperId = 'spray-chart-' . uniqid(); @endphp
+@if ($interactive)
+<div class="spray-chart-wrapper" id="{{ $wrapperId }}">
+@endif
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="-40 -40 527.94775 528.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
     <style>
         svg circle:hover, polygon:hover {
@@ -11,6 +15,8 @@
         svg polygon, svg circle {
             stroke: black;
             stroke-width: 1;
+            cursor: pointer;
+            touch-action: manipulation;
         }
     </style>
     <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
@@ -76,31 +82,91 @@
                 'E' => '#e53935',
                 default => '#9e9e9e'
             };
+            $resultLabel = match($ball->result) {
+                'O' => 'Out',
+                '1B' => 'Single',
+                '2B' => 'Double',
+                '3B' => 'Triple',
+                'HR' => 'Home Run',
+                'E' => 'Error',
+                default => ''
+            };
+            $typeLabel = match($ball->type) {
+                'B' => 'Bunt',
+                'G' => 'Ground ball',
+                'F' => 'Fly ball',
+                'L' => 'Line drive',
+                'P' => 'Pop up',
+                default => ''
+            };
+            $gameUrl = $ball->play->game_id ? route('game.view', $ball->play->game_id) : '';
         @endphp
         @if($shape === 'circle')
-            <circle cx="{{ $ball->position[0] }}" cy="{{ $ball->position[1] }}" r="7" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </circle>
+            <circle cx="{{ $ball->position[0] }}" cy="{{ $ball->position[1] }}" r="7" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></circle>
         @elseif($shape === 'triangle')
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] + 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] + 6 }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] + 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] + 6 }}" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></polygon>
         @elseif($shape === 'downward-pointing triangle')
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 6 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 6 }}" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></polygon>
         @elseif($shape === 'minus')
-            <polygon points="{{ $ball->position[0] + 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 3 }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
+            <polygon points="{{ $ball->position[0] + 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] - 3 }}" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></polygon>
         @elseif($shape === 'diamond')
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] }} {{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] + 7 }},{{ $ball->position[1] }} {{ $ball->position[0] }},{{ $ball->position[1] + 8 }} {{ $ball->position[0] - 7 }},{{ $ball->position[1] }}" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></polygon>
         @elseif($shape === 'star')
-            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] + 2 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 8 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 3 }},{{ $ball->position[1] + 1 }} {{ $ball->position[0] + 5 }},{{ $ball->position[1] + 7 }} {{ $ball->position[0] }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 5 }},{{ $ball->position[1] + 7 }} {{ $ball->position[0] - 3 }},{{ $ball->position[1] + 1 }} {{ $ball->position[0] - 8 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] - 2 }},{{ $ball->position[1] - 3 }}" fill="{{ $color }}">
-                <title>{{ $ball->play->human }}</title>
-            </polygon>
+            <polygon points="{{ $ball->position[0] }},{{ $ball->position[1] - 8 }} {{ $ball->position[0] + 2 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 8 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] + 3 }},{{ $ball->position[1] + 1 }} {{ $ball->position[0] + 5 }},{{ $ball->position[1] + 7 }} {{ $ball->position[0] }},{{ $ball->position[1] + 3 }} {{ $ball->position[0] - 5 }},{{ $ball->position[1] + 7 }} {{ $ball->position[0] - 3 }},{{ $ball->position[1] + 1 }} {{ $ball->position[0] - 8 }},{{ $ball->position[1] - 3 }} {{ $ball->position[0] - 2 }},{{ $ball->position[1] - 3 }}" fill="{{ $color }}"
+                data-human="{{ $ball->play->human ?? '' }}"
+                data-result="{{ $resultLabel }}"
+                data-type="{{ $typeLabel }}"
+                data-inning="{{ $ball->play->inning ?? '' }}"
+                data-inning-half="{{ $ball->play->inning_half ?? '' }}"
+                data-distance="{{ $ball->distance ?? '' }}"
+                data-play-id="{{ $ball->play->id ?? '' }}"
+                @if($gameUrl) data-game-url="{{ $gameUrl }}" @endif
+            ><title>{{ $ball->play->human }}</title></polygon>
         @endif
     @endforeach
 
@@ -151,3 +217,91 @@
         <text fill="black" x="15" y="88" font-family="Arial" font-size="11">Error</text>
     </g>
 </svg>
+@if ($interactive)
+<div class="spray-tooltip" id="{{ $wrapperId }}-tooltip" role="tooltip" style="display:none;" aria-live="polite">
+    <button class="spray-tooltip-close" aria-label="Close">&#x2715;</button>
+    <div class="spray-tooltip-inning"></div>
+    <div class="spray-tooltip-human"></div>
+    <div class="spray-tooltip-details"></div>
+    <a class="spray-tooltip-link" target="_blank" rel="noopener noreferrer">View Game &#x2192;</a>
+</div>
+<script>
+(function () {
+    const wrapper = document.getElementById('{{ $wrapperId }}');
+    if (!wrapper) return;
+    const svg = wrapper.querySelector('svg');
+    const tooltip = document.getElementById('{{ $wrapperId }}-tooltip');
+    const closeBtn = tooltip.querySelector('.spray-tooltip-close');
+    let active = null;
+
+    function ordinal(n) {
+        const s = ['th', 'st', 'nd', 'rd'];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+
+    function showTooltip(el) {
+        const human = el.dataset.human || '';
+        const result = el.dataset.result || '';
+        const type = el.dataset.type || '';
+        const inning = el.dataset.inning || '';
+        const inningHalf = el.dataset.inningHalf || '';
+        const distance = el.dataset.distance || '';
+        const gameUrl = el.dataset.gameUrl || '';
+        const playId = el.dataset.playId || '';
+
+        let inningText = '';
+        if (inning) {
+            inningText = (inningHalf === '0' ? 'Top' : 'Bottom') + ' of the ' + ordinal(parseInt(inning));
+        }
+
+        const details = [];
+        if (result) details.push(result);
+        if (type) details.push(type);
+        if (distance) details.push(distance + ' ft');
+
+        tooltip.querySelector('.spray-tooltip-inning').textContent = inningText;
+        tooltip.querySelector('.spray-tooltip-human').textContent = human;
+        tooltip.querySelector('.spray-tooltip-details').textContent = details.join(' \u00b7 ');
+
+        const link = tooltip.querySelector('.spray-tooltip-link');
+        if (gameUrl) {
+            link.href = gameUrl + (playId ? '#play-' + playId : '');
+            link.style.display = '';
+        } else {
+            link.style.display = 'none';
+        }
+
+        tooltip.style.display = 'block';
+        active = el;
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+        active = null;
+    }
+
+    svg.addEventListener('click', function (e) {
+        const el = e.target.closest('circle[data-human], polygon[data-human]');
+        if (!el) {
+            hideTooltip();
+            return;
+        }
+        if (el === active) {
+            hideTooltip();
+            return;
+        }
+        showTooltip(el);
+    });
+
+    closeBtn.addEventListener('click', hideTooltip);
+
+    document.addEventListener('click', function (e) {
+        if (active && !wrapper.contains(e.target) && !tooltip.contains(e.target)) {
+            hideTooltip();
+        }
+    });
+}());
+</script>
+</div>
+@endif

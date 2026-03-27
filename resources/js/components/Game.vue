@@ -158,6 +158,23 @@ const fetchData = () => {
                         hitting: hitting.value
                     });
                 }
+                // Handle deep-link hash navigation to a specific play
+                const playMatch = window.location.hash.match(/^#play-(\d+)$/);
+                if (playMatch) {
+                    const playId = parseInt(playMatch[1]);
+                    const linkedPlay = game.value.plays.find(p => p.id === playId);
+                    if (linkedPlay && linkedPlay.inning) {
+                        selectedInning.value = linkedPlay.inning;
+                        nextTick(() => {
+                            const el = document.getElementById(`play-${playId}`);
+                            if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                el.classList.add('spray-highlighted');
+                                setTimeout(() => el.classList.remove('spray-highlighted'), 2000);
+                            }
+                        });
+                    }
+                }
             });
         });
 };
@@ -409,7 +426,8 @@ const initialiseCast = () => {
                         <div id='play-by-play'>
                             <template v-for="(pa, i) in plays" :key="i">
                                 <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
-                                    <div :class="{
+                                    <div :id="'play-' + pa.find(p => p.plate_appearance)?.id"
+                                                :class="{
                                                     'plate-appearance-container': !pa[0]?.game_event,
                                                     'game-event-container': pa[0]?.game_event,
                                                     'selected': selectedPlay === i,
@@ -500,7 +518,8 @@ const initialiseCast = () => {
                         <div v-if="selectedView === 'plays'" id='play-by-play'>
                             <template v-for="(pa, i) in plays" :key="i">
                                 <template :style="{ display: (pa[0]?.inning ?? state.inning) === selectedInning ? 'block' : 'none' }">
-                                    <div :class="{
+                                    <div :id="'play-' + pa.find(p => p.plate_appearance)?.id"
+                                                :class="{
                                                     'plate-appearance-container': !pa[0]?.game_event,
                                                     'game-event-container': pa[0]?.game_event,
                                                     'selected': selectedPlay === i,
