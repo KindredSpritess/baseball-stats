@@ -272,6 +272,33 @@
         }
     });
 
+    // When a human readable play is clicked in the play log, highlight the corresponding line in the textarea
+    $('#play-by-play').on('click', '[data-play-id]', function() {
+        const playId = parseInt($(this).data('play-id'));
+        const textarea = document.getElementById('plays');
+        const lines = textarea.value.split('\n');
+
+        if (playId < 0 || playId >= lines.length) {
+            return;
+        }
+
+        let lineStart = 0;
+        for (let i = 0; i < playId; i++) {
+            lineStart += lines[i].length + 1; // +1 for newline
+        }
+        const lineEnd = lineStart + lines[playId].length;
+
+        textarea.focus();
+        textarea.setSelectionRange(lineStart, lineEnd);
+
+        // Scroll the textarea to show the selected line
+        const lineHeight = textarea.scrollHeight / lines.length;
+        textarea.scrollTop = Math.max(0, lineHeight * playId - textarea.clientHeight / 2);
+
+        $('#play-by-play div').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+
     $('#plays').on('keydown', function(event) {
         // Check if cmd / ctrl + / is pressed
         // Comment highlighted line(s) with #
