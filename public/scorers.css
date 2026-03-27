@@ -5,3 +5,7 @@
 .highlighted {
   background-color: #ff0 !important;
 }
+
+#play-by-play [data-play-id] {
+  cursor: pointer;
+}
