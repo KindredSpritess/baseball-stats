@@ -515,7 +515,7 @@ class Play extends Model
                             } else {
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$sac], ["fielder" => $this->fieldingBuffer]));
                             }
-                            $this->handleBattedBall($game, $sac, false, -1, $ballLocation ?? null);
+                            $this->handleBattedBall($game, $sac, BallInPlayResult::OUT, $ballLocation ?? null);
                         } elseif (($bb = $event->consume('B')) ||
                                   ($bb = $event->consume('G')) ||
                                   ($bb = $event->consume('FF')) ||
@@ -571,7 +571,15 @@ class Play extends Model
                                 }
                                 $this->logBuffer(__(self::OUT_TRAJECTORIES[$bb], ["fielder" => $this->fieldingBuffer]));
                             }
-                            $this->handleBattedBall($game, $bb, $hit, $tb, $ballLocation ?? null, $decisiveError);
+                            $bbResult = match (true) {
+                                $hit && $tb == 4 => BallInPlayResult::HOME_RUN,
+                                $hit && $tb == 3 => BallInPlayResult::TRIPLE,
+                                $hit && $tb == 2 => BallInPlayResult::DOUBLE,
+                                $hit && $tb == 1 => BallInPlayResult::SINGLE,
+                                $decisiveError => BallInPlayResult::ERROR,
+                                default => BallInPlayResult::OUT,
+                            };
+                            $this->handleBattedBall($game, $bb, $bbResult, $ballLocation ?? null);
                         } elseif ($event->consume('MFF')) {
                             // Muffed foul fly, error, At Bat continues.
                             // Need to handle batter being an expected out.
@@ -896,7 +904,7 @@ class Play extends Model
         return $inside;
     }
 
-    private function handleBattedBall(Game $game, string $type, bool $hit, int $bases, ?string $action, bool $decisiveError = false) {
+    private function handleBattedBall(Game $game, string $type, BallInPlayResult $result, ?string $action) {
         if (empty($action)) return;
         $position = array_map(fn ($p) => round($p, 2), explode(':', $action));
         $battedBall = new BallInPlay([
@@ -905,6 +913,8 @@ class Play extends Model
             'type' => match($type) {
                 'B' => 'B',
                 'G' => 'G',
+                'GDP' => 'G',
+                'GTP' => 'G',
                 'FF' => 'F',
                 'IF' => 'F',
                 'F' => 'F',
@@ -915,7 +925,7 @@ class Play extends Model
                 'SAB' => 'B',
                 default => null,
             },
-            'result' => $decisiveError ? 'E' : ($hit ? ($bases < 4 ? "{$bases}B" : 'HR') : 'O'),
+            'result' => $result == BallInPlayResult::FIELDERS_CHOICE ? 'O' : $result->value,
             'fielders' => array_map(fn ($p) => $game->fielding($p)?->id, [1, 2, 3, 4, 5, 6, 7, 8, 9]),
         ]);
         $battedBall->player()->associate($game->hitting());
@@ -1021,4 +1031,14 @@ class StringConsumer {
     {
         return substr($this->string, $this->index);
     }
+}
+
+enum BallInPlayResult: string {
+    case SINGLE = '1B';
+    case DOUBLE = '2B';
+    case TRIPLE = '3B';
+    case HOME_RUN = 'HR';
+    case ERROR = 'E';
+    case OUT = 'O';
+    case FIELDERS_CHOICE = 'FC';
 }
