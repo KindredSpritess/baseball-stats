@@ -153,7 +153,7 @@ import FieldSvg from './FieldSvg.vue';
 import FielderSelection from './FielderSelection.vue';
 
 const balls = ['.', 'b', 'i', 'p'];
-const strikes = ['s', 'c', 'r', 'f', 't'];
+const strikes = ['s', 'c', 'r', 'e', 'f', 't'];
 const STAGES = [
   'pitch',
   'trajectory',
@@ -220,6 +220,7 @@ export default {
         's': 'Swinging Strike',
         'c': 'Called Strike',
         'f': 'Foul Ball',
+        'e': 'Dropped Foul Ball',
         't': 'Foul Tip',
         'g': 'Foul (bunt)',
         'x': 'Ball In Play',
@@ -235,6 +236,7 @@ export default {
         's': 'out',
         'c': 'out',
         'f': 'out',
+        'e': 'out',
         'g': 'out',
         't': 'out',
         'x': 'in-play',
@@ -279,6 +281,7 @@ export default {
     pitchOutcomes() {
       const outcomes = { ...this.basePitchOutcomes };
       if (this.preferences.removeAdvancedPitchTypes) {
+        delete outcomes['e'];
         delete outcomes['r'];
         delete outcomes['b'];
         delete outcomes['p'];

@@ -170,6 +170,7 @@ const pitchDescription = (pitch) => ({
     'x': 'In Play',
     't': 'Foul Tip',
     'r': 'Foul (runner going)',
+    'e': 'Dropped Foul Ball',
     'f': 'Foul',
     'g': 'Foul (bunt)',
     'p': 'Pitchout',
