@@ -458,8 +458,13 @@ svg {
 /* Spray chart interactive wrapper and tooltip */
 .spray-chart-wrapper {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
   width: 100%;
+  justify-content: center;
+}
+
+.spray-chart-wrapper svg {
+  max-width: calc(50vh);
 }
 
 .spray-tooltip {
