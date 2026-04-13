@@ -18,8 +18,8 @@
         <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('PO')" class="action-btn out">Picked Off</button> -->
         <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('WP')" class="action-btn advance">Wild Pitch</button>
         <button v-if="!fouls.includes(pitch)" @click="logRunnerAction('PB')" class="action-btn advance">Passed Ball</button>
-        <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn advance">Advance on Error</button>
-        <button v-if="!['f', 'r'].includes(pitch)" @click="logRunnerAction('FC')" class="action-btn">Fielder's Choice</button>
+        <button v-if="!['e', 'f', 'r'].includes(pitch)" @click="logRunnerAction('E')" class="action-btn advance">Advance on Error</button>
+        <button v-if="!['e', 'f', 'r'].includes(pitch)" @click="logRunnerAction('FC')" class="action-btn">Fielder's Choice</button>
       </div>
       <div class="runner-actions"  v-else-if="step === 'errors'">
         <button @click="decisive = true; step = 'fielders'" class="action-btn advance">Safe on Error</button>
@@ -107,8 +107,8 @@ export default {
       decisive: false,
       fielders: [],
       actions: [],
-      fouls: ['f', 'r', '', 'x'],
-      noSteal: ['x', 'f', 'r'],
+      fouls: ['f', 'r', '', 'x', 'e'],
+      noSteal: ['x', 'f', 'r', 'e'],
       positions: POSITIONS,
       bases: '',
       nextBase: this.base,

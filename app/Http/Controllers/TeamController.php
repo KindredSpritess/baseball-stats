@@ -81,6 +81,40 @@ class TeamController extends Controller
         ]);
     }
 
+    public function games(Team $team) {
+        $games = Game::whereEnded(true)
+            ->where(function($q) use ($team) {
+                $q->where('home', $team->id)
+                  ->orWhere('away', $team->id);
+            })
+            ->orderBy('firstPitch')
+            ->get();
+
+        $stats = [];
+        $totals = new StatsHelper([]);
+        foreach ($games as $game) {
+            $gameStats = new StatsHelper([]);
+            $game->players()->whereTeamId($team->id)->each(fn (Player $player) => $gameStats->merge($player->stats));
+            $gameStats->derive();
+            $stats[$game->id] = $gameStats;
+            $totals->merge($gameStats);
+        }
+        $totals->derive();
+
+        $ballsInPlay = BallInPlay::whereRelation('player', 'team_id', $team->id)
+            ->whereHas('player', fn($q) => $q->whereIn('game_id', $games->pluck('id')))
+            ->get()
+            ->groupBy('player.game_id');
+
+        return view('team.games', [
+            'team' => $team,
+            'games' => $games,
+            'stats' => $stats,
+            'totals' => $totals,
+            'ballsInPlay' => $ballsInPlay,
+        ]);
+    }
+
     public function edit(Team $team) {
         return view('team.edit', [
             'team' => $team,

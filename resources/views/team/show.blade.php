@@ -47,6 +47,8 @@
     <a href="{{ route('roster.import', ['team' => $team->id]) }}" class="inline-link">Import Players</a>
     @endcan
 
+    <a href="{{ route('team.games', ['team' => $team->id]) }}" class="inline-link">View Stats by Game &rarr;</a>
+
     <section class="section-spacing">
         <h2 class="section-title stats">Statistics - Qualified (<a href="{{ route('team', ['team' => $team->id, 'qualified' => 'all']) }}" class="inline-link">see all</a>)</h2>
 

@@ -674,9 +674,11 @@ class ExportScorebookCommand extends Command
         } elseif (preg_match('/^[BG]?`?(\d)$/', $playText, $matches)) {
             // Unassisted ground out
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
-        } elseif (preg_match('/^[FLPGB]?([!@#$]?)(((\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
+        } elseif (preg_match('/^(F?)[FLPGB]?([!@#$]?)(((?:\d-)*)(?:E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
-            return ["{$prefix}{$matches[2]}{$suffix}", 'red', self::BASES[$matches[1]] ?? 1, $prefix ? null : ['E' => $matches[6], 'A' => str_replace('-', '', $matches[3])]];
+            [$_, $foul, $bases, $errorPlay, $assists, $errorPlayer] = $matches;
+            $bases = $foul ? 0 : self::BASES[$bases] ?? 1;
+            return ["{$prefix}{$errorPlay}{$suffix}", 'red', $bases, $prefix ? null : ['E' => $errorPlayer, 'A' => str_replace('-', '', $assists)]];
         } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];

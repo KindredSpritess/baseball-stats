@@ -90,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
                         't' => 'Foul Tip',
                         'r' => 'Foul (runner going)',
                         'g' => 'Foul (bunt)',
+                        'e' => 'Dropped Foul',
                         'f' => 'Foul',
                         default => "Unknown Pitch $pitch"
                     };

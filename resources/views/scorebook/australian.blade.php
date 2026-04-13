@@ -990,6 +990,7 @@
                         $pitches = substr($pitches, 0, -1);
                     }
                     $pitches = str_replace('.', '&middot;', $pitches);
+                    $pitches = str_replace('e', '<span style="color:red;">F</span>', $pitches);
                     @endphp
                     <td rowspan="{{ $loop->parent->count }}" @class([
                         'inning-cell',

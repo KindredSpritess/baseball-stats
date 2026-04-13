@@ -390,6 +390,7 @@ class Play extends Model
                 $this->lastPitch = '.';
             } else if ($p = ($log->consume('c') ?:  // Called Strike
                              $log->consume('s') ?:  // Swinging Strike
+                             $log->consume('e') ?:  // Dropped foul ball
                              $log->consume('f') ?:  // Foul
                              $log->consume('r') ?:  // Foul (runner going)
                              $log->consume('g') ?:  // Foul (bunt)
@@ -533,6 +534,11 @@ class Play extends Model
                             $decisiveError = false;
                             if ($this->handleFielding($game, $event, $hit)) {
                                 $decisiveError = !$hit && (string)$event !== 'FC';
+                                if (in_array($bb, ['FF', 'PF']) && $decisiveError) {
+                                    // Muffed foul flies are treated as errors but don't advance the runner, so we need to reset the error here.
+                                    $this->plate_appearance = false;
+                                    $tb = 0;
+                                }
                                 $game->advanceRunner($game->hitting(), $tb, $hit, $decisiveError, $hit ? 'H' : 'E');
                                 $format = null;
                                 if ($hit) {
@@ -542,12 +548,15 @@ class Play extends Model
                                         'type' => self::HIT[$tb],
                                         'trajectory' => self::TRAJECTORIES[$bb],
                                     ]);
-                                } else {
+                                } else if ($tb) {
                                     $format = __("reaches :base on {$this->fieldingBuffer}", [
                                         'type' => $tb < 4 ? self::HIT[$tb] : 'scores',
                                         'base' => self::BASES[$tb - 1],
                                     ]);
                                     $game->pitching()->evt('ABOE');
+                                } else {
+                                    $this->log(__('Muffed catch :fielder.', ['fielder' => $this->fieldingBuffer]));
+                                    return;
                                 }
                                 if ($tb < 4) {
                                     $b = $this->advance($game, -1, $tb - 1, $format);
