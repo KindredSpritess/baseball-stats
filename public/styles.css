@@ -455,6 +455,81 @@ svg {
   font-size: large;
 }
 
+/* Spray chart interactive wrapper and tooltip */
+.spray-chart-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.spray-chart-wrapper svg {
+  max-width: calc(50vh);
+}
+
+.spray-tooltip {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  padding: 10px 14px;
+  min-width: 180px;
+  max-width: 260px;
+  z-index: 100;
+  font-size: 0.88em;
+  color: var(--text-primary);
+}
+
+.spray-tooltip-close {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: 2px 4px;
+}
+
+.spray-tooltip-close:hover {
+  color: var(--text-primary);
+}
+
+.spray-tooltip-inning {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.spray-tooltip-human {
+  font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.spray-tooltip-details {
+  font-size: 0.82em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.spray-tooltip-link {
+  display: inline-block;
+  font-size: 0.82em;
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.spray-tooltip-link:hover {
+  color: var(--primary-dark);
+}
+
 /* Login page styles */
 .login-container {
   max-width: 1200px;

@@ -69,6 +69,7 @@ class PersonController extends Controller
 
         return response(view('components.field', [
             'ballsInPlay' => $balls,
+            'interactive' => false,
         ]))->header('Content-Type', 'image/svg+xml');
     }
 

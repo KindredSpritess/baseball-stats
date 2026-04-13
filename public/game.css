@@ -423,3 +423,11 @@ tr.atbat {
 #receiver .receiver-hover-element {
   filter: drop-shadow(0 0 0.75rem var(--primary));
 }
+.spray-highlighted {
+  animation: spray-highlight-pulse 2s ease-out;
+}
+
+@keyframes spray-highlight-pulse {
+  0% { background-color: var(--bg-highlight); }
+  100% { background-color: transparent; }
+}
