@@ -56,7 +56,11 @@
     @endunless
 
     <section class="section-spacing">
-        <h2 class="section-title stats">Statistics - Qualified (<a href="{{ route('team', ['team' => $team->id, 'qualified' => 'all']) }}" class="inline-link">see all</a>)</h2>
+        <h2 class="section-title stats">Statistics
+            @if ($minPA || $minFI || $minIP)
+            - Qualified (<a href="{{ route('team', ['team' => $team->id, 'qualified' => 'all']) }}" class="inline-link">see all</a>)
+            @endif
+        </h2>
 
         <div class="stats-section">
             <div class="stats-card">
