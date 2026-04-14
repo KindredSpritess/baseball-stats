@@ -84,6 +84,8 @@ Route::controller(StatsController::class)->group(function () {
 });
 
 Route::controller(SeasonController::class)->group(function () {
+    Route::get('/season/create', 'create')->name('season.create')->middleware('can:create-season');
+    Route::post('/season/create', 'store')->name('season.store')->middleware('can:create-season');
     Route::get('/season/{season}/preferences', 'preferences')->name('season.preferences');
 });
 

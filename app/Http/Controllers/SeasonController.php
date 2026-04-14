@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 
 class SeasonController extends Controller
 {
+    public function create() {
+        return view('season.create');
+    }
+
+    public function store(Request $request) {
+        $season = new Season($request->validate([
+            'name' => 'required|string|max:100',
+        ]));
+        $season->save();
+        return redirect()->route('team.create', ['season' => $season->id]);
+    }
+
     public function preferences(Season $season) {
         return view('season.preferences', [
             'season' => $season,
