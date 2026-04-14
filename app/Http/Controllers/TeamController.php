@@ -115,6 +115,47 @@ class TeamController extends Controller
         ]);
     }
 
+    public function historical(Request $request, Team $team) {
+        // First get the list of people who have played for the team.
+        // then find their stats for any game they've played in the last n months (default 12).
+        $people = Person::whereHas('players', fn($q) => $q->where('team_id', $team->id))->get();
+        $players = Player::whereIn('person_id', $people->pluck('id'))->whereHas('game', fn($q) => $q->where('firstPitch', '>=', now()->subMonths($request->query('months', 12))))->get();
+
+        $stats = $people->mapWithKeys(fn($person) => [$person->id => new StatsHelper([])]);
+        $player_ids = [];
+        foreach ($players as $player) {
+            $id = $player->person->id;
+            $player_ids[] = $player->id;
+            $stats[$id]->merge($player->stats);
+        }
+        $totals = new StatsHelper([]);
+        foreach ($stats as &$player) {
+            $totals->merge($player);
+            $player->derive();
+        }
+        $totals->derive();
+
+        if ($player_ids) {
+            $player_ids_list = implode(',', $player_ids);
+            $pitcherBalls = BallInPlay::whereRaw("JSON_EXTRACT(fielders, '$[0]') IN ($player_ids_list)")->get()->groupBy(fn($ball) => $ball->pitcher[0]->person_id);
+        } else {
+            $pitcherBalls = collect();
+        }
+
+        return view('team.show', [
+            'team' => $team,
+            'stats' => $stats,
+            'totals' => $totals,
+            'people' => $people,
+            'ballsInPlay' => BallInPlay::whereIn('player_id', $player_ids)->get()->groupBy('player.person_id'),
+            'pitchingBIP' => $pitcherBalls,
+            'minPA' => 0,
+            'minIP' => 0,
+            'minFI' => 0,
+            'historical' => $request->query('months', 12),
+        ]);
+    }
+
     public function edit(Team $team) {
         return view('team.edit', [
             'team' => $team,

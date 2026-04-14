@@ -70,6 +70,7 @@ Route::controller(TeamController::class)->group(function () {
     Route::post('/team/create', 'store')->name('teamstore')->middleware('can:create-team');
     Route::get('/team/{team}', 'show')->name('team');
     Route::get('/team/{team}/games', 'games')->name('team.games');
+    Route::get('/team/{team}/historical', 'historical')->name('team.historical');
     Route::get('/team/{team}/edit', 'edit')->name('team.edit')->middleware('can:edit-team,team');
     Route::post('/team/{team}/edit', 'update')->name('team.update')->middleware('can:edit-team,team');
 });

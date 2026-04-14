@@ -41,6 +41,9 @@
 @section('content')
 <div class="welcome-container team-page">
     <h1 class="welcome-title">{{ $team->name }} - {{ $team->season?->name }}</h1>
+    @if ($historical ?? false)
+    <p class="welcome-description">This page shows historical stats for the team's players in the last {{ $historical }} months. For current roster and season stats, <a href="{{ route('team', ['team' => $team->id]) }}" class="inline-link">click here</a>.</p>
+    @endif
 
     @can('edit-team', $team)
     <a href="{{ route('team.edit', ['team' => $team->id]) }}" class="inline-link">Edit Team Details</a>
@@ -48,13 +51,18 @@
     @endcan
 
     <a href="{{ route('team.games', ['team' => $team->id]) }}" class="inline-link">View Stats by Game &rarr;</a>
+    @unless ($historical ?? false)
+    <a href="{{ route('team.historical', ['team' => $team->id]) }}" class="inline-link">Historical &rarr;</a>
+    @endunless
 
     <section class="section-spacing">
         <h2 class="section-title stats">Statistics - Qualified (<a href="{{ route('team', ['team' => $team->id, 'qualified' => 'all']) }}" class="inline-link">see all</a>)</h2>
 
         <div class="stats-section">
             <div class="stats-card">
-                <h3 class="stats-card-title">Hitting - Minimum {{ number_format($minPA, 1) }} PAs</h3>
+                <h3 class="stats-card-title">Hitting
+                    @if ($minPA) - Minimum {{ number_format($minPA, 1) }} PAs @endif
+                </h3>
                 <div class="stats-table-container">
                     <table class="sortable stats-table">
                         <x-hitting-stat-header />
@@ -103,7 +111,9 @@
     <section class="section-spacing">
         <div class="stats-section">
             <div class="stats-card">
-                <h3 class="stats-card-title">Fielding - Minimum {{ App\Helpers\StatsHelper::innings_format($minFI) }} FIs</h3>
+                <h3 class="stats-card-title">Fielding
+                    @if ($minFI) - Minimum {{ App\Helpers\StatsHelper::innings_format($minFI) }} FIs @endif
+                </h3>
                 <div class="stats-table-container">
                     <table class="sortable stats-table">
                         <x-fielding-stat-header />
@@ -125,7 +135,9 @@
     <section class="section-spacing">
         <div class="stats-section">
             <div class="stats-card">
-                <h3 class="stats-card-title">Pitching - Minimum {{ App\Helpers\StatsHelper::innings_format($minIP) }} IPs</h3>
+                <h3 class="stats-card-title">Pitching
+                     @if ($minIP) - Minimum {{ App\Helpers\StatsHelper::innings_format($minIP) }} IPs @endif
+                </h3>
                 <div class="stats-table-container">
                     <table class="sortable stats-table">
                         <x-pitching-stat-header />
