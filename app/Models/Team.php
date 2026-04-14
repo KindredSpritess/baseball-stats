@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $short_name
  * @property string $name
- * @property string|null $season
+ * @property \App\Models\Season|null $season
  * @property int|null $season_id
  * @property string|null $primary_color
  * @property string|null $secondary_color
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team wherePrimaryColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereSeason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereSeasonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereSecondaryColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereShortName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereUpdatedAt($value)

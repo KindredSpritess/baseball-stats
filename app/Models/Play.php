@@ -880,23 +880,97 @@ class Play extends Model
         return $to;
     }
 
-    private function calculateBattedBallDistance(array $position): float {
-        $infield_polygon = [
-            [224.00866, 159.639],
-            [345.071, 280.826],
-            [258.727, 367.17],
-            [137.664, 246]
+    private function calculateBattedBallDistance(Game $game, array $position): float {
+        // Accepts $game as optional second argument for dimensions/settings
+        $args = func_get_args();
+
+        // Get field dimensions from $game->dimensions or fallback
+        $dimensions = $game->dimensions ?? [];
+        $lf = $dimensions['lf'] ?? 300;
+        $cf = $dimensions['cf'] ?? 400;
+        $rf = $dimensions['rf'] ?? 300;
+
+        // Get basepath distance from season settings or fallback
+        $basepath = $game->home_team->season->scoring_rules['basePath'] ?? 90;
+        Log::info("Season settings basePath: ", $game->home_team->season->scoring_rules);
+        Log::info("Using dimensions LF: {$lf}, CF: {$cf}, RF: {$rf}, Basepath: {$basepath}");
+        $diamond_hypot = sqrt(2 * pow($basepath, 2)); // 127.279 for 90ft
+
+        // Calibration table (angles in degrees)
+        $calibration = [
+            45 => [
+                [ 'd' => 173.2411614, 'fd' => $basepath ], // 3B/1B line
+                [ 'd' => 319.6122651, 'fd' => $lf ] // LF/3B corner
+            ],
+            90 => [
+                [ 'd' => 0, 'fd' => 0 ],
+                [ 'd' => 245, 'fd' => $diamond_hypot ], // 2B
+                [ 'd' => 405, 'fd' => $cf ] // CF (405 is default SVG max)
+            ],
+            135 => [
+                [ 'd' => 173.2411614, 'fd' => $basepath ], // 1B/3B line
+                [ 'd' => 319.6122651, 'fd' => $rf ] // RF/1B corner
+            ],
         ];
+
+        // Infield polygon (same as JS)
         $infield_polygon = [
-            [43, 318],
-            [224, 143],
-            [405, 318],
-            [224, 446],
+            [224,160],
+            [591,527],
+            [-143,527],
         ];
         $svg_distance = sqrt((224 - $position[0]) ** 2 + (405 - $position[1]) ** 2);
-        $scale = $this->isPointInPolygon($position, $infield_polygon) ? 0.516 : 0.987;
-        Log::info("SVG Distance: {$svg_distance}, scale: {$scale}");
-        return $svg_distance * $scale;
+        $infield_scale = $diamond_hypot / 245;
+        if ($this->isPointInPolygon($position, $infield_polygon)) {
+            return $svg_distance * $infield_scale;
+        }
+
+        // Calculate angle from home plate (same as JS)
+        $dx = $position[0] - 224;
+        $dy = 405 - $position[1];
+        $angle = fmod((atan2($dy, $dx) * (180 / M_PI) + 360), 360);
+
+        // Find the two closest calibration angles
+        $calibrationAngles = array_keys($calibration);
+        sort($calibrationAngles);
+        $lowerAngle = $calibrationAngles[0];
+        $upperAngle = $calibrationAngles[count($calibrationAngles) - 1];
+        for ($i = 0; $i < count($calibrationAngles) - 1; $i++) {
+            if ($angle >= $calibrationAngles[$i] && $angle <= $calibrationAngles[$i + 1]) {
+                $lowerAngle = $calibrationAngles[$i];
+                $upperAngle = $calibrationAngles[$i + 1];
+                break;
+            }
+        }
+
+        // Helper: interpolate scale for a given angle's calibration array
+        $interpScale = function($calibArr, $svg_distance) {
+            $lower = $calibArr[0];
+            $upper = $calibArr[count($calibArr) - 1];
+            for ($i = 0; $i < count($calibArr) - 1; $i++) {
+                if ($svg_distance >= $calibArr[$i]['d'] && $svg_distance <= $calibArr[$i + 1]['d']) {
+                    $lower = $calibArr[$i];
+                    $upper = $calibArr[$i + 1];
+                    break;
+                }
+            }
+            if ($upper['d'] == $lower['d']) return $lower['fd'] / $lower['d'];
+            $scale = ($svg_distance - $lower['d']) / ($upper['d'] - $lower['d']);
+            $fieldDist = $lower['fd'] + $scale * ($upper['fd'] - $lower['fd']);
+            return $fieldDist / $svg_distance;
+        };
+
+        $scaleLower = $interpScale($calibration[$lowerAngle], $svg_distance);
+        $scaleUpper = $interpScale($calibration[$upperAngle], $svg_distance);
+        $angleScale = $scaleLower;
+        if ($upperAngle != $lowerAngle) {
+            $angleFrac = ($angle - $lowerAngle) / ($upperAngle - $lowerAngle);
+            $angleScale = $scaleLower + $angleFrac * ($scaleUpper - $scaleLower);
+        }
+
+        $result = $svg_distance * $angleScale;
+        Log::info("SVG Distance: {$svg_distance}, Angle: {$angle}, Scale: {$angleScale}, Result: {$result}, Infield Scale {$infield_scale}");
+        return $result;
     }
 
     private function isPointInPolygon(array $point, array $polygon): bool {
@@ -918,7 +992,7 @@ class Play extends Model
         $position = array_map(fn ($p) => round($p, 2), explode(':', $action));
         $battedBall = new BallInPlay([
             'position' => $position,
-            'distance' => $this->calculateBattedBallDistance($position),
+            'distance' => $this->calculateBattedBallDistance($game, $position),
             'type' => match($type) {
                 'B' => 'B',
                 'G' => 'G',

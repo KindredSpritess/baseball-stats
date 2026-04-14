@@ -69,6 +69,22 @@
             </p>
             @endif
             <div>
+                <!-- Outfield Wall Dimensions Editor -->
+                <form id="wall-dimensions-form" style="margin-bottom: 1em; display: flex; gap: 1em; align-items: flex-end; justify-content: center;">
+                    <div>
+                        <label for="lf-dim">LF (Foul Pole)</label><br>
+                        <input type="number" id="lf-dim" name="lf" value="{{ $game->dimensions['lf'] ?? 300 }}" style="width: 5em;">
+                    </div>
+                    <div>
+                        <label for="cf-dim">CF (Dead Center)</label><br>
+                        <input type="number" id="cf-dim" name="cf" value="{{ $game->dimensions['cf'] ?? 400 }}" style="width: 5em;">
+                    </div>
+                    <div>
+                        <label for="rf-dim">RF (Foul Pole)</label><br>
+                        <input type="number" id="rf-dim" name="rf" value="{{ $game->dimensions['rf'] ?? 300 }}" style="width: 5em;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Walls</button>
+                </form>
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="-40 -40 527.94775 528.12701" xml:space="preserve" fill="#00000000" stroke="#00000000">
                     <path style="fill:none;stroke:#000000;stroke-width:2" d="M -40,-40 l 527.94775,0 l 0,528.12701 l -527.94775,0 Z" />
                     <g shape-rendering="auto" image-rendering="auto" color-rendering="auto" color-interpolation="sRGB">
@@ -229,6 +245,28 @@
     </tr>
 </table>
 <script>
+    // Wall dimensions AJAX update
+    $('#wall-dimensions-form').on('submit', function(e) {
+        e.preventDefault();
+        const lf = $('#lf-dim').val();
+        const cf = $('#cf-dim').val();
+        const rf = $('#rf-dim').val();
+        $.ajax({
+            url: "{{ route('game.update', ['game' => $game->id]) }}",
+            method: 'PATCH',
+            data: {
+                dimensions: {
+                    lf,
+                    cf,
+                    rf,
+                },
+                _token: '{{ csrf_token() }}',
+            },
+            error: function(xhr) {
+                alert('Failed to update wall dimensions: ' + (xhr.responseJSON?.message || xhr.statusText));
+            }
+        });
+    });
     function dsub(spot) {
         $('#pitches').val(`DC #${spot} -> `);
         $('#pitches').focus();

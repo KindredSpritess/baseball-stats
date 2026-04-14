@@ -59,6 +59,12 @@
           Use lineup for defensive changes
         </label>
       </div>
+      <div class="preference-item" v-if="'basePath' in preferences">
+        <label>
+          Base path distance (ft)
+          <input type="number" v-model="preferences.basePath" min="0" placeholder="90" />
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save {{ entityName }}</button>
     </form>
   </div>
@@ -215,5 +221,10 @@ button {
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+input[type="number"] {
+  margin-left: 10px;
+  width: 80px;
 }
 </style>

@@ -53,6 +53,7 @@ Route::get('/cast', function() {
 Route::controller(GameController::class)->group(function() {
     Route::get('/game/create', 'create')->name('game.create')->middleware('can:create-game');
     Route::post('/game/store', 'store')->name('gamestore')->middleware('can:create-game');
+    Route::patch('/game/{game}/update', 'update')->name('game.update')->middleware('can:score-game,game');
     Route::get('/game/{game}', 'show')->name('game')->middleware('can:score-game,game');
     Route::get('/game/{game}/score', 'score')->name('game.score')->middleware('can:score-game,game');
     Route::get('/game/{game}/scorebook', 'exportScorebook')->name('game.scorebook')->middleware('can:score-game,game');

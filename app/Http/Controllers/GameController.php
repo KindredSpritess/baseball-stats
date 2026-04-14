@@ -108,6 +108,18 @@ class GameController extends Controller
         }
     }
 
+    public function update(Game $game, Request $request) {
+        if ($game->locked) {
+            throw new Exception('Cannot update locked game.');
+        }
+        $game->fill($request->input());
+        if ($request->input('firstPitch')) {
+            $game->firstPitch = Carbon::createFromFormat('Y-m-d\TH:i', $request->input('firstPitch'), $request->input('timezone'))->setTimezone('UTC');
+        }
+        $game->save();
+        return response()->json(['status' => 'success']);
+    }
+
     public function plays(Game $game, Request $request) {
         if ($game->locked) {
             throw new Exception('Cannot update locked game.');
@@ -161,7 +173,6 @@ class GameController extends Controller
             }
         }
         $game->players->filter(function ($p) {
-            Log::info("Final stats for player {$p->id}: " . json_encode($p->stats));
             return empty($p->stats);
         })->each(fn ($p) => $p->delete());
         GameUpdated::dispatch($game->id, null, null, null, true);

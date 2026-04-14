@@ -20,7 +20,8 @@
           data-initial-preferences="{
             &quot;allowDropThirdStrikes&quot;: true,
             &quot;removeBalks&quot;: false,
-            &quot;balksCanCountTowardPitchCount&quot;: false
+            &quot;balksCanCountTowardPitchCount&quot;: false,
+            &quot;basePath&quot;: 90
           }"
         ></div>
     </div>
