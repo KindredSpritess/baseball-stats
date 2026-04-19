@@ -487,7 +487,7 @@ class Play extends Model
                             $game->hitting()->evt('BBs');
                             $game->hitting()->evt('IBBs');
                             $game->pitching()->evt('BB');
-                            $this->logBuffer("intentional walked");
+                            $this->logBuffer("walked intentionally");
                             $b = $this->advance($game, -1, 0, false);
                             $game->advanceRunner($game->hitting(), 1, true, false, 'W');
                         } elseif ($event->consume('HBP')) {
@@ -652,7 +652,8 @@ class Play extends Model
         $event = new StringConsumer($event);
 
         if ($event->consume('ER')) {
-            $game->runners[$runner->id]['pitcher']->evt('ER');
+            $game->runners[$runner->id]['earned'] = 4;
+            // $game->runners[$runner->id]['pitcher']->evt('ER');
         } elseif ($event->consume('UR')) {
             $stats = $game->runners[$runner->id]['pitcher']->stats;
             $stats['ER'] = ($stats['ER'] ?? 0) - 1;
@@ -707,6 +708,10 @@ class Play extends Model
                     'fielding' => $this->fieldingBuffer,
                 ]));
             } else {
+                if ($bases < 0) {
+                    $bases = 0;
+                    $this->logBuffer(" picked off, {$this->fieldingBuffer}");
+                }
                 $game->advanceRunner($runner, $bases, false, true);
                 $logFormat = '[0,2] picked off, reaches :base on ' . $this->fieldingBuffer . '|[3,*] picked off, scores on ' . $this->fieldingBuffer;
             }
@@ -856,6 +861,7 @@ class Play extends Model
     }
 
     public function advance(Game $game, int $from, int $to, ?string $logFormat = null) {
+        if ($from == $to) return $to;
         throw_unless($to > 2 || $to < 0 || $game->bases[$to] === null, "Cannot advance to occupied base");
         throw_unless($from < 0 || $game->bases[$from] !== null, "No runner on base to advance");
         $player = $from >= 0 ? $game->bases[$from] : $game->hitting();

@@ -641,6 +641,14 @@ class ExportScorebookCommand extends Command
         preg_match('/^(\(?)([^)]*?)(\)?)$/', $playText, $matches);
         [$_, $prefix, $playText, $suffix] = $matches;
 
+        // Strip off ER / UR prefixes.
+        $playText = preg_replace('/^(ER|UR)/', '', $playText);
+
+        $bases = 0;
+        preg_match('/^([!@#$]?)(.*)/', $playText, $matches);
+        $playText = $matches[2];
+        $bases = self::BASES[$matches[1]] ?? 1;
+
         if ($playText === 'K2') {
             return ['K2', 'blue', -1, ['PO' => 2]]; // Strikeout
         } elseif ($playText === 'KBTS') {
@@ -683,13 +691,13 @@ class ExportScorebookCommand extends Command
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];
         } elseif ($playText === 'SB') {
-            return ["SB$atbat", 'black', 1]; // Stolen base
+            return ["SB$atbat", 'black', $bases]; // Stolen base
         } elseif ($playText === 'WP') {
-            return ["{$prefix}WP{$atbat}{$suffix}", 'blue-text', 1];
+            return ["{$prefix}WP{$atbat}{$suffix}", 'blue-text', $bases]; // Wild pitch
         } elseif ($playText === 'PB') {
-            return ["{$prefix}PB{$atbat}{$suffix}", 'red-text', 1];
-        } elseif (in_array($playText, ['!', '@', '#', '$'])) {
-            return [$atbat, 'black', self::BASES[$playText] ?? 1]; // Advanced on hitter.
+            return ["{$prefix}PB{$atbat}{$suffix}", 'red-text', $bases]; // Passed ball
+        } elseif (empty($playText) && $bases > 0) {
+            return [$atbat, 'black', $bases]; // Advanced on hitter.
         } elseif (preg_match('/^(F?[FLPGB])([@!#\$]?)$/', $playText, $matches)) {
             // Hit: F=fly, L=line, P=pop, G=ground, B=bunt
             // @=double, !=single, #=triple, $=home run
