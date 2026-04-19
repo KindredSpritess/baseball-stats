@@ -898,8 +898,6 @@ class Play extends Model
 
         // Get basepath distance from season settings or fallback
         $basepath = $game->home_team->season->scoring_rules['basePath'] ?? 90;
-        Log::info("Season settings basePath: ", $game->home_team->season->scoring_rules);
-        Log::info("Using dimensions LF: {$lf}, CF: {$cf}, RF: {$rf}, Basepath: {$basepath}");
         $diamond_hypot = sqrt(2 * pow($basepath, 2)); // 127.279 for 90ft
 
         // Calibration table (angles in degrees)
