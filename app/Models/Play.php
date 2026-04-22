@@ -666,7 +666,7 @@ class Play extends Model
         $stat = null;
         if ($stat = $event->consume('SB')) {
             $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CSB');
-            $game->advanceRunner($runner, 1);
+            $game->advanceRunner($runner, $bases);
             $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
             $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CCS');
@@ -696,7 +696,7 @@ class Play extends Model
             $countStats && $game->hitting()->evt('RBI');
             $game->advanceRunner($runner, $bases);
         } elseif ($event->consume('PO')) {
-            $countStats && $game->pitching()->evt('POs');
+            $countStats && str_starts_with($event, '1') && $game->pitching()->evt('POs');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $targetBase = $b;
                 $this->addAction($runner->id, $targetBase);
