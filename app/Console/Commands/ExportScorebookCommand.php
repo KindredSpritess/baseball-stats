@@ -523,7 +523,10 @@ class ExportScorebookCommand extends Command
                     $b = $i - 1;
                     $plays = explode('/', $parts[$i]);
                     $spot = $i === 1 ? $atbat : ($runners[$i - 2] ?? null);
-                    foreach ($plays as $playSegment) {
+                    foreach ($plays as $pi => $playSegment) {
+                        if ($pi) {
+                            end($data[$spot][$inning])->links[($b-1)."-{$b}"] = true;
+                        }
                         $playResult = $this->extractPlayResult($playSegment, $atbat);
                         [$note, $colour, $bases] = $playResult;
                         if ($colour === 'green' && $ballInPlay) {
@@ -709,9 +712,9 @@ class ExportScorebookCommand extends Command
                 default => '-',
             };
             return [$symbol, 'green', self::BASES[$matches[2]] ?? 1];
-        } elseif (preg_match('/^[FLGPB]?([!@#$]?)FC$/', $playText, $matches)) {
+        } elseif (preg_match('/^[FLGPB]?([!@#$]?)(FC\d?)$/', $playText, $matches)) {
             // Fielder's choice
-            return ['FC', 'black', self::BASES[$matches[1]] ?? 1];
+            return [$matches[2], 'black', self::BASES[$matches[1]] ?? 1];
         }
 
         return [$playText, 'black', 1]; // Unknown
@@ -769,4 +772,5 @@ class PlateAppearence
     public $diamondUp = false;
     public $diamondDown = false;
     public $results = []; // Each entry: [note, colour]
+    public $links = []; // Each entry: [from-to => true]
 }

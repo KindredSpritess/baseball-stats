@@ -329,6 +329,41 @@
             line-height: 13px;
             text-align: center;
         }
+        .link-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1px), black 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 1px), black 0);
+            transform: translateX(-50%);
+        }
+
+        .link-circle[data-link="0-1"] {
+            background: conic-gradient(
+                transparent 0deg 75deg,
+                black 75deg 105deg,
+                transparent 105deg 360deg
+            );
+        }
+
+        .link-circle[data-link="1-2"] {
+            background: conic-gradient(
+                black 0deg 15deg,
+                transparent 15deg 345deg,
+                black 345deg 360deg
+            );
+        }
+
+        .link-circle[data-link="2-3"] {
+            background: conic-gradient(
+                transparent 0deg 255deg,
+                black 255deg 285deg,
+                transparent 285deg 360deg
+            );
+        }
 
         .play-quadrant.play-blue {
             color: blue;
@@ -1039,6 +1074,9 @@
                                 'earned' => $runEarned === true,
                                 'unearned' => $runEarned === false,
                             ])>{{ $outNumber ?? '' }}</div>
+                            @isset($play->links['0-1'])<div class="link-circle" data-link="0-1"></div>@endisset
+                            @isset($play->links['1-2'])<div class="link-circle" data-link="1-2"></div>@endisset
+                            @isset($play->links['2-3'])<div class="link-circle" data-link="2-3"></div>@endisset
                         </div>
                     </td>
                     @endfor
