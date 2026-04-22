@@ -533,7 +533,7 @@ class Play extends Model
                             $tb = self::getBases($event);
                             $decisiveError = false;
                             if ($this->handleFielding($game, $event, $hit)) {
-                                $decisiveError = !$hit && (string)$event !== 'FC';
+                                $decisiveError = !$hit && !str_starts_with($event, 'FC');
                                 if (in_array($bb, ['FF', 'PF']) && $decisiveError) {
                                     // Muffed foul flies are treated as errors but don't advance the runner, so we need to reset the error here.
                                     $this->plate_appearance = false;
@@ -776,7 +776,7 @@ class Play extends Model
     public function handleFielding(Game $game, StringConsumer|string $event, bool &$hit = true, bool $countStats = true): bool {
         $this->fieldingBuffer = null;
         if (!((string)$event)) return true;
-        if ((string)$event === 'FC') {
+        if (str_starts_with($event, 'FC')) {
             $this->fieldingBuffer = 'fielder\'s choice';
             $hit = false;
             return true;
