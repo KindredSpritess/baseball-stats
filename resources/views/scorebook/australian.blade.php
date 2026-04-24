@@ -1128,12 +1128,24 @@
                     @else
                         <td colspan="10" rowspan="8" style="border-spacing: 0; padding: 0;">&nbsp;</td>
                     @endif
-                    <td class="main-stats-header">RUNS</td>
+                    <td class="main-stats-header" rowspan="2">RUNS</td>
                     @foreach ($innings as $inning)
                     @for($i = 0; $i < $inning['width']; $i++)
-                    <td class="totals-stat">
+                    <td class="totals-stat" rowspan="2">
                         @unless($i !== $inning['width'] - 1 || is_null($inning['runs_total']))
-                            {{ $inning['runs'] }} / {{ $inning['runs_total'] }}
+                            <!-- Place the runs and total runs here, on either side of a diagonal line -->
+                            <div style="position:relative; width:100%; height:100%;">
+                                <div style="position:absolute; top:0; left:0; width:100%; height:100%;">
+                                    <div style="position:absolute; top:0; left:0; width:50%; height:100%; display:flex; align-items:end; justify-content:left; padding:4px;">
+                                        {{ $inning['runs'] }}
+                                    </div>
+                                    <div style="position:absolute; top:0; left:50%; width:50%; height:100%; display:flex; align-items:center; justify-content:right; padding:4px;">
+                                        {{ $inning['runs_total'] }}
+                                    </div>
+                                    <div style="position:absolute; top:calc(21.5px / 2); left:0; width:calc(hypot(59px, 21.5px)); height:100%; border-top: 1px solid black; transform: rotate(calc(atan(-21.5 / 59))); transform-origin: top left;"></div>
+                                </div>
+                            </div>
+                            <!-- {{ $inning['runs'] }} / {{ $inning['runs_total'] }} -->
                         @endunless
                     </td>
                     @endfor
@@ -1160,7 +1172,7 @@
                     <td class="totals-stat">{{  $teamStats->SB ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->CS ?: '' }}</td>
                 </tr>
-                <tr><td colspan="{{ array_sum(array_column($innings, 'width')) + 1 }}">&nbsp;</td></tr>
+                <tr><td colspan="18" style="border:none;">&nbsp;</td></tr>
                 <tr>
                     <td class="main-stats-header">Balls</td>
                     @foreach ($innings as $inning)
