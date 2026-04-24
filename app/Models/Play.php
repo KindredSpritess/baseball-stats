@@ -487,6 +487,7 @@ class Play extends Model
                             $game->hitting()->evt('BBs');
                             $game->hitting()->evt('IBBs');
                             $game->pitching()->evt('BB');
+                            $game->pitching()->evt('IBB');
                             $this->logBuffer("walked intentionally");
                             $b = $this->advance($game, -1, 0, false);
                             $game->advanceRunner($game->hitting(), 1, true, false, 'W');
