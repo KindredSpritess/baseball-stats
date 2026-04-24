@@ -932,13 +932,13 @@
                     <th class="main-stats-header non-ab-stat">SAB</th>
                     <th class="main-stats-header non-ab-stat">SAF</th>
                     <th class="main-stats-header non-ab-stat">BB</th>
+                    <th class="main-stats-header non-ab-stat">IBB</th>
                     <th class="main-stats-header non-ab-stat">HBP</th>
                     <th class="main-stats-header non-ab-stat">CI</th>
                     <th class="main-stats-header">K</th>
                     <th class="main-stats-header">GDP</th>
                     <th class="main-stats-header">SB</th>
                     <th class="main-stats-header">CS</th>
-                    <th class="main-stats-header">LOB</th>
                 </tr>
             </thead>
             <!-- Totals/Summary Row -->
@@ -1095,13 +1095,13 @@
                     <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAB ?: '' }}</td>
                     <td style="text-align: center;" class="non-ab-stat">{{ $stats->SAF ?: '' }}</td>
                     <td style="text-align: center;" class="non-ab-stat">{{ $stats->BBs ?: '' }}</td>
+                    <td style="text-align: center;" class="non-ab-stat">{{ $stats->IBBs ?: '' }}</td>
                     <td style="text-align: center;" class="non-ab-stat">{{ $stats->HPB ?: '' }}</td>
                     <td style="text-align: center;" class="non-ab-stat">{{ $stats->CI ?: '' }}</td>
                     <td style="text-align: center;">{{ $stats->SO ?: '' }}</td>
                     <td style="text-align: center;">{{ $stats->GDP ?: '' }}</td>
                     <td style="text-align: center;">{{ $stats->SB ?: '' }}</td>
                     <td style="text-align: center;">{{ $stats->CS ?: '' }}</td>
-                    <td style="text-align: center;">{{ $stats->LOB ?: '' }}</td>
                 </tr>
                 @endforeach
                 @endforeach
@@ -1152,13 +1152,13 @@
                     <td class="totals-stat non-ab-stat">{{  $teamStats->SAB ?: '' }}</td>
                     <td class="totals-stat non-ab-stat">{{  $teamStats->SAF ?: '' }}</td>
                     <td class="totals-stat non-ab-stat">{{  $teamStats->BBs ?: '' }}</td>
+                    <td class="totals-stat non-ab-stat">{{  $teamStats->IBBs ?: '' }}</td>
                     <td class="totals-stat non-ab-stat">{{  $teamStats->HPB ?: '' }}</td>
                     <td class="totals-stat non-ab-stat">{{  $teamStats->CI ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->SO ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->GDP ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->SB ?: '' }}</td>
                     <td class="totals-stat">{{  $teamStats->CS ?: '' }}</td>
-                    <td class="totals-stat">{{  $teamStats->LOB ?: '' }}</td>
                 </tr>
                 <tr><td colspan="{{ array_sum(array_column($innings, 'width')) + 1 }}">&nbsp;</td></tr>
                 <tr>
@@ -1271,13 +1271,9 @@
                                     <td><strong>SB</strong></td>
                                     <td><strong>CS</strong></td>
                                 </tr>
+                                @forelse($catchers as $catcherId)
                                 @php
-                                $catchers = collect($battingOrder)->filter(function($batter) {
-                                    return !empty(array_filter($batter['positions'], fn($pos) => $pos[2] == '2'));
-                                });
-                                @endphp
-                                @forelse($catchers as $catcher)
-                                @php
+                                $catcher = $battingOrder[$catcherId] ?? null;
                                 $stats = (new \App\Helpers\StatsHelper($catcher['player']->stats ?? []))->derive();
                                 $do2 = $stats->stat('DO.2');
                                 @endphp

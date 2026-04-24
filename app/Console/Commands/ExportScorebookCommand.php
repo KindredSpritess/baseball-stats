@@ -136,6 +136,7 @@ class ExportScorebookCommand extends Command
 
         // Build batting order with players
         $battingOrder = [];
+        $catchers = [];
         foreach ($lineup as $spotIndex => $playersInSpot) {
             if (!empty($playersInSpot)) {
                 foreach ($playersInSpot as $player) {
@@ -184,7 +185,7 @@ class ExportScorebookCommand extends Command
         }
 
         // Extract play-by-play data for each batter in each inning
-        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $innings, $battingOrder);
+        $batterInningData = $this->extractBatterInningData($game, $teamIndex, $plays, $innings, $battingOrder, $catchers);
         $this->splitLongInnings($batterInningData, $innings);
 
         // Get pitchers of record
@@ -204,6 +205,7 @@ class ExportScorebookCommand extends Command
             'batterInningData' => $batterInningData,
             'pitchers' => $pitchers,
             'pitchersOfRecord' => $pitchersOfRecord,
+            'catchers' => $catchers,
             'venue' => $game->location ?? '',
             'date' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('Y-m-d') : '',
             'timeStart' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('H:i') : '',
@@ -227,7 +229,7 @@ class ExportScorebookCommand extends Command
      * 
      * @return array Format: [batter_spot][inning][quadrant] = play_info
      */
-    private function extractBatterInningData(Game $game, int $teamIndex, $plays, array &$inningsData, array &$battingOrder): array
+    private function extractBatterInningData(Game $game, int $teamIndex, $plays, array &$inningsData, array &$battingOrder, array &$catchers): array
     {
         // This will contain the actual play data for each batter in each inning
         // Format: [batter_spot][inning][][quadrant] = play_info
@@ -398,6 +400,9 @@ class ExportScorebookCommand extends Command
                             $player = end($spot);
                         }
                         $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
+                        if ($position == '2') {
+                            $catchers[] = $player->id;
+                        }
                         break;
                     case str_starts_with($play->play, "DSUB @{$team->short_name} "):
                         // Player substituted out of lineup
@@ -411,6 +416,9 @@ class ExportScorebookCommand extends Command
                         }
                         if ($player) {
                             $battingOrder[$player->id]['positions'][] = [$game->inning, $game->outs, $position, $game->half];
+                            if ($position == '2') {
+                                $catchers[] = $player->id;
+                            }
                             // Find the player's batting spot and mark their next at-bat
                             $playerSpot = $battingOrder[$player->id]['spot'] ?? null;
                             if ($playerSpot && $playerSpot !== 'P') {
@@ -484,6 +492,9 @@ class ExportScorebookCommand extends Command
                         } else {
                             $player = end($game->lineup[$teamIndex][intval($matches[1]) - 1]);
                             array_unshift($battingOrder[$player->id]['positions'], [$game->inning, $game->outs, $matches[2], $game->half]);
+                            if ($matches[2] === '2') {
+                                $catchers[] = $player->id;
+                            }
                         }
                         break;
                 }
