@@ -176,8 +176,8 @@ class ExportScorebookCommand extends Command
             $innings[] = [
                 'number' => $i,
                 'runs' => $linescore[$teamIndex][$i - 1] ?? 0,
-                'runs_total' => isset($linescore[$teamIndex][$i - 1]) ? $runs : null,
-                'lob' => isset($linescore[$teamIndex][$i - 1]) ? 0 : null,
+                'runs_total' => isset($linescore[$teamIndex][$i - 1]) && $i <= $game->inning ? $runs : null,
+                'lob' => isset($linescore[$teamIndex][$i - 1]) && $i <= $game->inning ? 0 : null,
                 'width' => 1,
                 'fielding' => [],
                 'pitching' => [],
