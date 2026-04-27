@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $locked
  * @property int $ended
  * @property array<array-key, mixed>|null $dimensions
+ * @property array<array-key, mixed>|null $metadata
  * @property-read \App\Models\Team|null $away_team
  * @property-read \App\Models\Team|null $home_team
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Player> $players
@@ -85,6 +86,7 @@ class Game extends Model
         'state' => GameState::class,
         'dimensions' => 'array',
         'firstPitch' => 'datetime',
+        'metadata' => 'array',
     ];
 
     public function home_team() {

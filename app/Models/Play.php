@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Number;
 use NumberFormatter;
 use App\Events\GameUpdated;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -229,6 +230,15 @@ class Play extends Model
                 ];
             }
 
+            return;
+        }
+
+        if ($log->consume('$')) {
+            // Key value pair for game state override, in format $ ?key=value
+            $matches = [];
+            throw_unless(preg_match('/^([^=]+)=(.+)/', (string)$log, $matches), 'Expected key value format "$key=value"');
+            $metadata = [trim($matches[1]) => trim($matches[2]), ...($game->metadata ?? [])];
+            $game->metadata = $metadata;
             return;
         }
 
