@@ -237,7 +237,12 @@ class Play extends Model
             // Key value pair for game state override, in format $ ?key=value
             $matches = [];
             throw_unless(preg_match('/^([^=]+)=(.+)/', (string)$log, $matches), 'Expected key value format "$key=value"');
-            $metadata = [trim($matches[1]) => trim($matches[2]), ...($game->metadata ?? [])];
+            [$k, $v] = [trim($matches[1]), trim($matches[2])];
+            if ($v === 'NOW') {
+                $v = Carbon::now()->timezone($game->timeZone)->toDateTimeString();
+                $this->play = "$k=$v";
+            }
+            $metadata = [$k => $v, ...($game->metadata ?? [])];
             $game->metadata = $metadata;
             return;
         }
@@ -517,6 +522,7 @@ class Play extends Model
                                   ($sac = $event->consume('SAB'))) {
                             $tb = self::getBases($event);
                             $game->hitting()->evt($sac);
+                            $game->pitching()->evt("{$sac}A");
                             $hit = true;
                             if ($this->handleFielding($game, $event, $hit)) {
                                 $b = $this->advance($game, -1, $tb - 1,  __("reaches :base on sacrifce {$this->fieldingBuffer}", [
@@ -555,6 +561,7 @@ class Play extends Model
                                 if ($hit) {
                                     $game->hitting()->evt("$tb");
                                     $game->pitching()->evt('HA');
+                                    $tb === 4 && $game->pitching()->evt('HRA');
                                     $format = __(":type on a :trajectory", [
                                         'type' => self::HIT[$tb],
                                         'trajectory' => self::TRAJECTORIES[$bb],

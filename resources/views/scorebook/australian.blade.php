@@ -1226,20 +1226,23 @@
                                 <td><strong>Name</strong></td>
                                 <td><strong>IP</strong></td>
                                 <td><strong>H</strong></td>
+                                <td><strong>HR</strong></td>
                                 <td><strong>K</strong></td>
                                 <td><strong>BB</strong></td>
+                                <td><strong>IBB</strong></td>
                                 <td><strong>HBP</strong></td>
                                 <td><strong>RS</strong></td>
                                 <td><strong>ER</strong></td>
                                 <td><strong>WP</strong></td>
                                 <td><strong>BLK</strong></td>
+                                <td><strong>SAB</strong></td>
+                                <td><strong>SAF</strong></td>
                                 <td><strong>PO</strong></td>
                                 <td><strong>PCS</strong></td>
                                 <td><strong>BFP</strong></td>
                                 <td><strong>B</strong></td>
                                 <td><strong>S</strong></td>
                                 <td><strong>PIT</strong></td>
-                                <td><strong>W/L/S</strong></td>
                             </tr>
                             @forelse($pitchers as $pitcher)
                             @php
@@ -1250,20 +1253,23 @@
                                 <td class="player-name">{{ $pitcher->person->lastName }}, {{ $pitcher->person->firstName }}</td>
                                 <td class="pitcher-stat">{{ \App\Helpers\StatsHelper::innings_format(isset($pitcher->stats['TO']) ? number_format(($pitcher->stats['TO'] ?? 0) / 3, 1) : '0.0') }}</td>
                                 <td class="pitcher-stat">{{ $stats->HA ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->HRA ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->K ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->BB ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->IBB ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->HBP ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->RA ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->ER ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->WP ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->BLK ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->SABA ?: '' }}</td>
+                                <td class="pitcher-stat">{{ $stats->SAFA ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->POs ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->PCS ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->BFP ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->Balls ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->Strikes ?: '' }}</td>
                                 <td class="pitcher-stat">{{ $stats->Pitches ?: '' }}</td>
-                                <td class="pitcher-stat">{{ $stats->Win ? 'W' : ($stats->Loss ? 'L' : ($stats->Save ? 'S' : '')) }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -1306,7 +1312,7 @@
                     </td>
 
                     <!-- Right Column: Score and Scorer -->
-                    <td style="width: 40%; vertical-align: top;">
+                    <td style="width: 20%; vertical-align: top;">
                         <div class="section-title">SCORE: {{ $opponent->name }} {{ $game->score[$isHome ? 0 : 1] ?? 0 }} - {{ $team->name }} {{ $game->score[$isHome ? 1 : 0] ?? 0 }}</div>
 
                         <!-- Pitchers of Record -->
@@ -1329,14 +1335,28 @@
                             </table>
                         </div>
                         @endif
-
-                        <!-- Scorer Section -->
+                    </td>
+                    <td style="width: 20%; vertical-align: top;">
+                        <!-- Umpires Section -->
+                         @php
+                         $umpireOrder = array_flip(['HP', '1B', '2B', '3B', 'LF', 'RF']);
+                         $umpires = collect($game->metadata)->filter(fn($v, $k) => isset($umpireOrder[$k]))->sortKeysUsing(fn($a, $b) => $umpireOrder[$a] <=> $umpireOrder[$b])->chunk(2);
+                         @endphp
                         <div style="margin-top: 10px;">
-                            <div class="section-title">SCORER</div>
+                            <div class="section-title">OFFICIALS</div>
                             <table class="summary">
+                                @foreach ($umpires as $umpireGroup)
                                 <tr>
-                                    <td class="player-name">{{ $game->scorer ? $game->scorer->name : '' }}</td>
+                                    @foreach ($umpireGroup as $position => $umpire)
+                                    <td style="width: 50%;text-align:left;" class="player-name"><strong>{{ $position }}:</strong> {{ $umpire }}</td>
+                                    @endforeach
                                 </tr>
+                                @endforeach
+                                @if ($game->metadata['SCORER'] ?? $game->scorer)
+                                <tr>
+                                    <td class="player-name" colspan="2"><strong>SCORER:</strong> {{ $game->scorer ? $game->scorer->name : '' }}</td>
+                                </tr>
+                                @endif
                             </table>
                         </div>
                     </td>
