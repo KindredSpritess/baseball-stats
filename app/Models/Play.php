@@ -240,9 +240,10 @@ class Play extends Model
             [$k, $v] = [trim($matches[1]), trim($matches[2])];
             if ($v === 'NOW') {
                 $v = Carbon::now()->timezone($game->timeZone)->toDateTimeString();
-                $this->play = "$k=$v";
+                $this->play = "\$$k=$v";
             }
-            $metadata = [$k => $v, ...($game->metadata ?? [])];
+            $metadata = $game->metadata ?? [];
+            $metadata[$k] = $v;
             $game->metadata = $metadata;
             return;
         }

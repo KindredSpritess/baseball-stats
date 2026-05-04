@@ -7,6 +7,7 @@ use App\Helpers\StatsHelper;
 use App\Models\Game;
 use App\Models\Play;
 use App\Models\Team;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Spatie\LaravelPdf\Facades\Pdf;
 
@@ -195,6 +196,27 @@ class ExportScorebookCommand extends Command
             'saving' => null,
         ];
 
+        if (isset($game->metadata['FP'])) {
+            $timeStart = CarbonImmutable::parse($game->metadata['FP'], $game->timeZone);
+        }
+        $timeStart ??= $game->firstPitch->timezone($game->timeZone);
+        $timeFinish = isset($game->metadata['LP']) ? CarbonImmutable::parse($game->metadata['LP'], $game->timeZone) : null;
+        $duration = $timeFinish ? $timeFinish->diffInMinutes($timeStart, true) : $game->duration;
+        $delays = 0;
+        // Remove any delays in meta.
+        collect($game->metadata)->filter(fn($v, $k) => preg_match('/^DELAY_\d*_(BEGIN|END)$/', $k))
+            ->sortKeys()
+            ->groupBy(fn($v, $k) => preg_replace('/^DELAY_(\d*)_(BEGIN|END)$/', 'DELAY_$1', $k), true)
+            ->each(function ($group, $key) use (&$duration, &$delays, $game) {
+                $begin = CarbonImmutable::parse($group->firstWhere(fn($v, $k) => str_ends_with($k, '_BEGIN')), $game->timeZone);
+                $end = CarbonImmutable::parse($group->firstWhere(fn($v, $k) => str_ends_with($k, '_END')), $game->timeZone);
+                if ($end && $begin) {
+                    $delay = $end->diffInMinutes($begin, true);
+                    $duration -= $delay;
+                    $delays += $delay;
+                }
+            });
+
         return [
             'game' => $game,
             'team' => $team,
@@ -208,9 +230,10 @@ class ExportScorebookCommand extends Command
             'catchers' => $catchers,
             'venue' => $game->location ?? '',
             'date' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('Y-m-d') : '',
-            'timeStart' => $game->firstPitch ? $game->firstPitch->timezone($game->timeZone)->format('H:i') : '',
-            'timeFinish' => $game->duration ? $game->firstPitch->copy()->addMinutes($game->duration)->timezone($game->timeZone)->format('H:i') : '',
-            'totalTime' => $game->duration ? sprintf('%d:%02d', intdiv($game->duration, 60), $game->duration % 60) : '',
+            'timeStart' => $timeStart ? $timeStart->format('H:i') : '',
+            'timeFinish' => $timeFinish ? $timeFinish->format('H:i') : '',
+            'totalTime' => $duration ? sprintf('%d:%02d', intdiv($duration, 60), $duration % 60) : '',
+            'delays' => $delays ? sprintf('%d:%02d', intdiv($delays, 60), $delays % 60) : '',
         ];
     }
 

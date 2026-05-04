@@ -68,6 +68,16 @@
                 ({{ $game->balls }} - {{ $game->strikes }}) {{ $game->outs }} outs
             </p>
             @endif
+            {{--  Work out the current delays status --}}
+            @php
+                $activeDelay = collect($game->metadata)->filter(fn($v, $k) => preg_match('/^DELAY_\d*_BEGIN$/', $k))
+                    ->filter(fn($v, $k) => isset($game->metadata[preg_replace('/_BEGIN$/', '_END', $k)]) === false)
+                    ->flip()->first();
+                $delayReason = $game->metadata[str_replace('_BEGIN', '_REASON', $activeDelay)] ?? null;
+            @endphp
+            @if ($activeDelay)
+                <p class="delay-status">⏸️ Delay in progress: {{ $delayReason ?? 'Unknown reason' }}</p>
+            @endif
             <div>
                 <!-- Outfield Wall Dimensions Editor -->
                 <form id="wall-dimensions-form" style="margin-bottom: 1em; display: flex; gap: 1em; align-items: flex-end; justify-content: center;">
@@ -488,6 +498,19 @@
         // Initial check for hash
         if (window.location.hash.includes('add-player')) {
             $('.add-player-button-container').hide();
+        }
+
+        // If there's a delay lock the play input options.
+        if ({{ $activeDelay ? 'true' : 'false' }}) {
+            $('#batter').prop('disabled', true);
+            $('#first').prop('disabled', true);
+            $('#second').prop('disabled', true);
+            $('#third').prop('disabled', true);
+            if ({{  $delayReason ? 'true' : 'false' }}) {
+                $('#pitches').val(`${{ str_replace("_BEGIN", "_END", $activeDelay) }}=NOW`);
+            } else {
+                $('#pitches').val(`${{ str_replace("_BEGIN", "_REASON", $activeDelay) }}=`);
+            }
         }
     });
 

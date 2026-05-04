@@ -810,6 +810,9 @@
             <strong>TIME START:</strong> {{ $timeStart }} &nbsp;&nbsp;
             <strong>FINISH:</strong> {{ $timeFinish }} &nbsp;&nbsp;
             <strong>TOTAL:</strong> {{ $totalTime }}
+            @if ($delays)
+                ({{ $delays }} delay)
+            @endif
         </div>
 
         <!-- Main Grid -->
