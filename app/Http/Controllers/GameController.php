@@ -138,6 +138,7 @@ class GameController extends Controller
         $game->players->each(function ($player) {
             $player->stats = [];
         });
+        $game->metadata = [];
 
         foreach ($plays as $k => $play) {
             try {

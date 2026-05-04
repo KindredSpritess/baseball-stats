@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
 
 // Props
@@ -832,6 +832,17 @@ defineExpose({
   updateStatus,
   toast,
 })
+
+const gameDelayed = computed(() => {
+  // Get first unended delay from game meta.
+  const delay = Object.entries(props.game?.metadata ?? {}).find(
+    ([key], _, arr) => /^DELAY_\d+_BEGIN$/.test(key) && !(key.replace('_BEGIN', '_END') in props.game.metadata));
+  if (delay) {
+    return props.game.metadata[delay[0].replace('_BEGIN', '_REASON')] ?? 'Game delayed';
+  }
+  return null;
+});
+
 </script>
 
 <template>
@@ -842,6 +853,9 @@ defineExpose({
         {{ toastMessage }}
       </div>
     </Transition>
+    <div v-if="gameDelayed && !toastVisible" class="delay-notification">
+      {{ gameDelayed }}
+    </div>
   </div>
 </template>
 
@@ -851,6 +865,21 @@ defineExpose({
   bottom: 10px;
   right: 10px;
   left: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1000;
+  word-wrap: break-word;
+}
+
+.delay-notification {
+  position: absolute;
+  text-align: center;
+  top: 10px;
+  right: 50px;
+  left: 50px;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 10px 15px;
