@@ -813,6 +813,9 @@
             @if ($delays)
                 ({{ $delays }} delay)
             @endif
+            @if ($game->metadata['ATT'] ?? false)
+                &nbsp;&nbsp;<strong>ATTENDANCE:</strong> {{ $game->metadata['ATT'] }}
+            @endif
         </div>
 
         <!-- Main Grid -->
