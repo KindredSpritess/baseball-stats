@@ -109,9 +109,9 @@
             height: auto;
         }
 
-        .main-grid thead tr th.main-stats-header {
+        .main-grid thead tr th.main-stats-header, .main-grid thead tr th.spacing-col {
             height: 10px;
-            line-height: 10px;
+            /* line-height: 10px; */
         }
 
         .game-notes-title {
@@ -146,6 +146,7 @@
             min-width: 8px;
             max-width: 8px;
             padding: 0;
+            font-size: 1pt;
         }
 
         /* Fielding Section */
@@ -426,6 +427,11 @@
 
         .run-circle.unearned {
             background: #ff0000;
+        }
+
+        td.diamond-middle {
+            border-left: 2px solid orange;
+            border-right: 2px solid orange;
         }
 
         .diagonal-line, .diamond-up-left, .diamond-up-right, .diamond-down-left, .diamond-down-right {
@@ -835,9 +841,7 @@
                 </tr>
                 <tr>
                     <!-- Batting Order Sub-Header -->
-                    <th rowspan="3" colspan="2" class="batting-section">
-                        <div style="padding: 4px; text-align: center; font-weight: bold; height: 15px;">TEAM: {{ $team->name }}</div>
-                    </th>
+                    <th rowspan="3" colspan="2" class="batting-section">TEAM: {{ $team->name }}</th>
                     <!-- Assist row for each inning -->
                     <th class="main-stats-header">A</th>
                     @foreach($innings as $inning)
@@ -891,7 +895,7 @@
                     @endforeach
                 </tr>
                 <tr>
-                    <th class="main-stats-header">DO</th>
+                    <th class="main-stats-header">DP</th>
                     <th class="spacing-col">&nbsp;</th>
                     <th class="main-stats-header">PO</th>
                     <th class="main-stats-header">A</th>
@@ -966,11 +970,11 @@
                 $stats->derive();
                 @endphp
                 <tr @class(['hitter-row', 'hitter-divider' => $loop->first])>
-                    <td style="text-align: center;">{{ $stats->DO }}</td>
+                    <td style="text-align: center;">{{ $stats->DP ?: '' }}{{ ($stats->TP ? "({$stats->TP})" : '') }}</td>
                     <td class="spacing-col">&nbsp;</td>
-                    <td style="text-align: center;">{{ $stats->PO }}</td>
-                    <td style="text-align: center;">{{ $stats->A }}</td>
-                    <td style="text-align: center;">{{ $stats->E }}</td>
+                    <td style="text-align: center;">{{ $stats->PO ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->A ?: '' }}</td>
+                    <td style="text-align: center;">{{ $stats->E ?: '' }}</td>
                     <td class="spacing-col">&nbsp;</td>
                     <td class="fielding-player">
                         @foreach ($batter['positions'] as [$inning, $outs, $position])
@@ -1026,6 +1030,7 @@
                     $inningStart = $play?->inning_start ?? false;
                     $diamondUp = $play?->diamondUp ?? false;
                     $diamondDown = $play?->diamondDown ?? false;
+                    $diamondMiddle = !$diamondDown && ($play?->diamondMiddle ?? false);
                     $pitches = $play->pitches ?? '';
                     if ($play->results[0] ?? null) {
                         $pitches = substr($pitches, 0, -1);
@@ -1039,6 +1044,7 @@
                         'inning-start' => $inningStart,
                         'pitcher-change' => $play?->pitcher_change ?? false,
                         'next-at-bat' => $play?->next_at_bat ?? false,
+                        'diamond-middle' => $diamondMiddle,
                     ])>
                         <!-- Play cell with 4 quadrants and circle -->
                         <div class="play-cell">

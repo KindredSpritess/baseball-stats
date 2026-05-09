@@ -117,12 +117,19 @@ class Play extends Model
     /** @var ?BallInPlay tempBallInPlay */
     private $tempBallInPlay = null;
 
+    /** @var ?string $lastPitch */
     private $lastPitch = null;
 
     private $forceOuts = 0;
+    public $outsRecorded = [];
+    /**
+     * @var ?array multiPlay Used to track the state of multi runner plays, where we have more than one forced advance and need to work out the order of events.
+     */
+    private $multiPlay = null;
     private $forced = [];
 
     public $actions = [];
+    private $currentRunner = null;
 
     private function addAction($playerId, $base) {
         if (!isset($this->actions[$playerId])) {
@@ -146,6 +153,7 @@ class Play extends Model
         $this->inning = $game->inning;
         $this->inning_half = $game->half;
         $this->plate_appearance = false;
+        $this->outsRecorded = [];
 
         if ($log->consume('Side Away')) {
             $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
@@ -352,7 +360,7 @@ class Play extends Model
             throw_unless($log->consume(' -> '), 'Expected " -> "');
             $base = (string)$log;
             $game->bases[$base - 1] = $player;
-            $game->advanceRunner($player, $base, false);
+            $game->advanceRunner($player, $base, false, false, 'MF');
             $this->log("Extra runner {$player->person->lastName} placed at " . Number::ordinal($base) . ".");
             $this->logA(" {$game->away_team->short_name} {$game->score[0]} to {$game->home_team->short_name} {$game->score[1]}.");
             return;
@@ -436,6 +444,7 @@ class Play extends Model
 
                 // Handle base runners.
                 foreach (array_reverse($actions, true) as $b => $action) {
+                    $this->currentRunner = $b + 1;
                     if (!$action) continue;
                     $this->logBuffer($game->bases[$b]->person->lastName);
                     foreach (preg_split('/\//', $action) as $event) {
@@ -448,6 +457,7 @@ class Play extends Model
                 }
                 if ($br) {
                     $this->plate_appearance = true;
+                    $this->currentRunner = 0;
                     $this->logBuffer($game->hitting()->person->lastName);
                     $b = -1;
                     foreach (preg_split('/\//', $br) as $event) {
@@ -481,12 +491,14 @@ class Play extends Model
                                 $game->fielding(2)->evt('PO');
                                 $game->fielding(2)->evt('PO.2');
                                 $game->out();
+                                $this->outsRecorded[] = [0 => 2];
                                 $this->logBuffer("on bunted third strike");
                             } elseif ($event == '2') {
                                 $this->addAction($game->hitting()->id, -1);
                                 $game->fielding(2)->evt('PO');
                                 $game->fielding(2)->evt('PO.2');
                                 $game->out();
+                                $this->outsRecorded[] = [0 => 2];
                             } else {
                                 if ($this->handleFielding($game, $event)) {
                                     $b = $this->advance($game, -1, $tb - 1, "reaches :base on {$this->fieldingBuffer}");
@@ -631,6 +643,17 @@ class Play extends Model
                 } else {
                     $this->log("With {$game->hitting()->person->lastName} batting, ");
                 }
+                if (\count($this->outsRecorded) > 1) {
+                    // Give fielders credit for participating in a double play or triple play.
+                    // We need to work out whether their was a misplay in between outs or whether we have clean chain.
+                    $longestChain = $this->longestChain($this->outsRecorded);
+                    if (\count($longestChain) > 1) {
+                        $play = \count($longestChain) == 2 ? 'DP' : 'TP';
+                        collect($longestChain)->flatten()->unique()
+                            ->each(fn($pos) => $game->fielding($pos)->evt($play))
+                            ->each(fn($pos) => $game->fielding($pos)->evt("$play.$pos"));
+                    }
+                }
                 $this->logA(trans_choice(":outs out.|:outs out.", $game->outs, ['outs' => $game->outs]));
                 if ($game->outs >= 3) {
                     $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
@@ -641,6 +664,27 @@ class Play extends Model
                 return;
             }
         }
+    }
+
+    public function longestChain(array $chains, $holder = null): array {
+        if (empty($chains)) {
+            return [];
+        }
+        $longest = [];
+        foreach ($chains as $i => $chain) {
+            if ($holder && $chain[0] !== $holder) {
+                continue;
+            }
+            $arg = array_filter($chains, fn($_, $j) => $j !== $i, ARRAY_FILTER_USE_BOTH);
+            $result = $this->longestChain($arg, end($chain));
+            if (count($result) + 1 > count($longest)) {
+                $longest[$i] = $chain;
+                foreach ($result as $r => $c) {
+                    $longest[$r] = $c;
+                }
+            }
+        }
+        return $longest;
     }
 
     public static function getBases(StringConsumer $event): int {
@@ -802,6 +846,7 @@ class Play extends Model
         }
         $handled = [];
         $handlers = preg_split('/-/', $event);
+        $chain = array_map('intval', array_filter($handlers, 'intval'));
         foreach ($handlers as $k => $pos) {
             $pos = new StringConsumer($pos);
             if ($type = ($pos->consume('WT') || $pos->consume('E'))) {
@@ -827,6 +872,7 @@ class Play extends Model
                 $countStats && $game->fielding($pos)->evt("PO.$pos");
                 $game->out();
                 $hit = false;
+                $this->outsRecorded[$this->currentRunner] = $chain;
                 $this->fieldingBuffer .= self::POSITIONS[(string)$pos] . ' ' . $game->fielding($pos)->person->lastName;
                 return false;
             }

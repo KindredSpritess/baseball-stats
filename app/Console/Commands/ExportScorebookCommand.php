@@ -280,6 +280,8 @@ class ExportScorebookCommand extends Command
             'lob' => 0,
         ];
 
+        $plateAppearances = 0;
+
         foreach ($plays as $play) {
             /** @var Play $play */
             // Skip comments and announcements.
@@ -319,6 +321,8 @@ class ExportScorebookCommand extends Command
             }
 
             $play->apply($game);
+
+            if ($play->plate_appearance) $plateAppearances++;
 
             if (str_starts_with($play->play, 'Game Over')) {
                 if ($play->inning_half === $teamIndex) {
@@ -457,13 +461,12 @@ class ExportScorebookCommand extends Command
                     case str_starts_with($play->play, "@"):
                         // Opponent player substituted into the lineup
                         $matches = [];
-                        
                         if (!preg_match('/(DSUB )?@.*: (.+)( -> #(.+))?/', $play->play, $matches)) {
                             dd($play->play);
                         }
                         if ($matches[2] === '1') {
                             $handleReliefPitcher();
-                        } elseif (intval($matches[2])) {
+                        } elseif (intval($matches[2]) && $plateAppearances) {
                             // New fielder.
                             if (!array_intersect_key(['PC' => true, 'DC' => true], end($inningsData[$inning - 1]['fielding']) ?: [])) {
                                 $inningsData[$inning - 1]['fielding'][] = ['DC' => true];
@@ -536,23 +539,30 @@ class ExportScorebookCommand extends Command
             end($data[$atbat][$inning])->pitches .= $parts[0];
             end($data[$atbat][$inning])->pitch_total = (new StatsHelper($game->defense[($teamIndex + 1) % 2][1]->stats))->derive()->Pitches;
 
-            $dp = ($outs + 2) % 3 === $game->outs;
-            if ($dp) {
-                $diamondUp = $outs + 1;
-                $diamondDown = $outs + 2;
+            $orangeUp = false;
+            $orangeDown = false;
+            $oragneMiddle = false;
+            $outsRecorded = $play->outsRecorded;
+            $fieldingChain = $play->longestChain($outsRecorded);
+            $outNumbers = [];
+            if ($outsRecorded) {
+                // If the batter runner is out, and there's no assist, they're almost certainly the first out.
+                if (isset($outsRecorded[0]) && count($outsRecorded[0]) === 1) {
+                    $outNumbers[0] = ++$outs;
+                    unset($outsRecorded[0]);
+                }
+                foreach ($outsRecorded as $r => $_) {
+                    $outNumbers[$r] = ++$outs;
+                }
+                if (count($fieldingChain) > 1) {
+                    $outOrder = array_keys($fieldingChain);
+                    $orangeUp = $outOrder[0] ?? false;
+                    $orangeDown = end($outOrder);
+                    $oragneMiddle = $outOrder[1] ?? false;
+                }
             }
 
-            $init = 1;
-            $limit = 5;
-            $step = 1;
-            if ($dp && $parts[1][0] === 'G') {
-                // GDP - process in reverse order
-                $init = 4;
-                $limit = 0;
-                $step = -1;
-            }
-
-            for ($i = $init; $i != $limit; $i += $step) {
+            for ($i = 1; $i <= 4; $i++) {
                 if ($parts[$i] ?? null) {
                     $b = $i - 1;
                     $plays = explode('/', $parts[$i]);
@@ -571,10 +581,11 @@ class ExportScorebookCommand extends Command
                             $inningsData[$inning - 1]['fielding'][] = $playResult[3];
                         }
                         if ($bases < 0) {
-                            end($data[$spot][$inning])->out_number = ++$outs;
+                            end($data[$spot][$inning])->out_number = $outNumbers[$i - 1] ?? null;
                             end($data[$spot][$inning])->results[$b++] = [$note, $colour];
-                            end($data[$spot][$inning])->diamondUp = $dp && $diamondUp === $outs;
-                            end($data[$spot][$inning])->diamondDown = $dp && $diamondDown === $outs;
+                            end($data[$spot][$inning])->diamondUp = $orangeUp === $i - 1;
+                            end($data[$spot][$inning])->diamondDown = $orangeDown === $i - 1;
+                            end($data[$spot][$inning])->diamondMiddle = $oragneMiddle === $i - 1;
                         } else {
                             while ($bases--) {
                                 if ($bases) {
@@ -721,8 +732,13 @@ class ExportScorebookCommand extends Command
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
         } elseif (preg_match('/^(F?)[FLPGB]?([!@#$]?)(((?:\d-)*)(?:E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
-            [$_, $foul, $bases, $errorPlay, $assists, $errorPlayer] = $matches;
-            $bases = $foul ? 0 : self::BASES[$bases] ?? 1;
+            [$_, $foul, $baseStr, $errorPlay, $assists, $errorPlayer] = $matches;
+            // Bases is already potentially handle above. So only override if it's a foul error, or if there is an explicit base modifier.
+            if ($foul) {
+                $bases = 0;
+            } elseif ($baseStr) {
+                $bases = self::BASES[$baseStr] ?? 1;
+            }
             return ["{$prefix}{$errorPlay}{$suffix}", 'red', $bases, $prefix ? null : ['E' => $errorPlayer, 'A' => str_replace('-', '', $assists)]];
         } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
@@ -805,6 +821,7 @@ class PlateAppearence
     public $next_at_bat = false;
     public $diamondUp = false;
     public $diamondDown = false;
+    public $diamondMiddle = false;
     public $results = []; // Each entry: [note, colour]
     public $links = []; // Each entry: [from-to => true]
 }

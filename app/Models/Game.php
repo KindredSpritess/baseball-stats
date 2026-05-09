@@ -230,6 +230,7 @@ class Game extends Model
         $runner['base'] += $bases;
         if ($earned) $runner['earned'] += $bases;
         if ($decisiveError) $runner['earned'] = -100000000000;
+        if ($origin === 'MF') $runner['earned'] = -100000000000;
 
         $keys = array_reverse(array_keys($this->runners));
         $fb = $runner['earned'];
