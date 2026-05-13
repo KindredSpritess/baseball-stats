@@ -522,7 +522,7 @@ const updateStatus = (status, play) => {
   }
 
   if (state.ended) {
-    // return; // No further updates if game ended
+    cleanupField();
   }
 
   // Update runners using actions
@@ -605,6 +605,9 @@ const updateStatus = (status, play) => {
       const person = fielders[pos].person
       const text = person.lastName + ', ' + person.firstName[0]
       texture.clear()
+      if (state.ended) {
+        return;
+      }
       const ctx = texture.getContext()
       ctx.font = "bold 64px Helvetica"
       ctx.textAlign = "center"
@@ -618,6 +621,18 @@ const updateStatus = (status, play) => {
     }
   }
 }
+
+const cleanUpField = function () {
+  for (let pos = 1; pos <= 9; pos++) {
+    const texture = scene.getTextureByName('texture' + pos);
+    texture?.clear();
+  }
+  for (const key in previousRunners) {
+    const mesh = scene.getMeshByName(`runner${key}`);
+    mesh?.dispose();
+  }
+  previousRunners = {};
+};
 
 // Draw linescore below the status lights
 const drawLinescore = (ctx) => {
