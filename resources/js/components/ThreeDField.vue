@@ -67,10 +67,17 @@ const getDisplayHour = () => {
   const gameTimeZone = props.game?.timeZone;
   const hourInGameTimezone = (date) => {
     if (!gameTimeZone) {
-      return date.getHours();
+      return date.getHours() + (date.getMinutes() / 60);
     }
-    const hour = new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: gameTimeZone }).format(date);
-    return parseInt(hour, 10);
+    const parts = new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: gameTimeZone,
+    }).formatToParts(date);
+    const hour = parseInt(parts.find((part) => part.type === 'hour')?.value ?? '0', 10);
+    const minute = parseInt(parts.find((part) => part.type === 'minute')?.value ?? '0', 10);
+    return hour + (minute / 60);
   }
 
   if (!props.game?.ended) {
@@ -78,12 +85,84 @@ const getDisplayHour = () => {
   }
 
   const completionTime = props.game?.metadata?.LP ?? props.game?.metadata?.FP ?? props.game?.firstPitch;
+  if (typeof completionTime === 'string') {
+    const metadataHour = completionTime.match(/\b(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?\b/i);
+    if (metadataHour) {
+      const parsedHour = parseInt(metadataHour[1], 10);
+      const parsedMinute = parseInt(metadataHour[2], 10);
+      const meridiem = metadataHour[3]?.toUpperCase();
+
+      let hour = parsedHour % 24;
+      if (meridiem === 'PM' && parsedHour < 12) {
+        hour += 12;
+      }
+      if (meridiem === 'AM' && parsedHour === 12) {
+        hour = 0;
+      }
+      return hour + (parsedMinute / 60);
+    }
+  }
 
   const date = new Date(completionTime);
   if (Number.isNaN(date.getTime())) {
     return 12;
   }
   return hourInGameTimezone(date);
+}
+
+const lerp = (start, end, amount) => start + ((end - start) * amount)
+
+const smoothstep = (edge0, edge1, value) => {
+  const normalized = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)))
+  return normalized * normalized * (3 - (2 * normalized))
+}
+
+const getLightingProfile = (hour) => {
+  const wrappedHour = ((hour % 24) + 24) % 24
+
+  const keyframes = [
+    { hour: 0, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 5.5, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 6.75, clearColor: new BABYLON.Color4(0.95, 0.55, 0.32, 1), skyColor: '#F19466', cloudOpacity: 0.55, ambientIntensity: 0.55, floodLightStrength: 0.55 },
+    { hour: 8, clearColor: new BABYLON.Color4(0.53, 0.81, 0.92, 1), skyColor: '#87CEEB', cloudOpacity: 0.8, ambientIntensity: 0.95, floodLightStrength: 0 },
+    { hour: 17, clearColor: new BABYLON.Color4(0.53, 0.81, 0.92, 1), skyColor: '#87CEEB', cloudOpacity: 0.8, ambientIntensity: 0.95, floodLightStrength: 0 },
+    { hour: 18.5, clearColor: new BABYLON.Color4(0.95, 0.55, 0.32, 1), skyColor: '#F19466', cloudOpacity: 0.55, ambientIntensity: 0.55, floodLightStrength: 0.55 },
+    { hour: 20, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 24, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+  ]
+
+  for (let i = 0; i < keyframes.length - 1; i++) {
+    const start = keyframes[i]
+    const end = keyframes[i + 1]
+    if (wrappedHour < start.hour || wrappedHour > end.hour) {
+      continue
+    }
+
+    const rawProgress = (wrappedHour - start.hour) / (end.hour - start.hour || 1)
+    const progress = smoothstep(0, 1, rawProgress)
+
+    const startSky = BABYLON.Color3.FromHexString(start.skyColor)
+    const endSky = BABYLON.Color3.FromHexString(end.skyColor)
+
+    return {
+      clearColor: new BABYLON.Color4(
+        lerp(start.clearColor.r, end.clearColor.r, progress),
+        lerp(start.clearColor.g, end.clearColor.g, progress),
+        lerp(start.clearColor.b, end.clearColor.b, progress),
+        1
+      ),
+      skyColor: new BABYLON.Color3(
+        lerp(startSky.r, endSky.r, progress),
+        lerp(startSky.g, endSky.g, progress),
+        lerp(startSky.b, endSky.b, progress)
+      ).toHexString(),
+      cloudOpacity: lerp(start.cloudOpacity, end.cloudOpacity, progress),
+      ambientIntensity: lerp(start.ambientIntensity, end.ambientIntensity, progress),
+      floodLightStrength: lerp(start.floodLightStrength, end.floodLightStrength, progress),
+    }
+  }
+
+  return keyframes[0]
 }
 
 const drawSkyTexture = (baseColor, cloudOpacity) => {
@@ -118,43 +197,36 @@ const applyTimeOfDayLighting = () => {
   }
 
   const hour = getDisplayHour()
-  const isDay = false // hour >= 8 && hour < 18
-  const isTwilight = false // (hour >= 6 && hour < 8) || (hour >= 18 && hour < 20)
+  const profile = getLightingProfile(hour)
 
   floodLights.forEach(light => light.dispose())
   floodLights = []
 
-  if (isDay) {
-    scene.clearColor = new BABYLON.Color4(0.53, 0.81, 0.92, 1)
-    hemisphericLight.intensity = 0.95
-    drawSkyTexture('#87CEEB', 0.8)
+  scene.clearColor = profile.clearColor
+  hemisphericLight.intensity = profile.ambientIntensity
+  drawSkyTexture(profile.skyColor, profile.cloudOpacity)
+
+  if (profile.floodLightStrength <= 0.01) {
     return
   }
 
-  if (isTwilight) {
-    scene.clearColor = new BABYLON.Color4(0.95, 0.55, 0.32, 1)
-    hemisphericLight.intensity = 0.55
-    drawSkyTexture('#F19466', 0.55)
-    return
-  }
-
-  scene.clearColor = new BABYLON.Color4(0.04, 0.06, 0.12, 1)
-  hemisphericLight.intensity = 0.25
-  drawSkyTexture('#0B1D3A', 0.28)
-
-  const floodlightPositions = [
-    [new BABYLON.Vector3(110, 10, 248), new BABYLON.Vector3(1, -0.5, 0)],
-    [new BABYLON.Vector3(338, 10, 248), new BABYLON.Vector3(-1, -0.5, 0)],
-    [new BABYLON.Vector3(150, 10, 110), new BABYLON.Vector3(0, -0.5, 1)],
-    [new BABYLON.Vector3(298, 10, 110), new BABYLON.Vector3(0, -0.5, 1)],
-    [new BABYLON.Vector3(224, 10, 430), new BABYLON.Vector3(0, -0.5, -1)],
-    [new BABYLON.Vector3(224, 10, 277), new BABYLON.Vector3(0, -0.5, 0)],
+  const infieldTarget = new BABYLON.Vector3(224, 0, 286)
+  const floodlightConfigs = [
+    { position: new BABYLON.Vector3(50, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(145, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(303, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(398, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(-35, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
+    { position: new BABYLON.Vector3(483, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
   ]
 
-  floodLights = floodlightPositions.map(([position, direction], index) => {
-    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, Math.PI / 3, 2, scene)
+  floodLights = floodlightConfigs.map(({ position, target, angle }, index) => {
+    const direction = target.subtract(position).normalize()
+    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, angle, 2, scene)
     light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
-    light.intensity = 1.15
+    light.specular = new BABYLON.Color3(0.15, 0.15, 0.15)
+    light.intensity = lerp(0.55, 1.75, profile.floodLightStrength)
+    light.range = 900
     return light
   })
 }
