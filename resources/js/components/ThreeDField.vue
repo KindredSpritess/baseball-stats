@@ -78,22 +78,8 @@ const getDisplayHour = () => {
   }
 
   const completionTime = props.game?.metadata?.LP ?? props.game?.metadata?.FP ?? props.game?.firstPitch;
-  if (typeof completionTime === 'string') {
-    const metadataHour = completionTime.match(/\b(\d{1,2}):\d{2}(?::\d{2})?\s*(AM|PM)?\b/i);
-    if (metadataHour) {
-      const parsedHour = parseInt(metadataHour[1], 10);
-      const meridiem = metadataHour[2]?.toUpperCase();
-      if (meridiem === 'PM' && parsedHour < 12) {
-        return parsedHour + 12;
-      }
-      if (meridiem === 'AM' && parsedHour === 12) {
-        return 0;
-      }
-      return parsedHour;
-    }
-  }
 
-  const date = new Date(completionTime ?? props.game?.firstPitch);
+  const date = new Date(completionTime);
   if (Number.isNaN(date.getTime())) {
     return 12;
   }
