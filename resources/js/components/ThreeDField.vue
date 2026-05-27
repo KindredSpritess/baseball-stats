@@ -118,8 +118,8 @@ const applyTimeOfDayLighting = () => {
   }
 
   const hour = getDisplayHour()
-  const isDay = hour >= 8 && hour < 18
-  const isTwilight = (hour >= 6 && hour < 8) || (hour >= 18 && hour < 20)
+  const isDay = false // hour >= 8 && hour < 18
+  const isTwilight = false // (hour >= 6 && hour < 8) || (hour >= 18 && hour < 20)
 
   floodLights.forEach(light => light.dispose())
   floodLights = []
@@ -143,19 +143,18 @@ const applyTimeOfDayLighting = () => {
   drawSkyTexture('#0B1D3A', 0.28)
 
   const floodlightPositions = [
-    new BABYLON.Vector3(110, 72, 248),
-    new BABYLON.Vector3(338, 72, 248),
-    new BABYLON.Vector3(150, 78, 110),
-    new BABYLON.Vector3(298, 78, 110),
-    new BABYLON.Vector3(224, 80, 430),
-    new BABYLON.Vector3(224, 60, 277),
+    [new BABYLON.Vector3(110, 10, 248), new BABYLON.Vector3(1, -0.5, 0)],
+    [new BABYLON.Vector3(338, 10, 248), new BABYLON.Vector3(-1, -0.5, 0)],
+    [new BABYLON.Vector3(150, 10, 110), new BABYLON.Vector3(0, -0.5, 1)],
+    [new BABYLON.Vector3(298, 10, 110), new BABYLON.Vector3(0, -0.5, 1)],
+    [new BABYLON.Vector3(224, 10, 430), new BABYLON.Vector3(0, -0.5, -1)],
+    [new BABYLON.Vector3(224, 10, 277), new BABYLON.Vector3(0, -0.5, 0)],
   ]
 
-  floodLights = floodlightPositions.map((position, index) => {
-    const light = new BABYLON.PointLight(`floodLight${index}`, position, scene)
+  floodLights = floodlightPositions.map(([position, direction], index) => {
+    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, Math.PI / 3, 2, scene)
     light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
     light.intensity = 1.15
-    light.range = 540
     return light
   })
 }
