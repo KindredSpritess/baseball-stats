@@ -37,7 +37,10 @@ const toastVisible = ref(false)
 let engine = null;
 let scene = null;
 let camera = null;
-let light = null;
+let hemisphericLight = null;
+let floodLights = [];
+let skyTexture = null;
+let lastLightingMinute = null;
 
 let runnerTexture = null;
 let runnerPlane = null;
@@ -60,6 +63,107 @@ const basePositions = {
   mound: null,
 }
 
+const getDisplayHour = () => {
+  const gameTimeZone = props.game?.timeZone;
+  const hourInGameTimezone = (date) => {
+    if (!gameTimeZone) {
+      return date.getHours();
+    }
+    const hour = new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: gameTimeZone }).format(date);
+    return parseInt(hour, 10);
+  }
+
+  if (!props.game?.ended) {
+    return hourInGameTimezone(new Date());
+  }
+
+  const completionTime = props.game?.metadata?.LP ?? props.game?.metadata?.FP ?? props.game?.firstPitch;
+  if (typeof completionTime === 'string') {
+    const metadataHour = completionTime.match(/\b(\d{1,2}):\d{2}(?::\d{2})?\b/);
+    if (metadataHour) {
+      return parseInt(metadataHour[1], 10);
+    }
+  }
+
+  const date = new Date(completionTime ?? props.game?.firstPitch);
+  if (Number.isNaN(date.getTime())) {
+    return 12;
+  }
+  return hourInGameTimezone(date);
+}
+
+const drawSkyTexture = (baseColor, cloudOpacity) => {
+  if (!skyTexture) {
+    return;
+  }
+
+  const ctxSky = skyTexture.getContext()
+  ctxSky.fillStyle = baseColor
+  ctxSky.fillRect(0, 0, 16, 16)
+
+  ctxSky.fillStyle = `rgba(255, 255, 255, ${cloudOpacity})`
+  for (let i = 0; i < 30; i++) {
+    const x = Math.random() * 16
+    const y = Math.random() * 16
+    const radius = Math.random() * 0.625 + 0.156
+    ctxSky.beginPath()
+    ctxSky.arc(x, y, radius, 0, 2 * Math.PI)
+    ctxSky.fill()
+    if (Math.random() > 0.5) {
+      ctxSky.beginPath()
+      ctxSky.arc(x + Math.random() * 1 - 0.5, y + Math.random() * 1 - 0.5, radius * 0.7, 0, 2 * Math.PI)
+      ctxSky.fill()
+    }
+  }
+  skyTexture.update()
+}
+
+const applyTimeOfDayLighting = () => {
+  if (!scene || !hemisphericLight) {
+    return;
+  }
+
+  const hour = getDisplayHour()
+  const isDay = hour >= 8 && hour < 18
+  const isTwilight = (hour >= 6 && hour < 8) || (hour >= 18 && hour < 20)
+
+  floodLights.forEach(light => light.dispose())
+  floodLights = []
+
+  if (isDay) {
+    scene.clearColor = new BABYLON.Color4(0.53, 0.81, 0.92, 1)
+    hemisphericLight.intensity = 0.95
+    drawSkyTexture('#87CEEB', 0.8)
+    return
+  }
+
+  if (isTwilight) {
+    scene.clearColor = new BABYLON.Color4(0.95, 0.55, 0.32, 1)
+    hemisphericLight.intensity = 0.55
+    drawSkyTexture('#F19466', 0.55)
+    return
+  }
+
+  scene.clearColor = new BABYLON.Color4(0.04, 0.06, 0.12, 1)
+  hemisphericLight.intensity = 0.25
+  drawSkyTexture('#0B1D3A', 0.28)
+
+  const floodlightPositions = [
+    new BABYLON.Vector3(40, 85, 130),
+    new BABYLON.Vector3(408, 85, 130),
+    new BABYLON.Vector3(224, 85, 15),
+    new BABYLON.Vector3(224, 85, 395),
+  ]
+
+  floodLights = floodlightPositions.map((position, index) => {
+    const light = new BABYLON.PointLight(`floodLight${index}`, position, scene)
+    light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
+    light.intensity = 0.7
+    light.range = 420
+    return light
+  })
+}
+
 // Initialize the 3D scene
 const initScene = () => {
   if (!canvasRef.value) return
@@ -73,39 +177,27 @@ const initScene = () => {
   camera.setFocalLength(24);
 
   // Light
-  light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
+  hemisphericLight = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
 
   // Sky
-  scene.clearColor = new BABYLON.Color3(0.53, 0.81, 0.92) // Sky blue
-  const skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
-  const ctxSky = skyTexture.getContext()
-  ctxSky.fillStyle = '#87CEEB' // Sky blue
-  ctxSky.fillRect(0, 0, 16, 16)
-  // Draw clouds
-  ctxSky.fillStyle = 'rgba(255, 255, 255, 0.8)'
-  for (let i = 0; i < 30; i++) {
-    const x = Math.random() * 16
-    const y = Math.random() * 16
-    const radius = Math.random() * 0.625 + 0.156
-    ctxSky.beginPath()
-    ctxSky.arc(x, y, radius, 0, 2 * Math.PI)
-    ctxSky.fill()
-    // Add some overlapping for fluffier clouds
-    if (Math.random() > 0.5) {
-      ctxSky.beginPath()
-      ctxSky.arc(x + Math.random() * 1 - 0.5, y + Math.random() * 1 - 0.5, radius * 0.7, 0, 2 * Math.PI)
-      ctxSky.fill()
-    }
-  }
-  skyTexture.update()
+  skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
   const skyLayer = new BABYLON.Layer('skyLayer', null, scene)
   skyLayer.texture = skyTexture
+  applyTimeOfDayLighting()
+  lastLightingMinute = new Date().getMinutes()
 
   createField();
   createStatusDisplay();
 
   // Render loop
   engine.runRenderLoop(() => {
+    if (!props.game?.ended) {
+      const minute = new Date().getMinutes()
+      if (minute !== lastLightingMinute) {
+        applyTimeOfDayLighting()
+        lastLightingMinute = minute
+      }
+    }
     animateStatusLights();
     scene.render()
   })
