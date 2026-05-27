@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
 
 // Props
@@ -157,17 +157,19 @@ const applyTimeOfDayLighting = () => {
   drawSkyTexture('#0B1D3A', 0.28)
 
   const floodlightPositions = [
-    new BABYLON.Vector3(40, 85, 130),
-    new BABYLON.Vector3(408, 85, 130),
-    new BABYLON.Vector3(224, 85, 15),
-    new BABYLON.Vector3(224, 85, 395),
+    new BABYLON.Vector3(110, 72, 248),
+    new BABYLON.Vector3(338, 72, 248),
+    new BABYLON.Vector3(150, 78, 110),
+    new BABYLON.Vector3(298, 78, 110),
+    new BABYLON.Vector3(224, 80, 430),
+    new BABYLON.Vector3(224, 60, 277),
   ]
 
   floodLights = floodlightPositions.map((position, index) => {
     const light = new BABYLON.PointLight(`floodLight${index}`, position, scene)
     light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
-    light.intensity = 0.7
-    light.range = 420
+    light.intensity = 1.15
+    light.range = 540
     return light
   })
 }
@@ -926,6 +928,23 @@ onMounted(() => {
     }
   })
 })
+
+watch(
+  () => [
+    props.game?.ended,
+    props.game?.firstPitch,
+    props.game?.timeZone,
+    props.game?.metadata?.LP,
+    props.game?.metadata?.FP,
+  ],
+  () => {
+    if (!scene || !hemisphericLight) {
+      return
+    }
+    applyTimeOfDayLighting()
+    lastLightingMinute = new Date().getMinutes()
+  }
+)
 
 // Expose updateStatus method
 defineExpose({
