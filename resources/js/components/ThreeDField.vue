@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
 
 // Props
@@ -37,7 +37,10 @@ const toastVisible = ref(false)
 let engine = null;
 let scene = null;
 let camera = null;
-let light = null;
+let hemisphericLight = null;
+let floodLights = [];
+let skyTexture = null;
+let lastLightingMinute = null;
 
 let runnerTexture = null;
 let runnerPlane = null;
@@ -60,6 +63,174 @@ const basePositions = {
   mound: null,
 }
 
+const getDisplayHour = () => {
+  const gameTimeZone = props.game?.timeZone;
+  const hourInGameTimezone = (date) => {
+    if (!gameTimeZone) {
+      return date.getHours() + (date.getMinutes() / 60);
+    }
+    const parts = new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: gameTimeZone,
+    }).formatToParts(date);
+    const hour = parseInt(parts.find((part) => part.type === 'hour')?.value ?? '0', 10);
+    const minute = parseInt(parts.find((part) => part.type === 'minute')?.value ?? '0', 10);
+    return hour + (minute / 60);
+  }
+
+  if (!props.game?.ended) {
+    return hourInGameTimezone(new Date());
+  }
+
+  const completionTime = props.game?.metadata?.LP ?? props.game?.metadata?.FP ?? props.game?.firstPitch;
+  if (typeof completionTime === 'string') {
+    const metadataHour = completionTime.match(/\b(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?\b/i);
+    if (metadataHour) {
+      const parsedHour = parseInt(metadataHour[1], 10);
+      const parsedMinute = parseInt(metadataHour[2], 10);
+      const meridiem = metadataHour[3]?.toUpperCase();
+
+      let hour = parsedHour % 24;
+      if (meridiem === 'PM' && parsedHour < 12) {
+        hour += 12;
+      }
+      if (meridiem === 'AM' && parsedHour === 12) {
+        hour = 0;
+      }
+      return hour + (parsedMinute / 60);
+    }
+  }
+
+  const date = new Date(completionTime);
+  if (Number.isNaN(date.getTime())) {
+    return 12;
+  }
+  return hourInGameTimezone(date);
+}
+
+const lerp = (start, end, amount) => start + ((end - start) * amount)
+
+const smoothstep = (edge0, edge1, value) => {
+  const normalized = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)))
+  return normalized * normalized * (3 - (2 * normalized))
+}
+
+const getLightingProfile = (hour) => {
+  const wrappedHour = ((hour % 24) + 24) % 24
+
+  const keyframes = [
+    { hour: 0, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 5.5, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 6.75, clearColor: new BABYLON.Color4(0.95, 0.55, 0.32, 1), skyColor: '#F19466', cloudOpacity: 0.55, ambientIntensity: 0.55, floodLightStrength: 0.55 },
+    { hour: 8, clearColor: new BABYLON.Color4(0.53, 0.81, 0.92, 1), skyColor: '#87CEEB', cloudOpacity: 0.8, ambientIntensity: 0.95, floodLightStrength: 0 },
+    { hour: 17, clearColor: new BABYLON.Color4(0.53, 0.81, 0.92, 1), skyColor: '#87CEEB', cloudOpacity: 0.8, ambientIntensity: 0.95, floodLightStrength: 0 },
+    { hour: 18.5, clearColor: new BABYLON.Color4(0.95, 0.55, 0.32, 1), skyColor: '#F19466', cloudOpacity: 0.55, ambientIntensity: 0.55, floodLightStrength: 0.55 },
+    { hour: 20, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+    { hour: 24, clearColor: new BABYLON.Color4(0.04, 0.06, 0.12, 1), skyColor: '#0B1D3A', cloudOpacity: 0.28, ambientIntensity: 0.25, floodLightStrength: 1 },
+  ]
+
+  for (let i = 0; i < keyframes.length - 1; i++) {
+    const start = keyframes[i]
+    const end = keyframes[i + 1]
+    if (wrappedHour < start.hour || wrappedHour > end.hour) {
+      continue
+    }
+
+    const rawProgress = (wrappedHour - start.hour) / (end.hour - start.hour || 1)
+    const progress = smoothstep(0, 1, rawProgress)
+
+    const startSky = BABYLON.Color3.FromHexString(start.skyColor)
+    const endSky = BABYLON.Color3.FromHexString(end.skyColor)
+
+    return {
+      clearColor: new BABYLON.Color4(
+        lerp(start.clearColor.r, end.clearColor.r, progress),
+        lerp(start.clearColor.g, end.clearColor.g, progress),
+        lerp(start.clearColor.b, end.clearColor.b, progress),
+        1
+      ),
+      skyColor: new BABYLON.Color3(
+        lerp(startSky.r, endSky.r, progress),
+        lerp(startSky.g, endSky.g, progress),
+        lerp(startSky.b, endSky.b, progress)
+      ).toHexString(),
+      cloudOpacity: lerp(start.cloudOpacity, end.cloudOpacity, progress),
+      ambientIntensity: lerp(start.ambientIntensity, end.ambientIntensity, progress),
+      floodLightStrength: lerp(start.floodLightStrength, end.floodLightStrength, progress),
+    }
+  }
+
+  return keyframes[0]
+}
+
+const drawSkyTexture = (baseColor, cloudOpacity) => {
+  if (!skyTexture) {
+    return;
+  }
+
+  const ctxSky = skyTexture.getContext()
+  ctxSky.fillStyle = baseColor
+  ctxSky.fillRect(0, 0, 16, 16)
+
+  ctxSky.fillStyle = `rgba(255, 255, 255, ${cloudOpacity})`
+  for (let i = 0; i < 30; i++) {
+    const x = Math.random() * 16
+    const y = Math.random() * 16
+    const radius = Math.random() * 0.625 + 0.156
+    ctxSky.beginPath()
+    ctxSky.arc(x, y, radius, 0, 2 * Math.PI)
+    ctxSky.fill()
+    if (Math.random() > 0.5) {
+      ctxSky.beginPath()
+      ctxSky.arc(x + Math.random() * 1 - 0.5, y + Math.random() * 1 - 0.5, radius * 0.7, 0, 2 * Math.PI)
+      ctxSky.fill()
+    }
+  }
+  skyTexture.update()
+}
+
+const applyTimeOfDayLighting = () => {
+  if (!scene || !hemisphericLight) {
+    return;
+  }
+
+  const hour = getDisplayHour()
+  const profile = getLightingProfile(hour)
+
+  floodLights.forEach(light => light.dispose())
+  floodLights = []
+
+  scene.clearColor = profile.clearColor
+  hemisphericLight.intensity = profile.ambientIntensity
+  drawSkyTexture(profile.skyColor, profile.cloudOpacity)
+
+  if (profile.floodLightStrength <= 0.01) {
+    return
+  }
+
+  const infieldTarget = new BABYLON.Vector3(224, 0, 286)
+  const floodlightConfigs = [
+    { position: new BABYLON.Vector3(50, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(145, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(303, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(398, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
+    { position: new BABYLON.Vector3(-35, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
+    { position: new BABYLON.Vector3(483, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
+  ]
+
+  floodLights = floodlightConfigs.map(({ position, target, angle }, index) => {
+    const direction = target.subtract(position).normalize()
+    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, angle, 2, scene)
+    light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
+    light.specular = new BABYLON.Color3(0.15, 0.15, 0.15)
+    light.intensity = lerp(0.55, 1.75, profile.floodLightStrength)
+    light.range = 900
+    return light
+  })
+}
+
 // Initialize the 3D scene
 const initScene = () => {
   if (!canvasRef.value) return
@@ -73,39 +244,27 @@ const initScene = () => {
   camera.setFocalLength(24);
 
   // Light
-  light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
+  hemisphericLight = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
 
   // Sky
-  scene.clearColor = new BABYLON.Color3(0.53, 0.81, 0.92) // Sky blue
-  const skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
-  const ctxSky = skyTexture.getContext()
-  ctxSky.fillStyle = '#87CEEB' // Sky blue
-  ctxSky.fillRect(0, 0, 16, 16)
-  // Draw clouds
-  ctxSky.fillStyle = 'rgba(255, 255, 255, 0.8)'
-  for (let i = 0; i < 30; i++) {
-    const x = Math.random() * 16
-    const y = Math.random() * 16
-    const radius = Math.random() * 0.625 + 0.156
-    ctxSky.beginPath()
-    ctxSky.arc(x, y, radius, 0, 2 * Math.PI)
-    ctxSky.fill()
-    // Add some overlapping for fluffier clouds
-    if (Math.random() > 0.5) {
-      ctxSky.beginPath()
-      ctxSky.arc(x + Math.random() * 1 - 0.5, y + Math.random() * 1 - 0.5, radius * 0.7, 0, 2 * Math.PI)
-      ctxSky.fill()
-    }
-  }
-  skyTexture.update()
+  skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
   const skyLayer = new BABYLON.Layer('skyLayer', null, scene)
   skyLayer.texture = skyTexture
+  applyTimeOfDayLighting()
+  lastLightingMinute = new Date().getMinutes()
 
   createField();
   createStatusDisplay();
 
   // Render loop
   engine.runRenderLoop(() => {
+    if (!props.game?.ended) {
+      const minute = new Date().getMinutes()
+      if (minute !== lastLightingMinute) {
+        applyTimeOfDayLighting()
+        lastLightingMinute = minute
+      }
+    }
     animateStatusLights();
     scene.render()
   })
@@ -826,6 +985,23 @@ onMounted(() => {
     }
   })
 })
+
+watch(
+  () => [
+    props.game?.ended,
+    props.game?.firstPitch,
+    props.game?.timeZone,
+    props.game?.metadata?.LP,
+    props.game?.metadata?.FP,
+  ],
+  () => {
+    if (!scene || !hemisphericLight) {
+      return
+    }
+    applyTimeOfDayLighting()
+    lastLightingMinute = new Date().getMinutes()
+  }
+)
 
 // Expose updateStatus method
 defineExpose({
