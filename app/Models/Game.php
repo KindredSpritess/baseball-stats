@@ -216,6 +216,9 @@ class Game extends Model
             // Update the owning pitcher if he didn't walk.
             $this->runners[$player->id]['origin'] = $origin;
             $this->runners[$player->id]['pitcher'] = $this->pitching();
+        } else if ($origin === 'W') {
+            // This is an inherited runner on a walk.
+            $this->pitching()->evt('IR');
         }
 
         if ($decisiveError) {
