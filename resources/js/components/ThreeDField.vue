@@ -401,9 +401,24 @@ const createField = () => {
   plateDirt.material = dirtMaterial
   plateDirt.position = new BABYLON.Vector3(224, 0.05, 343)
 
+  const plateShape = [
+      new BABYLON.Vector3(0, 0, 0),
+      new BABYLON.Vector3(2.5, -2.5, 0),
+      new BABYLON.Vector3(5, -2.5, 0),
+      new BABYLON.Vector3(5, 2.5, 0),
+      new BABYLON.Vector3(2.5, 2.5, 0),
+  ];
+  const platePath = [
+      new BABYLON.Vector3(224, 0, 343),
+      new BABYLON.Vector3(224, 0.1, 343),
+  ];
+
   // Bases
   const baseMaterial = new BABYLON.StandardMaterial('baseMat', scene)
   baseMaterial.diffuseColor = BABYLON.Color3.White()
+
+  const plate = BABYLON.MeshBuilder.ExtrudeShape('plate', {shape: plateShape, path: platePath, sideOrientation: BABYLON.Mesh.DOUBLESIDE, closeShape: true, cap: BABYLON.Mesh.CAP_END}, scene);
+  plate.material = baseMaterial;
 
   const base1 = BABYLON.MeshBuilder.CreateBox('base1', {width: 4, height: 0.1, depth: 4}, scene)
   base1.material = baseMaterial
