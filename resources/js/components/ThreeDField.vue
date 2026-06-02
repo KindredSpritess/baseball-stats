@@ -41,6 +41,7 @@ let hemisphericLight = null;
 let floodLights = [];
 let skyTexture = null;
 let lastLightingMinute = null;
+let bulbMat = null;
 
 let runnerTexture = null;
 let runnerPlane = null;
@@ -63,7 +64,12 @@ const basePositions = {
   mound: null,
 }
 
+const homePlatePos = new BABYLON.Vector3(224, 0, 343);
+const leftFieldPos = new BABYLON.Vector3(224 - 233.35, 0, 343 - 233.35);
+const rightFieldPos = new BABYLON.Vector3(224 + 233.35, 0, 343 - 233.35);
+
 const getDisplayHour = () => {
+  return 22;
   const gameTimeZone = props.game?.timeZone;
   const hourInGameTimezone = (date) => {
     if (!gameTimeZone) {
@@ -191,6 +197,88 @@ const drawSkyTexture = (baseColor, cloudOpacity) => {
   skyTexture.update()
 }
 
+// new BABYLON.Vector3(224 - 233.35, 0, 343 - 233.35),
+//       // new BABYLON.Vector3(224 - 233.35 + 106.07, 0, 343 - 233.35 - 106.07),
+
+//       new BABYLON.Vector3(100, 0, -0.85),
+//       new BABYLON.Vector3(110, 0, -11.29),
+//       new BABYLON.Vector3(120, 0, -20.10),
+//       new BABYLON.Vector3(130, 0, -27.61),
+//       new BABYLON.Vector3(140, 0, -34.02),
+//       new BABYLON.Vector3(150, 0, -39.48),
+//       new BABYLON.Vector3(160, 0, -44.08),
+//       new BABYLON.Vector3(170, 0, -47.91),
+//       new BABYLON.Vector3(180, 0, -51.03),
+//       new BABYLON.Vector3(190, 0, -53.46),
+//       new BABYLON.Vector3(200, 0, -55.25),
+//       new BABYLON.Vector3(210, 0, -56.40),
+//       new BABYLON.Vector3(220, 0, -56.95),
+// new BABYLON.Vector3(224 + 233.35, 0, 343 - 233.35),
+
+  // const foulPoints1 = [
+  //   new BABYLON.Vector3(224, 0.1, 343),
+  //   new BABYLON.Vector3(224 - 233.35, 0, 343 - 233.35),
+  // ]
+  // BABYLON.MeshBuilder.CreateLines('foul1', {points: foulPoints1}, scene)
+
+  // const foulPoints3 = [
+  //   new BABYLON.Vector3(224, 0.1, 343),
+  //   new BABYLON.Vector3(224 + 233.35, 0, 343 - 233.35),
+  // ]
+
+// 224, 343
+
+const infieldTarget = new BABYLON.Vector3(224, 0, 286)
+const homePlatePosition = new BABYLON.Vector3(224, 0, 343)
+const centerFieldPosition = new BABYLON.Vector3(224, 0, -57)
+const floodlightConfigs = [
+  { position: new BABYLON.Vector3(20, 80, 60), target: homePlatePosition, angle: Math.PI / 2, range: 450 },  // RF
+  { position: new BABYLON.Vector3(80, 80, 0), target: homePlatePosition, angle: Math.PI / 2, range: 450 },   // RCF
+  { position: new BABYLON.Vector3(367, 80, 0), target: homePlatePosition, angle: Math.PI / 2, range: 450 },
+  { position: new BABYLON.Vector3(427, 80, 60), target: homePlatePosition, angle: Math.PI / 2, range: 450 },
+  
+  { position: new BABYLON.Vector3(149.75, 80, 346.54), target: new BABYLON.Vector3(367, -20, 0), angle: Math.PI / 4.5, range: 900 },
+  { position: new BABYLON.Vector3(298.25, 80, 346.54), target: new BABYLON.Vector3(80, -20, 0), angle: Math.PI / 4.5, range: 900 },
+
+  { position: new BABYLON.Vector3(388.76, 80, 234.81), target: new BABYLON.Vector3(80, -20, 0), angle: Math.PI / 3, range: 900 },
+  { position: new BABYLON.Vector3(59.24, 80, 234.81), target: new BABYLON.Vector3(367, -20, 0), angle: Math.PI / 3, range: 900 },
+];
+const bulbOnColour = new BABYLON.Color3(1, 1, 0.85);
+const bulbOffColour = new BABYLON.Color3(0.15, 0.15, 0.15);
+
+// Helper to draw a light pole and flood light array
+const drawLightPoleWithArray = (position, direction, scene, index) => {
+  // Draw pole
+  const poleHeight = position.y;
+  const poleDiameter = 2.5;
+  const pole = BABYLON.MeshBuilder.CreateCylinder(`lightPole${index}`, {height: poleHeight, diameterBottom: poleDiameter, diameterTop: poleDiameter * 0.8, enclose: true}, scene);
+  const poleMat = new BABYLON.StandardMaterial(`lightPoleMat${index}`, scene);
+  poleMat.diffuseColor = new BABYLON.Color3(0.7, 0.7, 0.7);
+  pole.material = poleMat;
+  pole.position = new BABYLON.Vector3(position.x, position.y - poleHeight / 2, position.z);
+
+  // Draw flood light array (6 lights in a grid)
+  const arrayOrigin = new BABYLON.Vector3(position.x, position.y + 2, position.z);
+  const arrayDir = direction.normalize();
+  const up = new BABYLON.Vector3(0, 1, 0);
+  const right = BABYLON.Vector3.Cross(arrayDir, up).normalize();
+  const lightSpacing = 3.5;
+  let lightMeshes = [];
+  for (let row = 0; row < 2; row++) {
+    for (let col = 0; col < 3; col++) {
+      const offset = right.scale((col - 1) * lightSpacing).add(up.scale(row * lightSpacing));
+      const bulbPos = arrayOrigin.add(offset);
+      const bulb = BABYLON.MeshBuilder.CreateSphere(`floodBulb${index}_${row}_${col}`, {diameter: 2.2}, scene);
+      bulb.position = bulbPos;
+      bulb.material = bulbMat;
+      bulbMat.diffuseColor = bulbOffColour;
+      bulbMat.emissiveColor = bulbOffColour;
+      lightMeshes.push(bulb);
+    }
+  }
+  return { pole, lightMeshes };
+};
+
 const applyTimeOfDayLighting = () => {
   if (!scene || !hemisphericLight) {
     return;
@@ -207,28 +295,24 @@ const applyTimeOfDayLighting = () => {
   drawSkyTexture(profile.skyColor, profile.cloudOpacity)
 
   if (profile.floodLightStrength <= 0.01) {
-    return
+    bulbMat.diffuseColor = bulbOffColour;
+    bulbMat.emissiveColor = bulbOffColour;
+    return;
+  } else {
+    bulbMat.diffuseColor = bulbOnColour;
+    bulbMat.emissiveColor = bulbOnColour;
   }
 
-  const infieldTarget = new BABYLON.Vector3(224, 0, 286)
-  const floodlightConfigs = [
-    { position: new BABYLON.Vector3(50, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
-    { position: new BABYLON.Vector3(145, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
-    { position: new BABYLON.Vector3(303, 26, -28), target: infieldTarget, angle: Math.PI / 2.8 },
-    { position: new BABYLON.Vector3(398, 26, 20), target: infieldTarget, angle: Math.PI / 2.8 },
-    { position: new BABYLON.Vector3(-35, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
-    { position: new BABYLON.Vector3(483, 30, 140), target: infieldTarget, angle: Math.PI / 3 },
-  ]
-
-  floodLights = floodlightConfigs.map(({ position, target, angle }, index) => {
-    const direction = target.subtract(position).normalize()
-    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, angle, 2, scene)
-    light.diffuse = new BABYLON.Color3(1, 0.95, 0.8)
-    light.specular = new BABYLON.Color3(0.15, 0.15, 0.15)
-    light.intensity = lerp(0.55, 1.75, profile.floodLightStrength)
-    light.range = 900
-    return light
-  })
+  floodLights = floodlightConfigs.map(({ position, target, angle, range }, index) => {
+    const direction = target.subtract(position).normalize();
+    // Draw the light pole and flood light array
+    const light = new BABYLON.SpotLight(`floodLight${index}`, position, direction, angle, 1, scene);
+    light.diffuse = new BABYLON.Color3(1, 0.95, 0.8);
+    light.specular = new BABYLON.Color3(0.15, 0.15, 0.15);
+    light.intensity = lerp(0.55, 1.75, profile.floodLightStrength);
+    light.range = range;
+    return light;
+  });
 }
 
 // Initialize the 3D scene
@@ -239,9 +323,11 @@ const initScene = () => {
   scene = new BABYLON.Scene(engine)
 
   // Camera
-  camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 35, 390), scene)
+  // camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 600, 160), scene)
+  // camera.setTarget(new BABYLON.Vector3(224, 0, 160))
+  camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(224, 35, 425), scene)
   camera.setTarget(new BABYLON.Vector3(224, 0, 240))
-  camera.setFocalLength(24);
+  // camera.setFocalLength(24);
 
   // Light
   hemisphericLight = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene)
@@ -249,7 +335,24 @@ const initScene = () => {
   // Sky
   skyTexture = new BABYLON.DynamicTexture('skyTexture', {width: 16, height: 16}, scene)
   const skyLayer = new BABYLON.Layer('skyLayer', null, scene)
-  skyLayer.texture = skyTexture
+  skyLayer.texture = skyTexture;
+
+  // TODO Remove Debug Spot
+  // Draw a red sphere at infield target.
+  const spot = BABYLON.MeshBuilder.CreateSphere('spot', {diameter: 4}, scene);
+  const spotMaterial = new BABYLON.StandardMaterial('spotMat', scene);
+  spotMaterial.diffuseColor = BABYLON.Color3.Red();
+  spot.material = spotMaterial;
+  spot.position = new BABYLON.Vector3(145, 80, -28);
+
+  // Light Poles
+  bulbMat = new BABYLON.StandardMaterial('floodBulbMat', scene);
+  const lightPoles = floodlightConfigs.map(({ position, target, angle }, index) => {
+    const direction = target.subtract(position).normalize();
+    // Draw the light pole and flood light array
+    return drawLightPoleWithArray(position, direction, scene, index);
+  });
+
   applyTimeOfDayLighting()
   lastLightingMinute = new Date().getMinutes()
 
@@ -341,17 +444,20 @@ const createField = () => {
   baseDirt3.position.y = 0.005;
 
   // Foul lines
-  const foulPoints1 = [
-    new BABYLON.Vector3(224, 0.1, 343),
-    new BABYLON.Vector3(224 - 226.27, 0.1, 343 - 226.27)
-  ]
-  BABYLON.MeshBuilder.CreateLines('foul1', {points: foulPoints1}, scene)
+  const foulPoints1 = [homePlatePos, leftFieldPos];
+  BABYLON.MeshBuilder.CreateLines('foul1', {points: foulPoints1}, scene);
 
-  const foulPoints3 = [
-    new BABYLON.Vector3(224, 0.1, 343),
-    new BABYLON.Vector3(224 + 226.27, 0.1, 343 - 226.27)
-  ]
-  BABYLON.MeshBuilder.CreateLines('foul3', {points: foulPoints3}, scene)
+  const foulPoints3 = [homePlatePos, rightFieldPos];
+  BABYLON.MeshBuilder.CreateLines('foul3', {points: foulPoints3}, scene);
+
+  const foulPoleMat = new BABYLON.StandardMaterial('foulMat', scene);
+  foulPoleMat.diffuseColor = BABYLON.Color3.Yellow();
+  const foulPoleL = BABYLON.MeshBuilder.CreateCylinder('foulPole1', {diameter: 1, height: 60}, scene);
+  foulPoleL.material = foulPoleMat;
+  foulPoleL.position = leftFieldPos.add(new BABYLON.Vector3(0, 30, 0));
+  const foulPoleR = BABYLON.MeshBuilder.CreateCylinder('foulPole2', {diameter: 1, height: 60}, scene);
+  foulPoleR.material = foulPoleMat;
+  foulPoleR.position = rightFieldPos.add(new BABYLON.Vector3(0, 30, 0));
 
   // outfield fence
   const fenceShape = [
@@ -360,18 +466,41 @@ const createField = () => {
       new BABYLON.Vector3(0.5, 20, 0),
       new BABYLON.Vector3(0.5, 0, 0)
   ];
+
   const fencePath = [
-      new BABYLON.Vector3(224 - 226.27, 0, 343 - 226.27),
-      new BABYLON.Vector3(-25, 0, 65),
-      new BABYLON.Vector3(50, 0, 35),
-      new BABYLON.Vector3(100, 0, 12),
-      new BABYLON.Vector3(150, 0, -8),
-      new BABYLON.Vector3(224, 0, -38),
-      new BABYLON.Vector3(300, 0, -8),
-      new BABYLON.Vector3(350, 0, 12),
-      new BABYLON.Vector3(400, 0, 35),
-      new BABYLON.Vector3(475, 0, 65),
-      new BABYLON.Vector3(224 + 226.27, 0, 343 - 226.27),
+      // new BABYLON.Vector3(224, 0, 343),
+      new BABYLON.Vector3(224 - 233.35, 0, 343 - 233.35),
+      // new BABYLON.Vector3(224 - 233.35 + 106.07, 0, 343 - 233.35 - 106.07),
+
+      new BABYLON.Vector3(100, 0, -0.85),
+      new BABYLON.Vector3(110, 0, -11.29),
+      new BABYLON.Vector3(120, 0, -20.10),
+      new BABYLON.Vector3(130, 0, -27.61),
+      new BABYLON.Vector3(140, 0, -34.02),
+      new BABYLON.Vector3(150, 0, -39.48),
+      new BABYLON.Vector3(160, 0, -44.08),
+      new BABYLON.Vector3(170, 0, -47.91),
+      new BABYLON.Vector3(180, 0, -51.03),
+      new BABYLON.Vector3(190, 0, -53.46),
+      new BABYLON.Vector3(200, 0, -55.25),
+      new BABYLON.Vector3(210, 0, -56.40),
+      new BABYLON.Vector3(220, 0, -56.95),
+
+      new BABYLON.Vector3(230, 0, -56.89),
+      new BABYLON.Vector3(240, 0, -56.22),
+      new BABYLON.Vector3(250, 0, -54.94),
+      new BABYLON.Vector3(260, 0, -53.02),
+      new BABYLON.Vector3(270, 0, -50.46),
+      new BABYLON.Vector3(280, 0, -47.21),
+      new BABYLON.Vector3(290, 0, -43.22),
+      new BABYLON.Vector3(300, 0, -38.45),
+      new BABYLON.Vector3(310, 0, -32.82),
+      new BABYLON.Vector3(320, 0, -26.20),
+      new BABYLON.Vector3(330, 0, -18.45),
+      new BABYLON.Vector3(340, 0, -9.34),
+
+      // new BABYLON.Vector3(224 + 233.35 - 106.07, 0, 343 - 233.35 - 106.07),
+      new BABYLON.Vector3(224 + 233.35, 0, 343 - 233.35),
   ];
   const fence = BABYLON.MeshBuilder.ExtrudeShape('fence', {shape: fenceShape, path: fencePath, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
   const fenceMat = new BABYLON.StandardMaterial('fenceMat', scene);
@@ -418,8 +547,8 @@ const createField = () => {
 
 // Create status display
 const createStatusDisplay = () => {
-  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 440, height: 180}, scene)
-  statusPlane.position = new BABYLON.Vector3(224, 95, -65)
+  const statusPlane = BABYLON.MeshBuilder.CreatePlane("statusPlane", {width: 220, height: 90}, scene)
+  statusPlane.position = new BABYLON.Vector3(224, 60, -85)
   const statusTexture = new BABYLON.DynamicTexture("statusTexture", {width: 440, height: 180}, scene)
   statusPlane.material = new BABYLON.StandardMaterial("statusMat", scene)
   statusPlane.material.diffuseTexture = statusTexture
