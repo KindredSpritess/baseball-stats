@@ -42,6 +42,8 @@ let floodLights = [];
 let skyTexture = null;
 let lastLightingMinute = null;
 let bulbMat = null;
+let baseballTexture = null;
+let baseballMaterial = null;
 
 let runnerTexture = null;
 let runnerPlane = null;
@@ -194,6 +196,100 @@ const drawSkyTexture = (baseColor, cloudOpacity) => {
     }
   }
   skyTexture.update()
+}
+
+const getBaseballMaterial = () => {
+  if (baseballMaterial) {
+    return baseballMaterial;
+  }
+
+  baseballTexture = new BABYLON.DynamicTexture('baseballTexture', { width: 1024, height: 512 }, scene)
+  baseballTexture.updateSamplingMode(BABYLON.Texture.TRILINEAR_SAMPLINGMODE)
+
+  const ctx = baseballTexture.getContext()
+  const width = baseballTexture.getSize().width
+  const height = baseballTexture.getSize().height
+
+  ctx.clearRect(0, 0, width, height)
+
+  const feltGradient = ctx.createLinearGradient(0, 0, 0, height)
+  feltGradient.addColorStop(0, '#fffdf7')
+  feltGradient.addColorStop(0.5, '#f5f0e6')
+  feltGradient.addColorStop(1, '#ebe3d7')
+  ctx.fillStyle = feltGradient
+  ctx.fillRect(0, 0, width, height)
+
+  ctx.strokeStyle = 'rgba(132, 14, 16, 0.95)'
+  ctx.lineWidth = 20
+  ctx.lineCap = 'round'
+
+  const drawSeam = (centerX, startY, controlYOffset, endY, stitchDirection) => {
+    ctx.beginPath()
+    ctx.moveTo(centerX, startY)
+    ctx.bezierCurveTo(
+      centerX - 170,
+      startY + controlYOffset,
+      centerX + 170,
+      endY - controlYOffset,
+      centerX,
+      endY,
+    )
+    ctx.stroke()
+
+    const stitchCount = 18
+    for (let i = 1; i < stitchCount; i++) {
+      const t = i / stitchCount
+      const point = BABYLON.Scalar.Lerp(startY, endY, t)
+      const curveX = centerX + Math.sin(t * Math.PI * 2) * 90 * stitchDirection
+      const tangent = Math.cos(t * Math.PI * 2) * 28
+
+      ctx.beginPath()
+      ctx.moveTo(curveX - tangent, point - 10)
+      ctx.lineTo(curveX + tangent, point + 10)
+      ctx.stroke()
+    }
+  }
+
+  drawSeam(width * 0.31, height * 0.08, 100, height * 0.92, 1)
+  drawSeam(width * 0.69, height * 0.08, -100, height * 0.92, -1)
+
+  baseballTexture.update()
+
+  baseballMaterial = new BABYLON.StandardMaterial('baseballMat', scene)
+  baseballMaterial.diffuseTexture = baseballTexture
+  baseballMaterial.specularColor = new BABYLON.Color3(0.35, 0.35, 0.35)
+  baseballMaterial.roughness = 1
+
+  return baseballMaterial
+}
+
+const createBallSpinAnimation = (ball, direction, totalFrames, battedBall) => {
+  const normalizedDirection = direction.lengthSquared() > 0 ? direction.normalize() : new BABYLON.Vector3(0, 0, 1)
+  const startRotation = ball.rotation.clone()
+  const axisWeight = battedBall?.type === 'G' || battedBall?.type === 'B'
+    ? new BABYLON.Vector3(Math.abs(normalizedDirection.z), 0.3, Math.abs(normalizedDirection.x))
+    : new BABYLON.Vector3(1.2, 0.25, 0.85)
+  const spinTurns = Math.max(2, totalFrames / (battedBall ? 6 : 4))
+  const endRotation = new BABYLON.Vector3(
+    startRotation.x + (Math.PI * 2 * spinTurns * axisWeight.x),
+    startRotation.y + (Math.PI * 2 * spinTurns * axisWeight.y),
+    startRotation.z + (Math.PI * 2 * spinTurns * axisWeight.z),
+  )
+
+  const rotationAnimation = new BABYLON.Animation(
+    'battedBallSpin',
+    'rotation',
+    30,
+    BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+  )
+
+  rotationAnimation.setKeys([
+    { frame: 0, value: startRotation },
+    { frame: totalFrames, value: endRotation },
+  ])
+
+  return rotationAnimation
 }
 
 const infieldTarget = new BABYLON.Vector3(224, 0, 286)
@@ -694,10 +790,9 @@ const animateBall = (battedBall) => {
   if (!scene) return;
 
   const ball = BABYLON.MeshBuilder.CreateSphere('battedBall', {diameter: 2}, scene);
-  const ballMaterial = new BABYLON.StandardMaterial('ballMat', scene);
-  ballMaterial.diffuseColor = BABYLON.Color3.White();
-  ball.material = ballMaterial;
+  ball.material = getBaseballMaterial();
   ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, 4, 0));
+  ball.rotation = new BABYLON.Vector3(Math.PI / 8, 0, Math.PI / 6)
 
   const baseDistance = battedBall ? Math.sqrt(
     Math.pow(battedBall.position[0] - 224, 2) +
@@ -756,26 +851,30 @@ const animateBall = (battedBall) => {
     }
 
     animation.setKeys(keys);
-    ball.animations = [animation];
+    const spinAnimation = createBallSpinAnimation(ball, targetPosition.subtract(ball.position), frames + 15, battedBall)
+    ball.animations = [animation, spinAnimation];
     scene.beginAnimation(ball, 0, frames + 15, false, 1, () => {
       setTimeout(() => ball.dispose(), battedBall ? 500 : 0);
     });
   } else {
     // Straight line animation
-    BABYLON.Animation.CreateAndStartAnimation(
+    const positionAnimation = new BABYLON.Animation(
       'battedBallAnim',
-      ball,
       'position',
       30,
-      trajectory.duration,
-      ball.position,
-      targetPosition,
+      BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
       BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
-      null,
-      () => {
-        setTimeout(() => ball.dispose(), 500);
-      }
-    );
+    )
+    positionAnimation.setKeys([
+      { frame: 0, value: ball.position.clone() },
+      { frame: trajectory.duration, value: targetPosition },
+    ])
+
+    const spinAnimation = createBallSpinAnimation(ball, targetPosition.subtract(ball.position), trajectory.duration, battedBall)
+    ball.animations = [positionAnimation, spinAnimation]
+    scene.beginAnimation(ball, 0, trajectory.duration, false, 1, () => {
+      setTimeout(() => ball.dispose(), 500);
+    });
   }
 
   return trajectory.duration / 30 + 0.5; // Return number of seconds for animation
