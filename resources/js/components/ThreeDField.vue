@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
+import earcut from 'earcut';
 
 // Props
 const props = defineProps({
@@ -482,6 +483,71 @@ const createField = () => {
       new BABYLON.Vector3(224, 0.2, 343),
   ];
 
+
+  // Infield dirt shape as SVG path starting 3 units behind home plate, going counterclockwise around the bases and back to the start.
+  // The arc is a 95 unit radius arc centered on the pitcher's mound center, which creates a tangent to the base paths.
+  // M 105, 223.5
+  // l 90.94829,-90.94829
+  // a 95,95 146.41226054067056 0 0 -181.89658,0
+  // z
+
+  // m -13,-3
+  // a 13,13 180 1 0 26,0 13,13 180 1 0 -26,0
+  // z
+
+  // m 13,-3
+  // l -53.0782,-53.0782
+  // a 13,13 71.22 0 0 0,-15.138
+  // l 45.45,-45.45
+  // a 13,13 71.22 0 0 15.138,0
+  // l 45.45,45.45
+  // a 13,13 71.22 0 0 0,15.138
+  // Z
+
+  const infieldDirtStart = new BABYLON.Vector3(224, 0, 349)
+  const infieldDirtRightTangent = new BABYLON.Vector3(314.94829+3, 0, 255.05171+3)
+  const infieldDirtLeftTangent = new BABYLON.Vector3(133.05171-3, 0, 255.05171+3)
+  const infieldArcRadius = 95
+
+  // Two circle centers satisfy the chord/radius. The one near the mound keeps the arc on-field.
+  const infieldArcCenter = new BABYLON.Vector3(224, 0, 282.014)
+  const arcStartAngle = Math.atan2(
+    infieldDirtRightTangent.z - infieldArcCenter.z,
+    infieldDirtRightTangent.x - infieldArcCenter.x,
+  )
+  const arcEndAngle = Math.atan2(
+    infieldDirtLeftTangent.z - infieldArcCenter.z,
+    infieldDirtLeftTangent.x - infieldArcCenter.x,
+  )
+
+  const infieldArcSegments = 36
+  const infieldDirtShape = [infieldDirtStart, infieldDirtRightTangent]
+  for (let i = 1; i < infieldArcSegments; i++) {
+    const t = i / infieldArcSegments
+    const angle = arcStartAngle + ((arcEndAngle - arcStartAngle) * t)
+    infieldDirtShape.push(new BABYLON.Vector3(
+      infieldArcCenter.x + (Math.cos(angle) * infieldArcRadius),
+      0,
+      infieldArcCenter.z + (Math.sin(angle) * infieldArcRadius),
+    ))
+  }
+  infieldDirtShape.push(infieldDirtLeftTangent)
+
+  const infieldGrassHole = [
+    new BABYLON.Vector3(224 - 63.63961030678928 + 5, 0.05, 280),
+    new BABYLON.Vector3(224, 0.05, 280 - 63.63961030678928),
+    new BABYLON.Vector3(224 + 63.63961030678928 - 5, 0.05, 280),
+    new BABYLON.Vector3(224, 0.05, 280 + 63.63961030678928 - 5),
+  ];
+
+  const infieldDirt = BABYLON.MeshBuilder.CreatePolygon('infieldDirt', {
+    shape: infieldDirtShape,
+    holes: [infieldGrassHole],
+    sideOrientation: BABYLON.Mesh.DOUBLESIDE,
+  }, scene, earcut)
+  infieldDirt.material = dirtMaterial
+  infieldDirt.position.y = 0.04
+
   // Bases
   const baseMaterial = new BABYLON.StandardMaterial('baseMat', scene)
   baseMaterial.diffuseColor = BABYLON.Color3.White()
@@ -515,20 +581,23 @@ const createField = () => {
   basePositions.plate = new BABYLON.Vector3(224, 2, 343)
 
   // dirt circles at bases
-  const baseDirt1 = BABYLON.MeshBuilder.CreateCylinder('baseDirt1', {diameter: 20, height: 0.01}, scene);
+  const baseDirt1 = BABYLON.MeshBuilder.CreateCylinder('baseDirt1', {diameter: 20, height: 0.01, arc: 0.25}, scene);
   baseDirt1.material = dirtMaterial;
   baseDirt1.position = base1.position.clone();
   baseDirt1.position.y = 0.005;
+  baseDirt1.rotation.y = -Math.PI / 4;
 
-  const baseDirt2 = BABYLON.MeshBuilder.CreateCylinder('baseDirt2', {diameter: 20, height: 0.01}, scene);
+  const baseDirt2 = BABYLON.MeshBuilder.CreateCylinder('baseDirt2', {diameter: 20, height: 0.01, arc: 0.25}, scene);
   baseDirt2.material = dirtMaterial;
   baseDirt2.position = base2.position.clone();
   baseDirt2.position.y = 0.005;
+  baseDirt2.rotation.y = -Math.PI / 4 * 3;
 
-  const baseDirt3 = BABYLON.MeshBuilder.CreateCylinder('baseDirt3', {diameter: 20, height: 0.01}, scene);
+  const baseDirt3 = BABYLON.MeshBuilder.CreateCylinder('baseDirt3', {diameter: 20, height: 0.01, arc: 0.25}, scene);
   baseDirt3.material = dirtMaterial;
   baseDirt3.position = base3.position.clone();
   baseDirt3.position.y = 0.005;
+  baseDirt3.rotation.y = Math.PI / 4 * 3;
 
   // Foul lines
   const offset = new BABYLON.Vector3(0, 0.1, 0);
