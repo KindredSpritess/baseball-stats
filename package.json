@@ -19,6 +19,7 @@
         "vue": "^3.5.25"
     },
     "dependencies": {
-        "babylonjs": "^8.41.1"
+        "babylonjs": "^8.41.1",
+        "earcut": "^3.0.2"
     }
 }
