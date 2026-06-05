@@ -28,6 +28,7 @@ class ExportScorebookCommand extends Command
     protected $description = 'Export an Australian style scorebook HTML for a game';
 
     const BASES = [
+        '`' => 0,
         '!' => 1,
         '@' => 2,
         '#' => 3,
@@ -693,7 +694,7 @@ class ExportScorebookCommand extends Command
         $playText = preg_replace('/^(ER|UR)/', '', $playText);
 
         $bases = 0;
-        preg_match('/^([!@#$]?)(.*)/', $playText, $matches);
+        preg_match('/^([`!@#$]?)(.*)/', $playText, $matches);
         $playText = $matches[2];
         $bases = self::BASES[$matches[1]] ?? 1;
 
@@ -730,7 +731,7 @@ class ExportScorebookCommand extends Command
         } elseif (preg_match('/^[BG]?`?(\d)$/', $playText, $matches)) {
             // Unassisted ground out
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
-        } elseif (preg_match('/^(F?)[FLPGB]?([!@#$]?)(((?:\d-)*)(?:E|e|WT|wt)(\d))$/', $playText, $matches)) {
+        } elseif (preg_match('/^(F?)[FLPGB]?([`!@#$]?)(((?:\d-)*)(?:E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
             [$_, $foul, $baseStr, $errorPlay, $assists, $errorPlayer] = $matches;
             // Bases is already potentially handle above. So only override if it's a foul error, or if there is an explicit base modifier.
