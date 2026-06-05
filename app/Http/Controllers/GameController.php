@@ -324,6 +324,27 @@ class GameController extends Controller
         ])->header('Cache-Control', 'public, max-age=' . ($game->ended ? 300 : 30));
     }
 
+    public function replay(Game $game) {
+        $game->load(['home_team', 'away_team', 'players.person', 'plays']);
+        $game->state;
+        $plays = $game->plays()->select('play')->get();
+        $state = new GameState();
+        $state->get($game, 'state', '{}', []);
+
+        // Create a log of states by replaying the game.
+        $log = [];
+        foreach ($plays as $play) {
+            $p = new Play(['play' => $play->play]);
+            $p->apply($game);
+            $log[] = [
+                'play' => $p,
+                'state' => json_decode($state->set($game, '', '', []), true),
+            ];
+        }
+
+        return response()->json($log);
+    }
+
     public function boxscore(Game $game) {
         $gs = new GameState;
         $state = $game->state;

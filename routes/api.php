@@ -41,6 +41,7 @@ Route::controller(GameController::class)->group(function() {
     // Route::post('/game/store', 'store');
     // Route::put('/game/{game}/log', 'play')->name('gamelog');
     Route::patch('/game/{game}/log', 'plays')->name('api.fullgamelog');
+    Route::get('/game/{game}/replay', 'replay')->name('api.game.replay');
 });
 
 Route::controller(PersonController::class)->group(function() {
