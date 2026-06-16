@@ -37,17 +37,17 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
             localStorage.removeItem('team_filter_' + seasonId);
         }
     },
-    isGameVisible(game, seasonId) {
+    shouldHideGame(seasonId, homeId, awayId) {
         const teamId = this.getStoredTeamFilter(seasonId);
-        if (!teamId) return true;
-        return game.home === parseInt(teamId) || game.away === parseInt(teamId);
+        if (!teamId) return false;
+        return teamId !== homeId.toString() && teamId !== awayId.toString();
     },
     init() {
         this.$watch('selectedSeason', (value) => {
             localStorage.setItem('selected_season', value);
         });
     }
-}" @allgames="allGames" x-init="allGames = $el.dataset.games || '{}'">
+}">
     <h1 class="welcome-title">Welcome to Baseball Stats</h1>
 
     @if(auth()->check())
@@ -135,9 +135,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                             @foreach ($games as $game)
                                 @if ($game->home_team->season->is($season))
                                 <li class="game-item" 
-                                    :style="getStoredTeamFilter('{{ $season->id }}') && 
-                                            getStoredTeamFilter('{{ $season->id }}') != '{{ $game->home }}' && 
-                                            getStoredTeamFilter('{{ $season->id }}') != '{{ $game->away }}' ? 'display: none' : ''">
+                                    :style="shouldHideGame('{{ $season->id }}', {{ $game->home }}, {{ $game->away }}) ? 'display: none' : ''">
                                     @if($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">
