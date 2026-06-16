@@ -231,18 +231,18 @@ class TeamController extends Controller
         $description .= "Away Team: {$game->away_team->name}";
 
         // Format timestamps for ICS (YYYYMMDDTHHMMSSZ) in UTC
-        $startTime = $game->firstPitch->utc()->format('Ymd\THis\Z');
+        $startTime = $game->firstPitch->utc()->format('Ymd\\THis\\Z');
 
         // Calculate end time (add duration if available, otherwise use 3 hours default)
         $duration = $game->duration ?? 180; // minutes
         $dtEnd = $game->firstPitch->copy()->addMinutes($duration);
-        $endTime = $dtEnd->utc()->format('Ymd\THis\Z');
+        $endTime = $dtEnd->utc()->format('Ymd\\THis\\Z');
 
         // Create unique event ID
         $eventId = 'game-' . $game->id . '@baseball-stats';
 
         // Format DTSTAMP (current time in UTC)
-        $dtstampFormatted = now()->utc()->format('Ymd\THis\Z');
+        $dtstampFormatted = now()->utc()->format('Ymd\\THis\\Z');
 
         $event = "BEGIN:VEVENT\r\n";
         $event .= "UID:{$eventId}\r\n";
