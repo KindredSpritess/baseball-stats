@@ -242,9 +242,13 @@ class TeamController extends Controller
         // Create unique event ID
         $eventId = 'game-' . $game->id . '@baseball-stats';
 
+        // Format DTSTAMP (current time in UTC)
+        $dtstamp = now()->toDateTimeString();
+        $dtstampFormatted = str_replace(['-', ':', ' '], '', $dtstamp) . 'Z';
+
         $event = "BEGIN:VEVENT\r\n";
         $event .= "UID:{$eventId}\r\n";
-        $event .= "DTSTAMP:" . now()->toDateTimeString('microseconds') . "Z\r\n";
+        $event .= "DTSTAMP:{$dtstampFormatted}\r\n";
         $event .= "DTSTART:{$startTime}\r\n";
         $event .= "DTEND:{$endTime}\r\n";
         $event .= "SUMMARY:" . $this->escapeText($summary) . "\r\n";
