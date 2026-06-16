@@ -225,26 +225,24 @@ class TeamController extends Controller
         // Create summary
         $summary = "{$teamType}: {$team->name} vs {$opponent->name}";
 
-        // Create description
-        $description = "Game Location: {$game->location}\r\n";
-        $description .= "Home Team: {$game->home_team->name}\r\n";
+        // Create description with proper line breaks for ICS
+        $description = "Game Location: {$game->location}\n";
+        $description .= "Home Team: {$game->home_team->name}\n";
         $description .= "Away Team: {$game->away_team->name}";
 
-        // Format timestamps for ICS (YYYYMMDDTHHMMSSZ)
-        $dtStart = $game->firstPitch->toDateTimeString();
-        $startTime = str_replace(['-', ':', ' '], '', $dtStart) . 'Z';
+        // Format timestamps for ICS (YYYYMMDDTHHMMSSZ) in UTC
+        $startTime = $game->firstPitch->utc()->format('Ymd\THis\Z');
 
         // Calculate end time (add duration if available, otherwise use 3 hours default)
         $duration = $game->duration ?? 180; // minutes
         $dtEnd = $game->firstPitch->copy()->addMinutes($duration);
-        $endTime = str_replace(['-', ':', ' '], '', $dtEnd->toDateTimeString()) . 'Z';
+        $endTime = $dtEnd->utc()->format('Ymd\THis\Z');
 
         // Create unique event ID
         $eventId = 'game-' . $game->id . '@baseball-stats';
 
         // Format DTSTAMP (current time in UTC)
-        $dtstamp = now()->toDateTimeString();
-        $dtstampFormatted = str_replace(['-', ':', ' '], '', $dtstamp) . 'Z';
+        $dtstampFormatted = now()->utc()->format('Ymd\THis\Z');
 
         $event = "BEGIN:VEVENT\r\n";
         $event .= "UID:{$eventId}\r\n";
