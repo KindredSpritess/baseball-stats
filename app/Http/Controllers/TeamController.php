@@ -189,14 +189,15 @@ class TeamController extends Controller
 
         // Return as ICS file
         return response($icsContent, 200, [
-            'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $team->short_name . '-schedule.ics"',
+            'Content-Type' => 'text/plain',
+            // 'Content-Type' => 'text/calendar; charset=utf-8',
+            // 'Content-Disposition' => 'attachment; filename="' . $team->short_name . '-schedule.ics"',
         ]);
     }
 
     private function generateICS(Team $team, $games) {
         // Generate unique identifier for this calendar
-        $prodId = '-//Baseball Stats//Team Calendar//EN';
+        $prodId = '-//Stats Keeper//Team Calendar//EN';
         $uid = 'team-' . $team->id . '@baseball-stats';
 
         $ics = "BEGIN:VCALENDAR\r\n";
@@ -222,13 +223,25 @@ class TeamController extends Controller
         $opponent = $isHome ? $game->away_team : $game->home_team;
         $teamType = $isHome ? 'Home' : 'Away';
 
+
+        // Load game state.
+        $game->state;
+        $score = $game->score[$isHome ? 1 : 0];
+        $opponentScore = $game->score[$isHome ? 0 : 1];
+        if ($game->ended) {
+            $teamType = $score > $opponentScore ? 'Win' : ($score < $opponentScore ? 'Loss' : 'Tie');
+        }
+
         // Create summary
-        $summary = "{$teamType}: {$team->name} vs {$opponent->name}";
+        $summary = "{$teamType}: {$team->name} ({$score}) vs {$opponent->name} ({$opponentScore})";
 
         // Create description with proper line breaks for ICS
         $description = "Game Location: {$game->location}\n";
         $description .= "Home Team: {$game->home_team->name}\n";
-        $description .= "Away Team: {$game->away_team->name}";
+        $description .= "Away Team: {$game->away_team->name}\n";
+        if ($game->ended) {
+            $description .= "Final Score: {$game->score[1]} - {$game->score[0]}\n";
+        }
 
         // Format timestamps for ICS (YYYYMMDDTHHMMSSZ) in UTC
         $startTime = $game->firstPitch->utc()->format('Ymd\\THis\\Z');
