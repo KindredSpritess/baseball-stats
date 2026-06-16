@@ -22,6 +22,26 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
 @endphp
 <div class="welcome-container" x-data="{
     selectedSeason: localStorage.getItem('selected_season') || null,
+    selectedTeamFilter: {},
+    getStoredTeamFilter(seasonId) {
+        if (!this.selectedTeamFilter[seasonId]) {
+            this.selectedTeamFilter[seasonId] = localStorage.getItem('team_filter_' + seasonId) || '';
+        }
+        return this.selectedTeamFilter[seasonId];
+    },
+    setTeamFilter(seasonId, teamId) {
+        this.selectedTeamFilter[seasonId] = teamId;
+        if (teamId) {
+            localStorage.setItem('team_filter_' + seasonId, teamId);
+        } else {
+            localStorage.removeItem('team_filter_' + seasonId);
+        }
+    },
+    isGameVisible(seasonId, homeId, awayId) {
+        const teamId = this.getStoredTeamFilter(seasonId);
+        if (!teamId) return true;
+        return teamId === homeId.toString() || teamId === awayId.toString();
+    },
     init() {
         this.$watch('selectedSeason', (value) => {
             localStorage.setItem('selected_season', value);
@@ -90,18 +110,29 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
             </select>
 
             @foreach ($seasons as $season)
-            <div x-show="selectedSeason === '{{ $season->id }}'" class="season-content">
+            <div x-show="selectedSeason === '{{ (string) $season->id }}'" class="season-content">
                 <h3 class="season-content-title">{{ $season->name }}</h3>
                 @can('manage-season', $season)
                 <a href="{{ route('season.preferences', ['season' => $season]) }}" class="season-stats-link">Scoring Rules</a>
                 @endcan
+                <div class="season-filter">
+                    <label for="team-filter-{{ (string) $season->id }}" class="team-filter-label">Filter by team:</label>
+                    <select id="team-filter-{{ (string) $season->id }}" class="team-filter-select" @change="setTeamFilter('{{ (string) $season->id }}', $event.target.value)" :value="getStoredTeamFilter('{{ (string) $season->id }}')">
+                        <option value="">All teams</option>
+                        @foreach ($teams as $team)
+                            @if ($team->season->is($season))
+                            <option value="{{ $team->id }}">{{ $team->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
                 <div class="games-list">
                     <div class="games-column">
                         <h4>Games</h4>
                         <ul class="games-list-items">
                             @foreach ($games as $game)
                                 @if ($game->home_team->season->is($season))
-                                <li class="game-item">
+                                <li class="game-item" x-show="isGameVisible('{{ (string) $season->id }}', {{ $game->home_team->id }}, {{ $game->away_team->id }})">
                                     @if($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">

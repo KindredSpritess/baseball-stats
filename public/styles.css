@@ -395,6 +395,32 @@ svg {
   margin-bottom: 20px;
 }
 
+.season-filter {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-filter-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.team-filter-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background-color: var(--white);
+  color: var(--text-primary);
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.team-filter-select:hover {
+  border-color: var(--primary);
+}
+
 .games-column {
   flex: 1 1 45%;
   min-width: 300px;
