@@ -135,7 +135,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                             @foreach ($games as $game)
                                 @if ($game->home_team->season->is($season))
                                 <li class="game-item" 
-                                    :style="shouldHideGame('{{ $season->id }}', {{ $game->home }}, {{ $game->away }}) ? 'display: none' : ''">
+                                    x-show="!shouldHideGame('{{ $season->id }}', {{ $game->home }}, {{ $game->away }})">
                                     @if($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">
