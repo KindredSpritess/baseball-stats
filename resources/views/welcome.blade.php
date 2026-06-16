@@ -116,10 +116,8 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                 <a href="{{ route('season.preferences', ['season' => $season]) }}" class="season-stats-link">Scoring Rules</a>
                 @endcan
                 <div class="season-filter">
-                    <label for="team-filter-{{ (string) $season->id }}" class="team-filter-label">Filter by team:</label>
-                    <select id="team-filter-{{ (string) $season->id }}" class="team-filter-select" 
-                            @change="setTeamFilter('{{ (string) $season->id }}', $event.target.value)"
-                            :value="getStoredTeamFilter('{{ (string) $season->id }}')">
+                    <label for="team-filter-{{ (string) $season->id }}" class="team-filter-label">Filter by team</label>
+                    <select id="team-filter-{{ (string) $season->id }}" class="team-filter-select" @change="setTeamFilter('{{ (string) $season->id }}', $event.target.value)" :value="getStoredTeamFilter('{{ (string) $season->id }}')">
                         <option value="">All teams</option>
                         @foreach ($teams as $team)
                             @if ($team->season->is($season))
@@ -134,8 +132,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                         <ul class="games-list-items">
                             @foreach ($games as $game)
                                 @if ($game->home_team->season->is($season))
-                                <li class="game-item" 
-                                    x-show="isGameVisible('{{ (string) $season->id }}', {{ $game->home_team->id }}, {{ $game->away_team->id }})">
+                                <li class="game-item" x-show="isGameVisible('{{ (string) $season->id }}', {{ $game->home_team->id }}, {{ $game->away_team->id }})">
                                     @if($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">
