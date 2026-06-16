@@ -498,7 +498,7 @@ class ExportScorebookCommand extends Command
                                 $runnerSpot = $battingOrder[$runner->id]['spot'] ?? null;
                                 if ($runnerSpot && $runnerSpot !== 'P') {
                                     $pas = count($data[$runnerSpot][$inning]);
-                                    $data[$runnerSpot][$inning][$pas - 1]->results[$base - 1][2] = true;
+                                    $data[$runnerSpot][$inning][$pas - 1]->results[$base - 1][] = true;
                                 }
                             }
                         }
@@ -583,16 +583,19 @@ class ExportScorebookCommand extends Command
                         }
                         if ($bases < 0) {
                             end($data[$spot][$inning])->out_number = $outNumbers[$i - 1] ?? null;
-                            end($data[$spot][$inning])->results[$b++] = [$note, $colour];
+                            end($data[$spot][$inning])->results[$b++] = [...end($data[$spot][$inning])->results[$b] ?? [], $note, $colour];
                             end($data[$spot][$inning])->diamondUp = $orangeUp === $i - 1;
                             end($data[$spot][$inning])->diamondDown = $orangeDown === $i - 1;
                             end($data[$spot][$inning])->diamondMiddle = $oragneMiddle === $i - 1;
+                        } else if ($bases == 0) {
+                            end($data[$spot][$inning])->results[$b] = [...end($data[$spot][$inning])->results[$b] ?? [], $note, $colour];
                         } else {
                             while ($bases--) {
                                 if ($bases) {
-                                    end($data[$spot][$inning])->results[$b++] = [self::CURVES[$b-1], $colour];
+                                    end($data[$spot][$inning])->results[$b++] = [...end($data[$spot][$inning])->results[$b] ?? [], self::CURVES[$b-1], $colour];
                                 } else {
-                                    end($data[$spot][$inning])->results[$b++] = [$note, $colour];
+                                    // dump(end($data[$spot][$inning])->results[3] ?? null, $b);
+                                    end($data[$spot][$inning])->results[$b++] = [...(end($data[$spot][$inning])->results[$b-1] ?? []), $note, $colour];
                                 }
                             }
                             if ($b === 4) {
@@ -602,6 +605,11 @@ class ExportScorebookCommand extends Command
                                     if ($game->expectedOuts < 3) {
                                         end($data[$spot][$inning])->run_earned = true;
                                     }
+                                }
+                                if (preg_match('/^\d+$/', $note)) {
+                                    // RBI.
+                                    $results = &end($data[$spot][$inning])->results[3];
+                                    $results[count($results) - 2] = "<span style=\"background:#FFD901;padding:0 4px\">$note</span>";
                                 }
                             }
                         }
@@ -731,16 +739,16 @@ class ExportScorebookCommand extends Command
         } elseif (preg_match('/^[BG]?`?(\d)$/', $playText, $matches)) {
             // Unassisted ground out
             return ["UA$matches[1]", 'black', -1, ['PO' => $matches[1]]];
-        } elseif (preg_match('/^(F?)[FLPGB]?([`!@#$]?)(((?:\d-)*)(?:E|e|WT|wt)(\d))$/', $playText, $matches)) {
+        } elseif (preg_match('/^(F?)[FLPGB]?([`!@#$]?)((CS|PO)?((?:\d-)*)(E|e|WT|wt)(\d))$/', $playText, $matches)) {
             // Error play
-            [$_, $foul, $baseStr, $errorPlay, $assists, $errorPlayer] = $matches;
+            [$_, $foul, $baseStr, $errorPlay, $errorPrefix, $assists, $errorType, $errorPlayer] = $matches;
             // Bases is already potentially handle above. So only override if it's a foul error, or if there is an explicit base modifier.
             if ($foul) {
                 $bases = 0;
             } elseif ($baseStr) {
                 $bases = self::BASES[$baseStr] ?? 1;
             }
-            return ["{$prefix}{$errorPlay}{$suffix}", 'red', $bases, $prefix ? null : ['E' => $errorPlayer, 'A' => str_replace('-', '', $assists)]];
+            return ["{$prefix}{$errorPrefix}{$assists}<span style=\"color:red\">{$errorType}{$errorPlayer}</span>{$suffix}", 'black', $bases, $prefix ? null : ['E' => $errorPlayer, 'A' => str_replace('-', '', $assists)]];
         } elseif (preg_match('/^[FLPGB]?(CS|PO)?`?(((\d-)*)(\d))$/', $playText, $matches)) {
             // Fielding play (e.g., 6-3, 4-3, etc.)
             return ["$matches[1]$matches[2]", 'black', -1, ['PO' => $matches[5], 'A' => str_replace('-', '', $matches[3])]];

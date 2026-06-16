@@ -848,18 +848,19 @@
                     <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
-                                <td>
-                                    @foreach ($inning['fielding'] as $fielding)
-                                        @if ($fielding['A'] ?? false)
-                                            {{ $fielding['A'] }}
-                                        @elseif (isset($fielding['PC']))
-                                            </td><td style="border-left: 2px solid blue;">
-                                        @elseif (isset($fielding['DC']))
-                                            </td><td style="border-left: 2px solid orange;">
-                                        @else
-                                            &nbsp;
-                                        @endif
-                                    @endforeach
+                                <td>@php
+                                    foreach ($inning['fielding'] as $fielding) {
+                                        if ($fielding['A'] ?? false) {
+                                            echo $fielding['A'];
+                                        } elseif (isset($fielding['PC'])) {
+                                            echo '</td><td style="border-left: 2px solid blue;">';
+                                        } elseif (isset($fielding['DC'])) {
+                                            echo '</td><td style="border-left: 2px solid orange;">';
+                                        } else {
+                                            echo '&nbsp;';
+                                        }
+                                    }
+                                    @endphp
                                 </td>
                             </tr></table>
                         </div>
@@ -873,22 +874,23 @@
                     <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
-                                <td>
-                                    @foreach ($inning['fielding'] as $fielding)
-                                        @for($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++)
-                                            &nbsp;
-                                        @endfor
-                                        @if (isset($fielding['PO']))
-                                            {{ $fielding['PO'] }}
-                                        @elseif (isset($fielding['PC']))
-                                            </td><td style="border-left: 2px solid blue;">
-                                        @elseif (isset($fielding['DC']))
-                                            </td><td style="border-left: 2px solid orange;">
-                                        @else
-                                            &nbsp;
-                                        @endif
-                                    @endforeach
-                                </td>
+                                <td>@php
+                                    foreach ($inning['fielding'] as $fielding) {
+                                        for ($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++) {
+                                            echo '&nbsp;';
+                                        }
+                                        if (isset($fielding['PO'])) {
+                                            echo $fielding['PO'];
+                                        } elseif (isset($fielding['PC'])) {
+                                            echo '</td><td style="border-left: 2px solid blue;">';
+                                        } elseif (isset($fielding['DC'])) {
+                                            echo '</td><td style="border-left: 2px solid orange;">';
+                                        } else {
+                                            echo '&nbsp;';
+                                        }
+                                    }
+                                @endphp
+                            </td>
                             </tr></table>
                         </div>
                     </td>
@@ -909,21 +911,20 @@
                     <td class="inning-fielding" colspan="{{ $inning['width'] }}">
                         <div>
                             <table class="fielding-stats-row"><tr>
-                                <td>
-                                    @foreach ($inning['fielding'] as $fielding)
-                                        @for($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++)
-                                            &nbsp;
-                                        @endfor
-                                        @if (isset($fielding['E']))
-                                            <span style="color:red">{{ $fielding['E'] }}</span>
-                                        @elseif (isset($fielding['PC']))
-                                            </td><td style="border-left: 2px solid blue;">
-                                        @elseif (isset($fielding['DC']))
-                                            </td><td style="border-left: 2px solid orange;">
-                                        @else
-                                            &nbsp;
-                                        @endif
-                                    @endforeach
+                                <td>@php
+                                    foreach ($inning['fielding'] as $fielding) {
+                                        for($i = 1; $i < strlen($fielding['A'] ?? ' '); $i++)
+                                            echo '&nbsp;';
+                                        if (isset($fielding['E']))
+                                            echo '<span style="color:red">' . $fielding['E'] . '</span>';
+                                        elseif (isset($fielding['PC']))
+                                            echo '</td><td style="border-left: 2px solid blue;">';
+                                        elseif (isset($fielding['DC']))
+                                            echo '</td><td style="border-left: 2px solid orange;">';
+                                        else
+                                            echo '&nbsp;';
+                                    }
+                                    @endphp
                                 </td>
                             </tr></table>
                         </div>
