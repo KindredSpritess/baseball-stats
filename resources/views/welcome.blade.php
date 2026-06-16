@@ -116,7 +116,7 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                 <a href="{{ route('season.preferences', ['season' => $season]) }}" class="season-stats-link">Scoring Rules</a>
                 @endcan
                 <div class="season-filter">
-                    <label for="team-filter-{{ (string) $season->id }}" class="team-filter-label">Filter by team</label>
+                    <label for="team-filter-{{ (string) $season->id }}" class="team-filter-label">Filter by team:</label>
                     <select id="team-filter-{{ (string) $season->id }}" class="team-filter-select" @change="setTeamFilter('{{ (string) $season->id }}', $event.target.value)" :value="getStoredTeamFilter('{{ (string) $season->id }}')">
                         <option value="">All teams</option>
                         @foreach ($teams as $team)
