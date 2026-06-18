@@ -54,6 +54,7 @@
     @unless ($historical ?? false)
     <a href="{{ route('team.historical', ['team' => $team->id]) }}" class="inline-link">Historical &rarr;</a>
     @endunless
+    <a href="{{ Illuminate\Support\Uri::of(route('team.calendar', ['team' => $team->id]))->withScheme('webcal') }}" class="inline-link">Team Calendar &rarr;</a>
 
     <section class="section-spacing">
         <h2 class="section-title stats">Statistics
