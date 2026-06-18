@@ -30,7 +30,7 @@ class ImportScheduleGameDayCommand extends Command
     if ($seasonId) {
       $this->importSeasonFromGameDay(Season::findOrFail($seasonId));
     } else {
-      $seasons = Season::whereJsonContains('competition_details', 'gameday_comp_id')->get();
+      $seasons = Season::where('competition_details->gameday_comp_id', '!=', null)->get();
       foreach ($seasons as $season) {
         $this->importSeasonFromGameDay($season);
       }
