@@ -133,7 +133,10 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                             @foreach ($games as $game)
                                 @if ($game->home_team->season->is($season))
                                 <li class="game-item" x-show="isGameVisible('{{ (string) $season->id }}', {{ $game->home_team->id }}, {{ $game->away_team->id }})">
-                                    @if($game->ended)
+                                    @if($game->status == 'washed_out')
+                                        <span class="game-washed-out">{{ $game->away_team->name }} @ {{ $game->home_team->name }} (Washed Out)</span>
+                                        <span class="game-location">(<span class="local-time" data-utc="{{ $game->firstPitch->toISOString() }}" data-format='{"month": "short", "day": "numeric", "year": "numeric"}'>{{ $game->firstPitch->format('M j, Y') }}</span>)</span>
+                                    @elseif($game->ended)
                                         @php $awayScore = $game->score[0]; $homeScore = $game->score[1]; @endphp
                                         <a href="{{ route('game.view', ['game' => $game->id]) }}">
                                             @if($awayScore > $homeScore)
