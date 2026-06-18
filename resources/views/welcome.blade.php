@@ -182,10 +182,10 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                     <a href="{{ route('team.edit', ['team' => $team->id]) }}" class="edit-link">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
+                                    @endcan
                                     <a href="{{ Illuminate\Support\Uri::of(route('team.calendar', ['team' => $team->id]))->withScheme('webcal') }}" class="schedule-link">
                                         <i class="fa-regular fa-calendar"></i>
                                     </a>
-                                    @endcan
                                 </li>
                                 @endif
                             @endforeach
