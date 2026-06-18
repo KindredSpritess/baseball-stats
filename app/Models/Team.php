@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereSecondaryColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereShortName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Team whereUpdatedAt($value)
+ * @method static \Database\Factories\TeamFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Team extends Model

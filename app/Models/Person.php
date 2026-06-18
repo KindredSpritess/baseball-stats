@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereThrows($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereUpdatedAt($value)
+ * @method static \Database\Factories\PersonFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Person extends Model
