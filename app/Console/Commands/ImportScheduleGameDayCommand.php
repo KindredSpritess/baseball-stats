@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Game;
 use App\Models\Season;
-use App\Models\Team;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\PendingRequest;
@@ -22,6 +21,7 @@ class ImportScheduleGameDayCommand extends Command
 
   public function handle()
   {
+    dump(posix_isatty(STDIN));
     $seasonId = $this->argument('season_id');
     $this->gamedayClient = Http::baseUrl(config('services.gameday.base_url'))
       ->withHeaders([
@@ -47,7 +47,7 @@ class ImportScheduleGameDayCommand extends Command
 
     if (!$compId) {
       // Ask for it.
-      $compId = $this->ask("Season '{$season->name}' does not have a GameDay Comp ID. Please enter the Comp ID to import games for this season, or leave blank to skip:");
+      $compId = posix_isatty(STDIN) && $this->ask("Season '{$season->name}' does not have a GameDay Comp ID. Please enter the Comp ID to import games for this season, or leave blank to skip:");
       if (!$compId) {
         $this->info("Skipping season '{$season->name}'");
         return;
@@ -71,6 +71,8 @@ class ImportScheduleGameDayCommand extends Command
       $pools = array_unique($matches[1]);
     }
 
+    $unknownGames = collect($deets['games'])->keys();
+
     // Now we have all the pools, we can import the games for each pool.
     foreach ($pools as $poolId) {
       $this->info("Importing games for pool ID: {$poolId}");
@@ -86,13 +88,18 @@ class ImportScheduleGameDayCommand extends Command
       $matches = [];
       preg_match('/var matches = (\[.*\]);$/m', $html, $matches);
       if (!empty($matches[1])) {
-        $games = json_decode($matches[1], true);
-        $teams = collect($games)
-          ->filter(fn($game) => !$game['isBye'])
+        $games = collect(json_decode($matches[1], true))->filter(fn($game) => !$game['isBye']);
+        $unknownGames = $unknownGames->diff($games->pluck('FixtureID'));
+        $teams = $games
           ->map(fn($game) => [$game['HomeID'] => $game['HomeName'], $game['AwayID'] => $game['AwayName']])
           ->collapseWithKeys();
         foreach ($teams as $teamId => $teamName) {
           if (!isset($deets['teams'][$teamId])) {
+            if (!posix_isatty(STDIN)) {
+              $this->warn("Team '{$teamName}' with ID '{$teamId}' does not exist in the database and cannot be imported because this command is not running in an interactive terminal. Skipping this team and any games involving it.");
+              return;
+            }
+
             // Try to find a team with this name, and if it doesn't exist, create it.
             $team = $season->teams()->firstWhere(['name' => $teamName]);
             if (!$team) {
@@ -113,7 +120,7 @@ class ImportScheduleGameDayCommand extends Command
         // Now we have the games for this pool, we can import them into the database.
         // But we need to make sure there aren't already games that exist.
         // We map FixtureID => GameID and store the mapping in the competition details for this season so we can update existing games instead of creating duplicates.
-        collect($games)->filter(fn($game) => !$game['isBye'])->each(function ($gameMeta) use (&$deets) {
+        $games->each(function ($gameMeta) use (&$deets) {
           // First check if the game already exists by looking for the FixtureID in the competition details.
           if (isset($deets['games'][$gameMeta['FixtureID']])) {
             $game = Game::find($deets['games'][$gameMeta['FixtureID']]);
@@ -171,19 +178,19 @@ class ImportScheduleGameDayCommand extends Command
             $deets['games'][$gameMeta['FixtureID']] = $game->id;
           }
         });
-
-
-        // foreach ($games as $game) {
-        //   $fixtureId = $game['FixtureID'];
-        //   $existingGameId = $fixtureIdToGameId[$fixtureId] ?? null;
-        //   $homeTeamId = $game['HomeID'];
-        //   $awayTeamId = $game['AwayID'];
-        //   $homeTeam = $teamIdToTeam[$homeTeamId] ?? null;
-        //   $awayTeam = $teamIdToTeam[$awayTeamId] ?? null;
-
-        //   // If some of the mappings don't exist, we'll first try to find the teams by name, and if they don't exist we'll create them.
       }
     }
+
+    if ($unknownGames->isNotEmpty()) {
+      $this->warn("The following FixtureIDs were found in the database but not in the GameDay import. This may mean they were deleted from GameDay, or that they were manually added to the database without a corresponding GameDay FixtureID. You can choose to delete these games from the database to keep it in sync with GameDay, or keep them if you think they might be valid games that just don't have a FixtureID.");
+    }
+    $unknownGames->each(function ($fixtureId) use (&$deets) {
+      $game = Game::find($deets['games'][$fixtureId]);
+      if ($game && posix_isatty(STDIN) && $this->confirm("Do you want to delete the game '{$game->homeTeam->name} vs {$game->awayTeam->name}' on {$game->firstPitch->toDateString()}?")) {
+        $game->delete();
+        unset($deets['games'][$fixtureId]);
+      }
+    });
 
     $season->competition_details = $deets;
     $season->save();
