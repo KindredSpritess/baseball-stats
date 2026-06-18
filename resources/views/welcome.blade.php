@@ -3,6 +3,10 @@
 Welcome
 @endsection
 
+@section('head')
+<script src="https://kit.fontawesome.com/cc3e56010d.js" crossorigin="anonymous"></script>
+@endsection
+
 @section('content')
 @php
 $now = \Carbon\CarbonImmutable::now();
@@ -174,6 +178,14 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                 @if ($team->season->is($season))
                                 <li class="game-item teams">
                                     <a href="{{ route('team', ['team' => $team->id]) }}">{{ $team->name }}</a>
+                                    @can('edit-team', $team)
+                                    <a href="{{ route('team.edit', ['team' => $team->id]) }}" class="edit-link">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="{{ Illuminate\Support\Uri::of(route('team.calendar', ['team' => $team->id]))->withScheme('webcal') }}" class="schedule-link">
+                                        <i class="fa-regular fa-calendar"></i>
+                                    </a>
+                                    @endcan
                                 </li>
                                 @endif
                             @endforeach
