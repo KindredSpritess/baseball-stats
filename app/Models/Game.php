@@ -43,6 +43,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereLocked($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereUpdatedAt($value)
+ * @property int|null $scorer_id
+ * @property string|null $status
+ * @property-read \App\Models\User|null $scorer
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereMetadata($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereScorerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereTimeZone($value)
  * @mixin \Eloquent
  */
 class Game extends Model
@@ -81,7 +88,7 @@ class Game extends Model
 
     public Collection $ballsInPlay;
 
-    protected $fillable = ['location', 'firstPitch', 'duration', 'dimensions'];
+    protected $fillable = ['home', 'away', 'location', 'firstPitch', 'duration', 'dimensions', 'status', 'ended'];
 
     protected $casts = [
         'state' => GameState::class,

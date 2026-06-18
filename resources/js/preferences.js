@@ -8,4 +8,5 @@ createApp(Preferences, {
   loadUrl: element.dataset.loadUrl,
   saveUrl: element.dataset.saveUrl,
   initialPreferences: element.dataset.initialPreferences ? JSON.parse(element.dataset.initialPreferences) : null,
+  initialCompetitionDetails: element.dataset.initialCompetitionDetails ? JSON.parse(element.dataset.initialCompetitionDetails) : null,
 }).mount('#preferences-app');

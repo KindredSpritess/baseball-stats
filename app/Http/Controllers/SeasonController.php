@@ -28,14 +28,17 @@ class SeasonController extends Controller
     public function getPreferences(Season $season) {
         return response()->json([
             'preferences' => $season->scoring_rules ?? [],
+            'competition_details' => $season->competition_details ?? [],
         ]);
     }
 
     public function storePreferences(Request $request, Season $season) {
         $data = $request->validate([
             'preferences' => 'nullable|array',
+            'competition_details' => 'nullable|array',
         ]);
         $season->scoring_rules = $data['preferences'] ?? [];
+        $season->competition_details = [...($season->competition_details ?? []), ...($data['competition_details'] ?? [])];
         $season->save();
         return response()->json(['status' => 'success']);
     }

@@ -37,6 +37,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @property array<array-key, mixed>|null $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Season> $seasons
+ * @property-read int|null $seasons_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePreferences($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable

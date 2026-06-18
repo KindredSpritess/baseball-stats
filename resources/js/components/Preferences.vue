@@ -65,6 +65,12 @@
           <input type="number" v-model="preferences.basePath" min="0" placeholder="90" />
         </label>
       </div>
+      <div class="preference-item" v-if="'gameday_comp_id' in competition_details">
+        <label>
+          GameDay ID:&nbsp;
+          <input type="text" v-model="competition_details.gameday_comp_id" placeholder="0-12345-0-123456-0" />
+        </label>
+      </div>
       <button type="submit" :disabled="saving">Save {{ entityName }}</button>
     </form>
   </div>
@@ -99,11 +105,16 @@ export default {
         balksCanCountTowardPitchCount: false,
         lineupDefensiveChanges: false,
       })
-    }
+    },
+    initialCompetitionDetails: {
+      type: Object,
+      default: () => ({})
+    },
   },
   data() {
     return {
       preferences: { ...this.initialPreferences },
+      competition_details: { ...this.initialCompetitionDetails },
       flashMessage: null,
       saving: false,
       flashTimeout: null,
@@ -123,6 +134,7 @@ export default {
         const data = await response.json();
         if (data.preferences) {
           this.preferences = { ...this.initialPreferences, ...data.preferences };
+          this.competition_details = { ...this.initialCompetitionDetails, ...data.competition_details };
         }
       } catch (error) {
         console.error('Failed to load preferences:', error);
@@ -139,7 +151,7 @@ export default {
             'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           },
-          body: JSON.stringify({ preferences: this.preferences }),
+          body: JSON.stringify({ preferences: this.preferences, competition_details: this.competition_details }),
         });
         if (response.ok) {
           this.showFlashMessage(`${this.entityName} saved successfully!`, 'success');

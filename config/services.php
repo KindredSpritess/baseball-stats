@@ -36,4 +36,8 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
+
+    'gameday' => [
+        'base_url' => env('GAMEDAY_BASE_URL', 'https://websites.mygameday.app/comp_info.cgi'),
+    ],
 ];

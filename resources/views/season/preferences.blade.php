@@ -23,6 +23,9 @@
             &quot;balksCanCountTowardPitchCount&quot;: false,
             &quot;basePath&quot;: 90
           }"
+          data-initial-competition-details="{
+            &quot;gameday_comp_id&quot;: null
+          }"
         ></div>
     </div>
 </div>
