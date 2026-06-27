@@ -1034,7 +1034,7 @@ const animateFieldersForPlay = (battedBall, outs, runners) => {
     } else if (action.type === 'moveToCutoff') {
       const basePos = FIELDER_COVER_BASE_POSITIONS[action.toBase] ?? null;
       if (basePos && ballLandingPos) {
-        // Position 45 % of the way from the base toward the ball (relay / cutoff spot)
+        // Position 45% of the way from the base toward the ball (relay / cutoff spot)
         targetPosition = BABYLON.Vector3.Lerp(basePos, ballLandingPos, 0.45);
       }
     }
