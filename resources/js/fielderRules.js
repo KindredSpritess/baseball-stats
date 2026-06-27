@@ -26,15 +26,17 @@
  *   toBase: number | 'home'   For moveToCutoff — target base for the relay throw.
  */
 
-const HOME_PLATE_X = 224;
-const INFIELD_MAX_DISTANCE = 90;
+// SVG-coordinate and field-distance thresholds used for sectoring.
+// Distances are in feet from home plate.
+export const HOME_PLATE_SVG_X = 224;
+const INFIELD_MAX_DISTANCE = 90; // feet
 const SIDE_LEFT_MAX_X = 180;
 const SIDE_RIGHT_MIN_X = 268;
 const DEFAULT_RING = 2;
-const INFIELD_RING_NEAR_MAX_DISTANCE = 30;
-const INFIELD_RING_MID_MAX_DISTANCE = 60;
-const OUTFIELD_RING_NEAR_MAX_DISTANCE = 180;
-const OUTFIELD_RING_MID_MAX_DISTANCE = 270;
+const INFIELD_RING_NEAR_MAX_DISTANCE = 30; // feet
+const INFIELD_RING_MID_MAX_DISTANCE = 60; // feet
+const OUTFIELD_RING_NEAR_MAX_DISTANCE = 180; // feet
+const OUTFIELD_RING_MID_MAX_DISTANCE = 270; // feet
 const INFIELD_LANE_1_MAX_X = 160;
 const INFIELD_LANE_3_MAX_X = 288;
 
@@ -54,7 +56,7 @@ const getOutfieldRing = (distance) => {
 
 const getInfieldLane = (x) => {
   if (x < INFIELD_LANE_1_MAX_X) return 1;
-  if (x < HOME_PLATE_X) return 2;
+  if (x < HOME_PLATE_SVG_X) return 2;
   if (x < INFIELD_LANE_3_MAX_X) return 3;
   return 4;
 };
@@ -129,9 +131,9 @@ export function getBallSector(ballPosition, distance) {
 export function getRunnerBitmask(runners) {
   let bitmask = 0;
   if (runners) {
-    if (runners[1]) bitmask |= 1;
-    if (runners[2]) bitmask |= 2;
-    if (runners[3]) bitmask |= 4;
+    if (runners[1]) bitmask |= (1 << 0);
+    if (runners[2]) bitmask |= (1 << 1);
+    if (runners[3]) bitmask |= (1 << 2);
   }
   return bitmask;
 }
