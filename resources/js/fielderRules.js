@@ -28,37 +28,46 @@
 
 const HOME_PLATE_X = 224;
 const INFIELD_MAX_DISTANCE = 90;
+const SIDE_LEFT_MAX_X = 180;
+const SIDE_RIGHT_MIN_X = 268;
+const DEFAULT_RING = 2;
+const INFIELD_RING_NEAR_MAX_DISTANCE = 30;
+const INFIELD_RING_MID_MAX_DISTANCE = 60;
+const OUTFIELD_RING_NEAR_MAX_DISTANCE = 180;
+const OUTFIELD_RING_MID_MAX_DISTANCE = 270;
+const INFIELD_LANE_1_MAX_X = 160;
+const INFIELD_LANE_3_MAX_X = 288;
 
 const getInfieldRing = (distance) => {
-  if (distance === null || distance === undefined) return 2;
-  if (distance < 30) return 1;
-  if (distance < 60) return 2;
+  if (distance === null || distance === undefined) return DEFAULT_RING;
+  if (distance < INFIELD_RING_NEAR_MAX_DISTANCE) return 1;
+  if (distance < INFIELD_RING_MID_MAX_DISTANCE) return 2;
   return 3;
 };
 
 const getOutfieldRing = (distance) => {
-  if (distance === null || distance === undefined) return 2;
-  if (distance < 180) return 1;
-  if (distance < 270) return 2;
+  if (distance === null || distance === undefined) return DEFAULT_RING;
+  if (distance < OUTFIELD_RING_NEAR_MAX_DISTANCE) return 1;
+  if (distance < OUTFIELD_RING_MID_MAX_DISTANCE) return 2;
   return 3;
 };
 
 const getInfieldLane = (x) => {
-  if (x < 160) return 1;
+  if (x < INFIELD_LANE_1_MAX_X) return 1;
   if (x < HOME_PLATE_X) return 2;
-  if (x < 288) return 3;
+  if (x < INFIELD_LANE_3_MAX_X) return 3;
   return 4;
 };
 
 const getOutfieldLane = (x) => {
-  if (x < 180) return 1;
-  if (x <= 268) return 2;
+  if (x < SIDE_LEFT_MAX_X) return 1;
+  if (x <= SIDE_RIGHT_MIN_X) return 2;
   return 3;
 };
 
 const getBallSide = (x) => {
-  if (x < 180) return 'left';
-  if (x > 268) return 'right';
+  if (x < SIDE_LEFT_MAX_X) return 'left';
+  if (x > SIDE_RIGHT_MIN_X) return 'right';
   return 'center';
 };
 

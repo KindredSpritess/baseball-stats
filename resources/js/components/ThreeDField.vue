@@ -871,21 +871,24 @@ const animateRunner = (playerId, startBase, actions, color, waitForPitch) => {
  * @param {Object | null} battedBall  { position: [svgX, svgY], distance: number, type: string }
  * @returns {BABYLON.Vector3 | null}
  */
+const HOME_PLATE_SVG_X = 224;
+const HOME_PLATE_SVG_Y = 405;
+
 const getBallLandingPosition = (battedBall) => {
   if (!battedBall || !basePositions.home) return null;
 
   const baseDistance = Math.sqrt(
-    Math.pow(battedBall.position[0] - 224, 2) +
-    Math.pow(battedBall.position[1] - 405, 2)
+    Math.pow(battedBall.position[0] - HOME_PLATE_SVG_X, 2) +
+    Math.pow(battedBall.position[1] - HOME_PLATE_SVG_Y, 2)
   );
 
   if (baseDistance === 0) return basePositions.home.clone();
 
   const d = battedBall.distance || 0;
   return basePositions.home.add(new BABYLON.Vector3(
-    -(battedBall.position[0] - 224) / baseDistance * d,
+    -(battedBall.position[0] - HOME_PLATE_SVG_X) / baseDistance * d,
     0,
-    (battedBall.position[1] - 405) / baseDistance * d
+    (battedBall.position[1] - HOME_PLATE_SVG_Y) / baseDistance * d
   ));
 };
 
@@ -1041,7 +1044,7 @@ const animateFieldersForPlay = (battedBall, outs, runners) => {
     } else if (action.type === 'moveToCutoff') {
       const basePos = FIELDER_COVER_BASE_POSITIONS[action.toBase] ?? null;
       if (basePos && ballLandingPos) {
-        // Position 45% of the way from the base toward the ball (relay / cutoff spot)
+        // Lerp(basePos, ballLandingPos, ratio): place fielder 45% of the way from base toward ball.
         targetPosition = BABYLON.Vector3.Lerp(basePos, ballLandingPos, CUTOFF_POSITION_RATIO);
       }
     }
