@@ -889,18 +889,25 @@ const getBallLandingPosition = (battedBall) => {
   ));
 };
 
+const DEFAULT_BALL_HEIGHT = 4;
+const DEFAULT_BALL_FORWARD_OFFSET = 10;
+const FIELDER_SPEED = 60;
+const MIN_FIELDER_ANIMATION_DURATION = 0.4;
+const MAX_FIELDER_ANIMATION_DURATION = 4;
+const CUTOFF_POSITION_RATIO = 0.45;
+
 const animateBall = (battedBall) => {
   if (!scene) return;
 
   const ball = BABYLON.MeshBuilder.CreateSphere('battedBall', {diameter: 2}, scene);
   ball.material = getBaseballMaterial();
-  ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, 4, 0));
+  ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, 0));
   ball.rotation = new BABYLON.Vector3(Math.PI / 8, 0, Math.PI / 6)
 
   const d = battedBall?.distance || 0;
   const targetPosition = battedBall
-    ? (getBallLandingPosition(battedBall) ?? basePositions.home.add(new BABYLON.Vector3(0, 4, 0)))
-    : basePositions.home.add(new BABYLON.Vector3(0, 4, 10));
+    ? (getBallLandingPosition(battedBall) ?? basePositions.home.add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, 0)))
+    : basePositions.home.add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, DEFAULT_BALL_FORWARD_OFFSET));
 
   const trajectory = {
     'F': { height: d * 0.3, duration: d / 73 * 30, parabolic: true, bounces: 0 },
@@ -991,7 +998,7 @@ const animateFielder = (pos, targetPosition) => {
 
   const distance = BABYLON.Vector3.Distance(mesh.position, targetPosition);
   // Speed ~60 units/s; clamp to [0.4, 4] seconds
-  const duration = Math.min(4, Math.max(0.4, distance / 60));
+  const duration = Math.min(MAX_FIELDER_ANIMATION_DURATION, Math.max(MIN_FIELDER_ANIMATION_DURATION, distance / FIELDER_SPEED));
   const frames = Math.round(duration * 30);
 
   BABYLON.Animation.CreateAndStartAnimation(
@@ -1035,7 +1042,7 @@ const animateFieldersForPlay = (battedBall, outs, runners) => {
       const basePos = FIELDER_COVER_BASE_POSITIONS[action.toBase] ?? null;
       if (basePos && ballLandingPos) {
         // Position 45% of the way from the base toward the ball (relay / cutoff spot)
-        targetPosition = BABYLON.Vector3.Lerp(basePos, ballLandingPos, 0.45);
+        targetPosition = BABYLON.Vector3.Lerp(basePos, ballLandingPos, CUTOFF_POSITION_RATIO);
       }
     }
 

@@ -62,6 +62,11 @@ const getBallSide = (x) => {
   return 'center';
 };
 
+const matchesArrayCondition = (conditionValues, value) => {
+  if (!conditionValues) return true;
+  return conditionValues.includes(value ?? null);
+};
+
 /**
  * Determine the area/side/sector of a batted ball from its SVG-coordinate position.
  *
@@ -75,7 +80,7 @@ export function getBallContext(ballPosition, distance) {
   const x = ballPosition[0];
   const side = getBallSide(x);
 
-  if (distance !== null && distance !== undefined && distance < INFIELD_MAX_DISTANCE) {
+  if (distance != null && distance < INFIELD_MAX_DISTANCE) {
     const ring = getInfieldRing(distance);
     const lane = getInfieldLane(x);
     return {
@@ -133,12 +138,12 @@ export function getRunnerBitmask(runners) {
  * @returns {boolean}
  */
 function matchesCondition(condition, outs, runnerBitmask, ballContext, trajectory) {
-  if (condition.outs && !condition.outs.includes(outs)) return false;
-  if (condition.runners && !condition.runners.includes(runnerBitmask)) return false;
-  if (condition.trajectory && !condition.trajectory.includes(trajectory)) return false;
-  if (condition.area && !condition.area.includes(ballContext?.area ?? null)) return false;
-  if (condition.side && !condition.side.includes(ballContext?.side ?? null)) return false;
-  if (condition.sector && !condition.sector.includes(ballContext?.sector ?? null)) return false;
+  if (!matchesArrayCondition(condition.outs, outs)) return false;
+  if (!matchesArrayCondition(condition.runners, runnerBitmask)) return false;
+  if (!matchesArrayCondition(condition.trajectory, trajectory)) return false;
+  if (!matchesArrayCondition(condition.area, ballContext?.area)) return false;
+  if (!matchesArrayCondition(condition.side, ballContext?.side)) return false;
+  if (!matchesArrayCondition(condition.sector, ballContext?.sector)) return false;
   return true;
 }
 
