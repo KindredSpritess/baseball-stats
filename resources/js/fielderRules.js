@@ -21,7 +21,7 @@
  *                            outfield: of-<ring>-<lane> (9 total; ring 1..3, lane 1..3)
  *
  * --- Action fields ---
- *   type:   'catchBall' | 'pickUpBall' | 'moveToBase' | 'moveToCutoff'
+ *   type:   'moveToBall' | 'catchBall' | 'pickUpBall' | 'moveToBase' | 'moveToCutoff'
  *   base:   number | 'home'   For moveToBase — which base to cover: 1, 2, 3, or 'home'.
  *   toBase: number | 'home'   For moveToCutoff — target base for the relay throw.
  */
@@ -30,14 +30,14 @@ const HOME_PLATE_X = 224;
 const INFIELD_MAX_DISTANCE = 90;
 
 const getInfieldRing = (distance) => {
-  if (distance == null) return 2;
+  if (distance === null || distance === undefined) return 2;
   if (distance < 30) return 1;
   if (distance < 60) return 2;
   return 3;
 };
 
 const getOutfieldRing = (distance) => {
-  if (distance == null) return 2;
+  if (distance === null || distance === undefined) return 2;
   if (distance < 180) return 1;
   if (distance < 270) return 2;
   return 3;
@@ -75,7 +75,7 @@ export function getBallContext(ballPosition, distance) {
   const x = ballPosition[0];
   const side = getBallSide(x);
 
-  if (distance != null && distance < INFIELD_MAX_DISTANCE) {
+  if (distance !== null && distance !== undefined && distance < INFIELD_MAX_DISTANCE) {
     const ring = getInfieldRing(distance);
     const lane = getInfieldLane(x);
     return {
