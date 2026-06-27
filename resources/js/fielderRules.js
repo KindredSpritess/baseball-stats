@@ -28,11 +28,13 @@
 
 // SVG-coordinate and field-distance thresholds used for sectoring.
 // Distances are in feet from home plate.
+// Exported so ThreeDField and sector rules stay aligned on the same SVG frame.
 export const HOME_PLATE_SVG_X = 224;
 const INFIELD_MAX_DISTANCE = 90; // feet
 const SIDE_LEFT_MAX_X = 180;
 const SIDE_RIGHT_MIN_X = 268;
 const DEFAULT_RING = 2;
+// Ring thresholds split the playable area into near/mid/deep handling zones.
 const INFIELD_RING_NEAR_MAX_DISTANCE = 30; // feet
 const INFIELD_RING_MID_MAX_DISTANCE = 60; // feet
 const OUTFIELD_RING_NEAR_MAX_DISTANCE = 180; // feet
@@ -91,7 +93,7 @@ export function getBallContext(ballPosition, distance) {
   const x = ballPosition[0];
   const side = getBallSide(x);
 
-  if (distance != null && distance < INFIELD_MAX_DISTANCE) {
+  if (distance !== null && distance !== undefined && distance < INFIELD_MAX_DISTANCE) {
     const ring = getInfieldRing(distance);
     const lane = getInfieldLane(x);
     return {

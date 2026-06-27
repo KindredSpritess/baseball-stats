@@ -872,6 +872,7 @@ const animateRunner = (playerId, startBase, actions, color, waitForPitch) => {
  * @returns {BABYLON.Vector3 | null}
  */
 const HOME_PLATE_SVG_Y = 405;
+const MIN_BASE_DISTANCE_EPSILON = 0.1;
 
 const getBallLandingPosition = (battedBall) => {
   if (!battedBall || !basePositions.home) return null;
@@ -881,7 +882,7 @@ const getBallLandingPosition = (battedBall) => {
     Math.pow(battedBall.position[1] - HOME_PLATE_SVG_Y, 2)
   );
 
-  if (baseDistance === 0) return basePositions.home.clone();
+  if (baseDistance < MIN_BASE_DISTANCE_EPSILON) return basePositions.home.clone();
 
   const d = battedBall.distance || 0;
   return basePositions.home.add(new BABYLON.Vector3(
@@ -897,6 +898,7 @@ const DEFAULT_BALL_FORWARD_OFFSET = 10;
 const FIELDER_SPEED = 60;
 const MIN_FIELDER_ANIMATION_DURATION = 0.4;
 const MAX_FIELDER_ANIMATION_DURATION = 4;
+const MIN_FIELDER_MOVEMENT_DISTANCE = 0.1;
 // Ratio along base-to-ball vector for cutoff positioning (45% from base toward ball).
 const CUTOFF_POSITION_RATIO = 0.45;
 
@@ -1001,7 +1003,7 @@ const animateFielder = (pos, targetPosition) => {
   if (!mesh) return 0;
 
   const distance = BABYLON.Vector3.Distance(mesh.position, targetPosition);
-  if (distance < 0.1) return 0;
+  if (distance < MIN_FIELDER_MOVEMENT_DISTANCE) return 0;
   // Speed ~60 units/s; clamp to [0.4, 4] seconds
   const duration = Math.min(MAX_FIELDER_ANIMATION_DURATION, Math.max(MIN_FIELDER_ANIMATION_DURATION, distance / FIELDER_SPEED));
   const frames = Math.round(duration * 30);
