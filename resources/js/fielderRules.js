@@ -14,40 +14,95 @@
  *                          e.g. [0] = bases empty, [7] = bases loaded.
  *   trajectory: string[]   Ball trajectory types: 'F' fly, 'L' line drive,
  *                            'G' ground ball, 'B' bunt, 'P' pop-up.
- *   sector:     string[]   Horizontal zone of the batted ball:
- *                            'left'    — LF / 3B side (SVG x < 180)
- *                            'center'  — CF area     (SVG 180 ≤ x ≤ 268)
- *                            'right'   — RF / 1B side (SVG x > 268)
- *                            'infield' — shallow hit (distance < 90 ft)
+ *   area:       string[]   Vertical area of the batted ball: 'infield' | 'outfield'.
+ *   side:       string[]   Lateral side of the batted ball: 'left' | 'center' | 'right'.
+ *   sector:     string[]   Fine-grained sector id of the batted ball:
+ *                            infield:  if-<ring>-<lane> (12 total; ring 1..3, lane 1..4)
+ *                            outfield: of-<ring>-<lane> (9 total; ring 1..3, lane 1..3)
  *
  * --- Action fields ---
- *   type:   'moveToBall' | 'moveToBase' | 'moveToCutoff'
+ *   type:   'catchBall' | 'pickUpBall' | 'moveToBase' | 'moveToCutoff'
  *   base:   number | 'home'   For moveToBase — which base to cover: 1, 2, 3, or 'home'.
  *   toBase: number | 'home'   For moveToCutoff — target base for the relay throw.
  */
 
+const HOME_PLATE_X = 224;
+const INFIELD_MAX_DISTANCE = 90;
+
+const getInfieldRing = (distance) => {
+  if (distance == null) return 2;
+  if (distance < 30) return 1;
+  if (distance < 60) return 2;
+  return 3;
+};
+
+const getOutfieldRing = (distance) => {
+  if (distance == null) return 2;
+  if (distance < 180) return 1;
+  if (distance < 270) return 2;
+  return 3;
+};
+
+const getInfieldLane = (x) => {
+  if (x < 160) return 1;
+  if (x < HOME_PLATE_X) return 2;
+  if (x < 288) return 3;
+  return 4;
+};
+
+const getOutfieldLane = (x) => {
+  if (x < 180) return 1;
+  if (x <= 268) return 2;
+  return 3;
+};
+
+const getBallSide = (x) => {
+  if (x < 180) return 'left';
+  if (x > 268) return 'right';
+  return 'center';
+};
+
 /**
- * Determine the lateral/depth sector of a batted ball from its SVG-coordinate position.
+ * Determine the area/side/sector of a batted ball from its SVG-coordinate position.
  *
- * In the SVG coordinate system (also used for ball positions):
- *   x < 224 — left field / 3B side (batter's left, standard LF)
- *   x > 224 — right field / 1B side (batter's right, standard RF)
+ * @param {number[] | null} ballPosition  [x, y] in SVG coords, or null
+ * @param {number} [distance]             Optional distance from home plate (feet)
+ * @returns {{ area: string, side: string, sector: string } | null}
+ */
+export function getBallContext(ballPosition, distance) {
+  if (!ballPosition) return null;
+
+  const x = ballPosition[0];
+  const side = getBallSide(x);
+
+  if (distance != null && distance < INFIELD_MAX_DISTANCE) {
+    const ring = getInfieldRing(distance);
+    const lane = getInfieldLane(x);
+    return {
+      area: 'infield',
+      side,
+      sector: `if-${ring}-${lane}`,
+    };
+  }
+
+  const ring = getOutfieldRing(distance);
+  const lane = getOutfieldLane(x);
+  return {
+    area: 'outfield',
+    side,
+    sector: `of-${ring}-${lane}`,
+  };
+}
+
+/**
+ * Determine the fine-grained sector id of a batted ball.
  *
  * @param {number[] | null} ballPosition  [x, y] in SVG coords, or null
  * @param {number} [distance]             Optional distance from home plate
  * @returns {string | null}               Sector string, or null when no ball
  */
 export function getBallSector(ballPosition, distance) {
-  if (!ballPosition) return null;
-
-  const x = ballPosition[0];
-
-  // Shallow / infield hit overrides lateral classification
-  if (distance != null && distance < 90) return 'infield';
-
-  if (x < 180) return 'left';
-  if (x > 268) return 'right';
-  return 'center';
+  return getBallContext(ballPosition, distance)?.sector ?? null;
 }
 
 /**
@@ -73,15 +128,17 @@ export function getRunnerBitmask(runners) {
  * @param {Object} condition
  * @param {number} outs
  * @param {number} runnerBitmask
- * @param {string | null} sector
+ * @param {{ area: string, side: string, sector: string } | null} ballContext
  * @param {string | null} trajectory
  * @returns {boolean}
  */
-function matchesCondition(condition, outs, runnerBitmask, sector, trajectory) {
+function matchesCondition(condition, outs, runnerBitmask, ballContext, trajectory) {
   if (condition.outs && !condition.outs.includes(outs)) return false;
   if (condition.runners && !condition.runners.includes(runnerBitmask)) return false;
   if (condition.trajectory && !condition.trajectory.includes(trajectory)) return false;
-  if (condition.sector && !condition.sector.includes(sector)) return false;
+  if (condition.area && !condition.area.includes(ballContext?.area ?? null)) return false;
+  if (condition.side && !condition.side.includes(ballContext?.side ?? null)) return false;
+  if (condition.sector && !condition.sector.includes(ballContext?.sector ?? null)) return false;
   return true;
 }
 
@@ -96,51 +153,51 @@ export const FIELDER_RULES = [
 
   // Left field — LF chases ball, SS takes cutoff, 3B covers third
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['left'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['left'] },
     fielder: 7,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['left'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['left'] },
     fielder: 6,
     action: { type: 'moveToCutoff', toBase: 'home' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['left'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['left'] },
     fielder: 5,
     action: { type: 'moveToBase', base: 3 },
   },
 
   // Center field — CF chases ball, SS takes cutoff, 2B covers second
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['center'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['center'] },
     fielder: 8,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['center'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['center'] },
     fielder: 6,
     action: { type: 'moveToCutoff', toBase: 'home' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['center'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['center'] },
     fielder: 4,
     action: { type: 'moveToBase', base: 2 },
   },
 
   // Right field — RF chases ball, 2B takes cutoff, 1B covers first
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['right'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['right'] },
     fielder: 9,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['right'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['right'] },
     fielder: 4,
     action: { type: 'moveToCutoff', toBase: 'home' },
   },
   {
-    conditions: { trajectory: ['F', 'L'], sector: ['right'] },
+    conditions: { trajectory: ['F', 'L'], area: ['outfield'], side: ['right'] },
     fielder: 3,
     action: { type: 'moveToBase', base: 1 },
   },
@@ -149,51 +206,51 @@ export const FIELDER_RULES = [
 
   // Ground ball to left (3B/SS side) — SS fields, 1B covers first, 2B covers second
   {
-    conditions: { trajectory: ['G'], sector: ['left'] },
+    conditions: { trajectory: ['G'], side: ['left'] },
     fielder: 6,
-    action: { type: 'moveToBall' },
+    action: { type: 'pickUpBall' },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['left'] },
+    conditions: { trajectory: ['G'], side: ['left'] },
     fielder: 3,
     action: { type: 'moveToBase', base: 1 },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['left'] },
+    conditions: { trajectory: ['G'], side: ['left'] },
     fielder: 4,
     action: { type: 'moveToBase', base: 2 },
   },
 
   // Ground ball up the middle (center) — 2B fields, 1B covers first, SS covers second
   {
-    conditions: { trajectory: ['G'], sector: ['center'] },
+    conditions: { trajectory: ['G'], side: ['center'] },
     fielder: 4,
-    action: { type: 'moveToBall' },
+    action: { type: 'pickUpBall' },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['center'] },
+    conditions: { trajectory: ['G'], side: ['center'] },
     fielder: 3,
     action: { type: 'moveToBase', base: 1 },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['center'] },
+    conditions: { trajectory: ['G'], side: ['center'] },
     fielder: 6,
     action: { type: 'moveToBase', base: 2 },
   },
 
   // Ground ball to right (1B/2B side) — 1B fields, P covers first, SS covers second
   {
-    conditions: { trajectory: ['G'], sector: ['right'] },
+    conditions: { trajectory: ['G'], side: ['right'] },
     fielder: 3,
-    action: { type: 'moveToBall' },
+    action: { type: 'pickUpBall' },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['right'] },
+    conditions: { trajectory: ['G'], side: ['right'] },
     fielder: 1,
     action: { type: 'moveToBase', base: 1 },
   },
   {
-    conditions: { trajectory: ['G'], sector: ['right'] },
+    conditions: { trajectory: ['G'], side: ['right'] },
     fielder: 6,
     action: { type: 'moveToBase', base: 2 },
   },
@@ -204,12 +261,12 @@ export const FIELDER_RULES = [
   {
     conditions: { trajectory: ['B'] },
     fielder: 1,
-    action: { type: 'moveToBall' },
+    action: { type: 'pickUpBall' },
   },
   {
     conditions: { trajectory: ['B'] },
     fielder: 2,
-    action: { type: 'moveToBall' },
+    action: { type: 'pickUpBall' },
   },
   {
     conditions: { trajectory: ['B'] },
@@ -219,42 +276,42 @@ export const FIELDER_RULES = [
 
   // ── POP-UPS ───────────────────────────────────────────────────────────────
 
-  // Infield pop-up (any sector) — C calls for it near home
+  // Infield pop-up (any infield sector) — C calls for it near home
   {
-    conditions: { trajectory: ['P'], sector: ['infield'] },
+    conditions: { trajectory: ['P'], area: ['infield'] },
     fielder: 2,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
 
   // Pop-up to the left (3B/SS side) — SS fields, 3B backs up
   {
-    conditions: { trajectory: ['P'], sector: ['left'] },
+    conditions: { trajectory: ['P'], area: ['outfield'], side: ['left'] },
     fielder: 6,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
   {
-    conditions: { trajectory: ['P'], sector: ['left'] },
+    conditions: { trajectory: ['P'], area: ['outfield'], side: ['left'] },
     fielder: 5,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
 
   // Pop-up to center — 2B or SS fields
   {
-    conditions: { trajectory: ['P'], sector: ['center'] },
+    conditions: { trajectory: ['P'], area: ['outfield'], side: ['center'] },
     fielder: 4,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
 
   // Pop-up to the right (1B/2B side) — 2B fields, 1B backs up
   {
-    conditions: { trajectory: ['P'], sector: ['right'] },
+    conditions: { trajectory: ['P'], area: ['outfield'], side: ['right'] },
     fielder: 4,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
   {
-    conditions: { trajectory: ['P'], sector: ['right'] },
+    conditions: { trajectory: ['P'], area: ['outfield'], side: ['right'] },
     fielder: 3,
-    action: { type: 'moveToBall' },
+    action: { type: 'catchBall' },
   },
 ];
 
@@ -270,10 +327,10 @@ export function getFielderMovements(outs, runners, battedBall) {
   if (!battedBall) return [];
 
   const runnerBitmask = getRunnerBitmask(runners);
-  const sector = getBallSector(battedBall.position, battedBall.distance);
+  const ballContext = getBallContext(battedBall.position, battedBall.distance);
   const trajectory = battedBall.type;
 
   return FIELDER_RULES
-    .filter(rule => matchesCondition(rule.conditions, outs, runnerBitmask, sector, trajectory))
+    .filter(rule => matchesCondition(rule.conditions, outs, runnerBitmask, ballContext, trajectory))
     .map(rule => ({ fielder: rule.fielder, action: rule.action }));
 }

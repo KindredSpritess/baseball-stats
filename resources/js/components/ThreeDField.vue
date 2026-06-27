@@ -1027,7 +1027,7 @@ const animateFieldersForPlay = (battedBall, outs, runners) => {
   for (const { fielder, action } of movements) {
     let targetPosition = null;
 
-    if (action.type === 'moveToBall') {
+    if (action.type === 'moveToBall' || action.type === 'catchBall' || action.type === 'pickUpBall') {
       targetPosition = ballLandingPos;
     } else if (action.type === 'moveToBase') {
       targetPosition = FIELDER_COVER_BASE_POSITIONS[action.base] ?? null;
