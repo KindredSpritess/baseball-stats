@@ -63,6 +63,7 @@ Route::controller(GameController::class)->group(function() {
     Route::post('/game/{game}/undo', 'undoLastPlay')->name('game.undoLastPlay')->middleware('can:score-game,game');
     Route::patch('/game/{game}/log', 'plays')->name('fullgamelog')->middleware('can:score-game,game');
     Route::get('/game/{game}/boxscore', 'boxscore')->name('game.boxscore');
+    Route::post('/game/{game}/swap', 'swap')->name('game.swap');
 });
 
 Route::controller(TeamController::class)->group(function () {

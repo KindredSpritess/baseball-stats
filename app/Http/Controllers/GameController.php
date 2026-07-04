@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
@@ -390,14 +391,14 @@ class GameController extends Controller
      *
      * @param Game $game
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function exportScorebook(Game $game, Request $request)
     {
         $teamFilter = $request->query('team');
         
         // Run the artisan command
-        \Illuminate\Support\Facades\Artisan::call('scorebook:export', [
+        Artisan::call('scorebook:export', [
             'game' => $game->id,
             '--team' => $teamFilter,
         ]);
@@ -412,5 +413,25 @@ class GameController extends Controller
 
         // Redirect to the generated HTML file
         return redirect("/storage/scorebooks/{$filename}");
+    }
+
+    /**
+     * Swap the home and away teams.
+     *
+     * @param Game $game
+     * @return RedirectResponse
+     */
+    public function swap(Game $game) {
+        $temp = $game->home;
+        $game->home = $game->away;
+        $game->away = $temp;
+        $game->save();
+
+        // Replay the game to recalculate stats and state using the reprocess command.
+        Artisan::call('games:reprocess', [
+            'game' => $game->id,
+        ]);
+        GameUpdated::dispatch($game->id, null, null, null, true);
+        return redirect()->route('game', ['game' => $game->id])->with('success', 'Teams swapped and game reprocessed.');
     }
 }
