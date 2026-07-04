@@ -45,12 +45,12 @@
     const context = cast.framework.CastReceiverContext.getInstance();
     context.addEventListener(cast.framework.system.EventType.READY, () => {
         if (!castDebugLogger.debugOverlayElement_) {
-            // Enable debug logger and show a 'DEBUG MODE' overlay at top left corner.
-            castDebugLogger.setEnabled(true);
-            // Show debug overlay
-            castDebugLogger.showDebugLogs(true);
-            // Clear log messages on debug overlay
-            castDebugLogger.clearDebugLogs();
+            // // Enable debug logger and show a 'DEBUG MODE' overlay at top left corner.
+            // castDebugLogger.setEnabled(true);
+            // // Show debug overlay
+            // castDebugLogger.showDebugLogs(true);
+            // // Clear log messages on debug overlay
+            // castDebugLogger.clearDebugLogs();
         }
     });
 

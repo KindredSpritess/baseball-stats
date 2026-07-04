@@ -1067,11 +1067,11 @@
                                     @else
                                     <x-score-quadrant :play="$play->results[2] ?? null" />
                                     @endif
-                                    <x-score-quadrant :play="$play->results[1] ?? null" />
+                                    <x-score-quadrant :play="$play->results[1] ?? null" reverse />
                                 </tr>
                                 <tr>
                                     @unless($bigK)<x-score-quadrant :play="$play->results[3] ?? null" />@endunless
-                                    <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play->results[0] ?? null" />
+                                    <x-score-quadrant :play="$bigK ? [$lastPitch, 'blue'] : $play->results[0] ?? null" reverse />
                                 </tr>
                                 <tr style="height: 12.47px;">
                                     <td colspan="2">

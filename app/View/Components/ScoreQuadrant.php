@@ -13,7 +13,7 @@ class ScoreQuadrant extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($play = null)
+    public function __construct($play = null, $reverse = false)
     {
         if (is_null($play)) {
             $play = ['', 'black'];
@@ -41,6 +41,9 @@ class ScoreQuadrant extends Component
         }
         if (empty(end($this->lines)->play) && !end($this->lines)->pinchRunner) {
             array_pop($this->lines);
+        }
+        if ($reverse) {
+            $this->lines = array_reverse($this->lines);
         }
     }
 

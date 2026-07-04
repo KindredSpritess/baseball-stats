@@ -592,7 +592,7 @@ class ExportScorebookCommand extends Command
                         } else {
                             while ($bases--) {
                                 if ($bases) {
-                                    end($data[$spot][$inning])->results[$b++] = [...end($data[$spot][$inning])->results[$b] ?? [], self::CURVES[$b-1], $colour];
+                                    end($data[$spot][$inning])->results[$b++] = [...end($data[$spot][$inning])->results[$b-1] ?? [], self::CURVES[$b-1], $colour];
                                 } else {
                                     // dump(end($data[$spot][$inning])->results[3] ?? null, $b);
                                     end($data[$spot][$inning])->results[$b++] = [...(end($data[$spot][$inning])->results[$b-1] ?? []), $note, $colour];

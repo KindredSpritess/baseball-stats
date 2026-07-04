@@ -746,6 +746,12 @@ class Play extends Model
                     'fielding' => $this->fieldingBuffer,
                 ]));
             } else {
+                if ($bases < 0) {
+                    $bases = 0;
+                    $this->logBuffer(" caught stealing, {$this->fieldingBuffer}");
+                } else {
+                    $logFormat = '[0,2] caught stealing, reaches :base on ' . $this->fieldingBuffer . '|[3,*] picked off, scores on ' . $this->fieldingBuffer;
+                }
                 $game->advanceRunner($runner, $bases, false, true);
             }
         } elseif ($event->consume('PB')) {
