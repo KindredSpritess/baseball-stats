@@ -144,8 +144,10 @@ class GameController extends Controller
         foreach ($plays as $k => $play) {
             try {
                 if (str_starts_with($play->play, 'Game Over')) {
-                    $game->inning = $plays[$k - 1]->inning ?? $game->inning;
-                    $game->half = $plays[$k - 1]->inning_half ?? $game->half;
+                    // Get last play.
+                    $lp = $plays->last(fn ($p, $i) => $i < $k && $p->command === false);
+                    $game->inning = $lp->inning ?? $game->inning;
+                    $game->half = $lp->inning_half ?? $game->half;
                     $game->ended = true;
                 }
                 $play->apply($game);

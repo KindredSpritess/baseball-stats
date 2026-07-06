@@ -165,7 +165,7 @@ class Play extends Model
         if ($log->consume('Game Over')) {
             $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
             // Because we might get called at the end of an inning, we need to make sure the game's inning is that of the last play.
-            $lastPlay = $game->plays()->orderByDesc('id')->first();
+            $lastPlay = $game->plays()->whereCommand(false)->orderByDesc('id')->first();
             $game->inning = $lastPlay?->inning ?? $game->inning;
             $game->half = $lastPlay?->inning_half ?? $game->half;
 
