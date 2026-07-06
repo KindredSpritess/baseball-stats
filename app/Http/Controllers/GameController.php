@@ -366,7 +366,6 @@ class GameController extends Controller
             )->get();
             $game->players()->whereTeamId($team->id)->each(fn (Player $player) => $team->totals->merge($player->stats));
             $team->totals->derive();
-
         }
 
         return view('game.boxscore', [
@@ -421,7 +420,7 @@ class GameController extends Controller
      * Swap the home and away teams.
      *
      * @param Game $game
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function swap(Game $game) {
         $temp = $game->home;
@@ -434,6 +433,11 @@ class GameController extends Controller
             'game' => $game->id,
         ]);
         GameUpdated::dispatch($game->id, null, null, null, true);
-        return redirect()->route('game', ['game' => $game->id])->with('success', 'Teams swapped and game reprocessed.');
+        $game->refresh();
+        if (request()->wantsJson()) {
+            return response()->json(['status' => 'success', ...$this->get($game)->getData(true)]);
+        } else {
+            return redirect()->route('game', ['game' => $game->id])->with('success', 'Teams swapped and game reprocessed.');
+        }
     }
 }

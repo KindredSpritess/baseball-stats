@@ -17,6 +17,7 @@
         <button @click="offensiveChangesShow" class="option-item">Offensive Changes</button>
         <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
         <button @click="endGame" class="option-item">End Game</button>
+        <button @click="switchHomeAway" class="option-item">🔄 Switch Home/Away</button>
         <a :href="`/game/${gameId}`" style="text-decoration: none;">
           <button  class="option-item">Full Scoring</button>
         </a>
@@ -70,6 +71,20 @@
         <div class="end-game-actions">
           <button @click="confirmEndGame" :disabled="canSelectWinningPitcher && !selectedWinningPitcher" class="confirm-btn">End Game</button>
           <button @click="cancelEndGame" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showSwitchHomeAwayModal" class="end-game-modal">
+      <div class="end-game-overlay" @click="cancelSwitchHomeAway"></div>
+      <div class="end-game-content">
+        <h3>Switch Home and Away Teams</h3>
+
+        <p>Are you sure you want to switch the home and away teams? This will reprocess the game and may affect the game state.</p>
+
+        <div class="end-game-actions">
+          <button @click="confirmSwitchHomeAway" class="confirm-btn">Switch Teams</button>
+          <button @click="cancelSwitchHomeAway" class="cancel-btn">Cancel</button>
         </div>
       </div>
     </div>
@@ -149,6 +164,7 @@ export default {
       showOptions: false,
       showDefensiveChanges: false,
       showOffensiveChanges: false,
+      showSwitchHomeAwayModal: false,
       showEndGameModal: false,
       selectedWinningPitcher: null,
       errors: [],
@@ -387,6 +403,34 @@ export default {
       this.showEndGameModal = false;
       this.overrideEnabled = false;
       this.overrideScore = { away: null, home: null };
+    },
+    switchHomeAway() {
+      this.showSwitchHomeAwayModal = true;
+      this.showOptions = false;
+    },
+    async confirmSwitchHomeAway() {
+      this.showSwitchHomeAwayModal = false;
+      try {
+        const response = await fetch(`/game/${this.gameId}/swap`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
+        });
+        const result = await response.json();
+        this.lastResponse = result;
+        if (result.status === 'success') {
+          // Update game state
+          window.location.reload();
+        }
+      } catch (error) {
+        this.lastResponse = { status: 'error', message: error.message };
+      }
+    },
+    cancelSwitchHomeAway() {
+      this.showSwitchHomeAwayModal = false;
     },
     // A couple of events force runnners to move, when forced.
     forceOneBase() {
