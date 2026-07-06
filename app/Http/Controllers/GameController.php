@@ -35,8 +35,8 @@ class GameController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @param  Request  $request
+     * @return JsonResponse|RedirectResponse
      */
     public function store(Request $request): JsonResponse|RedirectResponse
     {
@@ -249,7 +249,7 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Game  $game
+     * @param  Game  $game
      * @return \Illuminate\Contracts\View\View
      */
     public function show(Game $game)
@@ -266,7 +266,7 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Game  $game
+     * @param  Game  $game
      * @return \Illuminate\Contracts\View\View
      */
     public function view(Game $game)
@@ -281,7 +281,7 @@ class GameController extends Controller
     /**
      * Display the touch screen scoring interface.
      *
-     * @param  \App\Models\Game  $game
+     * @param  Game  $game
      * @return \Illuminate\Contracts\View\View
      */
     public function score(Game $game)
