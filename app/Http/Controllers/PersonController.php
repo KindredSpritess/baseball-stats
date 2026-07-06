@@ -43,6 +43,9 @@ class PersonController extends Controller
         $games = [];
         $totals = new StatsHelper([]);
         foreach ($players as $player) {
+            if (!$player->game) {
+                continue;
+            }
             $games[] = $player->game;
             $stats[$player->game->id] = new StatsHelper($player->stats);
             $totals->merge($stats[$player->game->id]);
