@@ -730,16 +730,18 @@ class Play extends Model
         $bases = self::getBases($event);
         $stat = null;
         if ($stat = $event->consume('SB')) {
+            $countStats && throw_unless($game->fielding(1), "no-one at catcher.")->evt('PSB');
             $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CSB');
             $game->advanceRunner($runner, $bases);
             $logFormat = "steals :base";
         } elseif ($event->consume('CS')) {
+            $countStats && throw_unless($game->fielding(1), "no-one at catcher.")->evt('PCS');
             $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CCS');
+            $runner->evt('CS');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $targetBase = $b + 1;
                 $this->addAction($runner->id, $targetBase);
                 $bases = -10000000000;
-                $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("caught stealing :base by :fielding", [
                     'base' => self::BASES[$targetBase],
@@ -766,13 +768,36 @@ class Play extends Model
             // NOTE: for GIDP or ROE 2 outs need to use FC.
             $countStats && $game->hitting()->evt('RBI');
             $game->advanceRunner($runner, $bases);
+        } elseif ($event->consume('POCS')) {
+            $countStats && str_starts_with($event, '1') && $game->pitching()->evt('POs');
+            $countStats && throw_unless($game->fielding(1), "no-one at catcher.")->evt('PCS');
+            $countStats && throw_unless($game->fielding(2), "no-one at catcher.")->evt('CCS');
+            $runner->evt('CS');
+            $text = 'picked off and caught stealing';
+            if (!$this->handleFielding($game, $event, $hit, $countStats)) {
+                $targetBase = $b + 1;
+                $this->addAction($runner->id, $targetBase);
+                $bases = -10000000000;
+                $game->advanceRunner($runner, $bases);
+                $this->logBuffer(__("{$text} :base by :fielding", [
+                    'base' => self::BASES[$targetBase],
+                    'fielding' => $this->fieldingBuffer,
+                ]));
+            } else {
+                if ($bases < 0) {
+                    $bases = 0;
+                    $this->logBuffer(" {$text}, {$this->fieldingBuffer}");
+                } else {
+                    $logFormat = "[0,2] {$text}, reaches :base on {$this->fieldingBuffer}|[3,*] picked off, scores on {$this->fieldingBuffer}";
+                }
+                $game->advanceRunner($runner, $bases, false, true);
+            }
         } elseif ($event->consume('PO')) {
             $countStats && str_starts_with($event, '1') && $game->pitching()->evt('POs');
             if (!$this->handleFielding($game, $event, $hit, $countStats)) {
                 $targetBase = $b;
                 $this->addAction($runner->id, $targetBase);
                 $bases = -10000000000;
-                $runner->evt('CS');
                 $game->advanceRunner($runner, $bases);
                 $this->logBuffer(__("picked off at :base by :fielding", [
                     'base' => self::BASES[$targetBase],

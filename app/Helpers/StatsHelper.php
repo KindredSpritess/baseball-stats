@@ -2,6 +2,78 @@
 
 namespace App\Helpers;
 
+/**
+ * @property int $A Assists
+ * @property int $AB At Bats
+ * @property float $AVG Batting Average
+ * @property int $BIP Balls in Play
+ * @property float $BABIP Batting Average on Balls in Play
+ * @property int $Balls Balls Thrown
+ * @property int $BB Walks
+ * @property float $BBP9 Walks per 9 Innings
+ * @property int $BBs Walks taken
+ * @property int $BFP Batters Faced by Pitcher
+ * @property int $CCS Caught Stealing as Catcher
+ * @property int $CI Reached on Catcher's Interference
+ * @property int $CS Caught Stealing
+ * @property int $CSB Stolen Bases as Catcher
+ * @property int $DO Defensive Outs
+ * @property int $E Errors
+ * @property int $ER Earned Runs
+ * @property float $ERA
+ * @property int $FI Fielding Innings
+ * @property float $FPCT Fielding Percentage
+ * @property int $FPS First Pitch Strikes
+ * @property float $FPSPCT First Pitch Strike Percentage
+ * @property int $G Games played
+ * @property int $GDP Grounded into Double Plays
+ * @property int $GP Games Pitched
+ * @property int $H Hits
+ * @property int $HA Hits Allowed
+ * @property int $HBP Batters Hit by Pitch
+ * @property int $HPB Hit by Pitch
+ * @property int $hStrikes Strikes seen by Batter
+ * @property int $hBalls Balls seen by Batter
+ * @property int $IP Innings Pitched
+ * @property int $IR Inherited Runners
+ * @property int $IRS Inherited Runners Scored
+ * @property float $ISO Isolated Power
+ * @property int $K Strikeouts as Pitcher
+ * @property int $KP9 Strikeouts per 9 Innings
+ * @property int $KPBB Strikeout to Walk Ratio
+ * @property int $Loss Losing Decisions
+ * @property float $OBP On Base Percentage
+ * @property float $OPS On Base + Slugging
+ * @property int $PA Plate Appearances
+ * @property int $PB Passed Balls
+ * @property int $PCS Caught Stealing as Pitcher
+ * @property int $Pitches Pitches Thrown
+ * @property int $PO Putouts
+ * @property int $POs Pickoffs
+ * @property string $Position
+ * @property string $Positions
+ * @property int $PPA Pitches per Plate Appearance
+ * @property int $PPBFP Pitches per Batter Faced
+ * @property int $PSB Stolen Bases as Pitcher
+ * @property int $R Runs Scored
+ * @property int $RA Runs Allowed
+ * @property int $RBI Runs Batted In
+ * @property float $RF Range Factor
+ * @property int $SAB Sacrifice Bunts
+ * @property int $SAF Sacrifice Flies
+ * @property int $Save Saves
+ * @property int $SB Stolen Bases
+ * @property float $SLG Slugging Percentage
+ * @property int $SO Strikeouts as Batter
+ * @property int $Strikes Strikes Thrown
+ * @property float $StrkPct Strike Percentage
+ * @property int $TB Total Bases
+ * @property int $TC Total Chances
+ * @property int $TO Total Outs Pitched
+ * @property float $WHIP Walks + Hits per Inning Pitched
+ * @property int $Win Winning Decisions
+ * @property int $WP Wild Pitches
+ */
 class StatsHelper {
 
     public function __construct(private array $stats, private ?int $position = null) {
@@ -31,7 +103,7 @@ class StatsHelper {
         return $this;
     }
 
-    public function stat($stat) {
+    public function stat(string $stat) {
         return $this->stats[$stat] ?? 0;
     }
 
@@ -146,7 +218,7 @@ class StatsHelper {
         $val = $this->stat($stat);
         $stat = match ($stat) {
             'BBs' => 'BB',
-            '1', '2', '3', '4' => $stat . 'B',
+            '1', '2', '3', '4' => "{$stat}B",
             default => $stat,
         };
         if ($val) {
