@@ -186,6 +186,9 @@ $recentSeasons = collect($seasons)->filter(function($season) use ($games, $three
                                     <a href="{{ Illuminate\Support\Uri::of(route('team.calendar', ['team' => $team->id]))->withScheme('webcal') }}" class="schedule-link">
                                         <i class="fa-regular fa-calendar"></i>
                                     </a>
+                                    <a href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fmembership.mygameday.app%2Fcal%2Fcal.cgi%3FteamID%3D3008221%26compID%3D549801%26user_fingerprint%3D4277235331%26type%3Dgoogle" class="schedule-link">
+                                        <i class="fa-brands fa-google"></i>
+                                    </a>
                                 </li>
                                 @endif
                             @endforeach
