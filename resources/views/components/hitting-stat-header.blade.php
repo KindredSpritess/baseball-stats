@@ -27,5 +27,6 @@
     @unless ($singleGameStats ?? false)<td>BABIP</td>@endunless
     @unless ($singleGameStats ?? false)<td>ISO</td>@endunless
     @unless ($singleGameStats ?? false)<td>P/PA</td>@endunless
+    <td>Spd</td>
   </tr>
 </thead>

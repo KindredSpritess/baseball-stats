@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Number;
+
 /**
  * @property int $A Assists
  * @property int $AB At Bats
@@ -73,6 +75,7 @@ namespace App\Helpers;
  * @property float $WHIP Walks + Hits per Inning Pitched
  * @property int $Win Winning Decisions
  * @property int $WP Wild Pitches
+ * @property float $Spd Speed Score
  */
 class StatsHelper {
 
@@ -198,6 +201,35 @@ class StatsHelper {
                 $this->stats['PPBFP'] = $pitches / $this->BFP;
             }
         }
+
+        // Speed Score
+        // SB% (Stolen Base Percentage)
+        $f1 = Number::clamp(20 * (($this->SB + 3) / ($this->SB + $this->CS + 7) - 0.4), 0, 10);
+        // SB Attempts
+        if ($this->stat('1') + $this->BBs + $this->HPB) {
+            $f2 = Number::clamp(sqrt(($this->SB + $this->CS) / ($this->stat('1') + $this->BBs + $this->HPB)) / 0.0866, 0, 10);
+        } else {
+            $f2 = 0;
+        }
+        // Triple rate.
+        if ($this->AB - $this->stat('4') - $this->SO) {
+            $f3 = Number::clamp(200 * ($this->stat('3') / ($this->AB - $this->stat('4') - $this->SO)), 0, 10);
+        } else {
+            $f3 = 0;
+        }
+        // Runs per Opportunity
+        if ($this->H + $this->BB + $this->HPB - $this->stat('4')) {
+            $f4 = Number::clamp(18 * (($this->R - $this->stat('4')) / ($this->H + $this->BBs + $this->HPB - $this->stat('4')) - 0.1), 0, 10);
+        } else {
+            $f4 = 0;
+        }
+        // Ground Ball Double Play rate
+        if ($this->AB - $this->stat('4') - $this->SO) {
+            $f5 = Number::clamp((1 / 0.007) * (0.063 - $this->GDP / ($this->AB - $this->stat('4') - $this->SO)), 0, 10);
+        } else {
+            $f5 = 0;
+        }
+        $this->stats['Spd'] = ($f1 + $f2 + $f3 + $f4 + $f5) / 5;
 
         return $this;
     }
