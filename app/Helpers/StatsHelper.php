@@ -218,8 +218,8 @@ class StatsHelper {
             $f3 = 0;
         }
         // Runs per Opportunity
-        if ($this->H + $this->BB + $this->HPB - $this->stat('4')) {
-            $f4 = Number::clamp(18 * (($this->R - $this->stat('4')) / ($this->H + $this->BBs + $this->HPB - $this->stat('4')) - 0.1), 0, 10);
+        if ($this->H + $this->BBs + $this->HBP - $this->stat('4')) {
+            $f4 = Number::clamp(18 * (($this->R - $this->stat('4')) / ($this->H + $this->BBs + $this->HBP - $this->stat('4')) - 0.1), 0, 10);
         } else {
             $f4 = 0;
         }
