@@ -66,7 +66,7 @@ class ImportScheduleGameDayCommand extends Command
 
     // Parse the HTML to extract any other pools, add them to an array of pools.
     $pools = [];
-    preg_match_all('/pool=(\d+)&amp;/', $html, $matches);
+    preg_match_all('/pool=(\d+)("|&amp;)/', $html, $matches);
     if (!empty($matches[1])) {
       $pools = array_unique($matches[1]);
     }
