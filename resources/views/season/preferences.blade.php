@@ -21,6 +21,7 @@
             &quot;allowDropThirdStrikes&quot;: true,
             &quot;removeBalks&quot;: false,
             &quot;balksCanCountTowardPitchCount&quot;: false,
+            &quot;coachPitch&quot;: false,
             &quot;basePath&quot;: 90
           }"
           data-initial-competition-details="{

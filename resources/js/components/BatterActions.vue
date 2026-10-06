@@ -249,6 +249,8 @@ export default {
         'INT2': 'out',
         'blk': 'advance',
         'blk!': 'advance',
+        'K2': 'out',
+        'BIP': 'in-play',
       },
       BASES: {
         1: '1st',
@@ -262,7 +264,7 @@ export default {
   computed: {
     hitter() {
       const lineup = this.state.lineup[this.state.half];
-      const hitter = lineup[this.state.atBat[this.state.half]].at(-1);
+      const hitter = lineup[this.state.atBat[this.state.half]]?.at(-1);
       const person = this.game?.players?.find(p => p.id === hitter)?.person;
       return person ? `${person.lastName}, ${person.firstName[0]}` : null;
     },
@@ -301,6 +303,9 @@ export default {
       if (!this.preferences.balksCanCountTowardPitchCount) {
         delete outcomes['blk!'];
       }
+      if (this.currentBalls >= 4 && this.preferences.coachPitch) {
+        return {};
+      }
       if (this.currentBalls >= 3) {
         outcomes['.'] = 'Walk';
         if (!this.preferences.removeAdvancedPitchTypes) {
@@ -323,6 +328,7 @@ export default {
     },
     outcomes() {
       const lastPitch = this.pitchSequence.at(-1);
+      if (this.preferences.coachPitch && this.currentBalls >= 4) return {'K2': 'Strikeout (Coach Pitch)', 'BIP': 'Ball In Play'};
       if (strikes.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       if (balls.includes(lastPitch)) return { 'HBP': 'Hit By Pitch', 'CI': "Catcher's Interference", 'INT2': 'Interference' };
       return {'HBP': 'Hit By Pitch'};
@@ -419,7 +425,7 @@ export default {
       }
 
       // Check for automatic at-bat endings
-      if (this.currentBalls >= 4) {
+      if (this.currentBalls >= 4 && !this.preferences.coachPitch) {
         this.addResult(code === 'i' ? 'IBB' : 'BB');
         this.$emit('force');
       } else if (this.currentStrikes >= 3) {
@@ -440,6 +446,10 @@ export default {
         } else {
           result = 'K2';
         }
+      }
+      else if (result === 'BIP') {
+        this.stage = 'trajectory';
+        return;
       }
       this.trajectory = '';
       if (result === 'HBP') {

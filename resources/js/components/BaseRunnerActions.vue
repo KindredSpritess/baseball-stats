@@ -12,7 +12,7 @@
         <button @click="logRunnerAction('PO')" class="action-btn out">Put Out</button>
       </div>
       <div class="runner-actions"  v-else-if="step === 'decision'">
-        <button v-if="pitch === 'x'" @click="logRunnerAction('')" class="action-btn advance">On Hit</button>
+        <button v-if="pitch === 'x' || preferences.coachPitch" @click="logRunnerAction('')" class="action-btn advance">On Hit</button>
         <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('SB')" class="action-btn advance">Steal</button>
         <!-- <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('CS')" class="action-btn out">Caught</button>
         <button v-if="!noSteal.includes(pitch)" @click="logRunnerAction('PO')" class="action-btn out">Picked Off</button> -->

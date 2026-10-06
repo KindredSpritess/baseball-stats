@@ -11,10 +11,11 @@
       <div class="options-overlay" @click="showOptions = false"></div>
       <div class="options-content">
         <h3>Game Options</h3>
-        <button @click="overrideCount" class="option-item">Override Count</button>
-        <button @click="sideAway" class="option-item">Side Away</button>
-        <button @click="defensiveChangesShow" class="option-item">Defensive Changes</button>
-        <button @click="offensiveChangesShow" class="option-item">Offensive Changes</button>
+        <button v-if="!gameStarted" @click="setLineups" class="option-item">Set Lineups</button>
+        <button v-if="lastResponse.play" @click="overrideCount" class="option-item">Override Count</button>
+        <button v-if="lastResponse.play" @click="sideAway" class="option-item">Side Away</button>
+        <button v-if="lastResponse.play" @click="defensiveChangesShow" class="option-item">Defensive Changes</button>
+        <button v-if="lastResponse.play" @click="offensiveChangesShow" class="option-item">Offensive Changes</button>
         <button @click="broadcastMessage" class="option-item">Broadcast Message</button>
         <button @click="endGame" class="option-item">End Game</button>
         <button @click="switchHomeAway" class="option-item">🔄 Switch Home/Away</button>
@@ -125,8 +126,40 @@
       @close="showOffensiveChanges = false"
     />
 
+    <!-- Set Lineups Modal -->
+    <div v-if="showSetLineupsModal" class="end-game-modal">
+      <div class="end-game-overlay" @click="cancelSetLineups"></div>
+      <div class="end-game-content">
+        <h3>Set Initial Lineups</h3>
+        <p style="text-align: center; margin: 20px 0;">Choose which team's lineup to set:</p>
+        <div class="team-selection-buttons">
+          <button @click="startLineupSetup(true)" class="team-select-btn">
+            {{ game.away_team.name }}
+          </button>
+          <button @click="startLineupSetup(false)" class="team-select-btn">
+            {{ game.home_team.name }}
+          </button>
+        </div>
+        <div class="end-game-actions">
+          <button @click="cancelSetLineups" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lineup Setup Component -->
+    <LineupChanges
+      v-if="showLineupChangesForSetup"
+      :game="game"
+      :state="state"
+      :preferences="preferences"
+      :set-lineups="true"
+      :offensive="selectedLineupTeam"
+      @log-play="logPlay"
+      @close="closeLineupSetup"
+    />
+
     <div class="status">
-      <p v-if="lastResponse" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
+      <p v-if="lastResponse && lastResponse.play" :class="{ success: lastResponse.status === 'success', error: lastResponse.status === 'error' }">
         {{ lastResponse.status === 'success' ? (lastResponse.play.human || lastResponse.play.game_event) : 'Error: ' + lastResponse.message }}
         <button v-if="lastResponse.status === 'success'" @click="undoLastPlay">Undo</button>
       </p>
@@ -170,9 +203,17 @@ export default {
       errors: [],
       overrideEnabled: false,
       overrideScore: { away: null, home: null },
+      showSetLineupsModal: false,
+      showLineupChangesForSetup: false,
+      selectedLineupTeam: null,
+      completedLineupsTeams: new Set(),
     }
   },
   computed: {
+    gameStarted() {
+      console.log(this.game?.players);
+      return !!this.game?.players?.find(p => p.stats && (p.stats.Strikes > 0 || p.stats.Balls > 0 || p.stats.Pitch > 0));
+    },
     runnerActions() {
       if (!this.isMounted) return [];
       return [
@@ -447,6 +488,37 @@ export default {
     onError(error) {
       this.errors.push(error);
     },
+    setLineups() {
+      this.showSetLineupsModal = true;
+      this.showOptions = false;
+    },
+    startLineupSetup(teamIndex) {
+      this.selectedLineupTeam = teamIndex;
+      this.showSetLineupsModal = false;
+      this.showLineupChangesForSetup = true;
+    },
+    handleLineupSetup(commands) {
+      // Mark this team's lineup as complete
+      this.completedLineupsTeams.add(this.selectedLineupTeam);
+      
+      // Log all the lineup setup commands
+      this.logPlay(...commands);
+      
+      // Close the lineup setup
+      this.closeLineupSetup();
+    },
+    closeLineupSetup() {
+      this.showLineupChangesForSetup = false;
+      this.selectedLineupTeam = null;
+      
+      // If both teams' lineups are set, close everything
+      if (this.completedLineupsTeams.size === 2) {
+        this.showOptions = false;
+      }
+    },
+    cancelSetLineups() {
+      this.showSetLineupsModal = false;
+    },
   }
 }
 </script>
@@ -706,5 +778,34 @@ export default {
 
 .cancel-btn:hover {
   background-color: #5a6268;
+}
+
+.team-selection-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.team-select-btn {
+  flex: 1;
+  padding: 15px 20px;
+  border: 2px solid #007bff;
+  background: white;
+  color: #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.team-select-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+.team-select-btn:active {
+  transform: scale(0.98);
 }
 </style>

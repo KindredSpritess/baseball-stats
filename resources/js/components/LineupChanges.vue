@@ -11,7 +11,7 @@
           <div class="lineup-column">
             <div class="lineup-list">
               <div
-                v-for="(spot, index) in currentLineup"
+                v-for="(spot, index) in Array.from({ length: lineupSpots }, (_, i) => currentLineup[i])"
                 :key="index"
                 class="lineup-spot"
                 :class="{ selected: selectedSpot === index, 'at-bat': offensive && state.atBat[half] === index, 'on-base': offensive && state.bases.includes(spot) }"
@@ -23,10 +23,10 @@
                     <span :class="{substitution: changes[index]?.newPlayerName}">
                       {{ getPlayerName(spot) }}
                     </span>
-                    <span v-if="offensive && state.atBat[half] === index">
+                    <span v-if="!setLineups && offensive && state.atBat[half] === index">
                       <span class="position"> (At Bat)</span>
                     </span>
-                    <span v-if="offensive && state.bases.includes(spot)">
+                    <span v-if="!setLineups && offensive && state.bases.includes(spot)">
                       <span class="position"> (On {{ ['1st', '2nd', '3rd'][state.bases.indexOf(spot)] }})</span>
                     </span>
                     <span v-if="changes[index]?.newPlayerName">
@@ -59,10 +59,21 @@
                   </div>
                 </div>
               </div>
+              <div v-if="setLineups" class="lineup-spot" @click="selectPlayer(lineupSpots)">
+                <div class="spot-number">+</div>
+                <div class="player-info">
+                  <div class="player-name">
+                    <span>Add Player</span>
+                  </div>
+                  <div class="player-position">
+                    -
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div v-if="!offensive && selectedSpot !== null && selectedSpot !== -1" class="position-column">
+          <div v-if="setLineups || (!offensive && selectedSpot !== null && selectedSpot !== -1)" class="position-column">
             <div class="position-selector">
               <h4>Select New Position for {{ getPlayerName(currentLineup[selectedSpot]) }}</h4>
               <div class="position-buttons">
@@ -126,6 +137,10 @@ export default {
     game: Object,
     state: Object,
     preferences: Object,
+    setLineups: {
+      type: Boolean,
+      default: false,
+    },
     offensive: {
       type: Boolean,
       default: false,
@@ -172,6 +187,15 @@ export default {
   computed: {
     half() {
       return this.offensive ? this.state.half : ((this.state.half + 1) % 2);
+    },
+    lineupSpots() {
+      let spots = this.currentLineup.length;
+      for (const change of Object.values(this.changes)) {
+        if (change.lineupSpot > spots) {
+          spots = change.lineupSpot;
+        }
+      }
+      return spots;
     },
     currentLineup() {
       const lineup = this.state.lineup?.[this.half] || [];
@@ -234,7 +258,9 @@ export default {
       return Object.entries(this.changes).flatMap(([spot, change]) => {
         const commands = [];
         if (change.newPlayerName) {
-          if (this.offensive) {
+          if (this.setLineups) {
+            commands.push(`@${this.currentTeam.short_name} ${change.newPlayerName}: ${change.newPosition ?? 'EH'}`);
+          } else if (this.offensive) {
             if (spot == this.state.atBat[this.half]) {
               commands.push('PH');
             } else {
@@ -312,6 +338,7 @@ export default {
       }
     },
     getPlayerName(playerId) {
+      if (!playerId) return '';
       const player = this.game.players.find(p => p.id === playerId);
       if (player) {
         return `${player.person.lastName}, ${player.person.firstName}`;

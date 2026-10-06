@@ -59,6 +59,12 @@
           Use lineup for defensive changes
         </label>
       </div>
+      <div class="preference-item" v-if="'coachPitch' in preferences">
+        <label>
+          <input type="checkbox" v-model="preferences.coachPitch" />
+          Use coach pitch
+        </label>
+      </div>
       <div class="preference-item" v-if="'basePath' in preferences">
         <label>
           Base path distance (ft)
