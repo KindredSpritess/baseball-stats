@@ -88,7 +88,9 @@ class ImportScheduleGameDayCommand extends Command
       $matches = [];
       preg_match('/var matches = (\[.*\]);$/m', $html, $matches);
       if (!empty($matches[1])) {
-        $games = collect(json_decode($matches[1], true))->filter(fn($game) => !$game['isBye']);
+        $games = collect(json_decode($matches[1], true))
+          ->filter(fn($game) => !$game['isBye'])
+          ->filter(fn($game) => $game['HomeName'] !== 'Undecided' && $game['AwayName'] !== 'Undecided');
         $unknownGames = $unknownGames->diff($games->pluck('FixtureID'));
         $teams = $games
           ->map(fn($game) => [$game['HomeID'] => $game['HomeName'], $game['AwayID'] => $game['AwayName']])
@@ -146,6 +148,7 @@ class ImportScheduleGameDayCommand extends Command
               'Washed Out' => 'washed_out',
               default => $game->status, // Don't overwrite existing status if we don't recognize the new one.
             };
+            $game->firstPitch = Carbon::parse($gameMeta['TimeDateRaw'], 'Australia/Brisbane')->setTimezone('UTC');
             $game->score = [
               \intval($gameMeta['AwayScore'] ?? 0),
               \intval($gameMeta['HomeScore'] ?? 0),
