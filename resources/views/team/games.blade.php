@@ -77,7 +77,7 @@
                 <div class='position'>
                     <h5><a href="{{ route('game.boxscore', $game->id) }}" class="inline-link">{{ $opponent }}</a></h5>
                     @if ($game->firstPitch)
-                        <small>{{ $game->firstPitch->format('M j, Y') }}</small>
+                        <small>{{ $game->firstPitch->setTimezone($game->timeZone ?? 'UTC')->format('M j, Y') }}</small>
                     @endif
                     <x-field :ballsInPlay="$ballsInPlay[$game->id] ?? []" />
                 </div>

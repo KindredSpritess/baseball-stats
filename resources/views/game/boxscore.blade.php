@@ -7,7 +7,7 @@
 <div class="page-container">
     <div class="page-header">
         <h1 class="page-title">{{ $game->away_team->name }} @ {{ $game->home_team->name }}</h1>
-        <p class="page-subtitle">{{ $game->firstPitch->format('F j, Y \a\t g:i A') }} - Box Score</p>
+        <p class="page-subtitle">{{ $game->firstPitch->setTimezone($game->timeZone ?? 'UTC')->format('F j, Y \a\t g:i A') }} - Box Score</p>
     </div>
 
     @for ($home = 0; $home <= 1; $home++)
