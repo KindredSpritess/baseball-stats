@@ -2,6 +2,7 @@
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import * as BABYLON from 'babylonjs'
 import earcut from 'earcut';
+import { getFielderMovements, HOME_PLATE_SVG_X } from '../fielderRules.js';
 
 // Props
 const props = defineProps({
@@ -55,6 +56,27 @@ let animationProgress = 0
 let previousCounts = null
 let previousRunners = {}
 let target = {balls: 0, strikes: 0, outs: 0}
+
+// Default positions for each fielder (used when creating meshes and when resetting)
+const FIELDER_DEFAULT_POSITIONS = {
+  1: {x: 224, y: 4,  z: 280},  // P  — pitcher
+  2: {x: 224, y: 2,  z: 358},  // C  — catcher
+  3: {x: 154, y: 2,  z: 270},  // 1B
+  4: {x: 164, y: 2,  z: 210},  // 2B
+  5: {x: 294, y: 2,  z: 270},  // 3B
+  6: {x: 284, y: 2,  z: 210},  // SS
+  7: {x: 364, y: 2,  z: 110},  // LF
+  8: {x: 224, y: 2,  z: 50},   // CF
+  9: {x: 84,  y: 2,  z: 110},  // RF
+}
+
+// 3D positions where fielders stand when covering each base
+const FIELDER_COVER_BASE_POSITIONS = {
+  1:      new BABYLON.Vector3(155, 2, 278),  // near 1st base
+  2:      new BABYLON.Vector3(224, 2, 218),  // at 2nd base
+  3:      new BABYLON.Vector3(293, 2, 278),  // near 3rd base
+  home:   new BABYLON.Vector3(224, 2, 348),  // near home plate
+}
 
 // Base positions for runners
 const basePositions = {
@@ -687,18 +709,6 @@ const createField = () => {
   runnerPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
 
   // Create fielder positions (placeholders)
-  const fielderPositions = {
-    1: {x: 224, z: 280},
-    2: {x: 224, z: 358},
-    3: {x: 154, z: 270},
-    4: {x: 164, z: 210},
-    5: {x: 294, z: 270},
-    6: {x: 284, z: 210},
-    7: {x: 364, z: 110},
-    8: {x: 224, z: 50},
-    9: {x: 84, z: 110},
-  }
-
   for (let pos = 1; pos <= 9; pos++) {
     const texture = new BABYLON.DynamicTexture('texture' + pos, {width: 512, height: 128}, scene)
     texture.updateSamplingMode(BABYLON.Texture.TRILINEAR_SAMPLINGMODE);
@@ -708,11 +718,11 @@ const createField = () => {
     } else if (pos > 6) {
       plane.scaling = new BABYLON.Vector3(1.4, 1.4, 1.4)
     }
-    // plane.scaling = new BABYLON.Vector3(3, 3, 3)
     plane.material = new BABYLON.StandardMaterial('mat' + pos, scene)
     plane.material.diffuseTexture = texture
     plane.material.diffuseTexture.hasAlpha = true
-    plane.position = new BABYLON.Vector3(fielderPositions[pos].x, pos == 1 ? 4 : 2, fielderPositions[pos].z)
+    const dp = FIELDER_DEFAULT_POSITIONS[pos]
+    plane.position = new BABYLON.Vector3(dp.x, dp.y, dp.z)
     plane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL
   }
 }
@@ -855,25 +865,55 @@ const animateRunner = (playerId, startBase, actions, color, waitForPitch) => {
   return keyFrames.length + (waitForPitch ? 0.5 : 0); // Return number of frames for animation
 }
 
+/**
+ * Compute the 3D landing position of a batted ball.
+ *
+ * @param {Object | null} battedBall  { position: [svgX, svgY], distance: number, type: string }
+ * @returns {BABYLON.Vector3 | null}
+ */
+const HOME_PLATE_SVG_Y = 405;
+const MIN_BASE_DISTANCE_EPSILON = 0.1;
+
+const getBallLandingPosition = (battedBall) => {
+  if (!battedBall || !basePositions.home) return null;
+
+  const baseDistance = Math.sqrt(
+    Math.pow(battedBall.position[0] - HOME_PLATE_SVG_X, 2) +
+    Math.pow(battedBall.position[1] - HOME_PLATE_SVG_Y, 2)
+  );
+
+  if (baseDistance < MIN_BASE_DISTANCE_EPSILON) return basePositions.home.clone();
+
+  const d = battedBall.distance || 0;
+  return basePositions.home.add(new BABYLON.Vector3(
+    -(battedBall.position[0] - HOME_PLATE_SVG_X) / baseDistance * d,
+    0,
+    (battedBall.position[1] - HOME_PLATE_SVG_Y) / baseDistance * d
+  ));
+};
+
+const DEFAULT_BALL_HEIGHT = 4;
+const DEFAULT_BALL_FORWARD_OFFSET = 10;
+// Fielder animation tuning (world units/seconds).
+const FIELDER_SPEED = 60;
+const MIN_FIELDER_ANIMATION_DURATION = 0.4;
+const MAX_FIELDER_ANIMATION_DURATION = 4;
+const MIN_FIELDER_MOVEMENT_DISTANCE = 0.1;
+// Ratio along base-to-ball vector for cutoff positioning (45% from base toward ball).
+const CUTOFF_POSITION_RATIO = 0.45;
+
 const animateBall = (battedBall) => {
   if (!scene) return;
 
   const ball = BABYLON.MeshBuilder.CreateSphere('battedBall', {diameter: 2}, scene);
   ball.material = getBaseballMaterial();
-  ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, 4, 0));
+  ball.position = basePositions.mound.clone().add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, 0));
   ball.rotation = new BABYLON.Vector3(Math.PI / 8, 0, Math.PI / 6)
 
-  const baseDistance = battedBall ? Math.sqrt(
-    Math.pow(battedBall.position[0] - 224, 2) +
-    Math.pow(battedBall.position[1] - 405, 2)
-  ) : 0;
-
   const d = battedBall?.distance || 0;
-  const targetPosition = basePositions.home.add(new BABYLON.Vector3(
-    battedBall ? -(battedBall.position[0] - 224) / baseDistance * d : 0,
-    battedBall ? 0 : 4,
-    battedBall ? (battedBall.position[1] - 405) / baseDistance * d : 10
-  ));
+  const targetPosition = battedBall
+    ? (getBallLandingPosition(battedBall) ?? basePositions.home.add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, 0)))
+    : basePositions.home.add(new BABYLON.Vector3(0, DEFAULT_BALL_HEIGHT, DEFAULT_BALL_FORWARD_OFFSET));
 
   const trajectory = {
     'F': { height: d * 0.3, duration: d / 73 * 30, parabolic: true, bounces: 0 },
@@ -949,6 +989,104 @@ const animateBall = (battedBall) => {
   return trajectory.duration / 30 + 0.5; // Return number of seconds for animation
 }
 
+/**
+ * Animate a single fielder mesh toward a 3D target position.
+ * Movement speed is ~60 units/second (reasonable running speed at field scale).
+ *
+ * @param {number}          pos             Fielder position number (1–9)
+ * @param {BABYLON.Vector3} targetPosition  Destination in 3D world coordinates
+ * @returns {number} Animation duration in seconds
+ */
+const animateFielder = (pos, targetPosition) => {
+  if (!scene) return 0;
+  const mesh = scene.getMeshByName('fielder' + pos);
+  if (!mesh) return 0;
+
+  const distance = BABYLON.Vector3.Distance(mesh.position, targetPosition);
+  if (distance < MIN_FIELDER_MOVEMENT_DISTANCE) return 0;
+  // Speed ~60 units/s; clamp to [0.4, 4] seconds
+  const duration = Math.min(MAX_FIELDER_ANIMATION_DURATION, Math.max(MIN_FIELDER_ANIMATION_DURATION, distance / FIELDER_SPEED));
+  const frames = Math.round(duration * 30);
+
+  BABYLON.Animation.CreateAndStartAnimation(
+    'moveFielder' + pos,
+    mesh,
+    'position',
+    30,
+    frames,
+    mesh.position.clone(),
+    targetPosition.clone(),
+    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+  );
+
+  return duration;
+};
+
+/**
+ * Apply the fielder movement rule system for a batted ball and animate all
+ * matching fielders.
+ *
+ * @param {Object} battedBall  { position, distance, type }
+ * @param {number} outs        Current number of outs (0–2)
+ * @param {Object} runners     { base: runnerObj }
+ * @returns {number} Maximum fielder animation duration in seconds
+ */
+const animateFieldersForPlay = (battedBall, outs, runners) => {
+  if (!scene || !battedBall) return 0;
+
+  const movements = getFielderMovements(outs, runners, battedBall);
+  const ballLandingPos = getBallLandingPosition(battedBall);
+  let maxDuration = 0;
+
+  for (const { fielder, action } of movements) {
+    let targetPosition = null;
+
+    if (action.type === 'moveToBall' || action.type === 'catchBall' || action.type === 'pickUpBall') {
+      targetPosition = ballLandingPos;
+    } else if (action.type === 'moveToBase') {
+      targetPosition = FIELDER_COVER_BASE_POSITIONS[action.base] ?? null;
+    } else if (action.type === 'moveToCutoff') {
+      const basePos = FIELDER_COVER_BASE_POSITIONS[action.toBase] ?? null;
+      if (basePos && ballLandingPos) {
+        // Lerp(basePos, ballLandingPos, ratio): place fielder 45% of the way from base toward ball.
+        targetPosition = BABYLON.Vector3.Lerp(basePos, ballLandingPos, CUTOFF_POSITION_RATIO);
+      }
+    }
+
+    if (targetPosition) {
+      const dur = animateFielder(fielder, targetPosition);
+      maxDuration = Math.max(maxDuration, dur);
+    }
+  }
+
+  return maxDuration;
+};
+
+/**
+ * Smoothly return all fielder meshes to their default starting positions.
+ * Called after a play has fully animated.
+ */
+const resetFieldersToDefault = () => {
+  if (!scene) return;
+  for (let pos = 1; pos <= 9; pos++) {
+    const mesh = scene.getMeshByName('fielder' + pos);
+    const dp = FIELDER_DEFAULT_POSITIONS[pos];
+    if (mesh && dp) {
+      const target = new BABYLON.Vector3(dp.x, dp.y, dp.z);
+      BABYLON.Animation.CreateAndStartAnimation(
+        'resetFielder' + pos,
+        mesh,
+        'position',
+        30,
+        30, // 1-second reset animation
+        mesh.position.clone(),
+        target,
+        BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT,
+      );
+    }
+  }
+};
+
 const FOUL_BALL = {
   position: [225.97, 442.13],
   distance: 100,
@@ -1021,14 +1159,24 @@ const updateStatus = (status, play) => {
     }
   }
 
-  // If we have a batted ball, animate the batted ball.
+  // If we have a batted ball, animate the batted ball and the fielders.
   if (hasPitch) {
     delayFrames = Math.max(delayFrames, animateBall(ball_in_play ?? foul_ball));
+    // Animate fielders only for fair balls in play (not foul balls)
+    if (ball_in_play) {
+      animateFieldersForPlay(ball_in_play, state.outs, runners);
+    }
   }
 
   if (delayFrames > 0) {
     setTimeout(() => updateStatus(status), 1000 * delayFrames);
     return;
+  }
+
+  // Reset fielders to their default positions after the play has animated.
+  // This is the "settled" call with no play argument.
+  if (!play) {
+    resetFieldersToDefault();
   }
 
   // Now go through previousRunners to find any runners that should be deleted.
